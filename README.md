@@ -1,2 +1,0 @@
-# pytripgui
-PyTRiP GUI
