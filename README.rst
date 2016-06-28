@@ -62,7 +62,7 @@ Overview
 
 .. end-badges
 
-PyTRiP GUI
+Overv.io issue board: https://overv.io/pytrip/pytripgui/
 
 
 Installation
@@ -79,7 +79,7 @@ Latest unstable version, directly GIT repository, using::
 
 To unistall, simply use::
 
-    pip uninstall beprof
+    pip uninstall pytrip98gui
 
 Documentation
 =============
