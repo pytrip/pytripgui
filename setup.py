@@ -114,7 +114,7 @@ with open('README.rst') as readme_file:
 setuptools.setup(
     name='pytrip98gui',
     version=get_version(),
-    packages=['pytrip98gui'],
+    packages=['pytripgui'],
     url='https://github.com/pytrip/pytripgui',
     license='GPL',
     author='Leszek Grzanka',
@@ -146,8 +146,8 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'run_pytrip98gui=' + \
-            'pytrip98gui.run_pytrip98gui:main',
+            'pytripgui=' + \
+            'pytripgui.main:start',
         ],
     },
     cmdclass=get_cmdclass(),

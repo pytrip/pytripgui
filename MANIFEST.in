@@ -6,10 +6,14 @@
   include tests/requirements-test.txt
   recursive-include docs *.py
   recursive-include docs *.rst
-  recursive-include pytrip98gui *.py
+  recursive-include pytripgui *.py
   recursive-include tests *.py
   include versioneer.py
-  include pytrip98gui/_version.py
+  include pytripgui/_version.py
+  recursive-include pytripgui *.fbp
+  recursive-include pytripgui *.png
+  recursive-include pytripgui *.py
+  recursive-include pytripgui *.xrc
 
   exclude .gitkeep
   exclude .gitconfig
@@ -18,4 +22,3 @@
   exclude appveyor.yml
   prune .travis
   prune install_deps.sh
-
