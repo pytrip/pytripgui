@@ -17,6 +17,8 @@
 import wx
 import sys
 import pdb
+import threading
+import time
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
@@ -31,14 +33,13 @@ else:
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
 from matplotlib.figure import Figure
 import matplotlib
-
 matplotlib.interactive(True)
 import matplotlib.pyplot as plt
-from pytrip.guiutil import PlotUtil
-from pytripgui.util import *
+
 import numpy as np
-import threading
-import time
+
+from pytripgui.guiutil import PlotUtil
+from pytripgui.util import *
 
 
 def cmap_discretize(cmap, N):
