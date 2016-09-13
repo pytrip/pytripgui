@@ -27,7 +27,7 @@ install_freetype() {
 if [[ $TOXENV == py27* ]] || [[ $TOXENV == pep8* ]] || [[ $TOXENV == py32* ]] || [[ $TOXENV == py33* ]] || [[ $TOXENV == py36* ]];
 then
     sudo apt-get -qq update
-    sudo apt-get search wxgtk
+    sudo apt-cache search wxgtk
 #    install_freetype
     sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev
 fi
@@ -36,7 +36,7 @@ fi
 if [[ $TOXENV == py35* ]];
 then
     sudo apt-get -qq update
-    sudo apt-get search wxgtk
+    sudo apt-cache search wxgtk
     # pkg-config libwxgtk2.8-dev freeglut3-dev
     # http://tutorialforlinux.com/2014/11/09/how-to-install-wxpython-python-3-on-ubuntu-14-04-trusty-lts-32-64bit-easy-guide/
     # http://stackoverflow.com/questions/27240143/installing-wxpython-on-ubuntu-14-04
