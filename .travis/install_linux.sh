@@ -19,7 +19,7 @@ install_freetype() {
     cd freetype-2.3.0
     ./configure --prefix=/usr
     make -j4
-    make install
+    sudo make install
     cd ..
 }
 
