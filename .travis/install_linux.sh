@@ -27,9 +27,18 @@ install_freetype() {
 if [[ $TOXENV == py27* ]] || [[ $TOXENV == pep8* ]] || [[ $TOXENV == py32* ]] || [[ $TOXENV == py33* ]] || [[ $TOXENV == py36* ]];
 then
     sudo apt-get -qq update
+#    install_freetype
     sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev
-    install_freetype
 fi
+
+# instruction valid for Ubuntu 14.04
+if [[ $TOXENV == py35* ]];
+then
+    sudo apt-get -qq update
+    sudo apt-get install -y libblas-dev liblapack-dev gfortran libfreetype6-dev
+    pip install -U --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
+fi
+
 
 pip install --upgrade virtualenv$VENVVER pip$PIPVER setuptools tox wheel
 
