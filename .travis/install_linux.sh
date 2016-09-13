@@ -35,7 +35,12 @@ fi
 if [[ $TOXENV == py35* ]];
 then
     sudo apt-get -qq update
+    # pkg-config libwxgtk2.8-dev freeglut3-dev
+    # http://tutorialforlinux.com/2014/11/09/how-to-install-wxpython-python-3-on-ubuntu-14-04-trusty-lts-32-64bit-easy-guide/
+    # http://stackoverflow.com/questions/27240143/installing-wxpython-on-ubuntu-14-04
     sudo apt-get install -y libblas-dev liblapack-dev gfortran libfreetype6-dev
+    sudo apt-get install -y make gcc libgtkgl2.0-dev libgstreamer* libwebkit-dev
+    sudo apt-get install -y pkg-config libwxgtk2.8-dev freeglut3-dev
     pip install -U --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
 fi
 
@@ -49,3 +54,5 @@ else
   pip install --upgrade versioneer
 fi
 pip install -r requirements.txt
+
+PYTHONPATH=. python tests/test_pytripgui.py
