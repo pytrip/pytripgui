@@ -1,101 +1,29 @@
-===============================
-pytripgui
-===============================
+WHAT IS THIS ?
+==============
 
-.. image:: https://img.shields.io/pypi/v/pytripgui.svg
-        :target: https://pypi.python.org/pypi/pytripgui
-.. image:: https://img.shields.io/travis/pytrip/pytripgui.svg
-        :target: https://travis-ci.org/pytrip/pytripgui
+pytripgui is graphical user interface (GUI) built around TRiP98 planning system and pytrip package.
+It is capable of visualising patient CT data, dose and LET overlays.
+pytripgui can make treatment plans using local or remote TRiP98 package.
 
+TRiP98 package is not included here, if you need it, go first to TRiP98 webpage.
 
-.. image:: https://readthedocs.org/projects/pytripgui/badge/?version=latest
-        :target: https://readthedocs.org/projects/pytripgui/?badge=latest
-        :alt: Documentation Status
-
-========
-Overview
-========
-
-.. start-badges
-
-.. list-table::
-    :stub-columns: 1
-
-    * - docs
-      - |docs|
-    * - tests
-      - |travis| |appveyor|
-    * - package
-      - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
-
-.. |docs| image:: https://readthedocs.org/projects/pytripgui/badge/?style=flat
-    :target: https://readthedocs.org/projects/pytripgui
-    :alt: Documentation Status
-
-.. |travis| image:: https://travis-ci.org/pytrip/pytripgui.svg?branch=master
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.org/pytrip/pytripgui
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/grzanka/pytripgui?branch=master&svg=true
-    :alt: Appveyor Build Status
-    :target: https://ci.appveyor.com/project/grzanka/pytripgui
-
-.. |version| image:: https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat
-    :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/pytrip98gui
-
-.. |downloads| image:: https://img.shields.io/pypi/dm/pytrip98gui.svg?style=flat
-    :alt: PyPI Package monthly downloads
-    :target: https://pypi.python.org/pypi/pytrip98gui
-
-.. |wheel| image:: https://img.shields.io/pypi/wheel/pytrip98gui.svg?style=flat
-    :alt: PyPI Wheel
-    :target: https://pypi.python.org/pypi/pytrip98gui
-
-.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/pytrip98gui.svg?style=flat
-    :alt: Supported versions
-    :target: https://pypi.python.org/pypi/pytrip98gui
-
-.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/pytrip98gui.svg?style=flat
-    :alt: Supported implementations
-    :target: https://pypi.python.org/pypi/pytrip98gui
-
-.. end-badges
-
-Overv.io issue board: https://overv.io/pytrip/pytripgui/
-
+pytripgui works under Linux operating system with necessary packages installed, see installation instructions.
 
 Installation
 ============
 
-Stable version ::
+First be sure to have Python framework installed, then type::
 
-    pip install pytrip98gui
+    pip install pytripgui
 
-Latest unstable version, directly GIT repository, using::
+In case you don't have administrator rights, add ``--user`` flag to ``pip`` command.
+In this situation GUI will be probably installed in ``~/.local/bin`` directory.
 
-    pip install setuptools versioneer
-    pip install git+https://github.com/pytrip/pytripgui.git
-
-To unistall, simply use::
-
-    pip uninstall pytrip98gui
 
 Documentation
 =============
 
-https://pytripgui.readthedocs.io/
+MORE DOCUMENTATION
+==================
 
-
-Features
---------
-
-* TODO
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `grzanka/cookiecutter-pip-docker-versioneer`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`grzanka/cookiecutter-pip-docker-versioneer`: https://github.com/grzanka/cookiecutter-pip-docker-versioneer
+If you would like to download the code and modify it, read first `developer documentation <docs/technical.rst>`__.
