@@ -11,24 +11,11 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
 # check ubuntu version
 lsb_release -a
 
-# freetype v2.3.0 installation, some versions of matplotlib require it
-# docker image has only freetype v2.2
-install_freetype() {
-    wget http://downloads.sourceforge.net/freetype/freetype-2.3.0.tar.gz
-    tar -zxvf freetype-2.3.0.tar.gz
-    cd freetype-2.3.0
-    ./configure --prefix=/usr
-    make -j4
-    sudo make install
-    cd ..
-}
-
 # instruction valid for Ubuntu 14.04
 if [[ $TOXENV == py27* ]] || [[ $TOXENV == pep8* ]] || [[ $TOXENV == py32* ]] || [[ $TOXENV == py33* ]] || [[ $TOXENV == py36* ]];
 then
     sudo apt-get -qq update
     sudo apt-cache search wxgtk
-#    install_freetype
     sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev libwxgtk2.8-dev libwxgtk-media2.8-dev libwxgtk-media2.8-0 libwxgtk2.8-0  libwxgtk3.0-dev
 fi
 
