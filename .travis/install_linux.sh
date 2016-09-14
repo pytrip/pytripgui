@@ -33,7 +33,7 @@ then
 fi
 
 # instruction valid for Ubuntu 14.04
-if [[ $TOXENV == py35* ]];
+if [[ $TOXENV == py27* ]] || [[ $TOXENV == py35* ]];
 then
     sudo apt-get -qq update
     sudo apt-cache search wxgtk
