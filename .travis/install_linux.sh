@@ -9,7 +9,7 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
                 # pipeline exit successfully.
 
 # check ubuntu version
-lsb_release -a
+#lsb_release -a
 
 # instruction valid for Ubuntu 14.04
 if [[ $TOXENV == py27* ]] || [[ $TOXENV == pep8* ]] || [[ $TOXENV == py32* ]] || [[ $TOXENV == py33* ]] || [[ $TOXENV == py36* ]];
