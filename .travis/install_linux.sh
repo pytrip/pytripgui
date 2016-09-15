@@ -30,7 +30,7 @@ then
     sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev libwxgtk2.8-dev libwxgtk-media2.8-dev libwxgtk-media2.8-0 libwxgtk2.8-0  libwxgtk3.0-dev
     sudo apt-get install -y make gcc libgtkgl2.0-dev libgstreamer* libwebkit-dev
     sudo apt-get install -y pkg-config libwxgtk2.8-dev freeglut3-dev
-    pip install -U --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix==3.0.3.dev2487+3b86464
+    # pip install -U --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix==3.0.3.dev2487+3b86464
 fi
 
 
