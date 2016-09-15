@@ -6,8 +6,10 @@ import pytripgui
 
 class TestStart(unittest.TestCase):
     def test_check(self):
-        pytripgui.start()
-        self.assertTrue(True)
+        try:
+            pytripgui.start()
+        except SystemExit as e:
+            self.assertEqual(e.code, 2)
 
 
 if __name__ == '__main__':
