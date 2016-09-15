@@ -9,21 +9,11 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
                 # pipeline exit successfully.
 
 # check ubuntu version
-#lsb_release -a
-
-# instruction valid for Ubuntu 14.04
-if [[ $TOXENV == py27* ]] || [[ $TOXENV == pep8* ]] || [[ $TOXENV == py32* ]] || [[ $TOXENV == py33* ]] || [[ $TOXENV == py36* ]];
-then
-    sudo apt-get -qq update
-    sudo apt-cache search wxgtk
-    sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev libwxgtk2.8-dev libwxgtk-media2.8-dev libwxgtk-media2.8-0 libwxgtk2.8-0  libwxgtk3.0-dev
-fi
 
 # instruction valid for Ubuntu 14.04
 if [[ $TOXENV == py27* ]] || [[ $TOXENV == py35* ]];
 then
     sudo apt-get -qq update
-    sudo apt-cache search wxgtk
     # pkg-config libwxgtk2.8-dev freeglut3-dev
     # http://tutorialforlinux.com/2014/11/09/how-to-install-wxpython-python-3-on-ubuntu-14-04-trusty-lts-32-64bit-easy-guide/
     # http://stackoverflow.com/questions/27240143/installing-wxpython-on-ubuntu-14-04
@@ -33,15 +23,6 @@ then
     pip install -U --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix==3.0.3.dev2487+3b86464
 fi
 
+pip install --upgrade virtualenv pip setuptools tox wheel
 
-pip install --upgrade virtualenv$VENVVER pip$PIPVER setuptools tox wheel
-
-if [[ $TOXENV == py32 ]];
-then
-  pip install git+https://github.com/grzanka/python-versioneer.git@support_python32
-else
-  pip install --upgrade versioneer
-fi
 pip install -r requirements.txt
-
-PYTHONPATH=. python tests/test_pytripgui.py
