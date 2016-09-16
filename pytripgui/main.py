@@ -14,21 +14,25 @@
     You should have received a copy of the GNU General Public License
     along with libdedx.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx, wx.lib.dialogs
 
-from pytrip.error import *
 import sys, traceback
-from wx.xrc import *
-from leftmenu import *
-from settings import *
-from plugin import *
-from panels.plotpanel import *
-from panels.dvh import *
-from tripexecparser import *
 import threading
 import os
-import util
-from data import *
+import gc
+
+import wx, wx.lib.dialogs
+from wx.xrc import *
+
+from pytrip.error import *
+
+from pytripgui.leftmenu import *
+from pytripgui.settings import *
+from pytripgui.plugin import *
+from pytripgui.panels.plotpanel import *
+from pytripgui.panels.dvh import *
+from pytripgui.tripexecparser import *
+import pytripgui.util
+from pytripgui.data import *
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
@@ -40,7 +44,6 @@ else:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
-import gc
 
 
 class FileDropTarget(wx.FileDropTarget):
