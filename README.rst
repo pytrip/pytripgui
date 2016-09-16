@@ -14,11 +14,14 @@ Installation
 
 First be sure to have Python framework installed, then type::
 
-    pip install pytripgui
+    pip install pytrip98gui
 
 In case you don't have administrator rights, add ``--user`` flag to ``pip`` command.
 In this situation GUI will be probably installed in ``~/.local/bin`` directory.
 
+Start it by calling::
+
+    pytripgui
 
 Documentation
 =============
