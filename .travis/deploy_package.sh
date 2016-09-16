@@ -43,7 +43,7 @@ write_pypirc
 set -x
 
 # install necessary tools
-pip install -U wheel twine
+sudo pip install -U wheel twine
 
 # makes wheel
 python setup.py bdist_wheel
