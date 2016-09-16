@@ -18,6 +18,9 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
 #sudo apt-get install -y libblas-dev liblapack-dev gfortran python-wxgtk2.8 python-tk libfreetype6-dev libwxgtk2.8-dev libwxgtk-media2.8-dev libwxgtk-media2.8-0 libwxgtk-media3.0-0  libwxgtk2.8-0 make gcc libgtkgl2.0-dev libgstreamer* libwebkit-dev pkg-config freeglut3-dev
 #pip install -U --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix==3.0.3.dev2487+3b86464
 
+sudo apt-get -qq update
+sudo apt-get install -y python-numpy python-scipy python-matplotlib python-tk python-wxgtk2.8
+
 sudo pip install --upgrade pip setuptools wheel
 
 sudo pip install -r requirements.txt
