@@ -148,6 +148,9 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
+    install_requires=[
+        'matplotlib', 'numpy', 'pydicom', 'scipy'
+    ],
     entry_points={
         'console_scripts': [
             'pytripgui=pytripgui.main:start',

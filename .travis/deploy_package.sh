@@ -8,6 +8,7 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
                 # exit with a non-zero status, or zero if all commands in the
                 # pipeline exit successfully.
 
+# name of pypi repo to be used
 PYPIREPO=$1
 
 write_pypirc() {
@@ -41,10 +42,18 @@ set +x
 write_pypirc
 set -x
 
-# make bdist universal package
-pip install wheel
+# install necessary tools
+sudo pip install -U wheel twine
+
+# makes wheel
 python setup.py bdist_wheel
 
-# upload the package to pypi repository
-pip install twine
-twine upload -r $PYPIREPO dist/*
+# makes source
+python setup.py sdist
+
+ls -al dist
+
+# upload only if tag present
+if [[ $TRAVIS_TAG != "" ]]; then
+    twine upload -r $PYPIREPO dist/*
+fi

@@ -16,8 +16,11 @@
 """
 import wx
 import copy
-import numpy as np
 import sys
+import json
+import time
+import gc
+import threading
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
     from wx.lib.pubsub import setuparg1
@@ -29,6 +32,7 @@ else:
         from wx.lib.pubsub import pub
 
 
+import numpy as np
 from util import *
 from pytrip import dicomhelper
 from pytrip.error import *
@@ -37,15 +41,20 @@ from pytrip.vdx import VdxCube
 from pytrip.dos import DosCube
 from pytrip.let import LETCube
 from pytrip.ctimage import *
-import time
 from rbehandler import *
-import json
 from dose import *
 from tripexecparser import *
-import threading
 import pytrip.tripexecuter as pte
-import gc
+import pytrip.tripexecuter.tripexecuter as pte_te
+import pytrip.tripexecuter.voi as pte_v
+import pytrip.tripexecuter.tripvoi as pte_tv
+import pytrip.tripexecuter.field as pte_f
+import pytrip.tripexecuter.fieldcollection as pte_fc
+import pytrip.tripexecuter.voicollection as pte_vc
+import pytrip.tripexecuter.tripplan as pte_tp
+import pytrip.tripexecuter.tripplancollection as pte_tpc
 from closeobj import *
+
 notify = 1
 def set_notify(a):
     global notify
@@ -194,7 +203,7 @@ class PytripData:
     def get_vois(self):
         return self.structures
         
-class TripExecuter(pte.TripExecuter):
+class TripExecuter(pte_te.TripExecuter):
     def __init__(self,images,rbe):
         super(TripExecuter,self).__init__(images,rbe)
     def log(self,txt):
@@ -204,7 +213,7 @@ class TripExecuter(pte.TripExecuter):
     def finish(self):
         for l in self.listeners:
             wx.CallAfter(l.finish)
-class Voi(pte.Voi):
+class Voi(pte_v.Voi):
     def __init__(self,name,voi):
         self.icon = None
         super(Voi,self).__init__(name,voi)
@@ -217,7 +226,7 @@ class Voi(pte.Voi):
         super(Voi,self).toogle_selected()
         pub.sendMessage("voi.selection_changed",self)
     
-class TripVoi(pte.TripVoi):
+class TripVoi(pte_tv.TripVoi):
     def __init__(self,voi):
         super(TripVoi,self).__init__(voi)
     def toogle_plan_selected(self,plan):
@@ -235,7 +244,7 @@ class TripVoi(pte.TripVoi):
         super(TripVoi,self).set_dose(dose)
         pub.sendMessage('plan.voi.dose.changed',self)
 
-class Field(pte.Field):
+class Field(pte_f.Field):
     def __init__(self,name):
         self.selected = False
         super(Field,self).__init__(name)
@@ -257,7 +266,7 @@ class Field(pte.Field):
         super(Field,self).set_couch(angle)
         pub.sendMessage('plan.field.couch',self)    
         
-class FieldCollection(pte.FieldCollection):
+class FieldCollection(pte_fc.FieldCollection):
     def __init__(self,plan):
         super(FieldCollection,self).__init__(plan)
     def load(self,data):
@@ -275,7 +284,7 @@ class FieldCollection(pte.FieldCollection):
         super(FieldCollection,self).remove_field(field)
         pub.sendMessage('plan.field.deleted',{"plan":self.plan,"field":field})
     
-class VoiCollection(pte.VoiCollection):
+class VoiCollection(pte_vc.VoiCollection):
     def __init__(self,parent):
         super(VoiCollection,self).__init__(parent)
     def load(self,data,structures):
@@ -299,7 +308,7 @@ class VoiCollection(pte.VoiCollection):
                 pub.sendMessage("plan.voi.remove",{"plan":self.parent,"voi":voi})
     def destroy(self):
         pass
-class TripPlan(pte.TripPlan):
+class TripPlan(pte_tp.TripPlan):
     def __init__(self,name="",comment=""):
         super(TripPlan,self).__init__(name,comment)
         self.fields = FieldCollection(self)
@@ -323,7 +332,6 @@ class TripPlan(pte.TripPlan):
     def remove_let(self,let):
         super(TripPlan,self).remove_let(path)
         pub.sendMessage("plan.let.removed",{"plan":self,"let":let})
-    
 
     def remove_dose(self,dos):
         super(TripPlan,self).remove_dose(dos)
@@ -337,8 +345,7 @@ class TripPlan(pte.TripPlan):
             dos = DoseCube(dos,t)
         super(TripPlan,self).add_dose(dos)
         wx.CallAfter(pub.sendMessage,"plan.dose.added",{"plan":self,"dose":dos})
-        
-        
+
     def set_active_dose(self,dos):
         super(TripPlan,self).set_active_dose(dos)
         wx.CallAfter(pub.sendMessage,"plan.dose.active_changed",{"plan":self,"dose":dos})    
@@ -349,7 +356,7 @@ class TripPlan(pte.TripPlan):
             return True
         return False
 
-class TripPlanCollection(pte.TripPlanCollection):
+class TripPlanCollection(pte_tpc.TripPlanCollection):
     def __init__(self):
         super(TripPlanCollection,self).__init__()
     def load(self,data,structures):
@@ -368,10 +375,9 @@ class TripPlanCollection(pte.TripPlanCollection):
         super(TripPlanCollection,self).set_active_plan(plan)
         if get_notify():
             pub.sendMessage("plan.active.changed",plan)
+
     def delete_plan(self,plan):
         new_plan = super(TripPlanCollection,self).delete_plan(plan)
         if not new_plan is None:
             pub.sendMessage("plan.active.changed",new_plan)
         pub.sendMessage("plan.deleted",plan)
-
-    

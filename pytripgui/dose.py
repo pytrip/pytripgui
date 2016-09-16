@@ -15,6 +15,7 @@
     along with libdedx.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
+
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
 else:
@@ -24,11 +25,13 @@ else:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
-import pytrip.tripexecuter as pte
-class DoseCube(pte.DoseCube):
-    def __init__(self,dosecube,type):
-        super(DoseCube,self).__init__(dosecube,type)
-    def set_dose(self,value):
-        super(DoseCube,self).set_dose(value)
-        pub.sendMessage("plan.dose.target_dose_changed",self)
+import pytrip.tripexecuter.dosecube as dc
 
+
+class DoseCube(dc.DoseCube):
+    def __init__(self, dosecube, type):
+        super(DoseCube, self).__init__(dosecube, type)
+
+    def set_dose(self, value):
+        super(DoseCube, self).set_dose(value)
+        pub.sendMessage("plan.dose.target_dose_changed", self)

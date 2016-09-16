@@ -14,9 +14,14 @@
     You should have received a copy of the GNU General Public License
     along with libdedx.  If not, see <http://www.gnu.org/licenses/>
 """
-from util import *
-import pytrip.tripexecuter as pt
+import os
+import csv
 import sys
+
+import pytrip.tripexecuter.rbehandler as rh
+
+from util import *
+
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
 else:
@@ -25,14 +30,13 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
-import os
-import csv
 
-class RBEHandler(pt.RBEHandler):
+
+class RBEHandler(rh.RBEHandler):
     def __init__(self):
-        pub.subscribe(self.on_rbefolder_changed,"datafiles.rbefolder")
-        pub.sendMessage("settings.value.request","datafiles.rbefolder")
-        self.datafile = os.path.join(get_user_directory(),"rbe.dat")
-        
-    def on_rbefolder_changed(self,msg):
+        pub.subscribe(self.on_rbefolder_changed, "datafiles.rbefolder")
+        pub.sendMessage("settings.value.request", "datafiles.rbefolder")
+        self.datafile = os.path.join(get_user_directory(), "rbe.dat")
+
+    def on_rbefolder_changed(self, msg):
         self.rbe_folder = msg.data

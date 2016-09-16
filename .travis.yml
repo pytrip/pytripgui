@@ -1,72 +1,12 @@
-language: python
+# before commiting check this file here: https://lint.travis-ci.org/
+language: generic
 
-cache:
-  directories:
-  - ~/.cache/pip
-  - ~/.pyenv
+env:
+  global:
+    - PYPIUSER=grzanka
+    #  pypi secured password (PYPIPASS variable), you need to update it to your own if you want to use it
+    - secure: "SMZG9NowpZXGR0uNh5FvTRNO/rafNlj5smen8GK77tgYP8AiCjoXxzl5EXhO8WRd/6Zf1vMtSan8p0fif/8LCr7hncZ8SZ/rKNnf1EOKa0Wam7TVxwVaeMnThDyZNOuV5/3/NDEg/ro194Z7kKHGPAaE8GycaGxAmXG8EbCIVw8uYu3DHDstpewWveGusKqPFOUORUHtfEdpINMizY/Ady34BDRRC7UHU67eWGx3wa1g5WXBr34LKQTHY8nzWI6W04z55gQhHWytrJbp947/JvMItSEOd3s09KPv36K4nezbMrpnWmhSxtP9JDhZI2eLO3bjQHWRnoYNBG2DN/6VC0C+eUsZ81Pi17JEUBlyyjfx0iFCbi5ssvjXwDaqbaCFIeoMh+TEiQFjIYBX8GgIg/+b9lWUaxGxTdx/mdE8MJOufX3G3df8eXklil2D89R0SfkHqxunbheBp4POXP2w3b7LbKv4NV5pgPSWx1h8Hv60ODQyEcF658EA23sV7W2SAKc/Pt+WQ9fVuP/1ZWFHZN3ACd03pqHI0HLzrIufLE3aww1dKpiZKL1v7Irvai9RbCugEYYX5BzoBF/DTwYDJuH8OFf1H+nNT8oO+LbnYgkZ7POrKQ+8SAuZRIYg708bh5EmDaiS04D2CaBpRV9rfiQwhvHnWY35c6G2BXbGsgU="
 
-before_cache:
-  - rm -f $HOME/.cache/pip/log/debug.log
-
-matrix:
-    include:
-        - os: linux
-          python: 2.7
-          env: TOXENV=py27
-        - os: linux
-          python: 3.2
-          env: TOXENV=py32 VENVVER="<14.0.0" PIPVER="<8.0.0"
-        - os: linux
-          python: 3.3
-          env: TOXENV=py33
-        - os: linux
-          python: 3.4
-          env: TOXENV=py34
-        - os: linux
-          python: 3.5
-          env: TOXENV=py35
-        - os: linux
-          python: 3.5-dev
-          env: TOXENV=py35
-        - os: linux
-          python: nightly
-          env: TOXENV=py36
-        - os: linux
-          python: 3.4
-          env: TOXENV=docs
-        - os: linux
-          python: 2.7
-          env: TOXENV=pep8
-        - os: linux
-          python: 3.4
-          env: TOXENV=pep8
-        - os: linux
-          python: 3.4
-          env:
-            - TOXENV=packaging
-            - PYPIUSER=grzanka
-            #  pypi secured password (PYPIPASS variable), you need to update it to your own if you want to use it
-            - secure: "SMZG9NowpZXGR0uNh5FvTRNO/rafNlj5smen8GK77tgYP8AiCjoXxzl5EXhO8WRd/6Zf1vMtSan8p0fif/8LCr7hncZ8SZ/rKNnf1EOKa0Wam7TVxwVaeMnThDyZNOuV5/3/NDEg/ro194Z7kKHGPAaE8GycaGxAmXG8EbCIVw8uYu3DHDstpewWveGusKqPFOUORUHtfEdpINMizY/Ady34BDRRC7UHU67eWGx3wa1g5WXBr34LKQTHY8nzWI6W04z55gQhHWytrJbp947/JvMItSEOd3s09KPv36K4nezbMrpnWmhSxtP9JDhZI2eLO3bjQHWRnoYNBG2DN/6VC0C+eUsZ81Pi17JEUBlyyjfx0iFCbi5ssvjXwDaqbaCFIeoMh+TEiQFjIYBX8GgIg/+b9lWUaxGxTdx/mdE8MJOufX3G3df8eXklil2D89R0SfkHqxunbheBp4POXP2w3b7LbKv4NV5pgPSWx1h8Hv60ODQyEcF658EA23sV7W2SAKc/Pt+WQ9fVuP/1ZWFHZN3ACd03pqHI0HLzrIufLE3aww1dKpiZKL1v7Irvai9RbCugEYYX5BzoBF/DTwYDJuH8OFf1H+nNT8oO+LbnYgkZ7POrKQ+8SAuZRIYg708bh5EmDaiS04D2CaBpRV9rfiQwhvHnWY35c6G2BXbGsgU="
-        - os: osx
-          language: generic
-          env: TOXENV=py35
-        - os: osx
-          language: generic
-          env: TOXENV=py34
-        - os: osx
-          language: generic
-          env: TOXENV=py33
-        - os: osx
-          language: generic
-          env: TOXENV=py32 VENVVER="<14.0.0" PIPVER="<8.0.0"
-        - os: osx
-          language: generic
-          env: TOXENV=py27
-#    uncomment and adjust if you want to allow some failures
-#    allow_failures:
-#        - os: osx
-#          language: generic
-#          env: TOXENV=py27
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
@@ -74,23 +14,11 @@ sudo: required
 dist: trusty
 
 before_install:
-  - PYTHON_VERSION="py3"
-  - if [[ $TOXENV == "py27" ]]; then PYTHON_VERSION="py2" ; fi
-  - sudo bash ./install_deps.sh $PYTHON_VERSION
+  - sudo bash ./install_deps.sh
 
 install:
-  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then travis_wait bash ./.travis/install_linux.sh ; fi
-  - if [[ $TRAVIS_OS_NAME == "osx" ]]; then travis_wait 60 bash ./.travis/install_osx.sh ; fi
+  - bash ./.travis/install_linux.sh
 
-# if scipy is used, then installation from pip last longer than 10min, thus we add travis_wait
 script:
-  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then travis_wait tox --notest && tox -- -n 8 ; fi
-  - if [[ $TRAVIS_OS_NAME == "osx" ]]; then travis_wait bash ./.travis/run_osx.sh ; fi
-
-after_success:
-  # deploy to normal if tag is present
-  - if [[ $TRAVIS_TAG != "" ]] && [[ $TOXENV == "packaging" ]]; then bash .travis/deploy_package.sh pypi ; fi
-
-notifications:
-  email:
-    - leszek.grzanka@gmail.com
+  - py.test
+  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then bash .travis/deploy_package.sh pypi; fi
