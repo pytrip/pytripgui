@@ -33,7 +33,7 @@ Start it by calling::
     $ pytripgui
 
 More detailed instruction will available soon. Pytrip GUI currently works only with Python 2.7 on Linux.
-We do not support Windows and Python3.x (yet).
+pytrip GUI do not support Windows and Python3.x (yet).
 
 
 More documentation
