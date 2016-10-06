@@ -3,6 +3,8 @@
 # build Configuration, i.e. Debug, Release, etc.
 configuration: Release
 
+# check also https://github.com/BjornFJohansson/seguid_calculator/blob/master/appveyor.yml
+
 # we are not building Visual Studio project, so default build step is off
 build: off
 
@@ -18,11 +20,13 @@ environment:
       PYTHON_ROOT: "C:\\Python27"
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda"
+      WXP: "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev2567+1fe2585-cp27-cp27m-win32.whl"
 
     - platform: x64
       PYTHON_ROOT: "C:\\Python27-x64"
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda"
+      WXP: "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev2567+1fe2585-cp27-cp27m-win_amd64.whl"
 
 init:
 # add Python interpreter to PATH variable
@@ -56,6 +60,9 @@ install:
   - python -V
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
+# wxPython
+  - pip install --upgrade --trusted-host wxpython.org --pre -vv %WXP%
+  - python -c "import wx; print(wx.__version__)"
 
 test_script:
 # generate versioneer stuff
@@ -70,6 +77,8 @@ test_script:
   - cd ..
 # run tests (normal py.test command results in memory error on appveyor, so we run tests file-by-file)
   - FOR %%I in (tests\test*.py) DO python -m pytest %%I
+# making single exe
+  - pip install pyinstaller
 # deploy package
   - bash appveyor\deploy_package.sh
 
