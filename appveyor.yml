@@ -80,7 +80,7 @@ test_script:
 # deploy package
   - bash appveyor\deploy_package.sh
 # clean build directory
-  - rd /s /q build
+#  - rd /s /q build
 # making single exe
   - pip install pyinstaller
 # TODO
