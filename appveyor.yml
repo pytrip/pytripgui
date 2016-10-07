@@ -77,11 +77,18 @@ test_script:
   - cd ..
 # run tests (normal py.test command results in memory error on appveyor, so we run tests file-by-file)
 #  - FOR %%I in (tests\test*.py) DO python -m pytest %%I
-# making single exe
-  - pip install pyinstaller
 # deploy package
   - bash appveyor\deploy_package.sh
+# clean build directory
+  - rd /s /q build
+# making single exe
+  - pip install pyinstaller
+# TODO
+  - pyinstaller --onefile --windowed pytripgui/main.py
+# TODO
+  - dir dist
 
 # upload artifacts
 artifacts:
   - path: dist\*whl
+  - path: dist\*exe
