@@ -504,7 +504,7 @@ class LeftMenuTree(wx.TreeCtrl):
             data = wx.TreeItemData()
             data.SetData(voi)
             item = self.AppendItem(self.structure_node, voi.get_name(), data=data)
-            img = self.image_list.Add(guihelper.get_empty_bitmap(self.icon_size[0], self.icon_size[1], voi.get_color()))
+            img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0], self.icon_size[1], voi.get_color()))
             voi.set_icon(img)
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
         for plan in self.data.get_plans():
