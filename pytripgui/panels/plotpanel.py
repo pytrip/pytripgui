@@ -260,7 +260,7 @@ class PlotPanel(wx.Panel):
             if standard:
                 menu = self.normal_right_click_menu()
 
-            wx.CallAfter(self.show_menu, menu);
+            wx.CallAfter(self.show_menu, menu)
             if self.canvas.HasCapture():
                 self.canvas.ReleaseMouse()
 
@@ -631,8 +631,7 @@ class PlotPanel(wx.Panel):
         size[0] = size[0] - 5
         pixels = tuple(size)
         self.canvas.SetSize(pixels)
-        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(),
-                                    float(pixels[1]) / self.figure.get_dpi())
+        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(), float(pixels[1]) / self.figure.get_dpi())
         self.Draw()
 
     def Draw(self):

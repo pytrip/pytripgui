@@ -14,16 +14,18 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import os,re
+import os, re
 import data
 from util import *
 
+
 class TripExecParser:
-    def __init__(self,data):
+    def __init__(self, data):
         self.data = data
-    def parse_file(self,path):
+
+    def parse_file(self, path):
         self.folder = os.path.dirname(path)
-        with open(path,"r") as fp:
+        with open(path, "r") as fp:
             data = fp.read()
         data = data.split("\n")
         for line in data:
@@ -36,50 +38,53 @@ class TripExecParser:
             if line.find("opt") is 0:
                 self.load_plan(line)
 
-    def load_ct(self,line):
+    def load_ct(self, line):
         items = line.split("/")
         if len(items) > 1:
             path = items[0].split()[1]
             args = items[1].split()
             if "read" in args:
                 ctx_file = os.path.splitext(path)[0] + ".ctx"
-                path = find_path(ctx_file,self.folder)
+                path = find_path(ctx_file, self.folder)
                 if not path is None:
                     self.data.load_from_voxelplan(path)
                     self.plan = data.TripPlan()
                     self.data.get_plans().add_plan(self.plan)
-    def try_set(self,obj,arg,dic):    
+
+    def try_set(self, obj, arg, dic):
         arg = arg.lower()
         func = get_func_from_string(arg)
         if not func is None:
             arguments = get_args_from_string(arg)
-            if hasattr(obj,"set_"+func):
-                getattr(obj,"set_"+func)(*arguments)
+            if hasattr(obj, "set_" + func):
+                getattr(obj, "set_" + func)(*arguments)
             elif func in dic.keys():
-                getattr(obj,dic[func])(*arguments)
-    def load_plan(self,line):
+                getattr(obj, dic[func])(*arguments)
+
+    def load_plan(self, line):
         items = line.split("/")
-        dic = {"dosealgorithm":"set_dose_algorithm","optalgorithm":"set_opt_algorithm","bioalgorithm":"set_bio_algorithm"}
+        dic = {"dosealgorithm": "set_dose_algorithm",
+               "optalgorithm": "set_opt_algorithm",
+               "bioalgorithm": "set_bio_algorithm"}
         if len(items) > 1:
             args = items[1].split()
-            if hasattr(self,"plan"):
+            if hasattr(self, "plan"):
                 for arg in args:
-                    if self.try_set(self.plan,arg,dic) is None:
-                        pass #should set i yourself 
-                        
-    def load_field(self,line):
+                    if self.try_set(self.plan, arg, dic) is None:
+                        pass  #should set i yourself
+
+    def load_field(self, line):
         items = line.split("/")
-        dic = {"raster":"set_rasterstep","proj":"set_projectile","doseext":"set_doseextension","contourext":"set_contourextension"}
+        dic = {"raster": "set_rasterstep",
+               "proj": "set_projectile",
+               "doseext": "set_doseextension",
+               "contourext": "set_contourextension"}
         if len(items) > 1:
             args = items[1].split()
             if "new" in args:
-                if hasattr(self,"plan"):
-                    field = data.Field("Field %s"%(items[0].split()[1]))
+                if hasattr(self, "plan"):
+                    field = data.Field("Field %s" % (items[0].split()[1]))
                     self.plan.add_field(field)
                     for arg in args:
-                        if self.try_set(field,arg,dic) is None:
-                            pass #should set i yourself 
-                        
-                        
-            
-        
+                        if self.try_set(field, arg, dic) is None:
+                            pass  #should set i yourself

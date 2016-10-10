@@ -173,25 +173,18 @@ class PlanDialog(wx.Dialog):
 
     def on_btn_ddd_clicked(self, evt):
         dlg = wx.DirDialog(
-            self,
-            defaultPath=self.txt_ddd.GetValue(),
-            message="Choose folder where ddd files are located")
+            self, defaultPath=self.txt_ddd.GetValue(), message="Choose folder where ddd files are located")
         if dlg.ShowModal() == wx.ID_OK:
             self.txt_ddd.SetValue(dlg.GetPath())
 
     def on_btn_sis_clicked(self, evt):
-        dlg = wx.FileDialog(
-            self,
-            defaultFile=self.txt_sis.GetValue(),
-            message="Choose sis file")
+        dlg = wx.FileDialog(self, defaultFile=self.txt_sis.GetValue(), message="Choose sis file")
         if dlg.ShowModal() == wx.ID_OK:
             self.txt_sis.SetValue(dlg.GetPath())
 
     def on_btn_spc_clicked(self, evt):
         dlg = wx.DirDialog(
-            self,
-            defaultPath=self.txt_spc.GetValue(),
-            message="Choose folder where spc files are located")
+            self, defaultPath=self.txt_spc.GetValue(), message="Choose folder where spc files are located")
         if dlg.ShowModal() == wx.ID_OK:
             self.txt_spc.SetValue(dlg.GetPath())
 

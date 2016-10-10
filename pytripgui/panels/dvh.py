@@ -72,8 +72,7 @@ class LinePlotPanel(wx.Panel):
         size[0] = size[0] - 5
         pixels = tuple(size)
         self.canvas.SetSize(pixels)
-        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(),
-                                    float(pixels[1]) / self.figure.get_dpi())
+        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(), float(pixels[1]) / self.figure.get_dpi())
         self.draw()
 
     def bind(self):
@@ -91,8 +90,8 @@ class LinePlotPanel(wx.Panel):
                 if self.nearest_point["idx"] > 0:
                     self.nearest_point["idx"] -= 1
             elif code in nextkey:
-                data = getattr(self.nearest_point["voi"], self.data_method)(
-                    getattr(self.nearest_point["plan"], self.cube_method)())
+                data = getattr(self.nearest_point["voi"],
+                               self.data_method)(getattr(self.nearest_point["plan"], self.cube_method)())
                 if self.nearest_point["idx"] < np.where(data <= 0)[0][0]:
                     self.nearest_point["idx"] += 1
             self.draw_nearest_text()
@@ -148,8 +147,9 @@ class LinePlotPanel(wx.Panel):
         plan = self.nearest_point["plan"]
         data = getattr(self.nearest_point["voi"], self.data_method)(getattr(plan, self.cube_method)())
         point = [data[idx], idx / 10.0]
-        text = "Vol: " + unicode("%.2f" % (point[0] * 100)) + "%%\n%s: " % self.quantity + unicode(
-            "%.2f" % (point[1])) + "%s" % self.unit
+        text = "Vol: " + unicode("%.2f" %
+                                 (point[0] * 100)) + "%%\n%s: " % self.quantity + unicode("%.2f" %
+                                                                                          (point[1])) + "%s" % self.unit
         if data[idx] < max(data) * 0.20:
             va = 'top'
             y_offset = 0.1
@@ -158,9 +158,15 @@ class LinePlotPanel(wx.Panel):
             y_offset = -0.1
         x_offset = -15
         ha = 'left'
-        self.subplot.annotate(text, xy=(point[1], point[0] * 100), va=va, ha=ha,
-                              xytext=(point[1] + x_offset, (point[0] + y_offset) * 100),
-                              arrowprops=dict(arrowstyle="->", facecolor='black'), fontproperties=font)
+        self.subplot.annotate(
+            text,
+            xy=(point[1], point[0] * 100),
+            va=va,
+            ha=ha,
+            xytext=(point[1] + x_offset, (point[0] + y_offset) * 100),
+            arrowprops=dict(
+                arrowstyle="->", facecolor='black'),
+            fontproperties=font)
 
     def find_nearest_point(self, point):
         g_min = None
@@ -171,7 +177,7 @@ class LinePlotPanel(wx.Panel):
                     n = np.where(data <= 0.0)[0][0]
                     x = np.linspace(0, n / 10, n)
                     y = data[0:n] * 100
-                    dist = (x - point[0]) ** 2 + ((y - point[1])) ** 2
+                    dist = (x - point[0])**2 + ((y - point[1]))**2
                     idx = np.where(dist == min(dist))[0][0]
                     if g_min is None or dist[idx] < g_min:
                         g_min = dist[idx]
@@ -196,9 +202,12 @@ class LinePlotPanel(wx.Panel):
                     if data is None:
                         continue
                     n = np.where(data <= 0.0)[0][0]
-                    self.subplot.plot(np.linspace(0, n / 10, n), data[0:n] * 100,
-                                      label="%s: %s" % (plan.get_name(), voi.get_name()),
-                                      color=(np.array(voi.get_voi().get_color()) / 255.0), linestyle=markertypes[i % 4])
+                    self.subplot.plot(
+                        np.linspace(0, n / 10, n),
+                        data[0:n] * 100,
+                        label="%s: %s" % (plan.get_name(), voi.get_name()),
+                        color=(np.array(voi.get_voi().get_color()) / 255.0),
+                        linestyle=markertypes[i % 4])
             handles, labels = self.subplot.get_legend_handles_labels()
 
         self.subplot.legend(handles[::-1], labels[::-1], fancybox=True, prop={'size': 8})
@@ -249,4 +258,4 @@ class LVHPanel(LinePlotPanel):
         self.set_unit("keV/um")
 
     def get_title(self):
-        return "LVH";
+        return "LVH"

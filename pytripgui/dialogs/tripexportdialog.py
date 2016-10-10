@@ -65,10 +65,7 @@ class TripExportDialog(wx.Dialog):
         self.data = msg.data
 
     def browse_folder(self, evt):
-        dlg = wx.DirDialog(
-            self,
-            defaultPath=self.output_path,
-            message="Choose where the plan should be placed")
+        dlg = wx.DirDialog(self, defaultPath=self.output_path, message="Choose where the plan should be placed")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.output_path = path

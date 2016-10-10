@@ -36,9 +36,7 @@ class MultiDimPanel(HasTraits):
     scene = Instance(MlabSceneModel, ())
 
     # The layout of the panel created by Traits
-    view = View(Item('scene', editor=SceneEditor(), resizable=True,
-                     show_label=False),
-                resizable=True)
+    view = View(Item('scene', editor=SceneEditor(), resizable=True, show_label=False), resizable=True)
 
     def __init__(self, parent):
         HasTraits.__init__(self)
