@@ -1,38 +1,30 @@
 """
-    This file is part of pytripgui.
+    This file is part of PyTRiP.
 
-    pytripgui is free software: you can redistribute it and/or modify
+    pytrip is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    pytripgui is distributed in the hope that it will be useful,
+    pytrip is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
+    along with pytrip.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
 import copy
 import sys
 import json
 import time
 import gc
 import threading
-if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import pub
-    from wx.lib.pubsub import setuparg1
-else:
-    try:
-        from wx.lib.pubsub import Publisher as pub
-    except:
-        from wx.lib.pubsub import setuparg1
-        from wx.lib.pubsub import pub
+
+import wx
 
 import numpy as np
-from util import *
+
 from pytrip import dicomhelper
 from pytrip.error import *
 from pytrip.ctx import CtxCube
@@ -40,9 +32,6 @@ from pytrip.vdx import VdxCube
 from pytrip.dos import DosCube
 from pytrip.let import LETCube
 from pytrip.ctimage import *
-from rbehandler import *
-from dose import *
-from tripexecparser import *
 import pytrip.tripexecuter as pte
 import pytrip.tripexecuter.tripexecuter as pte_te
 import pytrip.tripexecuter.voi as pte_v
@@ -52,7 +41,22 @@ import pytrip.tripexecuter.fieldcollection as pte_fc
 import pytrip.tripexecuter.voicollection as pte_vc
 import pytrip.tripexecuter.tripplan as pte_tp
 import pytrip.tripexecuter.tripplancollection as pte_tpc
-from closeobj import *
+
+from pytripgui.rbehandler import *
+from pytripgui.util import *
+from pytripgui.dose import *
+from pytripgui.tripexecparser import *
+from pytripgui.closeobj import *
+
+if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import pub
+    from wx.lib.pubsub import setuparg1
+else:
+    try:
+        from wx.lib.pubsub import Publisher as pub
+    except:
+        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import pub
 
 notify = 1
 

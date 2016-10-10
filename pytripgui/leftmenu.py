@@ -1,24 +1,27 @@
 """
-    This file is part of pytripgui.
+    This file is part of PyTRiP.
 
-    pytripgui is free software: you can redistribute it and/or modify
+    pytrip is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    pytripgui is distributed in the hope that it will be useful,
+    pytrip is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
+    along with pytrip.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
-from data import *
-from util import *
-import guihelper
 import sys
+
+import wx
+
+from pytripgui.data import *
+from pytripgui.util import *
+import pytripgui.guihelper
+
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
     from wx.lib.pubsub import setuparg1
@@ -88,12 +91,13 @@ class LeftMenuTree(wx.TreeCtrl):
                                           "type": "check",
                                           "value": "is_oar",
                                           "callback": self.plan_toogle_oar}, {"text": "Move Up",
-                                                                              "callback": self.plan_up_voi},
-                                         {"text": "Move Down",
-                                          "callback": self.plan_down_voi}, {"text": "Delete",
-                                                                            "callback": self.plan_delete_voi},
-                                         {"text": "Properties",
-                                          "callback": self.tripvoi_properties}],
+                                                                              "callback":
+                                                                              self.plan_up_voi}, {"text": "Move Down",
+                                                                                                  "callback":
+                                                                                                  self.plan_down_voi},
+                                         {"text": "Delete",
+                                          "callback": self.plan_delete_voi}, {"text": "Properties",
+                                                                              "callback": self.tripvoi_properties}],
                              "MainVoi": [{"text": "Select",
                                           "type": "check",
                                           "value": "is_selected",
