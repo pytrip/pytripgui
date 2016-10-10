@@ -15,7 +15,6 @@
     along with pytrip.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys, traceback
-import threading
 import os
 
 import wx, wx.lib.dialogs
