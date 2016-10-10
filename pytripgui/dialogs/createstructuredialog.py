@@ -28,9 +28,8 @@ class CreateStructureDialog(wx.Dialog):
         self.parent = parent
         self.notebook = XRCCTRL(self, "notebook")
         voxelplan_image = self.parent.data.get_images().get_voxelplan()
-        center = [voxelplan_image.dimx / 2.0 * voxelplan_image.pixel_size,
-                  voxelplan_image.dimy / 2.0 * voxelplan_image.pixel_size,
-                  voxelplan_image.dimz / 2.0 * voxelplan_image.slice_distance]
+        center = [voxelplan_image.dimx / 2.0 * voxelplan_image.pixel_size, voxelplan_image.dimy / 2.0 *
+                  voxelplan_image.pixel_size, voxelplan_image.dimz / 2.0 * voxelplan_image.slice_distance]
 
         self.txt_name = XRCCTRL(self, "txt_name")
         data = self.parent.data

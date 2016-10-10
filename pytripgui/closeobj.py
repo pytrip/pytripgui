@@ -14,11 +14,15 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
+
+
 class CloseObj:
     def __init__(self):
         self.action = None
-    def set_action(self,action):
+
+    def set_action(self, action):
         self.action = action
+
     def close(self):
         if not self.action is None:
             self.action()

@@ -14,8 +14,10 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-from util import *
 import sys
+
+from pytripgui.util import *
+
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
 else:
@@ -26,45 +28,52 @@ else:
         from wx.lib.pubsub import pub
 
 import json
+
+
 class SettingsManager:
     def __init__(self):
-        self.path = os.path.join(get_user_directory(),"preferences.dat")
+        self.path = os.path.join(get_user_directory(), "preferences.dat")
         self.values = {}
         self.template = {}
-        pub.subscribe(self.get_requested_value,"settings.value.request")
-        pub.subscribe(self.get_requested_values,"settings.values.request")
-        pub.subscribe(self.value_updated,"settings.value.updated")
-    def value_updated(self,msg):
-        for key,value in msg.data.iteritems():
-            self.set_value(key,value)
-            pub.sendMessage(key,value)
-    def get_requested_value(self,msg):
+        pub.subscribe(self.get_requested_value, "settings.value.request")
+        pub.subscribe(self.get_requested_values, "settings.values.request")
+        pub.subscribe(self.value_updated, "settings.value.updated")
+
+    def value_updated(self, msg):
+        for key, value in msg.data.iteritems():
+            self.set_value(key, value)
+            pub.sendMessage(key, value)
+
+    def get_requested_value(self, msg):
         query = msg.data
         value = self.get_value(query)
-        pub.sendMessage(msg.data,value)
-    def get_requested_values(self,msg):
+        pub.sendMessage(msg.data, value)
+
+    def get_requested_values(self, msg):
         query = msg.data
         values = self.get_value(query)
-        for key,value in values.iteritems():
-            pub.sendMessage(msg.data + "." + key,value)
-    
-    def load_settings(self,path=""):
+        for key, value in values.iteritems():
+            pub.sendMessage(msg.data + "." + key, value)
+
+    def load_settings(self, path=""):
         if path == "":
             path = self.path
         if os.path.exists(path):
-            with open(path,mode='r') as settings:
+            with open(path, mode='r') as settings:
                 try:
                     self.values = json.load(settings)
                 except ValueError:
                     self.values = {}
         else:
             self.values = {}
-    def save_settings(self,path=""):
+
+    def save_settings(self, path=""):
         if path == "":
             path = self.path
-        with open(path,mode='w+') as set_file:
-            json.dump(self.values,set_file,sort_keys=True,indent=4)
-    def get_value(self,query):
+        with open(path, mode='w+') as set_file:
+            json.dump(self.values, set_file, sort_keys=True, indent=4)
+
+    def get_value(self, query):
         q = query.split(".")
         temp = self.values
         for key in q:
@@ -73,18 +82,19 @@ class SettingsManager:
             except KeyError:
                 return None
         return temp
-    def load_template(self,template):
+
+    def load_template(self, template):
         self.template = template
         save = False
         for group in template:
             for item in group:
                 if self.get_value(item["callback"]) is None:
-                    self.set_value(item["callback"],item["default"])
+                    self.set_value(item["callback"], item["default"])
                     save = True
         if save is True:
             self.save_settings()
-        
-    def set_value(self,query,value,save_file=True):
+
+    def set_value(self, query, value, save_file=True):
         q = query.split(".")
         last_key = q.pop()
         temp = self.values
@@ -95,7 +105,3 @@ class SettingsManager:
         temp[last_key] = value
         if save_file is True:
             self.save_settings()
-
-        
-        
-        

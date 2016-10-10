@@ -14,11 +14,8 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-
 import sys, traceback
-import threading
 import os
-import gc
 
 import wx, wx.lib.dialogs
 from wx.xrc import *
@@ -28,11 +25,13 @@ from pytrip.error import *
 from pytripgui.leftmenu import *
 from pytripgui.settings import *
 from pytripgui.plugin import *
+
 from pytripgui.panels.plotpanel import *
 from pytripgui.panels.dvh import *
+
 from pytripgui.tripexecparser import *
-import pytripgui.util
 from pytripgui.data import *
+from pytripgui import util
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
@@ -44,6 +43,7 @@ else:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
+import gc
 
 
 class FileDropTarget(wx.FileDropTarget):
@@ -70,8 +70,8 @@ class MainFrame(wx.Frame):
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        self.leftmenu = LeftMenuTree(self.leftmenu_panel, -1, size=(200, -1),
-                                     style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
+        self.leftmenu = LeftMenuTree(
+            self.leftmenu_panel, -1, size=(200, -1), style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
         sizer.Add(self.leftmenu, 1, wx.EXPAND, 0)
         self.leftmenu_panel.SetSizer(sizer)
         self.data = PytripData()
@@ -101,9 +101,14 @@ class MainFrame(wx.Frame):
         self.statusbar.SetStatusText("", 2)
 
     def load_dialog(self, msg):
-        dialogs = {"field": "FieldDialog", "tripplan": "PlanDialog", "tripvoi": "TripVoiDialog",
-                   "dose": "DoseDialog", "triplog": "TripLogDialog", "wait": "ProgressDialog",
-                   "tripexport": "TripExportDialog", "tripcubeexport": "TripExportCubeDialog"}
+        dialogs = {"field": "FieldDialog",
+                   "tripplan": "PlanDialog",
+                   "tripvoi": "TripVoiDialog",
+                   "dose": "DoseDialog",
+                   "triplog": "TripLogDialog",
+                   "wait": "ProgressDialog",
+                   "tripexport": "TripExportDialog",
+                   "tripcubeexport": "TripExportCubeDialog"}
         panels = {"dvh": DVHPanel, "lvh": LVHPanel}
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
@@ -208,16 +213,12 @@ class MainFrame(wx.Frame):
     def view_licence(self, evt):
         with open(os.path.join(util.get_main_dir(), "LICENSE"), "rU") as fp:
             msg = fp.read()
-        dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
-                                                   "PyTRiP License")
+        dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiP License")
         dlg.ShowModal()
         dlg.Destroy()
 
     def load(self, evt):
-        dlg = wx.FileDialog(
-            self,
-            wildcard="PyTRiP project files (*.pyt)|*.pyt",
-            message="Choose PyTRiP project file")
+        dlg = wx.FileDialog(self, wildcard="PyTRiP project files (*.pyt)|*.pyt", message="Choose PyTRiP project file")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.load_pyt(path)
@@ -235,10 +236,7 @@ class MainFrame(wx.Frame):
 
     def saveas(self, evt):
         dlg = wx.FileDialog(
-            self,
-            wildcard="PyTRiP project files (*.pyt)|*.pyt",
-            message="Save Project",
-            style=wx.FD_SAVE)
+            self, wildcard="PyTRiP project files (*.pyt)|*.pyt", message="Save Project", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.savepath = os.path.splitext(path)[0] + ".pyt"
@@ -273,10 +271,7 @@ class MainFrame(wx.Frame):
 
     def save_as_picture(self, evt):
         page = self.main_notebook.GetCurrentPage()
-        dlg = wx.FileDialog(
-            self,
-            message="Save Picture",
-            style=wx.FD_SAVE)
+        dlg = wx.FileDialog(self, message="Save Picture", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             ext = os.path.splitext(path)[1]
@@ -327,9 +322,7 @@ class MainFrame(wx.Frame):
 
     def open_patient_load_dialog(self, evt):
         dlg = wx.DirDialog(
-            self,
-            defaultPath=self.dicom_path,
-            message="Choose the folder where the dicom files are stored")
+            self, defaultPath=self.dicom_path, message="Choose the folder where the dicom files are stored")
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()

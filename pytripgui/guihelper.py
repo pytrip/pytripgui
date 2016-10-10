@@ -14,14 +14,16 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
 import numpy as np
 
-def get_empty_bitmap(width=32,height=32,color=[0,0,0] ):
+import wx
+
+
+def get_empty_bitmap(width=32, height=32, color=[0, 0, 0]):
     if len(color) is 0:
-        color = [0,0,0]
-    data = np.zeros((width,height,3),'uint8')
-    data[:,:,] = color
-    image = wx.EmptyImage(width,height)
+        color = [0, 0, 0]
+    data = np.zeros((width, height, 3), 'uint8')
+    data[:, :, ] = color
+    image = wx.EmptyImage(width, height)
     image.SetData(data.tostring())
     return image.ConvertToBitmap()

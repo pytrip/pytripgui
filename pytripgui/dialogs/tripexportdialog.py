@@ -14,11 +14,11 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
+import os, sys
+
 import wx
-import sys
 
 from pytrip.error import *
-import os, sys
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
@@ -65,10 +65,7 @@ class TripExportDialog(wx.Dialog):
         self.data = msg.data
 
     def browse_folder(self, evt):
-        dlg = wx.DirDialog(
-            self,
-            defaultPath=self.output_path,
-            message="Choose where the plan should be placed")
+        dlg = wx.DirDialog(self, defaultPath=self.output_path, message="Choose where the plan should be placed")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.output_path = path

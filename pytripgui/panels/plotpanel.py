@@ -14,21 +14,12 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
 import sys
 import pdb
 import threading
 import time
 
-if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import pub
-    from wx.lib.pubsub import setuparg1
-else:
-    try:
-        from wx.lib.pubsub import Publisher as pub
-    except:
-        from wx.lib.pubsub import setuparg1
-        from wx.lib.pubsub import pub
+import wx
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
 from matplotlib.figure import Figure
@@ -40,6 +31,16 @@ import numpy as np
 
 from pytripgui.guiutil import PlotUtil
 from pytripgui.util import *
+
+if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import pub
+    from wx.lib.pubsub import setuparg1
+else:
+    try:
+        from wx.lib.pubsub import Publisher as pub
+    except:
+        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import pub
 
 
 def cmap_discretize(cmap, N):
@@ -260,7 +261,7 @@ class PlotPanel(wx.Panel):
             if standard:
                 menu = self.normal_right_click_menu()
 
-            wx.CallAfter(self.show_menu, menu);
+            wx.CallAfter(self.show_menu, menu)
             if self.canvas.HasCapture():
                 self.canvas.ReleaseMouse()
 
@@ -631,8 +632,7 @@ class PlotPanel(wx.Panel):
         size[0] = size[0] - 5
         pixels = tuple(size)
         self.canvas.SetSize(pixels)
-        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(),
-                                    float(pixels[1]) / self.figure.get_dpi())
+        self.figure.set_size_inches(float(pixels[0]) / self.figure.get_dpi(), float(pixels[1]) / self.figure.get_dpi())
         self.Draw()
 
     def Draw(self):

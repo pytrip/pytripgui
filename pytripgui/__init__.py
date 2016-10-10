@@ -14,7 +14,6 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-# __path__ = ["panels","dialogs"]
 __all__ = ['util']
 from pytripgui.main import start, MainFrame
 import pytripgui.dialogs

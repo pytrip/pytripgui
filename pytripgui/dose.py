@@ -16,6 +16,8 @@
 """
 import sys
 
+import pytrip.tripexecuter.dosecube as dc
+
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
 else:
@@ -24,8 +26,6 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
-
-import pytrip.tripexecuter.dosecube as dc
 
 
 class DoseCube(dc.DoseCube):

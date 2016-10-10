@@ -14,10 +14,12 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
+
+import os, sys
 import wx
 import pytrip
+
 from wx.xrc import XmlResource, XRCCTRL, XRCID
-import os, sys
 import numpy as np
 
 if getattr(sys, 'frozen', False):
@@ -95,11 +97,7 @@ class TripExportCubeDialog(wx.Dialog):
             self.checkbox_vois.Check(k, False)
 
     def browse_for_file(self):
-        dlg = wx.FileDialog(
-            self,
-            message="Save Picture",
-            defaultDir=self.path,
-            style=wx.FD_SAVE)
+        dlg = wx.FileDialog(self, message="Save Picture", defaultDir=self.path, style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             a = os.path.splitext(path)
@@ -119,7 +117,7 @@ class TripExportCubeDialog(wx.Dialog):
                 if dos is None:
                     dos = voi.get_voi().get_voi_data().get_voi_cube() / 1000 * voi.get_cube_value()
                 else:
-                    dos.cube[dos.cube == 0] = -1;
+                    dos.cube[dos.cube == 0] = -1
                     a = voi.get_voi().get_voi_data().get_voi_cube() / 1000 * voi.get_cube_value()
                     dos.cube[dos.cube == -1] = a.cube[dos.cube == -1]
 

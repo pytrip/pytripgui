@@ -14,21 +14,24 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
-from wx.lib.pubsub import Publisher as pub
-from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
-from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d import Axes3D
+
 import numpy as np
 import threading
 
+import wx
+from wx.lib.pubsub import Publisher as pub
+
+from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
+from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import Axes3D
+
 from numpy import ogrid, sin
+
 from traits.api import HasTraits, Instance
 from traitsui.api import View, Item
 
 from mayavi.sources.api import ArraySource
 from mayavi.modules.api import IsoSurface
-
 from mayavi.core.ui.api import SceneEditor, MlabSceneModel
 
 
@@ -36,9 +39,7 @@ class MultiDimPanel(HasTraits):
     scene = Instance(MlabSceneModel, ())
 
     # The layout of the panel created by Traits
-    view = View(Item('scene', editor=SceneEditor(), resizable=True,
-                     show_label=False),
-                resizable=True)
+    view = View(Item('scene', editor=SceneEditor(), resizable=True, show_label=False), resizable=True)
 
     def __init__(self, parent):
         HasTraits.__init__(self)

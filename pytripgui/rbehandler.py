@@ -15,12 +15,11 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import os
-import csv
 import sys
 
 import pytrip.tripexecuter.rbehandler as rh
 
-from util import *
+from pytripgui.util import *
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub

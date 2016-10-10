@@ -95,8 +95,8 @@ class FieldDialog(wx.Dialog):
         self.field.set_gantry(self.txt_gantry.GetValue())
         self.field.set_fwhm(self.txt_fwhm.GetValue())
         if self.check_isocenter.IsChecked():
-            self.field.set_target(
-                self.txt_targetx.GetValue() + "," + self.txt_targety.GetValue() + "," + self.txt_targetz.GetValue())
+            self.field.set_target(self.txt_targetx.GetValue() + "," + self.txt_targety.GetValue() + "," +
+                                  self.txt_targetz.GetValue())
         else:
             self.field.set_target("")
         self.field.set_zsteps(self.txt_zsteps.GetValue())

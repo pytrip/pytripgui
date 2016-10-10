@@ -16,6 +16,7 @@
 """
 import wx
 
+
 class PlotPanel(wx.Panel):
-    def __init__(self,parent):
+    def __init__(self, parent):
         wx.Panel.__init__(self, parent)

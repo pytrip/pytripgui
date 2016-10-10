@@ -14,7 +14,8 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-__all__ = ['tripexportcubedialog','tripexportdialog','createcubedialog','progressdialog','createstructuredialog','dosedialog','fielddialog','plandialog','progressdialog','triplogdialog','tripvoidialog','voidialog']
+__all__ = ['tripexportcubedialog', 'tripexportdialog', 'createcubedialog', 'progressdialog', 'createstructuredialog',
+           'dosedialog', 'fielddialog', 'plandialog', 'progressdialog', 'triplogdialog', 'tripvoidialog', 'voidialog']
 
 import progressdialog
 import createcubedialog
