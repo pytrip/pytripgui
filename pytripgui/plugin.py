@@ -15,6 +15,7 @@
     along with pytrip.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
+import os, imp
 from pytripgui import util
 
 if getattr(sys, 'frozen', False):
@@ -25,8 +26,6 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
-
-import os, imp
 
 
 class PluginManager:

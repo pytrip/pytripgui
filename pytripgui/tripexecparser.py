@@ -15,7 +15,7 @@
     along with pytrip.  If not, see <http://www.gnu.org/licenses/>
 """
 import os, re
-from pytripgui import data
+import pytripgui.data
 from pytripgui.util import *
 
 
@@ -48,7 +48,7 @@ class TripExecParser:
                 path = find_path(ctx_file, self.folder)
                 if not path is None:
                     self.data.load_from_voxelplan(path)
-                    self.plan = data.TripPlan()
+                    self.plan = pytripgui.data.TripPlan()
                     self.data.get_plans().add_plan(self.plan)
 
     def try_set(self, obj, arg, dic):
@@ -83,7 +83,7 @@ class TripExecParser:
             args = items[1].split()
             if "new" in args:
                 if hasattr(self, "plan"):
-                    field = data.Field("Field %s" % (items[0].split()[1]))
+                    field = pytripgui.data.Field("Field %s" % (items[0].split()[1]))
                     self.plan.add_field(field)
                     for arg in args:
                         if self.try_set(field, arg, dic) is None:
