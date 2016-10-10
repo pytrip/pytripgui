@@ -300,7 +300,7 @@ class MainFrame(wx.Frame):
         dlg = wx.FileDialog(
             self,
             defaultFile=self.tripexec_path,
-            wildcard="TRiP Exec File (*.exec)|*.exec|",
+            wildcard="TRiP Exec File (*.exec)|*.exec",
             message="Choose TRiP Exec File")
         if dlg.ShowModal() == wx.ID_OK:
             data = PytripData()
@@ -312,7 +312,7 @@ class MainFrame(wx.Frame):
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
-            wildcard="Voxelplan headerfile (*.hed)|*.hed|",
+            wildcard="Voxelplan headerfile (*.hed)|*.hed",
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
