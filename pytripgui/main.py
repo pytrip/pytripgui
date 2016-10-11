@@ -14,10 +14,13 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import sys, traceback
+import sys
+import traceback
 import os
+import gc
 
-import wx, wx.lib.dialogs
+import wx
+import wx.lib.dialogs
 from wx.xrc import *
 
 from pytrip.error import *
@@ -43,8 +46,6 @@ else:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
-import gc
-
 
 class FileDropTarget(wx.FileDropTarget):
     def __init__(self, obj):
@@ -63,6 +64,9 @@ class MainFrame(wx.Frame):
         self.PostCreate(pre)
 
     def Init(self, res):
+        from pytripgui import __version__ as ptgv
+        from pytrip import __version__ as ptv
+
         self.leftmenu_panel = XRCCTRL(self, "leftmenu_panel")
         self.main_notebook = XRCCTRL(self, "main_notebook")
         self.statusbar = XRCCTRL(self, "statusbar")
@@ -90,6 +94,18 @@ class MainFrame(wx.Frame):
         pub.subscribe(self.load_dialog, "gui")
 
         self.res = XmlResource(util.get_resource_path('panels.xrc'))
+
+        self.disc = XRCCTRL(self, "m_staticText6")
+        self.welcome = XRCCTRL(self, "m_staticText12")
+
+        disclaimer = "THIS PROGRAM AND INFORMATION ARE PROVIDED \"AS IS\" " + \
+                     "WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT " + \
+                     "LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A " + \
+                     "PARTICULAR PURPOSE. THIS CODE IS NOT CERTIFIED FOR RADIATION THERAPY IN ANY WAY " + \
+                     "AND MAY UNDER NO CIRCUMSTANCE BE USED FOR SUCH PURPOSES!\n"
+        self.disc.SetLabel(disclaimer)
+        vstr = "Version: " + ptgv + "\n"
+        self.welcome.SetLabel(vstr)
 
     def statusbar_updated(self, msg):
         self.statusbar.SetStatusText(msg.data["text"], msg.data["number"])
@@ -152,7 +168,7 @@ class MainFrame(wx.Frame):
         self.main_notebook.DeleteAllPages()
         plot = PlotPanel(self.main_notebook)
         plot.Init()
-        self.main_notebook.AddPage(plot, "2d Plot")
+        self.main_notebook.AddPage(plot, "2D Plot")
 
     def on_import_path_change(self, msg):
         data = msg.data
@@ -196,24 +212,29 @@ class MainFrame(wx.Frame):
         pub.sendMessage("gui.lvh.open", None)
 
     def view_about(self, evt):
+        from pytripgui import __version__ as ptgv
+        from pytrip import __version__ as ptv
+
         info = wx.AboutDialogInfo()
-        with open(os.path.join(util.get_main_dir(), "LICENSE"), "rU") as fp:
+        with open(os.path.join(util.get_main_dir(), "../LICENSE.rst"), "rU") as fp:
             licence = fp.read()
-        description = "Bla bla description"
-        info.SetName('PyTRiP')
-        info.SetVersion('0.1')
+        description = "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
+        description += "\nPyTRiP Version:" + ptv
+        info.SetName('PyTRiPGUI')
+        info.SetVersion(ptgv)
         info.SetDescription(description)
-        info.SetCopyright('(C) 2012 - 2013 Aarhus Particle Therapy Group')
-        info.SetWebSite('https://svn.nfit.au.dk/trac/pytrip')
+        info.SetCopyright('(C) 2012 - 2016 Aarhus Particle Therapy Group')
+        info.SetWebSite('https://github.com/pytrip/pytripgui')
         info.SetLicence(licence)
         info.AddDeveloper('Jakob Toftegaard')
         info.AddDeveloper('Niels Bassler')
+        info.AddDeveloper('Leszek Grzanka')
         wx.AboutBox(info)
 
     def view_licence(self, evt):
-        with open(os.path.join(util.get_main_dir(), "LICENSE"), "rU") as fp:
+        with open(os.path.join(util.get_main_dir(), "../LICENSE.rst"), "rU") as fp:
             msg = fp.read()
-        dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiP License")
+        dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiPGUI License")
         dlg.ShowModal()
         dlg.Destroy()
 
