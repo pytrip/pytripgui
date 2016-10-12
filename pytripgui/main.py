@@ -64,8 +64,7 @@ class MainFrame(wx.Frame):
         self.PostCreate(pre)
 
     def Init(self, res):
-        from pytripgui import __version__ as ptgv
-        from pytrip import __version__ as ptv
+        from pytripgui import __version__ as pytripgui_version
 
         self.leftmenu_panel = XRCCTRL(self, "leftmenu_panel")
         self.main_notebook = XRCCTRL(self, "main_notebook")
@@ -108,7 +107,7 @@ class MainFrame(wx.Frame):
                      "PARTICULAR PURPOSE. THIS CODE IS NOT CERTIFIED FOR RADIATION THERAPY IN ANY WAY " + \
                      "AND MAY UNDER NO CIRCUMSTANCE BE USED FOR SUCH PURPOSES!\n"
         self.welcome_disclaimer.SetLabel(disclaimer)
-        vstr = "Version: " + ptgv + "\n"
+        vstr = "Version: " + pytripgui_version + "\n"
         self.welcome_version.SetLabel(vstr)
        
     def statusbar_updated(self, msg):
@@ -216,16 +215,16 @@ class MainFrame(wx.Frame):
         pub.sendMessage("gui.lvh.open", None)
 
     def view_about(self, evt):
-        from pytripgui import __version__ as ptgv
-        from pytrip import __version__ as ptv
+        from pytripgui import __version__ as pytripgui_version
+        from pytrip import __version__ as pytrip_version
 
         info = wx.AboutDialogInfo()
         with open(os.path.join(util.get_main_dir(), "res", "LICENSE.rst"), "rU") as fp:
             licence = fp.read()
         description = "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
-        description += "\nPyTRiP Version:" + ptv
+        description += "\nPyTRiP Version:" + pytrip_version
         info.SetName('PyTRiPGUI')
-        info.SetVersion(ptgv)
+        info.SetVersion(pytripgui_version)
         info.SetDescription(description)
         info.SetCopyright('(C) 2012 - 2016 Aarhus Particle Therapy Group')
         info.SetWebSite('https://github.com/pytrip/pytripgui')
