@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-	<object class="wxDialog" name="FieldDialog" subclass="pytripgui.dialogs.fielddialog.FieldDialog">
+	<object class="wxDialog" name="FieldDialog" subclass="dialogs.fielddialog.FieldDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Field</title>
 		<centered>1</centered>
@@ -289,7 +289,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="PlanDialog" subclass="pytripgui.dialogs.plandialog.PlanDialog">
+	<object class="wxDialog" name="PlanDialog" subclass="dialogs.plandialog.PlanDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Plan</title>
 		<centered>1</centered>
@@ -386,7 +386,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>TRiP</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel1">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -611,7 +611,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>Optimization</label>
-						<selected>1</selected>
+						<selected>0</selected>
 						<object class="wxPanel" name="m_panel4">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -621,7 +621,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="label">
-										<label>Setup Optimization algorithms</label>
+										<label>Setup optimization algorithms</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -746,9 +746,9 @@
 											<object class="wxChoice" name="drop_dose_alg">
 												<selection>0</selection>
 												<content>
-													<item>classic</item>
-													<item>allpoints</item>
-													<item>multiplescatter</item>
+													<item>Classic</item>
+													<item>All Points</item>
+													<item>Multiplescatter</item>
 												</content>
 											</object>
 										</object>
@@ -824,7 +824,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText44">
-												<label>Pick DDD files</label>
+												<label>Choose DDD directory</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -856,7 +856,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText46">
-												<label>Pick SPC files</label>
+												<label>Choose SPC directory</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -888,7 +888,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText75">
-												<label>Pick SIS file (Leave empty for dummy file)</label>
+												<label>Choose SIS file (leave empty for dummy file)</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -1009,7 +1009,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripVoiDialog" subclass="pytripgui.dialogs.tripvoidialog.TripVoiDialog">
+	<object class="wxDialog" name="TripVoiDialog" subclass="dialogs.tripvoidialog.TripVoiDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Voi</title>
 		<centered>1</centered>
@@ -1285,7 +1285,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="DoseDialog" subclass="pytripgui.dialogs.dosedialog.DoseDialog">
+	<object class="wxDialog" name="DoseDialog" subclass="dialogs.dosedialog.DoseDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>DoseDialog</title>
 		<centered>1</centered>
@@ -1350,7 +1350,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripLogDialog" subclass="pytripgui.dialogs.triplogdialog.TripLogDialog">
+	<object class="wxDialog" name="TripLogDialog" subclass="dialogs.triplogdialog.TripLogDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Trip Log</title>
 		<centered>1</centered>
@@ -1395,7 +1395,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="CreateCubeDialog" subclass="pytripgui.dialogs.createcubedialog.CreateCubeDialog">
+	<object class="wxDialog" name="CreateCubeDialog" subclass="dialogs.createcubedialog.CreateCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Create Cube</title>
 		<centered>1</centered>
@@ -1568,7 +1568,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="CreateStructureDialog" subclass="pytripgui.dialogs.createstructuredialog.CreateStructureDialog">
+	<object class="wxDialog" name="CreateStructureDialog" subclass="dialogs.createstructuredialog.CreateStructureDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Create Structure</title>
 		<centered>1</centered>
@@ -1923,7 +1923,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="ProgressDialog" subclass="pytripgui.dialogs.progressdialog.ProgressDialog">
+	<object class="wxDialog" name="ProgressDialog" subclass="dialogs.progressdialog.ProgressDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title></title>
 		<centered>1</centered>
@@ -1934,13 +1934,13 @@
 				<flag>wxALL</flag>
 				<border>50</border>
 				<object class="wxStaticText" name="m_staticText64">
-					<label>Wait while the choosen action is performed</label>
+					<label>Please wait while the choosen action is performed</label>
 					<wrap>-1</wrap>
 				</object>
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripExportDialog" subclass="pytripgui.dialogs.tripexportdialog.TripExportDialog">
+	<object class="wxDialog" name="TripExportDialog" subclass="dialogs.tripexportdialog.TripExportDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Export Voxelplan</title>
 		<centered>1</centered>
@@ -2023,7 +2023,6 @@
 				<border>5</border>
 				<object class="wxStaticText" name="label_folder">
 					<font>
-						<family>default</family>
 						<style>italic</style>
 						<weight>normal</weight>
 						<underlined>0</underlined>
@@ -2060,7 +2059,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripExportCubeDialog" subclass="pytripgui.dialogs.tripexportcubedialog.TripExportCubeDialog">
+	<object class="wxDialog" name="TripExportCubeDialog" subclass="dialogs.tripexportcubedialog.TripExportCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Export Cube</title>
 		<centered>1</centered>
