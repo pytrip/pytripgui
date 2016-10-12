@@ -95,18 +95,22 @@ class MainFrame(wx.Frame):
 
         self.res = XmlResource(util.get_resource_path('panels.xrc'))
 
-        self.disc = XRCCTRL(self, "m_staticText6")
-        self.welcome = XRCCTRL(self, "m_staticText12")
+        self.welcome_title = XRCCTRL(self, "m_staticText8")
+        self.welcome_version = XRCCTRL(self, "m_staticText12")
+        self.welcome_intro = XRCCTRL(self, "m_staticText11")
+        self.welcome_disclaimer = XRCCTRL(self, "m_staticText6")
 
+        self.welcome_title.SetLabel("Welcome to PyTRiPGUI")
+        self.welcome_intro.SetLabel("")
         disclaimer = "THIS PROGRAM AND INFORMATION ARE PROVIDED \"AS IS\" " + \
                      "WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT " + \
                      "LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A " + \
                      "PARTICULAR PURPOSE. THIS CODE IS NOT CERTIFIED FOR RADIATION THERAPY IN ANY WAY " + \
                      "AND MAY UNDER NO CIRCUMSTANCE BE USED FOR SUCH PURPOSES!\n"
-        self.disc.SetLabel(disclaimer)
+        self.welcome_disclaimer.SetLabel(disclaimer)
         vstr = "Version: " + ptgv + "\n"
-        self.welcome.SetLabel(vstr)
-
+        self.welcome_version.SetLabel(vstr)
+       
     def statusbar_updated(self, msg):
         self.statusbar.SetStatusText(msg.data["text"], msg.data["number"])
 
@@ -216,7 +220,7 @@ class MainFrame(wx.Frame):
         from pytrip import __version__ as ptv
 
         info = wx.AboutDialogInfo()
-        with open(os.path.join(util.get_main_dir(), "../LICENSE.rst"), "rU") as fp:
+        with open(os.path.join(util.get_main_dir(), "res/LICENSE.rst"), "rU") as fp:
             licence = fp.read()
         description = "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
         description += "\nPyTRiP Version:" + ptv
@@ -232,7 +236,7 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def view_licence(self, evt):
-        with open(os.path.join(util.get_main_dir(), "../LICENSE.rst"), "rU") as fp:
+        with open(os.path.join(util.get_main_dir(), "res/LICENSE.rst"), "rU") as fp:
             msg = fp.read()
         dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiPGUI License")
         dlg.ShowModal()
