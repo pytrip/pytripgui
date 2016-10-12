@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
-	<object class="wxDialog" name="FieldDialog" subclass="dialogs.fielddialog.FieldDialog">
+	<object class="wxDialog" name="FieldDialog" subclass="pytripgui.dialogs.fielddialog.FieldDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Field</title>
 		<centered>1</centered>
@@ -289,7 +289,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="PlanDialog" subclass="dialogs.plandialog.PlanDialog">
+	<object class="wxDialog" name="PlanDialog" subclass="pytripgui.dialogs.plandialog.PlanDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Plan</title>
 		<centered>1</centered>
@@ -1009,7 +1009,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripVoiDialog" subclass="dialogs.tripvoidialog.TripVoiDialog">
+	<object class="wxDialog" name="TripVoiDialog" subclass="pytripgui.dialogs.tripvoidialog.TripVoiDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Voi</title>
 		<centered>1</centered>
@@ -1285,7 +1285,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="DoseDialog" subclass="dialogs.dosedialog.DoseDialog">
+	<object class="wxDialog" name="DoseDialog" subclass="pytripgui.dialogs.dosedialog.DoseDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>DoseDialog</title>
 		<centered>1</centered>
@@ -1350,7 +1350,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripLogDialog" subclass="dialogs.triplogdialog.TripLogDialog">
+	<object class="wxDialog" name="TripLogDialog" subclass="pytripgui.dialogs.triplogdialog.TripLogDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Trip Log</title>
 		<centered>1</centered>
@@ -1395,7 +1395,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="CreateCubeDialog" subclass="dialogs.createcubedialog.CreateCubeDialog">
+	<object class="wxDialog" name="CreateCubeDialog" subclass="pytripgui.dialogs.createcubedialog.CreateCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Create Cube</title>
 		<centered>1</centered>
@@ -1568,7 +1568,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="CreateStructureDialog" subclass="dialogs.createstructuredialog.CreateStructureDialog">
+	<object class="wxDialog" name="CreateStructureDialog" subclass="pytripgui.dialogs.createstructuredialog.CreateStructureDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Create Structure</title>
 		<centered>1</centered>
@@ -1923,7 +1923,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="ProgressDialog" subclass="dialogs.progressdialog.ProgressDialog">
+	<object class="wxDialog" name="ProgressDialog" subclass="pytripgui.dialogs.progressdialog.ProgressDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title></title>
 		<centered>1</centered>
@@ -1940,7 +1940,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripExportDialog" subclass="dialogs.tripexportdialog.TripExportDialog">
+	<object class="wxDialog" name="TripExportDialog" subclass="pytripgui.dialogs.tripexportdialog.TripExportDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Export Voxelplan</title>
 		<centered>1</centered>
@@ -2059,7 +2059,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripExportCubeDialog" subclass="dialogs.tripexportcubedialog.TripExportCubeDialog">
+	<object class="wxDialog" name="TripExportCubeDialog" subclass="pytripgui.dialogs.tripexportcubedialog.TripExportCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>Export Cube</title>
 		<centered>1</centered>

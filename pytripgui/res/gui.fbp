@@ -46,7 +46,7 @@
             <property name="pos"></property>
             <property name="size">900,600</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
-            <property name="subclass">main.MainFrame; </property>
+            <property name="subclass">pytripgui.main.MainFrame; </property>
             <property name="title">PyTRiPGUI</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
