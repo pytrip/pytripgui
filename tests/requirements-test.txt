@@ -1,4 +1,4 @@
-versioneer
+versioneer<0.18
 pytest
 pytest-capturelog
 pytest-timeout
