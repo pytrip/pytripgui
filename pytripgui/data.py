@@ -164,7 +164,7 @@ class PytripData:
 
         self.structures = VoiCollection(self)
         if dicom.has_key('rtss'):
-            structures = VdxCube("", c)
+            structures = VdxCube(c)
             structures.read_dicom(dicom)
             for voi in structures.vois:
                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
@@ -206,7 +206,7 @@ class PytripData:
             raise InputError("No Images")
         self.structures = VoiCollection(self)
         if os.path.exists(clean_path + ".vdx"):
-            structures = VdxCube("", c)
+            structures = VdxCube(c)
             structures.read(clean_path + ".vdx")
             for voi in structures.vois:
                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
