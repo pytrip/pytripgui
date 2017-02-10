@@ -509,7 +509,7 @@ class PlotUtil:
             offset[0],
             offset[1] + 3.0 / self.zoom * 100,
             "Slice #: %d/%d\n"
-            "Slice Position: %.1f mm" % (idx, slices, idx * slice_dist),
+            "Slice Position: %.1f mm" % (idx + 1, slices, idx * slice_dist),
             color="white",
             va="top",
             fontsize=8)
