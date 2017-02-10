@@ -58,7 +58,7 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # wxPython
-  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=:all: -V
+  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=":all:" -V
   - python -c "import wx; print(wx.__version__)"
 
 test_script:
