@@ -61,7 +61,7 @@ install:
 # wxPython
   - python -m pip install --upgrade pip
   - pip install --upgrade wheel -V
-  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix -V
+  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=:all: -V
   - python -c "import wx; print(wx.__version__)"
 
 test_script:
