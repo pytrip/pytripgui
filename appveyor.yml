@@ -21,7 +21,6 @@ environment:
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda"
       WXP: "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev2811+ecc4797-cp27-cp27m-win32.whl"
-
     - platform: x64
       PYTHON_ROOT: "C:\\Python27-x64"
       PYTHON_VERSION: "2.7"
