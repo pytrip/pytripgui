@@ -20,17 +20,15 @@ environment:
       PYTHON_ROOT: "C:\\Python27"
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda"
-      WXP: "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev2768+b0c24a5-cp27-cp27m-win32.whl"
 
     - platform: x64
       PYTHON_ROOT: "C:\\Python27-x64"
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda-x64"
-      WXP: "http://wxpython.org/Phoenix/snapshot-builds/wxPython_Phoenix-3.0.3.dev2768+b0c24a5-cp27-cp27m-win_amd64.whl"
 
 init:
 # add Python interpreter to PATH variable
-  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PATH%
+  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%QTDIR%\bin;%PATH%
 # add Miniconda to PATH variable
   - set PATH=%MINICONDAPATH%\Scripts;%PATH%
 # following this one: https://github.com/audreyr/cookiecutter/issues/599
@@ -61,7 +59,9 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # wxPython
-  - pip install --upgrade --trusted-host wxpython.org --pre -vv %WXP%
+  - python -m pip install --upgrade pip
+  - pip install --upgrade wheel -V
+  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix -V
   - python -c "import wx; print(wx.__version__)"
 
 test_script:
