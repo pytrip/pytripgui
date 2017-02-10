@@ -20,7 +20,6 @@ environment:
       PYTHON_ROOT: "C:\\Python27"
       PYTHON_VERSION: "2.7"
       MINICONDAPATH: "C:\\Miniconda"
-
     - platform: x64
       PYTHON_ROOT: "C:\\Python27-x64"
       PYTHON_VERSION: "2.7"
