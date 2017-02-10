@@ -78,8 +78,8 @@ test_script:
 # making single exe
   - pip install pyinstaller
 #  - pyinstaller --onefile --windowed pytripgui/main.py
-  - pyinstaller -c -d --log-level DEBUG pytripgui/main.py --clean --hidden-import wx --hidden-import wx._xml --hidden-import matplotlib
-  - dist\main.exe
+  - pyinstaller -c -d --log-level DEBUG pytripgui/main.py --clean --hidden-import wx --hidden-import wx._xml --hidden-import matplotlib --hidden-import FileDialog
+  - dist\main\main.exe
 
 # upload artifacts
 artifacts:
