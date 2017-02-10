@@ -27,7 +27,7 @@ environment:
 
 init:
 # add Python interpreter to PATH variable
-  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%QTDIR%\bin;%PATH%
+  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PATH%
 # add Miniconda to PATH variable
   - set PATH=%MINICONDAPATH%\Scripts;%PATH%
 # following this one: https://github.com/audreyr/cookiecutter/issues/599
@@ -58,8 +58,6 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # wxPython
-  - python -m pip install --upgrade pip
-  - pip install --upgrade wheel -V
   - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=:all: -V
   - python -c "import wx; print(wx.__version__)"
 
