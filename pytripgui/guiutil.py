@@ -531,7 +531,6 @@ class PlotUtil:
             color="white",
             va="top",
             fontsize=8)
-        print("contrast: {} - {}".format(self.contrast[1], self.contrast[0]))
         self.figure.text(
             offset[0] + width / self.zoom * 100,
             offset[1] + 3.0 / self.zoom * 100,
