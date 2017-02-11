@@ -15,22 +15,24 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-import pdb
-import threading
-import time
+# import pdb
+# import threading
+# import time
 
 import wx
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
 from matplotlib.figure import Figure
 import matplotlib
-matplotlib.interactive(True)
 import matplotlib.pyplot as plt
 
 import numpy as np
 
 from pytripgui.guiutil import PlotUtil
 from pytripgui.util import *
+
+
+matplotlib.interactive(True)
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
@@ -245,7 +247,7 @@ class PlotPanel(wx.Panel):
 
     def on_mouse_press_plot(self, evt):
         if evt.button is 3:
-            pos = evt.guiEvent.GetPosition()
+            evt.guiEvent.GetPosition()
             standard = True
             if hasattr(self.plotutil, "contrast_bar"):
                 bar = self.plotutil.contrast_bar
@@ -309,7 +311,7 @@ class PlotPanel(wx.Panel):
             _stepsize = 10.0
             if self.plot_mouse_action == "contrast_top":
                 contrast = self.plotutil.get_contrast()
-                if contrast[1] > contrast [0]:
+                if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
                     _stepsize = 1
@@ -317,7 +319,7 @@ class PlotPanel(wx.Panel):
                 self.plotutil.set_contrast(contrast)
             elif self.plot_mouse_action == "contrast_bottom":
                 contrast = self.plotutil.get_contrast()
-                if contrast[1] > contrast [0]:
+                if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
                     _stepsize = 1
@@ -345,7 +347,7 @@ class PlotPanel(wx.Panel):
                 self.plotutil.set_let_min_max(let)
             self.Draw()
         elif evt.button == 1 and evt.inaxes is self.plotutil.fig_ct.axes:
-            if not None in self.mouse_pos_ini:
+            if None not in self.mouse_pos_ini:
                 step = [pos[0] - self.mouse_pos_ini[0], pos[1] - self.mouse_pos_ini[1]]
                 if self.plotutil.move_center(step):
                     self.Draw()
@@ -363,15 +365,19 @@ class PlotPanel(wx.Panel):
                 pos = [dim[0] - round(evt.xdata), self.image_idx, dim[2] - round(evt.ydata)]
             elif self.plotmode == "Coronal":
                 pos = [self.image_idx, dim[1] - round(evt.xdata), dim[2] - round(evt.ydata)]
+
             try:
-                ct_value = self.data.get_image_cube()[pos[2], pos[1], pos[0]]
-                text = "CT Value: %.1f HU" % (ct_value)
+                _ct_values = self.data.get_image_cube()
+                text = "CT Value: %.1f HU" % (_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
+            except:
+                pass
+
+            try:
                 plan = self.active_plan
-                print("We have CT")
                 if plan is not None:
                     dose = plan.get_dose_cube()
                     if dose is not None:
-                        dose_value = dose[pos[2], pos[1], pos[0]]
+                        dose_value = dose[int(pos[2]), int(pos[1]), int(pos[0])]
                         target_dose = plan.get_dose().get_dose()
                         if not target_dose == 0.0:
                             dose_value *= target_dose / 1000
@@ -382,7 +388,7 @@ class PlotPanel(wx.Panel):
 
                     let = plan.get_let_cube()
                     if let is not None:
-                        let_value = let[pos[2], pos[1], pos[0]]
+                        let_value = let[int(pos[2]), int(pos[1]), int(pos[0])]
                         text += " / LET: %.1f keV/um" % (let_value)
             except IndexError as e:
                 pass
@@ -474,7 +480,7 @@ class PlotPanel(wx.Panel):
     def right_click_dose(self):
         menu = wx.Menu()
         id = wx.NewId()
-        item = menu.Append(id, "Reset")
+        menu.Append(id, "Reset")
         wx.EVT_MENU(menu, id, self.reset_dose_range)
 
         colormap_menu = wx.Menu()
@@ -487,7 +493,7 @@ class PlotPanel(wx.Panel):
         colormap_menu.Append(id, "Discrete")
         wx.EVT_MENU(colormap_menu, id, self.set_colormap_dose)
 
-        item = menu.AppendSubMenu(colormap_menu, "Colorscale")
+        menu.AppendSubMenu(colormap_menu, "Colorscale")
 
         scale_menu = wx.Menu()
 
@@ -504,14 +510,14 @@ class PlotPanel(wx.Panel):
         scale_menu.Append(id, "Relative")
         wx.EVT_MENU(scale_menu, id, self.set_dose_scale)
 
-        item = menu.AppendSubMenu(scale_menu, "Scale")
+        menu.AppendSubMenu(scale_menu, "Scale")
 
         return menu
 
     def right_click_contrast(self):
         menu = wx.Menu()
         id = wx.NewId()
-        item = menu.Append(id, "Reset")
+        menu.Append(id, "Reset")
         wx.EVT_MENU(menu, id, self.reset_contrast)
         return menu
 
@@ -578,7 +584,7 @@ class PlotPanel(wx.Panel):
         name = evt.GetEventObject().GetLabel(evt.GetId())
         name = name.replace("__", "_")
         voi = self.data.get_vois().get_voi_by_name(name)
-        if not voi is None:
+        if voi is not None:
             voi.toogle_selected()
 
     def menu_field_selected(self, evt):
