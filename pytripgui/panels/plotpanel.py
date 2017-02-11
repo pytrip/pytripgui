@@ -298,19 +298,33 @@ class PlotPanel(wx.Panel):
         self.plot_mouse_action = None
 
     def on_mouse_move_plot(self, evt):
+        """ Handler for mouse movements in over 2D plotting canvas
+        """
         pos = [evt.x, evt.y]
+
         if self.plot_mouse_action is not None:
             step = [pos[0] - self.mouse_pos_ini[0], pos[1] - self.mouse_pos_ini[1]]
+
+            # Adjust contrast of HU colour bar
+            _stepsize = 10.0
             if self.plot_mouse_action == "contrast_top":
                 contrast = self.plotutil.get_contrast()
-                stepsize = np.log(contrast[1] - contrast[0])
-                contrast[1] -= stepsize * step[1]
+                if contrast[1] > contrast [0]:
+                    _stepsize = np.log(contrast[1] - contrast[0])
+                if _stepsize < 1:
+                    _stepsize = 1
+                contrast[1] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
             elif self.plot_mouse_action == "contrast_bottom":
                 contrast = self.plotutil.get_contrast()
-                stepsize = np.log(contrast[1] - contrast[0])
-                contrast[0] -= stepsize * step[1]
+                if contrast[1] > contrast [0]:
+                    _stepsize = np.log(contrast[1] - contrast[0])
+                if _stepsize < 1:
+                    _stepsize = 1
+                contrast[0] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
+
+            # Adjust dose colour bar
             elif self.plot_mouse_action == "dose_top":
                 dose = self.plotutil.get_min_max_dose()
                 dose[1] -= 0.30 * step[1]
@@ -319,6 +333,8 @@ class PlotPanel(wx.Panel):
                 dose = self.plotutil.get_min_max_dose()
                 dose[0] -= 0.30 * step[1]
                 self.plotutil.set_dose_min_max(dose)
+
+            # Adjust LET colour bar
             elif self.plot_mouse_action == "let_top":
                 let = self.plotutil.get_min_max_let()
                 let[1] -= 0.30 * step[1]
@@ -349,8 +365,9 @@ class PlotPanel(wx.Panel):
                 pos = [self.image_idx, dim[1] - round(evt.xdata), dim[2] - round(evt.ydata)]
             try:
                 ct_value = self.data.get_image_cube()[pos[2], pos[1], pos[0]]
-                text = "Value: %.1f" % (ct_value)
+                text = "CT Value: %.1f HU" % (ct_value)
                 plan = self.active_plan
+                print("We have CT")
                 if plan is not None:
                     dose = plan.get_dose_cube()
                     if dose is not None:
@@ -366,7 +383,7 @@ class PlotPanel(wx.Panel):
                     let = plan.get_let_cube()
                     if let is not None:
                         let_value = let[pos[2], pos[1], pos[0]]
-                        text += " / LET: %.1f kev/um" % (let_value)
+                        text += " / LET: %.1f keV/um" % (let_value)
             except IndexError as e:
                 pass
             pub.sendMessage("statusbar.update", {"number": 2, "text": text})
@@ -440,18 +457,18 @@ class PlotPanel(wx.Panel):
 
         jump_menu = wx.Menu()
         id = wx.NewId()
-        item = jump_menu.Append(id, "First")
+        item = jump_menu.Append(id, "First slice")
         wx.EVT_MENU(self, id, self.jump_to_first)
 
         id = wx.NewId()
-        item = jump_menu.Append(id, "Middle")
+        item = jump_menu.Append(id, "Center slice")
         wx.EVT_MENU(self, id, self.jump_to_middle)
 
         id = wx.NewId()
-        item = jump_menu.Append(id, "Last")
+        item = jump_menu.Append(id, "Last slice")
         wx.EVT_MENU(self, id, self.jump_to_last)
 
-        menu.AppendSubMenu(jump_menu, "Jump To")
+        menu.AppendSubMenu(jump_menu, "Jump to slice")
         return menu
 
     def right_click_dose(self):
