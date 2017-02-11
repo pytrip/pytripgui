@@ -362,7 +362,7 @@ class MainFrame(wx.Frame):
 
 class pytripgui(wx.App):
     def OnInit(self):
-        wx.InitAllImageHandlers()
+        # wx.InitAllImageHandlers()
         wx.GetApp().SetAppName("pytrip")
         # Load the XRC file for our gui resources
         self.res = XmlResource(util.get_resource_path('main.xrc'))
