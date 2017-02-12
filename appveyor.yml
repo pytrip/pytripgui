@@ -46,7 +46,7 @@ install:
   - conda create -q --name python%PYTHON_VERSION% python=%PYTHON_VERSION%
   - activate python%PYTHON_VERSION%
 # as scipy doesn't yet have wheels for windows, install it using conda
-  - conda install -q --name python%PYTHON_VERSION% scipy
+  - conda install -q --name python%PYTHON_VERSION% scipy wxpython
 # install usual requirements
   - pip install --upgrade -r tests/requirements-test.txt
   - pip install --upgrade -r requirements.txt
@@ -58,7 +58,7 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # wxPython
-  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=":all:" -V
+#  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=":all:" -V
   - python -c "import wx; print(wx.__version__)"
 
 test_script:
