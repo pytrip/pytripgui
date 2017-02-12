@@ -80,8 +80,8 @@ test_script:
   - pip install appdirs tornado
 #  - pyinstaller --onefile --windowed pytripgui/main.py
   - pyinstaller -c -d --log-level DEBUG pytripgui/main.py --clean --hidden-import wx --hidden-import wx._xml --hidden-import matplotlib --hidden-import FileDialog  --hidden-import wx.lib.pubsub --hidden-import wx.lib.pubsub.core.arg1 --hidden-import wx.lib.pubsub.core.kwargs --hidden-import appdirs
-  - pip install --upgrade setuptools
-  - dist\main\main.exe
+#  - pip install --upgrade setuptools
+#  - dist\main\main.exe
 
 # upload artifacts
 artifacts:
