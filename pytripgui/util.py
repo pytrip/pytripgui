@@ -27,7 +27,7 @@ def get_resource_path(res):
 
 def get_main_dir():
     if getattr(sys, 'frozen', False):
-        return os.environ.get("_MEIPASS2", os.path.abspath("."))
+        return os.path.dirname(sys.executable)
     else:
         return os.path.dirname(__file__)
 
