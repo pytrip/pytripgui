@@ -15,9 +15,6 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-# import pdb
-# import threading
-# import time
 
 import wx
 
