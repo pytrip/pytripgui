@@ -15,31 +15,30 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-import pdb
-import threading
-import time
 
 import wx
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
 from matplotlib.figure import Figure
 import matplotlib
-matplotlib.interactive(True)
 import matplotlib.pyplot as plt
 
 import numpy as np
 
 from pytripgui.guiutil import PlotUtil
-from pytripgui.util import *
+from pytripgui.util import get_resource_path
+
+
+matplotlib.interactive(True)
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import pub
-    from wx.lib.pubsub import setuparg1
+    # from wx.lib.pubsub import setuparg1
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        # from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
 
@@ -51,7 +50,7 @@ def cmap_discretize(cmap, N):
     indices = np.linspace(0, 1., N + 1)
     cdict = {}
     for ki, key in enumerate(('red', 'green', 'blue')):
-        cdict[key] = [(indices[i], colors_rgba[i - 1, ki], colors_rgba[i, ki]) for i in xrange(N + 1)]
+        cdict[key] = [(indices[i], colors_rgba[i - 1, ki], colors_rgba[i, ki]) for i in range(N + 1)]
     # Return colormap object.
     return matplotlib.colors.LinearSegmentedColormap(cmap.name + "_%d" % N, cdict, 1024)
 
@@ -245,7 +244,7 @@ class PlotPanel(wx.Panel):
 
     def on_mouse_press_plot(self, evt):
         if evt.button is 3:
-            pos = evt.guiEvent.GetPosition()
+            evt.guiEvent.GetPosition()
             standard = True
             if hasattr(self.plotutil, "contrast_bar"):
                 bar = self.plotutil.contrast_bar
@@ -298,19 +297,33 @@ class PlotPanel(wx.Panel):
         self.plot_mouse_action = None
 
     def on_mouse_move_plot(self, evt):
+        """ Handler for mouse movements in over 2D plotting canvas
+        """
         pos = [evt.x, evt.y]
+
         if self.plot_mouse_action is not None:
             step = [pos[0] - self.mouse_pos_ini[0], pos[1] - self.mouse_pos_ini[1]]
+
+            # Adjust contrast of HU colour bar
+            _stepsize = 10.0
             if self.plot_mouse_action == "contrast_top":
                 contrast = self.plotutil.get_contrast()
-                stepsize = np.log(contrast[1] - contrast[0])
-                contrast[1] -= stepsize * step[1]
+                if contrast[1] > contrast[0]:
+                    _stepsize = np.log(contrast[1] - contrast[0])
+                if _stepsize < 1:
+                    _stepsize = 1
+                contrast[1] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
             elif self.plot_mouse_action == "contrast_bottom":
                 contrast = self.plotutil.get_contrast()
-                stepsize = np.log(contrast[1] - contrast[0])
-                contrast[0] -= stepsize * step[1]
+                if contrast[1] > contrast[0]:
+                    _stepsize = np.log(contrast[1] - contrast[0])
+                if _stepsize < 1:
+                    _stepsize = 1
+                contrast[0] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
+
+            # Adjust dose colour bar
             elif self.plot_mouse_action == "dose_top":
                 dose = self.plotutil.get_min_max_dose()
                 dose[1] -= 0.30 * step[1]
@@ -319,6 +332,8 @@ class PlotPanel(wx.Panel):
                 dose = self.plotutil.get_min_max_dose()
                 dose[0] -= 0.30 * step[1]
                 self.plotutil.set_dose_min_max(dose)
+
+            # Adjust LET colour bar
             elif self.plot_mouse_action == "let_top":
                 let = self.plotutil.get_min_max_let()
                 let[1] -= 0.30 * step[1]
@@ -329,7 +344,7 @@ class PlotPanel(wx.Panel):
                 self.plotutil.set_let_min_max(let)
             self.Draw()
         elif evt.button == 1 and evt.inaxes is self.plotutil.fig_ct.axes:
-            if not None in self.mouse_pos_ini:
+            if None not in self.mouse_pos_ini:
                 step = [pos[0] - self.mouse_pos_ini[0], pos[1] - self.mouse_pos_ini[1]]
                 if self.plotutil.move_center(step):
                     self.Draw()
@@ -347,14 +362,19 @@ class PlotPanel(wx.Panel):
                 pos = [dim[0] - round(evt.xdata), self.image_idx, dim[2] - round(evt.ydata)]
             elif self.plotmode == "Coronal":
                 pos = [self.image_idx, dim[1] - round(evt.xdata), dim[2] - round(evt.ydata)]
+
             try:
-                ct_value = self.data.get_image_cube()[pos[2], pos[1], pos[0]]
-                text = "Value: %.1f" % (ct_value)
+                _ct_values = self.data.get_image_cube()
+                text = "CT Value: %.1f HU" % (_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
+            except:
+                pass
+
+            try:
                 plan = self.active_plan
                 if plan is not None:
                     dose = plan.get_dose_cube()
                     if dose is not None:
-                        dose_value = dose[pos[2], pos[1], pos[0]]
+                        dose_value = dose[int(pos[2]), int(pos[1]), int(pos[0])]
                         target_dose = plan.get_dose().get_dose()
                         if not target_dose == 0.0:
                             dose_value *= target_dose / 1000
@@ -365,8 +385,8 @@ class PlotPanel(wx.Panel):
 
                     let = plan.get_let_cube()
                     if let is not None:
-                        let_value = let[pos[2], pos[1], pos[0]]
-                        text += " / LET: %.1f kev/um" % (let_value)
+                        let_value = let[int(pos[2]), int(pos[1]), int(pos[0])]
+                        text += " / LET: %.1f keV/um" % (let_value)
             except IndexError as e:
                 pass
             pub.sendMessage("statusbar.update", {"number": 2, "text": text})
@@ -440,24 +460,24 @@ class PlotPanel(wx.Panel):
 
         jump_menu = wx.Menu()
         id = wx.NewId()
-        item = jump_menu.Append(id, "First")
+        item = jump_menu.Append(id, "First slice")
         wx.EVT_MENU(self, id, self.jump_to_first)
 
         id = wx.NewId()
-        item = jump_menu.Append(id, "Middle")
+        item = jump_menu.Append(id, "Center slice")
         wx.EVT_MENU(self, id, self.jump_to_middle)
 
         id = wx.NewId()
-        item = jump_menu.Append(id, "Last")
+        item = jump_menu.Append(id, "Last slice")
         wx.EVT_MENU(self, id, self.jump_to_last)
 
-        menu.AppendSubMenu(jump_menu, "Jump To")
+        menu.AppendSubMenu(jump_menu, "Jump to slice")
         return menu
 
     def right_click_dose(self):
         menu = wx.Menu()
         id = wx.NewId()
-        item = menu.Append(id, "Reset")
+        menu.Append(id, "Reset")
         wx.EVT_MENU(menu, id, self.reset_dose_range)
 
         colormap_menu = wx.Menu()
@@ -470,7 +490,7 @@ class PlotPanel(wx.Panel):
         colormap_menu.Append(id, "Discrete")
         wx.EVT_MENU(colormap_menu, id, self.set_colormap_dose)
 
-        item = menu.AppendSubMenu(colormap_menu, "Colorscale")
+        menu.AppendSubMenu(colormap_menu, "Colorscale")
 
         scale_menu = wx.Menu()
 
@@ -487,14 +507,14 @@ class PlotPanel(wx.Panel):
         scale_menu.Append(id, "Relative")
         wx.EVT_MENU(scale_menu, id, self.set_dose_scale)
 
-        item = menu.AppendSubMenu(scale_menu, "Scale")
+        menu.AppendSubMenu(scale_menu, "Scale")
 
         return menu
 
     def right_click_contrast(self):
         menu = wx.Menu()
         id = wx.NewId()
-        item = menu.Append(id, "Reset")
+        menu.Append(id, "Reset")
         wx.EVT_MENU(menu, id, self.reset_contrast)
         return menu
 
@@ -561,7 +581,7 @@ class PlotPanel(wx.Panel):
         name = evt.GetEventObject().GetLabel(evt.GetId())
         name = name.replace("__", "_")
         voi = self.data.get_vois().get_voi_by_name(name)
-        if not voi is None:
+        if voi is not None:
             voi.toogle_selected()
 
     def menu_field_selected(self, evt):

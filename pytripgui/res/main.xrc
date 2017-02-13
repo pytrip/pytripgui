@@ -164,7 +164,7 @@
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_openpatient">
-				<label>Open Patient\tCTRL+o</label>
+				<label>Open DICOM\tCTRL+o</label>
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_voxelplan">
