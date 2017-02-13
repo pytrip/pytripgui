@@ -36,9 +36,15 @@ from pytripgui.tripexecparser import *
 from pytripgui.data import *
 from pytripgui import util
 
-from wx.lib.pubsub import pub
-from wx.lib.pubsub import setuparg1
-
+if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import pub
+    from wx.lib.pubsub import setuparg1
+else:
+    try:
+        from wx.lib.pubsub import Publisher as pub
+    except:
+        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import pub
 
 
 class FileDropTarget(wx.FileDropTarget):
@@ -360,7 +366,7 @@ class pytripgui(wx.App):
         # Load the XRC file for our gui resources
         self.res = XmlResource(util.get_resource_path('main.xrc'))
         pytripFrame = self.res.LoadFrame(None, 'MainFrame')
-        font = wx.SystemSettings.GetFontpy(wx.SYS_SYSTEM_FONT)
+        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         pytripFrame.SetFont(font)
         pytripFrame.Init(self.res)
         dt1 = FileDropTarget(pytripFrame)
