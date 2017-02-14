@@ -14,6 +14,9 @@ a = Analysis(['pytripgui\\main.py'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
+
+print(a)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -31,3 +34,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                name='main')
+print(coll)
