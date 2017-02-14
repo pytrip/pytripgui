@@ -4,6 +4,7 @@ block_cipher = None
 
 # one directory installation:
 # might be useful when combined with installer generator such as http://www.innosetup.com/isinfo.php
+# check get_main_dir() method in pytripgui/util.py before uncommenting this one
 # -*- mode: python -*-
 #a = Analysis(['pytripgui\\main.py'],
 #             pathex=['.'],
