@@ -81,8 +81,9 @@ test_script:
 # previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
 # funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
 # we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
-   - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip && 7z e upx.zip *.exe -r
-   - upx --help
+  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
+  - 7z e upx.zip *.exe -r
+  - upx --help
 #  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
 #  - pip install appdirs tornado packaging
 #  - pyinstaller -F main.spec
