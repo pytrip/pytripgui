@@ -84,9 +84,9 @@ test_script:
   - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
   - 7z e upx.zip *.exe -r
   - upx --help
-#  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
-#  - pip install appdirs tornado packaging
-#  - pyinstaller -F main.spec
+  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
+  - pip install appdirs tornado packaging
+  - pyinstaller -F main.spec
 #  - pip install --upgrade setuptools
 #  - dist\main\main.exe
 
