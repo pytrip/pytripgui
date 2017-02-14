@@ -63,14 +63,6 @@ install:
 test_script:
 # generate versioneer stuff
   - python %MINICONDAPATH%/envs/python%PYTHON_VERSION%/Scripts/versioneer install
-## make wheel package
-#  - python setup.py bdist_wheel
-## clean build directory
-#  - rd /s /q build
-## install generated package
-#  - cd dist
-#  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
-#  - cd ..
 # TODO fix running tests:
 #  - FOR %%I in (tests\test*.py) DO python -m pytest %%I TODO to be fixed
 # deploy package, TODO to be fixed
@@ -87,8 +79,17 @@ test_script:
   - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
 # install missing dependencies
   - pip install appdirs tornado packaging
+#
 # generate single file installation
   - pyinstaller -F main.spec
+# make wheel package
+  - python setup.py bdist_wheel
+# clean build directory
+  - rd /s /q build
+# install generated package
+  - cd dist
+  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
+  - cd ..
 
 # upload artifacts
 artifacts:
