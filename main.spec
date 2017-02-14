@@ -10,10 +10,19 @@ a = Analysis(['pytripgui\\main.py'],
              hiddenimports=['wx', 'wx._xml', 'matplotlib', 'FileDialog', 'wx.lib.pubsub', 'wx.lib.pubsub.core.arg1', 'appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
              hookspath=[],
              runtime_hooks=[],
-             excludes=[],
+             excludes=['pywin.debugger', 'tcl', 'PyQt5', 'IPython'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
+
+a.binaries = [x for x in a.binaries if not x[0].startswith("IPython")]
+a.binaries = [x for x in a.binaries if not x[0].startswith("zmq")]
+
+a.binaries = a.binaries - TOC([
+ ('sqlite3.dll', None, None),
+ ('_sqlite3', None, None),
+ ('_ssl', None, None)])
+
 
 pyz = PYZ(a.pure)
 exe = EXE(pyz,
