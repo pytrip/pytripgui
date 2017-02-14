@@ -19,6 +19,7 @@ import sys
 from pytripgui.util import *
 
 if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import setuparg1
     from wx.lib.pubsub import pub
 else:
     try:

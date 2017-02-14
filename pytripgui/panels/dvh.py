@@ -27,6 +27,7 @@ from matplotlib.figure import Figure
 import numpy as np
 
 if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import setuparg1
     from wx.lib.pubsub import pub
 else:
     try:
