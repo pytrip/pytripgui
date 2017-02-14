@@ -83,7 +83,7 @@ test_script:
 # we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
   - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
   - pip install appdirs tornado packaging
-  - pyinstaller main.spec
+  - pyinstaller -F main.spec
 #  - pip install --upgrade setuptools
 #  - dist\main\main.exe
 
