@@ -1,4 +1,4 @@
-﻿;; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
+﻿
 
 #define MyAppName "pytripgui"
 #define MyAppVersion "X.Y.Z"
