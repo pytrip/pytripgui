@@ -73,7 +73,7 @@ test_script:
   # Installing InnoSetup
   - choco install -y curl InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
-  - iscc /?
+  - iscc -h
 ## upx is needed by pyinstaller to compress files
 #  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
 #  - 7z e upx.zip *.exe -r
