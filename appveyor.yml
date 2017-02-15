@@ -4,6 +4,7 @@
 configuration: Release
 
 # check also https://github.com/BjornFJohansson/seguid_calculator/blob/master/appveyor.yml
+# this one is also interesting: https://github.com/FCS-analysis/PyCorrFit/blob/master/appveyor.yml
 
 # we are not building Visual Studio project, so default build step is off
 build: off
@@ -68,28 +69,32 @@ test_script:
 # deploy package, TODO to be fixed
 #  - ps: If ($env:Platform -eq "x86") {bash appveyor\deploy_package.sh}
 #
-# making single exe
-# upx is needed by pyinstaller to compress files
-  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
-  - 7z e upx.zip *.exe -r
-# latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
-# previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
-# funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
-# we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
-  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
-# install missing dependencies
-  - pip install appdirs tornado packaging
-#
-# generate single file installation
-  - pyinstaller -F main.spec
-# make wheel package
-  - python setup.py bdist_wheel
-# clean build directory
-  - rd /s /q build
-# install generated package
-  - cd dist
-  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
-  - cd ..
+## making single exe
+  # Installing InnoSetup
+  - choco install -y curl InnoSetup
+  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+  - iscc /?
+## upx is needed by pyinstaller to compress files
+#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
+#  - 7z e upx.zip *.exe -r
+## latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
+## previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
+## funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
+## we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
+#  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
+## install missing dependencies
+#  - pip install appdirs tornado packaging
+##
+## generate single file installation
+#  - pyinstaller -F main.spec
+## make wheel package
+#  - python setup.py bdist_wheel
+## clean build directory
+#  - rd /s /q build
+## install generated package
+#  - cd dist
+#  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
+#  - cd ..
 
 # upload artifacts
 artifacts:
