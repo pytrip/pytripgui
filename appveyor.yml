@@ -101,4 +101,4 @@ test_script:
 artifacts:
   - path: 'dist\*whl'
   - path: 'dist\*exe'
-  - path: '*exe'
+  - path: 'Output\pytrip*exe'
