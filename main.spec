@@ -31,7 +31,8 @@ version = pytripgui.__version__
 ## Create inno setup .iss file
 import codecs
 import platform
-issfile = codecs.open("win10_innosetup.iss", 'r', "utf-8")
+filename = "win10_innosetup.iss"
+issfile = codecs.open(filename, 'r', "utf-8")
 iss = issfile.readlines()
 issfile.close()
 for item in iss:
@@ -40,13 +41,13 @@ for item in iss:
     if item.strip().startswith("#define MyAppPlatform"):
         # sys.maxint returns the same for windows 64bit verions
         item = '#define MyAppPlatform "win_{}"\n'.format(platform.architecture()[0])
-nissfile = codecs.open("win10_innosetup.iss", 'wb', "utf-8")
+nissfile = codecs.open(filename, 'wb', "utf-8")
 nissfile.write(u"\ufeff")
 nissfile.writelines(iss)
 nissfile.close()
 
 with open('pytripgui\__init__.py', "a") as fd:
-    fd.write("\n__version__ = get_versions()[\'{:s}\']".format(version))
+    fd.write("\n__version__ = \'{:s}\'".format(version))
 
 a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
