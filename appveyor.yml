@@ -99,6 +99,6 @@ test_script:
 
 # upload artifacts
 artifacts:
-  - path: dist\*whl
-  - path: dist\*exe
-  - path: *exe
+  - path: 'dist\*whl'
+  - path: 'dist\*exe'
+  - path: '*exe'
