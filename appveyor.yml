@@ -73,30 +73,32 @@ test_script:
   # Installing InnoSetup
   - choco install -y curl InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
-  - iscc -h
-## upx is needed by pyinstaller to compress files
-#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
-#  - 7z e upx.zip *.exe -r
-## latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
-## previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
-## funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
-## we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
-#  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
-## install missing dependencies
-#  - pip install appdirs tornado packaging
-##
-## generate single file installation
-#  - pyinstaller -F main.spec
-## make wheel package
-#  - python setup.py bdist_wheel
-## clean build directory
-#  - rd /s /q build
-## install generated package
-#  - cd dist
-#  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
-#  - cd ..
+# upx is needed by pyinstaller to compress files
+  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
+  - 7z e upx.zip *.exe -r
+# latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
+# previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
+# funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
+# we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
+  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
+# install missing dependencies
+  - pip install appdirs tornado packaging
+#
+# generate single dir installation
+  - pyinstaller main.spec
+# generate installer
+  - iscc win10_innosetup.iss
+# make wheel package
+  - python setup.py bdist_wheel
+# clean build directory
+  - rd /s /q build
+# install generated package
+  - cd dist
+  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
+  - cd ..
 
 # upload artifacts
 artifacts:
   - path: dist\*whl
   - path: dist\*exe
+  - path: *exe
