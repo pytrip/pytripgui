@@ -60,7 +60,7 @@ a.binaries = a.binaries - TOC([
  ('_ssl', None, None)])
 
 pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+             cipher=None)
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
@@ -90,7 +90,7 @@ coll = COLLECT(exe,
 #             excludes=['pywin.debugger', 'tcl', 'PyQt5', 'IPython', 'tornado'],
 #             win_no_prefer_redirects=False,
 #             win_private_assemblies=False,
-#             cipher=block_cipher)
+#             cipher=None)
 #
 #a.binaries = [x for x in a.binaries if not x[0].startswith("IPython")]
 #a.binaries = [x for x in a.binaries if not x[0].startswith("zmq")]
