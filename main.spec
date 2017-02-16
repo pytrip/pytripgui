@@ -35,14 +35,13 @@ filename = "win10_innosetup.iss"
 issfile = codecs.open(filename, 'r', "utf-8")
 iss = issfile.readlines()
 issfile.close()
-for item in iss:
+for i,item in enumerate(iss):
     if item.strip().startswith("#define MyAppVersion"):
-        item = '#define MyAppVersion "{:s}"\n'.format(version)
+        iss[i] = '#define MyAppVersion "{:s}"\n'.format(version)
     if item.strip().startswith("#define MyAppPlatform"):
         # sys.maxint returns the same for windows 64bit verions
-        item = '#define MyAppPlatform "win_{}"\n'.format(platform.architecture()[0])
+        iss[i] = '#define MyAppPlatform "win_{}"\n'.format(platform.architecture()[0])
 nissfile = codecs.open(filename, 'wb', "utf-8")
-#nissfile.write(u"\ufeff")
 nissfile.writelines(iss)
 nissfile.close()
 
