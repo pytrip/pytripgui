@@ -42,7 +42,7 @@ for item in iss:
         # sys.maxint returns the same for windows 64bit verions
         item = '#define MyAppPlatform "win_{}"\n'.format(platform.architecture()[0])
 nissfile = codecs.open(filename, 'wb', "utf-8")
-nissfile.write(u"\ufeff")
+#nissfile.write(u"\ufeff")
 nissfile.writelines(iss)
 nissfile.close()
 
