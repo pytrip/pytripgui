@@ -4,7 +4,6 @@
 configuration: Release
 
 # check also https://github.com/BjornFJohansson/seguid_calculator/blob/master/appveyor.yml
-# this one is also interesting: https://github.com/FCS-analysis/PyCorrFit/blob/master/appveyor.yml
 
 # we are not building Visual Studio project, so default build step is off
 build: off
@@ -102,3 +101,17 @@ artifacts:
   - path: 'dist\*whl'
   - path: 'dist\*exe'
   - path: 'Output\pytrip*exe'
+
+# push artifacts to github
+deploy:
+  description: 'AppveyorCI build'
+  provider: GitHub
+  auth_token:
+    secure: p+WOiBJJTkzczNSfry0A4Jmf63P61UbnuMgM/i2Y+TvkVNkjc9cFjQs8UEEdy9J/
+  artifact: Output\pytripgui_*.exe
+  draft: false
+  prerelease: false
+  force_update: true
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
