@@ -271,7 +271,6 @@ class MainFrame(wx.Frame):
         self.bind_default_toolbar()
 
     def bind_default_toolbar(self):
-        self.toolbar.ClearTools()
         id = wx.NewId()
         self.toolbar.AddLabelTool(id, '', wx.Bitmap(get_resource_path('open.png')))
         wx.EVT_MENU(self, id, self.open_patient_load_dialog)
