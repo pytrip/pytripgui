@@ -4,6 +4,7 @@
 configuration: Release
 
 # check also https://github.com/BjornFJohansson/seguid_calculator/blob/master/appveyor.yml
+# this one is also interesting: https://github.com/FCS-analysis/PyCorrFit/blob/master/appveyor.yml
 
 # we are not building Visual Studio project, so default build step is off
 build: off
@@ -45,8 +46,8 @@ install:
 # create new conda workspace and activate it
   - conda create -q --name python%PYTHON_VERSION% python=%PYTHON_VERSION%
   - activate python%PYTHON_VERSION%
-# as scipy doesn't yet have wheels for windows, install it using conda
-  - conda install -q --name python%PYTHON_VERSION% scipy
+# as scipy and classic wxpython doesn't yet have wheels for windows, install it using conda
+  - conda install -q --name python%PYTHON_VERSION% scipy wxpython
 # install usual requirements
   - pip install --upgrade -r tests/requirements-test.txt
   - pip install --upgrade -r requirements.txt
@@ -57,13 +58,36 @@ install:
   - python -V
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
-# wxPython
-  - pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix --only-binary=":all:" -V
+# wxPython version
   - python -c "import wx; print(wx.__version__)"
 
 test_script:
 # generate versioneer stuff
   - python %MINICONDAPATH%/envs/python%PYTHON_VERSION%/Scripts/versioneer install
+# TODO fix running tests:
+#  - FOR %%I in (tests\test*.py) DO python -m pytest %%I TODO to be fixed
+# deploy package, TODO to be fixed
+#  - ps: If ($env:Platform -eq "x86") {bash appveyor\deploy_package.sh}
+#
+## making single exe
+  # Installing InnoSetup
+  - choco install -y curl InnoSetup
+  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+# upx is needed by pyinstaller to compress files
+  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
+  - 7z e upx.zip *.exe -r
+# latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
+# previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
+# funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
+# we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
+  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
+# install missing dependencies
+  - pip install appdirs tornado packaging
+#
+# generate single dir installation
+  - pyinstaller main.spec
+# generate installer
+  - iscc win10_innosetup.iss
 # make wheel package
   - python setup.py bdist_wheel
 # clean build directory
@@ -72,14 +96,9 @@ test_script:
   - cd dist
   - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
   - cd ..
-#  - FOR %%I in (tests\test*.py) DO python -m pytest %%I TODO to be fixed
-# deploy package, TODO to be fixed
-#  - ps: If ($env:Platform -eq "x86") {bash appveyor\deploy_package.sh}
-# making single exe
-  - pip install pyinstaller
-  - pyinstaller --onefile --windowed pytripgui/main.py
 
 # upload artifacts
 artifacts:
-  - path: dist\*whl
-  - path: dist\*exe
+  - path: 'dist\*whl'
+  - path: 'dist\*exe'
+  - path: 'Output\pytrip*exe'

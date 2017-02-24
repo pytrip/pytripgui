@@ -23,8 +23,8 @@ from pytripgui.util import *
 import pytripgui.guihelper
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import pub
     from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub

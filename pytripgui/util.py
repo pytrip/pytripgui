@@ -28,6 +28,8 @@ def get_resource_path(res):
 def get_main_dir():
     if getattr(sys, 'frozen', False):
         return os.environ.get("_MEIPASS2", os.path.abspath("."))
+        # when using single directory installer, this one should be probably used:
+        # return os.path.dirname(sys.executable)
     else:
         return os.path.dirname(__file__)
 
