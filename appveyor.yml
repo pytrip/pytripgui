@@ -99,7 +99,9 @@ test_script:
 # upload artifacts
 artifacts:
   - path: 'dist\*whl'
+    name: wheel
   - path: 'Output\pytrip*exe'
+    name: installer
 
 # push artifacts to github
 deploy:
@@ -107,7 +109,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: p+WOiBJJTkzczNSfry0A4Jmf63P61UbnuMgM/i2Y+TvkVNkjc9cFjQs8UEEdy9J/
-  artifact: 'Output\pytrip*exe'
+  artifact: installer
   draft: false
   prerelease: false
   force_update: true
