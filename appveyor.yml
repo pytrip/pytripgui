@@ -99,7 +99,6 @@ test_script:
 # upload artifacts
 artifacts:
   - path: 'dist\*whl'
-  - path: 'dist\*exe'
   - path: 'Output\pytrip*exe'
 
 # push artifacts to github
@@ -108,7 +107,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: p+WOiBJJTkzczNSfry0A4Jmf63P61UbnuMgM/i2Y+TvkVNkjc9cFjQs8UEEdy9J/
-  artifact: Output\pytripgui_*.exe
+  artifact: 'Output\pytrip*exe'
   draft: false
   prerelease: false
   force_update: true
