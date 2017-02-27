@@ -379,8 +379,7 @@ class PlotUtil:
         # center = target.calculate_center() # TODO why not used ?
         data = None
         if self.plot_plan == "Transversal":
-            # slice = target.get_slice_at_pos(self.ctx.slice_to_z(idx))
-            slice = target.get_slice_at_pos2(self.ctx.slice_to_z(idx))
+            slice = target.get_slice_at_pos(self.ctx.slice_to_z(idx))
             if slice is not None:
                 for contour in slice.contour:
                     data = np.array(contour.contour)
@@ -516,18 +515,15 @@ class PlotUtil:
         width = size[0]
         height = size[1]
         if self.plot_plan == "Transversal":
-            slices = self.ctx.dimz
-            slice_dist = self.ctx.slice_distance
+            _slices = self.ctx.dimz
         elif self.plot_plan == "Sagital":
-            slices = self.ctx.dimy
-            slice_dist = self.ctx.pixel_size
+            _slices = self.ctx.dimy
         elif self.plot_plan == "Coronal":
-            slices = self.ctx.dimx
-            slice_dist = self.ctx.pixel_size
+            _slices = self.ctx.dimx
         self.figure.text(
             offset[0],
             offset[1] + 3.0 / self.zoom * 100,
-            "Slice #: {:d}/{:d}\n".format(idx + 1, slices) + 
+            "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) +
             "Slice Position: {:.1f} mm ".format(self.ctx.slice_pos[idx]),
             color="white",
             va="top",
