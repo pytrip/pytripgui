@@ -309,21 +309,21 @@ class PlotUtil:
                 plot = False
                 data = []
                 if self.plot_plan == "Transversal":
-                    slice = voi.get_slice_at_pos(self.ctx.slice_to_z(idx))
-                    if slice is None:
+                    _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(idx + 1))
+                    if _slice is None:
                         continue
-                    for contour in slice.contour:
+                    for contour in _slice.contour:
                         data.append(np.array(contour.contour))
                         plot = True
                 elif self.plot_plan == "Sagital":
-                    slice = voi.get_2d_slice(voi.sagital, idx * self.ctx.pixel_size)
-                    if slice is not None:
-                        data.append(np.array(slice.contour[0].contour))
+                    _slice = voi.get_2d_slice(voi.sagital, idx * self.ctx.pixel_size)
+                    if _slice is not None:
+                        data.append(np.array(_slice.contour[0].contour))
                         plot = True
                 elif self.plot_plan == "Coronal":
-                    slice = voi.get_2d_slice(voi.coronal, idx * self.ctx.pixel_size)
-                    if slice is not None:
-                        data.append(np.array(slice.contour[0].contour))
+                    _slice = voi.get_2d_slice(voi.coronal, idx * self.ctx.pixel_size)
+                    if _slice is not None:
+                        data.append(np.array(_slice.contour[0].contour))
                         plot = True
                 data = self.points_to_plane(data)
                 if plot:
@@ -379,7 +379,8 @@ class PlotUtil:
         # center = target.calculate_center() # TODO why not used ?
         data = None
         if self.plot_plan == "Transversal":
-            slice = target.get_slice_at_pos(self.ctx.slice_to_z(idx))
+            # slice = target.get_slice_at_pos(self.ctx.slice_to_z(idx))
+            slice = target.get_slice_at_pos2(self.ctx.slice_to_z(idx))
             if slice is not None:
                 for contour in slice.contour:
                     data = np.array(contour.contour)
@@ -526,8 +527,8 @@ class PlotUtil:
         self.figure.text(
             offset[0],
             offset[1] + 3.0 / self.zoom * 100,
-            "Slice #: %d/%d\n"
-            "Slice Position: %.1f mm" % (idx + 1, slices, idx * slice_dist),
+            "Slice #: {:d}/{:d}\n".format(idx + 1, slices) + 
+            "Slice Position: {:.1f} mm ".format(self.ctx.slice_pos[idx]),
             color="white",
             va="top",
             fontsize=8)
