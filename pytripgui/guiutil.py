@@ -237,12 +237,14 @@ class PlotUtil:
 
     def pixel_to_pos(self, pixel):
         if self.plot_plan == "Transversal":
-            pos = [pixel[0] * self.ctx.pixel_size, pixel[1] * self.ctx.pixel_size]
+            pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
+                   pixel[1] * self.ctx.pixel_size + self.ctx.yoffset]
         elif self.plot_plan == "Sagital":
-            pos = [(self.ctx.dimy - pixel[0]) * self.ctx.pixel_size,
-                   (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance]
+            pos = [(self.ctx.dimy - pixel[0]) * self.ctx.pixel_size + self.ctx.yoffset,
+                   (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         elif self.plot_plan == "Coronal":
-            pos = [pixel[0] * self.ctx.pixel_size, (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance]
+            pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
+                   (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         return [pixel, pos]
 
     def get_contrast(self):
@@ -313,7 +315,7 @@ class PlotUtil:
                     if _slice is None:
                         continue
                     for contour in _slice.contour:
-                        data.append(np.array(contour.contour))
+                        data.append(np.array(contour.contour)-np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0]))
                         plot = True
                 elif self.plot_plan == "Sagital":
                     _slice = voi.get_2d_slice(voi.sagital, idx * self.ctx.pixel_size)
