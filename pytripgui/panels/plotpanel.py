@@ -148,7 +148,7 @@ class PlotPanel(wx.Panel):
         id = wx.NewId()
         selector = wx.Choice(toolbar, id)
         selector.Append("Transversal")
-        selector.Append("Sagital")
+        selector.Append("Sagittal")
         selector.Append("Coronal")
         idx = selector.FindString(self.plotmode)
         selector.Select(idx)
@@ -358,7 +358,7 @@ class PlotPanel(wx.Panel):
             dim = self.data.get_image_dimensions()
             if self.plotmode == "Transversal":
                 pos = [round(evt.xdata), round(evt.ydata), self.image_idx]
-            elif self.plotmode == "Sagital":
+            elif self.plotmode == "Sagittal":
                 pos = [dim[0] - round(evt.xdata), self.image_idx, dim[2] - round(evt.ydata)]
             elif self.plotmode == "Coronal":
                 pos = [self.image_idx, dim[1] - round(evt.xdata), dim[2] - round(evt.ydata)]
