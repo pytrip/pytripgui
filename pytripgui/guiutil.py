@@ -122,7 +122,7 @@ class PlotUtil:
     def get_images_count(self):
         if self.plot_plan == "Transversal":
             return len(self.ctx.cube)
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             return len(self.ctx.cube[0, 0])
         elif self.plot_plan == "Coronal":
             return len(self.ctx.cube[0])
@@ -239,7 +239,7 @@ class PlotUtil:
         if self.plot_plan == "Transversal":
             pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
                    pixel[1] * self.ctx.pixel_size + self.ctx.yoffset]
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             pos = [(self.ctx.dimy - pixel[0]) * self.ctx.pixel_size + self.ctx.yoffset,
                    (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         elif self.plot_plan == "Coronal":
@@ -259,7 +259,7 @@ class PlotUtil:
         if self.plot_plan == "Transversal":
             width = self.ctx.dimx
             height = self.ctx.dimy
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             width = self.ctx.dimy
             height = self.ctx.dimz
         elif self.plot_plan == "Coronal":
@@ -276,7 +276,7 @@ class PlotUtil:
         if self.plot_plan == "Transversal":
             ct_data = self.ctx.cube[idx]
             self.aspect = 1.0
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             ct_data = self.ctx.cube[-1:0:-1, -1:0:-1, idx]
             self.aspect = self.ctx.slice_distance / self.ctx.pixel_size
         elif self.plot_plan == "Coronal":
@@ -291,7 +291,7 @@ class PlotUtil:
 
         if self.plot_plan == "Transversal":
             self.figure.axis([0, self.ctx.dimx, self.ctx.dimy, 0])
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             self.figure.axis([0, self.ctx.dimy, self.ctx.dimz, 0])
         elif self.plot_plan == "Coronal":
             self.figure.axis([0, self.ctx.dimx, self.ctx.dimz, 0])
@@ -317,8 +317,8 @@ class PlotUtil:
                     for contour in _slice.contour:
                         data.append(np.array(contour.contour)-np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0]))
                         plot = True
-                elif self.plot_plan == "Sagital":
-                    _slice = voi.get_2d_slice(voi.sagital, idx * self.ctx.pixel_size)
+                elif self.plot_plan == "Sagittal":
+                    _slice = voi.get_2d_slice(voi.sagittal, idx * self.ctx.pixel_size)
                     if _slice is not None:
                         data.append(np.array(_slice.contour[0].contour))
                         plot = True
@@ -359,7 +359,7 @@ class PlotUtil:
             if self.plot_plan == "Transversal":
                 data[:, 0] /= self.ctx.pixel_size
                 data[:, 1] /= self.ctx.pixel_size
-            elif self.plot_plan == "Sagital":
+            elif self.plot_plan == "Sagittal":
                 data[:, 0] = (-data[:, 1] + self.ctx.pixel_size * self.ctx.dimx) / self.ctx.pixel_size
                 data[:, 1] = (-data[:, 2] + self.ctx.slice_distance * self.ctx.dimz) / self.ctx.slice_distance
             elif self.plot_plan == "Coronal":
@@ -386,8 +386,8 @@ class PlotUtil:
                 for contour in slice.contour:
                     data = np.array(contour.contour)
             vec = np.array([0, 0, 1])
-        elif self.plot_plan == "Sagital":
-            slice = target.get_2d_slice(target.sagital, idx * self.ctx.pixel_size)
+        elif self.plot_plan == "Sagittal":
+            slice = target.get_2d_slice(target.sagittal, idx * self.ctx.pixel_size)
             if slice is not None:
                 for contour in slice.contour:
                     data = np.array(contour.contour)
@@ -457,7 +457,7 @@ class PlotUtil:
             return
         if self.plot_plan == "Transversal":
             dos_data = self.dos.cube[idx]
-        elif self.plot_plan == "Sagital":
+        elif self.plot_plan == "Sagittal":
             dos_data = self.dos.cube[-1:0:-1, -1:0:-1, idx]
         elif self.plot_plan == "Coronal":
             dos_data = self.dos.cube[-1:0:-1, idx, -1:0:-1]
@@ -518,15 +518,18 @@ class PlotUtil:
         height = size[1]
         if self.plot_plan == "Transversal":
             _slices = self.ctx.dimz
-        elif self.plot_plan == "Sagital":
+            _slice_pos = self.ctx.slice_pos[idx]
+        elif self.plot_plan == "Sagittal":
             _slices = self.ctx.dimy
+            _slice_pos = idx * self.ctx.pixel_size + self.ctx.xoffset
         elif self.plot_plan == "Coronal":
             _slices = self.ctx.dimx
+            _slice_pos = idx * self.ctx.pixel_size + self.ctx.yoffset
         self.figure.text(
             offset[0],
             offset[1] + 3.0 / self.zoom * 100,
             "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) +
-            "Slice Position: {:.1f} mm ".format(self.ctx.slice_pos[idx]),
+            "Slice Position: {:.1f} mm ".format(_slice_pos),
             color="white",
             va="top",
             fontsize=8)
@@ -568,7 +571,7 @@ class PlotUtil:
             cmap._lut[0, -1] = 0.0
             if self.plot_plan == "Transversal":
                 let_data = self.let.cube[idx]
-            elif self.plot_plan == "Sagital":
+            elif self.plot_plan == "Sagittal":
                 let_data = self.let.cube[-1:0:-1, idx, -1:0:-1]
             elif self.plot_plan == "Coronal":
                 let_data = self.let.cube[-1:0:-1, -1:0:-1, idx]
