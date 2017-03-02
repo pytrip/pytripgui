@@ -1,4 +1,4 @@
-# before commiting check this file here: https://lint.travis-ci.org/
+# before committing check this file here: https://lint.travis-ci.org/
 language: generic
 
 env:
@@ -14,11 +14,12 @@ sudo: required
 dist: trusty
 
 before_install:
-  - sudo bash ./install_deps.sh
+  - sudo ./install_deps.sh
 
 install:
-  - bash ./.travis/install_linux.sh
+  - ./.travis/install_linux.sh
 
 script:
+  - ./install_versioneer.sh
   - py.test
-  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then bash .travis/deploy_package.sh pypi; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi

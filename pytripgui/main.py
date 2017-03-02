@@ -18,6 +18,8 @@ import sys
 import traceback
 import os
 import gc
+import logging
+import argparse
 
 import wx
 import wx.lib.dialogs
@@ -45,6 +47,8 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
+
+logger = logging.getLogger(__name__)
 
 
 class FileDropTarget(wx.FileDropTarget):
@@ -109,7 +113,7 @@ class MainFrame(wx.Frame):
         self.welcome_disclaimer.SetLabel(disclaimer)
         vstr = "Version: " + pytripgui_version + "\n"
         self.welcome_version.SetLabel(vstr)
-       
+
     def statusbar_updated(self, msg):
         self.statusbar.SetStatusText(msg.data["text"], msg.data["number"])
 
@@ -390,10 +394,26 @@ def handleInputException(exc_type, exc_value, exc_traceback):
 sys.excepthook = handleInputException
 
 
-def start():
+def start(args=sys.argv[1:]):
+    from pytripgui import __version__ as _ptgv
+    from pytrip import __version__ as _ptv
+    _vers = "PyTRiP98GUI {} using PyTRiP98 {}".format(_ptgv, _ptv)
+    # parse arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbosity", action='count', help="increase output verbosity", default=0)
+    parser.add_argument('-V', '--version', action='version', version=(_vers))
+    parsed_args = parser.parse_args(args)
+
+    if parsed_args.verbosity == 1:
+        logging.basicConfig(level=logging.INFO)
+    elif parsed_args.verbosity > 1:
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig()
+
     app = pytripgui(0)
     app.MainLoop()
 
 
 if __name__ == '__main__':
-    start()
+    sys.exit(start(sys.argv[1:]))
