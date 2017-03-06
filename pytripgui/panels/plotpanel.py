@@ -414,7 +414,7 @@ class PlotPanel(wx.Panel):
                 item = view_menu.AppendCheckItem(id, "View Dose")
                 if self.plotutil.get_dose() is not None:
                     item.Check()
-                wx.EVT_MENU(self, id, self.toogle_dose)
+                wx.EVT_MENU(self, id, self.toggle_dose)
 
                 id = wx.NewId()
                 item = dose_type_menu.Append(id, "Color wash")
@@ -433,7 +433,7 @@ class PlotPanel(wx.Panel):
                         for contour in self.plotutil.get_dose_contours():
                             if contour["doselevel"] == level:
                                 item.Check()
-                        wx.EVT_MENU(self, id, self.toogle_dose_contour)
+                        wx.EVT_MENU(self, id, self.toggle_dose_contour)
                     menu.AppendSubMenu(dose_contour_menu, "Dose Contour levels")
 
             let = active_plan.get_let()
@@ -443,7 +443,7 @@ class PlotPanel(wx.Panel):
                 item = view_menu.AppendCheckItem(id, "View LET")
                 if self.plotutil.get_let() is not None:
                     item.Check()
-                wx.EVT_MENU(self, id, self.toogle_let)
+                wx.EVT_MENU(self, id, self.toggle_let)
 
             if view_menu.GetMenuItemCount() > 0:
                 menu.AppendSubMenu(view_menu, "View")
@@ -553,7 +553,7 @@ class PlotPanel(wx.Panel):
         self.image_idx = self.plotutil.get_images_count() - 1
         self.Draw()
 
-    def toogle_dose_contour(self, evt):
+    def toggle_dose_contour(self, evt):
         value = float(evt.GetEventObject().GetLabel(evt.GetId()).split()[0])
         if evt.IsChecked():
             self.plotutil.add_dose_contour({"doselevel": value, "color": "b"})
@@ -563,14 +563,14 @@ class PlotPanel(wx.Panel):
                     self.plotutil.remove_dose_contour(contour)
         self.Draw()
 
-    def toogle_dose(self, evt):
+    def toggle_dose(self, evt):
         if self.plotutil.get_dose() is None:
             self.plotutil.set_dose(self.active_plan.get_dose().get_dosecube())
         else:
             self.plotutil.set_dose(None)
         self.Draw()
 
-    def toogle_let(self, evt):
+    def toggle_let(self, evt):
         if self.plotutil.get_let() is None:
             self.plotutil.set_let(self.active_plan.get_let())
         else:
@@ -582,12 +582,12 @@ class PlotPanel(wx.Panel):
         name = name.replace("__", "_")
         voi = self.data.get_vois().get_voi_by_name(name)
         if voi is not None:
-            voi.toogle_selected()
+            voi.toggle_selected()
 
     def menu_field_selected(self, evt):
         name = evt.GetEventObject().GetLabel(evt.GetId())
         field = self.active_plan.get_fields().get_field_by_name(name)
-        field.toogle_selected(self.active_plan)
+        field.toggle_selected(self.active_plan)
 
     def change_dose_to_colorwash(self, evt):
         self.plotutil.set_dose_plot("colorwash")
@@ -608,19 +608,19 @@ class PlotPanel(wx.Panel):
         rot = rot / delta
 
         if evt.ControlDown():
-            if (rot >= 1):
+            if rot >= 1:
                 self.zoom_in(None)
-            elif (rot < 1):
+            elif rot < 1:
                 self.zoom_out(None)
             return
         n_images = self.data.get_images().get_voxelplan().dimz
         if n_images:
-            if (rot >= 1):
-                if (self.image_idx > 0):
+            if rot >= 1:
+                if self.image_idx > 0:
                     self.image_idx -= 1
                     self.Draw()
-            if (rot <= -1):
-                if (self.image_idx < self.plotutil.get_images_count() - 1):
+            if rot <= -1:
+                if self.image_idx < self.plotutil.get_images_count() - 1:
                     self.image_idx += 1
                     self.Draw()
 
@@ -629,11 +629,11 @@ class PlotPanel(wx.Panel):
         nextkey = [wx.WXK_DOWN, wx.WXK_PAGEDOWN]
         code = evt.GetKeyCode()
         if code in prevkey:
-            if (self.image_idx > 0):
+            if self.image_idx > 0:
                 self.image_idx -= 1
                 self.Draw()
         elif code in nextkey:
-            if (self.image_idx < self.plotutil.get_images_count() - 1):
+            if self.image_idx < self.plotutil.get_images_count() - 1:
                 self.image_idx += 1
                 self.Draw()
 

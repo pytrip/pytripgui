@@ -131,7 +131,7 @@ class LinePlotPanel(wx.Panel):
         name = evt.GetEventObject().GetLabel(evt.GetId()).replace("__", "_")
         for voi in plan.get_vois():
             if voi.get_name() == name:
-                voi.toogle_plan_selected(plan)
+                voi.toggle_plan_selected(plan)
         self.redraw()
 
     def on_mouse_click(self, evt):

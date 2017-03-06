@@ -83,14 +83,14 @@ class LeftMenuTree(wx.TreeCtrl):
                              "TripVoi": [{"text": "Select",
                                           "type": "check",
                                           "value": "is_selected",
-                                          "callback": self.toogle_selected_voi}, {"text": "Target",
+                                          "callback": self.toggle_selected_voi}, {"text": "Target",
                                                                                   "type": "check",
                                                                                   "value": "is_target",
-                                                                                  "callback": self.plan_toogle_target},
+                                                                                  "callback": self.plan_toggle_target},
                                          {"text": "OAR",
                                           "type": "check",
                                           "value": "is_oar",
-                                          "callback": self.plan_toogle_oar}, {"text": "Move Up",
+                                          "callback": self.plan_toggle_oar}, {"text": "Move Up",
                                                                               "callback":
                                                                               self.plan_up_voi}, {"text": "Move Down",
                                                                                                   "callback":
@@ -101,7 +101,7 @@ class LeftMenuTree(wx.TreeCtrl):
                              "MainVoi": [{"text": "Select",
                                           "type": "check",
                                           "value": "is_selected",
-                                          "callback": self.toogle_selected_voi}, {"text": "Add To Plan",
+                                          "callback": self.toggle_selected_voi}, {"text": "Add To Plan",
                                                                                   "type": "submenu",
                                                                                   "submenu": self.plan_submenu}],
                              "FieldCollection": [{"text": "Add Field",
@@ -135,9 +135,9 @@ class LeftMenuTree(wx.TreeCtrl):
         self.image_list = wx.ImageList(self.icon_size[0], self.icon_size[1])
         self.AssignImageList(self.image_list)
 
-    def toogle_selected_voi(self, evt):
+    def toggle_selected_voi(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
-        voi.toogle_selected()
+        voi.toggle_selected()
 
     def on_import_path_change_dicom(self, msg):
         self.dicom_path = msg.data
@@ -336,13 +336,13 @@ class LeftMenuTree(wx.TreeCtrl):
         plan = self.get_parent_plan_data(self.selected_item)
         self.data.plans.set_active_plan(plan)
 
-    def plan_toogle_oar(self, evt):
+    def plan_toggle_oar(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
-        voi.toogle_oar()
+        voi.toggle_oar()
 
-    def plan_toogle_target(self, evt):
+    def plan_toggle_target(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
-        voi.toogle_target()
+        voi.toggle_target()
 
     def plan_delete_voi(self, evt):
         vois_item = self.GetItemParent(self.selected_item)

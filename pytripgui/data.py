@@ -182,7 +182,7 @@ class PytripData:
     def load_voi(self, voi, selected=False):
         v = Voi(voi.get_name(), voi)
         if selected:
-            v.toogle_selected()
+            v.toggle_selected()
         self.structures.add_voi(v, 0)
         pub.sendMessage("patient.voi.added", v)
 
@@ -247,8 +247,8 @@ class Voi(pte_v.Voi):
     def set_icon(self, icon):
         self.icon = icon
 
-    def toogle_selected(self):
-        super(Voi, self).toogle_selected()
+    def toggle_selected(self):
+        super(Voi, self).toggle_selected()
         pub.sendMessage("voi.selection_changed", self)
 
 
@@ -256,8 +256,8 @@ class TripVoi(pte_tv.TripVoi):
     def __init__(self, voi):
         super(TripVoi, self).__init__(voi)
 
-    def toogle_plan_selected(self, plan):
-        super(TripVoi, self).toogle_plan_selected(plan)
+    def toggle_plan_selected(self, plan):
+        super(TripVoi, self).toggle_plan_selected(plan)
         pub.sendMessage("plan.voi.plan_selected_change", {"voi": self, "plan": plan})
 
     def load(self, data):
@@ -278,8 +278,8 @@ class Field(pte_f.Field):
         self.selected = False
         super(Field, self).__init__(name)
 
-    def toogle_selected(self, plan):
-        super(Field, self).toogle_selected()
+    def toggle_selected(self, plan):
+        super(Field, self).toggle_selected()
         pub.sendMessage("plan.field.selection_changed", {"field": self, "plan": plan})
 
     def load(self, data):

@@ -125,9 +125,9 @@ class TripVoiDialog(wx.Dialog):
         voi = self.voi
         voi.set_dose(self.txt_dose.GetValue())
         if voi.is_target() is not self.check_target.IsChecked():
-            voi.toogle_target()
+            voi.toggle_target()
         if voi.is_oar() is not self.check_oar.IsChecked():
-            voi.toogle_oar()
+            voi.toggle_oar()
         voi.set_max_dose_fraction(self.txt_max_dose_fraction.GetValue())
         voi.set_hu_offset(self.txt_hu_offset.GetValue())
         voi.set_hu_value(self.txt_hu_value.GetValue())
