@@ -20,7 +20,7 @@ import json
 import time
 import gc
 import threading
-
+import logging
 import wx
 
 import numpy as np
@@ -57,6 +57,8 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
+
+logger = logging.getLogger(__name__)
 
 notify = 1
 
@@ -197,17 +199,33 @@ class PytripData:
             self.load_from_voxelplan_thread(path)
 
     def load_from_voxelplan_thread(self, path, close=None):
-        clean_path = os.path.splitext(path)[0]
-        if os.path.exists(clean_path + ".ctx"):
+        """
+        """
+
+        # preapare paths to CTX and VDX data
+        ext_list = ['bio', 'dosemlet', 'phys']
+        path_noext = os.path.splitext(path)[0]  # path without the extention
+        # check for double extensions
+        _temp = os.path.splitext(path_noext)
+        if any(word in _temp[1] for word in ext_list):
+            path_noext = _temp[0]
+        ctx_path = path_noext + ".ctx"
+        vdx_path = path_noext + ".vdx"
+
+        if os.path.exists(ctx_path):
             c = CtxCube()
-            c.read(clean_path + ".ctx")
+            logger.debug("Opening {:s}".format(ctx_path))
+            c.read(ctx_path)
             self.ct_images = CTImages(c)
         else:
-            raise InputError("No Images")
+            logger.info("No CT images found")
+        #    raise InputError("No Images")
+
         self.structures = VoiCollection(self)
-        if os.path.exists(clean_path + ".vdx"):
+        if os.path.exists(vdx_path):
             structures = VdxCube(c)
-            structures.read(clean_path + ".vdx")
+            logger.debug("Opening {:s}".format(vdx_path))
+            structures.read(vdx_path)
             for voi in structures.vois:
                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
         self.patient_name = c.patient_name
@@ -215,6 +233,7 @@ class PytripData:
             wx.CallAfter(close.close)
         wx.CallAfter(self.patient_load)
 
+        
     def get_plans(self):
         return self.plans
 
