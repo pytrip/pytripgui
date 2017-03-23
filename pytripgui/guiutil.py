@@ -273,6 +273,10 @@ class PlotUtil:
         return None
 
     def plot(self, idx):
+        """
+        Plot the CT data, and if available the VOIs as well.
+        :params idx: index of slice to be plotted.
+        """
         if self.plot_plan == "Transversal":
             ct_data = self.ctx.cube[idx]
             self.aspect = 1.0
@@ -368,6 +372,8 @@ class PlotUtil:
         return d
 
     def plot_fields(self, idx):
+        """
+        """
         if self.plan is None:
             return
         targets = []
@@ -449,6 +455,10 @@ class PlotUtil:
             del self.dose_bar
 
     def plot_dose(self, idx):
+        """ Plot the colour-wash dose cube.
+        :params idx: index of slice to be plotted.
+        """
+
         if not hasattr(self, "dos"):
             return
         if self.dos is None:
@@ -512,25 +522,35 @@ class PlotUtil:
                     self.figure.plot(contour[0][:, 0], contour[0][:, 1], con["color"])
 
     def plot_text(self, idx):
+        """ Plot the text overlays
+        :params idx: index of slice to be plotted.
+        """
+
         size = self.get_size()
         offset = self.get_offset()
         width = size[0]
         height = size[1]
+
+        text_color = "#33DD33"
+
         if self.plot_plan == "Transversal":
             _slices = self.ctx.dimz
             _slice_pos = self.ctx.slice_pos[idx]
+            self._plot_markers(idx, ['L', 'R', 'A', 'P'], text_color)
         elif self.plot_plan == "Sagittal":
             _slices = self.ctx.dimy
             _slice_pos = idx * self.ctx.pixel_size + self.ctx.xoffset
+            self._plot_markers(idx, ['D', 'V', 'A', 'P'], text_color)
         elif self.plot_plan == "Coronal":
             _slices = self.ctx.dimx
             _slice_pos = idx * self.ctx.pixel_size + self.ctx.yoffset
+            self._plot_markers(idx, ['R', 'L', 'A', 'P'], text_color)
         self.figure.text(
             offset[0],
             offset[1] + 3.0 / self.zoom * 100,
             "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) +
             "Slice Position: {:.1f} mm ".format(_slice_pos),
-            color="white",
+            color=text_color,
             va="top",
             fontsize=8)
         self.figure.text(
@@ -538,18 +558,45 @@ class PlotUtil:
             offset[1] + 3.0 / self.zoom * 100,
             "W / L: %d / %d" % (self.contrast[1], self.contrast[0]),
             ha="right",
-            color="white",
+            color=text_color,
             va="top",
             fontsize=8)
         self.figure.text(
             offset[0],
             offset[1] + (height - 5) / self.zoom * 100,
             self.plot_plan,
-            color="white",
+            color=text_color,
             va="bottom",
             fontsize=8)
 
+    def _plot_markers(self, idx, markers, text_color='#00ff00'):
+        """
+        :params idx: slice to be plotted
+        :params markers: list of marker strings, ordered (left,right,top,bottom) in plot canvas.
+        :params text_color: colour of text
+        """
+        size = self.get_size()
+        offset = self.get_offset()
+        width = size[0]
+        height = size[1]
+
+        # relative position of orientation markers
+        rel_pos = ((0.03, 0.5), (0.95, 0.5), (0.5, 0.02), (0.5, 0.95))
+
+        for i, marker in enumerate(markers):
+            self.figure.text(
+                offset[0] + rel_pos[i][0] * width / self.zoom * 100,
+                offset[1] + rel_pos[i][1] * height / self.zoom * 100,
+                marker,
+                color=text_color,
+                va="top",
+                fontsize=8)
+
     def plot_let(self, idx):
+        """ Plot the colour-wash LET cube
+        :params idx: index of slice to be plotted.
+        """
+
         if not hasattr(self, "let"):
             return
         if self.let is None:
