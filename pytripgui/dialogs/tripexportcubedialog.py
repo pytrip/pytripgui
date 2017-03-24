@@ -102,7 +102,7 @@ class TripExportCubeDialog(wx.Dialog):
             path = dlg.GetPath()
             a = os.path.splitext(path)
             if not a[-1] is "dos":
-                path = path + ".dos"
+                path += ".dos"
                 self.output_path = path
                 pub.sendMessage("settings.value.updated", {"general.export.cube": os.path.dirname(path)})
             return True
