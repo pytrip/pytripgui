@@ -1594,7 +1594,7 @@
 						<flag>wxEXPAND</flag>
 						<border>5</border>
 						<object class="wxFlexGridSizer">
-							<rows>2</rows>
+							<rows>4</rows>
 							<cols>2</cols>
 							<vgap>0</vgap>
 							<hgap>0</hgap>
@@ -1708,7 +1708,7 @@
 											<flag>wxEXPAND</flag>
 											<border>5</border>
 											<object class="wxFlexGridSizer">
-												<rows>2</rows>
+												<rows>3</rows>
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
