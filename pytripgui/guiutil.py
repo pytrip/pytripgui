@@ -285,7 +285,11 @@ class PlotUtil:
 
         if not hasattr(self, "fig_ct"):
             self.fig_ct = self.figure.imshow(
-                ct_data, cmap=plt.get_cmap("gray"), vmin=self.contrast[0], vmax=self.contrast[1], aspect=self.aspect)
+                ct_data,
+                cmap=plt.get_cmap("gray"),
+                vmin=self.contrast[0],
+                vmax=self.contrast[1],
+                aspect=self.aspect)
         else:
             self.fig_ct.set_data(ct_data)
 
@@ -330,13 +334,16 @@ class PlotUtil:
                         plot = True
                 data = self.points_to_plane(data)
                 if plot:
-                    contour_color = (np.array(voi.get_color()) / 255.0)
-                    d = data[0]
-                    if len(d[:, 0]) == 1:
-                        # This is a POI, so plot it clearly as a POI
-                        self._plot_poi(d[:, 0], d[:, 1], contour_color, voi.name)
-                    else:
-                        for d in data:
+                    contour_color = np.array(voi.get_color()) / 255.0
+                    for d in data:  # data is list of numpy arrays
+                        # d has shape (n,3)
+                        # if n is 1, it means it is a point
+                        # if n > 1, it means it is a contour
+                        if d.shape[0] == 1:
+                            # This is a POI, so plot it clearly as a POI
+                            self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+                        else:
+                            # This is a contour
                             self.figure.plot(d[:, 0], d[:, 1], color=contour_color)
         # set zoom
         size = self.get_size()
