@@ -1397,7 +1397,7 @@
 	</object>
 	<object class="wxDialog" name="CreateCubeDialog" subclass="pytripgui.dialogs.createcubedialog.CreateCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Create Cube</title>
+		<title>Create CT-Cube</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1453,7 +1453,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText41">
-							<label>Dimx</label>
+							<label># of Pixels X</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1471,7 +1471,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText42">
-							<label>Dimy</label>
+							<label># of Pixels Y</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1489,7 +1489,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText43">
-							<label>Dimz</label>
+							<label># of Slices</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1507,7 +1507,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText44">
-							<label>Pixel Size</label>
+							<label>Pixel Size [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1525,7 +1525,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText45">
-							<label>Slice Distance</label>
+							<label>Slice Distance [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1570,7 +1570,7 @@
 	</object>
 	<object class="wxDialog" name="CreateStructureDialog" subclass="pytripgui.dialogs.createstructuredialog.CreateStructureDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Create Structure</title>
+		<title>Create ROI</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1585,7 +1585,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText62">
-							<label>Define center of structure</label>
+							<label>Define center of ROI</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1623,7 +1623,7 @@
 								<flag>wxALL</flag>
 								<border>5</border>
 								<object class="wxStaticText" name="m_staticText52">
-									<label>X (mm)</label>
+									<label>X [mm]</label>
 									<wrap>-1</wrap>
 								</object>
 							</object>
@@ -1641,7 +1641,7 @@
 								<flag>wxALL</flag>
 								<border>5</border>
 								<object class="wxStaticText" name="m_staticText53">
-									<label>Y (mm)</label>
+									<label>Y [mm]</label>
 									<wrap>-1</wrap>
 								</object>
 							</object>
@@ -1659,7 +1659,7 @@
 								<flag>wxALL</flag>
 								<border>5</border>
 								<object class="wxStaticText" name="m_staticText54">
-									<label>Z (mm)</label>
+									<label>Z [mm]</label>
 									<wrap>-1</wrap>
 								</object>
 							</object>
@@ -1719,7 +1719,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText58">
-														<label>Width (mm)</label>
+														<label>Width [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -1737,7 +1737,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="Height">
-														<label>Height (mm)</label>
+														<label>Height [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -1755,7 +1755,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText59">
-														<label>Depth (mm)</label>
+														<label>Depth [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -1805,7 +1805,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText61">
-														<label>Radius (mm)</label>
+														<label>Radius [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -1823,7 +1823,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText621">
-														<label>Depth (mm)</label>
+														<label>Depth [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -1873,7 +1873,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText63">
-														<label>Radius (mm)</label>
+														<label>Radius [mm]</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>

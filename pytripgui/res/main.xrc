@@ -194,11 +194,11 @@
 			<object class="wxMenu" name="m_menu3">
 				<label>Create</label>
 				<object class="wxMenuItem" name="menuitem_createcube">
-					<label>Create Cube</label>
+					<label>New CT-Cube</label>
 					<help></help>
 				</object>
 				<object class="wxMenuItem" name="menuitem_createstructure">
-					<label>Create Structure</label>
+					<label>New ROI</label>
 					<help></help>
 				</object>
 			</object>
