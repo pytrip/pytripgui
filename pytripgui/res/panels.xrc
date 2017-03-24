@@ -20,7 +20,7 @@
 				<flag>wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxFlexGridSizer">
-					<rows>2</rows>
+					<rows>11</rows>
 					<cols>2</cols>
 					<vgap>0</vgap>
 					<hgap>0</hgap>
@@ -49,7 +49,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText2">
-							<label>Isocenter</label>
+							<label>Isocenter X,Y,Z [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -96,7 +96,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText3">
-							<label>Gantry</label>
+							<label>Gantry angle [deg]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -114,7 +114,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText4">
-							<label>Couch</label>
+							<label>Couch angle [deg]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -132,7 +132,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText5">
-							<label>Fwhm</label>
+							<label>Spot size FWHM [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -150,7 +150,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText28">
-							<label>Raster Spacing</label>
+							<label>Raster Spacing X,Y [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -165,7 +165,7 @@
 								<flag>wxALL</flag>
 								<border>5</border>
 								<object class="wxTextCtrl" name="txt_raster1">
-									<size>40,-1</size>
+									<size>50,-1</size>
 									<value></value>
 									<maxlength>0</maxlength>
 								</object>
@@ -175,7 +175,7 @@
 								<flag>wxALL</flag>
 								<border>5</border>
 								<object class="wxTextCtrl" name="txt_raster2">
-									<size>40,-1</size>
+									<size>50,-1</size>
 									<value></value>
 									<maxlength>0</maxlength>
 								</object>
@@ -223,7 +223,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText62">
-							<label>ZSteps</label>
+							<label>Depth steps [mm]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -1011,7 +1011,7 @@
 	</object>
 	<object class="wxDialog" name="TripVoiDialog" subclass="pytripgui.dialogs.tripvoidialog.TripVoiDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Voi</title>
+		<title>ROI Properties</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1026,7 +1026,7 @@
 						<object class="wxPanel" name="m_panel5">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
-								<rows>2</rows>
+								<rows>5</rows>
 								<cols>2</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
@@ -1055,7 +1055,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText70">
-										<label>Target</label>
+										<label>Set as Target</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -1073,7 +1073,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText71">
-										<label>Dose (Gy)</label>
+										<label>Dose [Gy]</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -1091,7 +1091,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText72">
-										<label>OAR</label>
+										<label>Set as OAR</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -1109,7 +1109,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText73">
-										<label>Max Dose Fraction</label>
+										<label>Max Dose Fraction [%]</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -1137,7 +1137,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText40">
-										<label>Override existing HU values for voi </label>
+										<label>Override existing HU values for ROI </label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -1157,7 +1157,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText41">
-												<label>HU Value</label>
+												<label>Set all HU values in ROI to [HU]</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -1166,7 +1166,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_hu_value">
-												<tooltip>Overrides the original HU value</tooltip>
+												<tooltip>Overrides the original HU value with the HU value given</tooltip>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -1176,7 +1176,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText42">
-												<label>HU Offset</label>
+												<label>Add offset to HU in ROI [HU]</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -1185,7 +1185,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_hu_offset">
-												<tooltip>Add an offset to the HU values</tooltip>
+												<tooltip>Adds this HU value to the HU values in ROI</tooltip>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -1201,7 +1201,7 @@
 						<object class="wxPanel" name="m_panel11">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
-								<rows>2</rows>
+								<rows>3</rows>
 								<cols>2</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
@@ -1307,7 +1307,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText43">
-							<label>Target Dose (Gy)</label>
+							<label>Target Dose [Gy]</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
