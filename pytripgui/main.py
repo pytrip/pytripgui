@@ -230,7 +230,7 @@ class MainFrame(wx.Frame):
         info.SetName('PyTRiPGUI')
         info.SetVersion(pytripgui_version)
         info.SetDescription(description)
-        info.SetCopyright('(C) 2012 - 2016 Aarhus Particle Therapy Group')
+        info.SetCopyright('(C) 2012 - 2017 Aarhus Particle Therapy Group')
         info.SetWebSite('https://github.com/pytrip/pytripgui')
         info.SetLicence(licence)
         info.AddDeveloper('Jakob Toftegaard')
@@ -306,7 +306,7 @@ class MainFrame(wx.Frame):
             if len(ext) is 1:
                 path = os.path.splitext(path)[0] + ".png"
             else:
-                if not ext.lower() in [".eps", ".jpg", ".jpeg", ".png", ".gif"]:
+                if not ext.lower() in (".eps", ".jpg", ".jpeg", ".png", ".gif"):
                     return
             page.get_figure().savefig(path, bbox_inches=0, facecolor=page.get_figure().get_facecolor(), edgecolor=None)
 

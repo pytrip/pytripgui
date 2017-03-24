@@ -197,19 +197,25 @@ class PytripData:
             self.load_from_voxelplan_thread(path)
 
     def load_from_voxelplan_thread(self, path, close=None):
-        clean_path = os.path.splitext(path)[0]
-        if os.path.exists(clean_path + ".ctx"):
+        # get the basename path from .ctx, .ctx.gz or .hed file
+        _, data_file_name = CtxCube.parse_path(path)
+        data_file_path = CtxCube.discover_file(data_file_name)
+
+        # file is not compatible with required extension
+        if data_file_path is not None:
             c = CtxCube()
-            c.read(clean_path + ".ctx")
+            c.read(data_file_path)
             self.ct_images = CTImages(c)
         else:
-            raise InputError("No Images")
+            raise InputError("No Images in path {:s}".format(path))
+        ctx_basename = os.path.splitext(data_file_path)[0]
+        ctx_path = ctx_basename + ".vdx"
         self.structures = VoiCollection(self)
-        if os.path.exists(clean_path + ".vdx"):
-            structures = VdxCube(c)
-            structures.read(clean_path + ".vdx")
-            for voi in structures.vois:
-                self.structures.add_voi(Voi(voi.get_name(), voi), 0)
+        if os.path.exists(ctx_path):
+             structures = VdxCube(c)
+             structures.read(ctx_path)
+             for voi in structures.vois:
+                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
         self.patient_name = c.patient_name
         if not close is None:
             wx.CallAfter(close.close)

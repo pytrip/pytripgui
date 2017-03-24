@@ -235,7 +235,7 @@ class LeftMenuTree(wx.TreeCtrl):
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
-            wildcard="Voxelplan headerfile (*.hed)|*.hed|",
+            wildcard="Voxelplan headerfile (*.hed)|*.hed",
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
@@ -247,7 +247,7 @@ class LeftMenuTree(wx.TreeCtrl):
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
-            wildcard="Voxelplan headerfile (*.hed)|*.hed|",
+            wildcard="Voxelplan headerfile (*.hed)|*.hed",
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
