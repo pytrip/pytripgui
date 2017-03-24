@@ -318,6 +318,7 @@ class PlotUtil:
             for i, voi in enumerate(self.vois):
                 plot = False
                 data = []
+                data_closed = []
                 if self.plot_plan == "Transversal":
                     _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(idx + 1))
                     if _slice is None:
@@ -325,30 +326,39 @@ class PlotUtil:
                     for contour in _slice.contour:
                         data.append(np.array(contour.contour) -
                                     np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0]))
+                        data_closed.append(contour.contour_closed)
                         plot = True
                 elif self.plot_plan == "Sagittal":
                     _slice = voi.get_2d_slice(voi.sagittal, idx * self.ctx.pixel_size)
                     if _slice is not None:
                         data.append(np.array(_slice.contour[0].contour))
+                        data_closed.append(_slice.contour[0].contour_closed)
                         plot = True
                 elif self.plot_plan == "Coronal":
                     _slice = voi.get_2d_slice(voi.coronal, idx * self.ctx.pixel_size)
                     if _slice is not None:
                         data.append(np.array(_slice.contour[0].contour))
+                        data_closed.append(_slice.contour[0].contour_closed)
                         plot = True
                 data = self.points_to_plane(data)
                 if plot:
                     contour_color = np.array(voi.get_color()) / 255.0
-                    for d in data:  # data is list of numpy arrays
-                        # d has shape (n,3)
+                    for i, d in enumerate(data):  # data is list of numpy arrays, holding several contours
+                        # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
                         # if n is 1, it means it is a point
-                        # if n > 1, it means it is a contour
+                        # if n > 1, it means it is a contour                        
                         if d.shape[0] == 1:
                             # This is a POI, so plot it clearly as a POI
                             self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
                         else:
                             # This is a contour
-                            self.figure.plot(d[:, 0], d[:, 1], color=contour_color)
+                            # Now check whether contour is open or closed.
+                            # If it is closed, we need to repeat the first point at the end
+                            if data_closed[i] is True:
+                                xy = np.concatenate((d, [d[0,:]]), axis=0)
+                            else:
+                                xy = d
+                            self.figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
         # set zoom
         size = self.get_size()
         width = float(size[0]) / self.zoom * 100.0
