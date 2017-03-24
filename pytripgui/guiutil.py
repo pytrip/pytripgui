@@ -354,21 +354,32 @@ class PlotUtil:
     def _plot_poi(self, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
         :params x,y: position in real world CT units
-        :params poi_color: colour of the point of interest
+        :params color: colour of the point of interest
         :params legend: name of POI
         """
 
-        size = self.get_size()
+        size = self.get_size()  # width and height in pixels
         width = float(size[0]) / self.zoom * 100.0
         height = float(size[1]) / self.zoom * 100.0
 
+        # we draw two line segments : one which will underline legend text
+        # and other one which will connect the first one with point of interest
+        # point coordinates as on the plot below
+        #
+        #
+        #           LEGEND TEXT
+        #       ___________________
+        #      / (x1,y1)          (x2,y2)
+        #     /
+        #    /
+        #   o (x,y)
         x1 = x + 0.02*width
         y1 = y - 0.02*height
 
         x2 = x1 + 2.0 * len(legend)
         y2 = y1
 
-        # prepare a brigter version of input color, for text and line to point
+        # prepare a brighter version of input color, for text and line to point
         if isinstance(color, str):
             _rgb = matplotlib.colors.hex2color(color)
         else:
@@ -377,7 +388,7 @@ class PlotUtil:
         _hsv[1] *= 0.5
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
-        # plot a line pointing to dot
+        # plot a line (two segments) pointing to dot and underlining legend text
         self.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
 
         # add the legend text
