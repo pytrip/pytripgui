@@ -230,7 +230,7 @@ class MainFrame(wx.Frame):
         info.SetName('PyTRiPGUI')
         info.SetVersion(pytripgui_version)
         info.SetDescription(description)
-        info.SetCopyright('(C) 2012 - 2017 Aarhus Particle Therapy Group')
+        info.SetCopyright('(C) 2012 - 2017 PyTRiP98 Developers')
         info.SetWebSite('https://github.com/pytrip/pytripgui')
         info.SetLicence(licence)
         info.AddDeveloper('Jakob Toftegaard')
