@@ -289,7 +289,11 @@ class PlotUtil:
 
         if not hasattr(self, "fig_ct"):
             self.fig_ct = self.figure.imshow(
-                ct_data, cmap=plt.get_cmap("gray"), vmin=self.contrast[0], vmax=self.contrast[1], aspect=self.aspect)
+                ct_data,
+                cmap=plt.get_cmap("gray"),
+                vmin=self.contrast[0],
+                vmax=self.contrast[1],
+                aspect=self.aspect)
         else:
             self.fig_ct.set_data(ct_data)
 
@@ -319,7 +323,8 @@ class PlotUtil:
                     if _slice is None:
                         continue
                     for contour in _slice.contour:
-                        data.append(np.array(contour.contour)-np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0]))
+                        data.append(np.array(contour.contour) -
+                                    np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0]))
                         plot = True
                 elif self.plot_plan == "Sagittal":
                     _slice = voi.get_2d_slice(voi.sagittal, idx * self.ctx.pixel_size)
@@ -333,8 +338,17 @@ class PlotUtil:
                         plot = True
                 data = self.points_to_plane(data)
                 if plot:
-                    for d in data:
-                        self.figure.plot(d[:, 0], d[:, 1], color=(np.array(voi.get_color()) / 255.0))
+                    contour_color = np.array(voi.get_color()) / 255.0
+                    for d in data:  # data is list of numpy arrays
+                        # d has shape (n,3)
+                        # if n is 1, it means it is a point
+                        # if n > 1, it means it is a contour
+                        if d.shape[0] == 1:
+                            # This is a POI, so plot it clearly as a POI
+                            self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+                        else:
+                            # This is a contour
+                            self.figure.plot(d[:, 0], d[:, 1], color=contour_color)
         # set zoom
         size = self.get_size()
         width = float(size[0]) / self.zoom * 100.0
@@ -347,6 +361,56 @@ class PlotUtil:
         self.plot_fields(idx)
         if not self.draw_in_gui:
             self.figure.show()
+
+    def _plot_poi(self, x, y, color='#00ff00', legend=''):
+        """ Plot a point of interest at x,y
+        :params x,y: position in real world CT units
+        :params color: colour of the point of interest
+        :params legend: name of POI
+        """
+
+        size = self.get_size()  # width and height in pixels
+        width = float(size[0]) / self.zoom * 100.0
+        height = float(size[1]) / self.zoom * 100.0
+
+        # we draw two line segments : one which will underline legend text
+        # and other one which will connect the first one with point of interest
+        # point coordinates as on the plot below
+        #
+        #
+        #           LEGEND TEXT
+        #       ___________________
+        #      / (x1,y1)          (x2,y2)
+        #     /
+        #    /
+        #   o (x,y)
+        x1 = x + 0.02*width
+        y1 = y - 0.02*height
+
+        x2 = x1 + 2.0 * len(legend)
+        y2 = y1
+
+        # prepare a brighter version of input color, for text and line to point
+        if isinstance(color, str):
+            _rgb = matplotlib.colors.hex2color(color)
+        else:
+            _rgb = color
+        _hsv = matplotlib.colors.rgb_to_hsv(_rgb)
+        _hsv[1] *= 0.5
+        bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
+
+        # plot a line (two segments) pointing to dot and underlining legend text
+        self.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
+
+        # add the legend text
+        self.figure.text(x1, y1 - 0.025*height,
+                         legend,
+                         color=bright_color,
+                         va="top",
+                         fontsize=7,
+                         weight='semibold',
+                         backgroundcolor=(0.0, 0.0, 0.0, 0.8))
+        self.figure.plot(x, y, 'o', color=color)  # plot the dot
 
     def clean_plot(self):
         while len(self.figure.lines) > 0:
