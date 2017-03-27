@@ -1352,7 +1352,7 @@
 	</object>
 	<object class="wxDialog" name="TripLogDialog" subclass="pytripgui.dialogs.triplogdialog.TripLogDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Trip Log</title>
+		<title>TRiP98 Log</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1362,9 +1362,8 @@
 				<border>5</border>
 				<object class="wxTextCtrl" name="txt_log">
 					<style>wxHSCROLL|wxTE_MULTILINE|wxTE_READONLY</style>
-					<size>400,400</size>
+					<size>800,400</size>
 					<value></value>
-					<maxlength>0</maxlength>
 				</object>
 			</object>
 			<object class="sizeritem">
@@ -1387,7 +1386,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxCheckBox" name="check_close">
-							<label>Close window when calculation done</label>
+							<label>Close window when calculation has completed</label>
 							<checked>0</checked>
 						</object>
 					</object>
