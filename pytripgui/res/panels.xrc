@@ -301,7 +301,7 @@
 				<border>5</border>
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
-						<label>General</label>
+						<label>Tissue Types</label>
 						<selected>0</selected>
 						<object class="wxPanel" name="m_panel41">
 							<style>wxTAB_TRAVERSAL</style>
@@ -333,7 +333,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText38">
-														<label>If biological optimization or calculation are choosen, tissue type should be set</label>
+														<label>If biological optimization or calculation are choosen, tissue type must be specified</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -385,7 +385,7 @@
 						</object>
 					</object>
 					<object class="notebookpage">
-						<label>TRiP</label>
+						<label>TRiP98</label>
 						<selected>1</selected>
 						<object class="wxPanel" name="m_panel1">
 							<style>wxTAB_TRAVERSAL</style>
@@ -402,7 +402,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText17">
-												<label>Location of TRiP</label>
+												<label>Location of TRiP98 installation</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -414,7 +414,7 @@
 												<selection>0</selection>
 												<content>
 													<item>Local</item>
-													<item>Remote</item>
+													<item>Remote server</item>
 												</content>
 											</object>
 										</object>
@@ -432,7 +432,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText18">
-												<label>If working directory is not specified, input folder will be used</label>
+												<label>If working directory is not specified, the local CT-dir will be used</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -477,7 +477,7 @@
 											<flag>wxEXPAND</flag>
 											<border>5</border>
 											<object class="wxFlexGridSizer">
-												<rows>2</rows>
+												<rows>3</rows>
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
@@ -488,7 +488,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText20">
-														<label>Server IP/Name</label>
+														<label>Server IP/Hostname</label>
 														<wrap>-1</wrap>
 													</object>
 												</object>
@@ -557,7 +557,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText64">
-										<label>Select what TRiP should calculate</label>
+										<label>Select what TRiP98 should calculate</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -584,7 +584,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText65">
-										<label>If Biological Dose is checked target and residual tissue type should be specified</label>
+										<label>(Biological Dose need target and residual tissue type to be specified)</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -593,7 +593,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxCheckBox" name="check_mean_let">
-										<label>Dose Mean LET</label>
+										<label>Dose-averaged LET</label>
 										<checked>0</checked>
 									</object>
 								</object>
@@ -602,7 +602,7 @@
 									<flag>wxALL</flag>
 									<border>5</border>
 									<object class="wxCheckBox" name="check_field">
-										<label>Field</label>
+										<label>Raster Scan File (.rst) / Field</label>
 										<checked>0</checked>
 									</object>
 								</object>
@@ -630,7 +630,7 @@
 									<flag></flag>
 									<border>5</border>
 									<object class="wxGridSizer">
-										<rows>2</rows>
+										<rows>8</rows>
 										<cols>2</cols>
 										<vgap>0</vgap>
 										<hgap>0</hgap>
@@ -704,8 +704,8 @@
 											<object class="wxChoice" name="drop_opt_method">
 												<selection>0</selection>
 												<content>
-													<item>Phys</item>
-													<item>Bio</item>
+													<item>Physical Dose</item>
+													<item>Biological Dose (LEM)</item>
 												</content>
 											</object>
 										</object>
@@ -789,11 +789,11 @@
 											<object class="wxChoice" name="drop_opt_alg">
 												<selection>0</selection>
 												<content>
-													<item>cl</item>
-													<item>cg</item>
-													<item>gr</item>
-													<item>bf</item>
-													<item>fr</item>
+													<item>Classic</item>
+													<item>Conjugate Gradients</item>
+													<item>Plain Gradients</item>
+													<item>Bortfeld</item>
+													<item>Fletcher-Reeves</item>
 												</content>
 											</object>
 										</object>
@@ -888,7 +888,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText75">
-												<label>Choose SIS file (leave empty for dummy file)</label>
+												<label>Choose SIS file (optional)</label>
 												<wrap>-1</wrap>
 											</object>
 										</object>
@@ -925,7 +925,7 @@
 						<object class="wxPanel" name="m_panel14">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
-								<rows>2</rows>
+								<rows>3</rows>
 								<cols>2</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
@@ -1352,7 +1352,7 @@
 	</object>
 	<object class="wxDialog" name="TripLogDialog" subclass="pytripgui.dialogs.triplogdialog.TripLogDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Trip Log</title>
+		<title>TRiP98 Log</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1362,9 +1362,8 @@
 				<border>5</border>
 				<object class="wxTextCtrl" name="txt_log">
 					<style>wxHSCROLL|wxTE_MULTILINE|wxTE_READONLY</style>
-					<size>400,400</size>
+					<size>800,400</size>
 					<value></value>
-					<maxlength>0</maxlength>
 				</object>
 			</object>
 			<object class="sizeritem">
@@ -1387,7 +1386,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxCheckBox" name="check_close">
-							<label>Close window when calculation done</label>
+							<label>Close window when calculation has completed</label>
 							<checked>0</checked>
 						</object>
 					</object>

@@ -135,6 +135,7 @@ class MainFrame(wx.Frame):
         panels = {"dvh": DVHPanel, "lvh": LVHPanel}
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
+                logger.debug("GUI: Opening {:s} Dialog".format(msg.topic[1]))
                 pytripDialog = self.res.LoadDialog(self, dialogs[msg.topic[1]])
                 pytripDialog.Init(msg.data)
                 self.Enable(False)
