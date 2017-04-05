@@ -233,7 +233,6 @@ class TripExecuter(pte_te.TripExecuter):
         super(TripExecuter, self).__init__(images, rbe)
 
     def log(self, txt):
-        txt = txt.replace("\n", "")
         for l in self.listeners:
             wx.CallAfter(l.write, txt)
 
