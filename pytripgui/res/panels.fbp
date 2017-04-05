@@ -38,7 +38,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -46,7 +46,7 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.fielddialog.FieldDialog; </property>
+            <property name="subclass">pytripgui.dialogs.fielddialog.FieldDialog</property>
             <property name="title">Field</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -90,7 +90,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer1</property>
+                <property name="name">bSizer41</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -123,7 +123,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="label"></property>
                         <property name="max_size"></property>
@@ -187,10 +187,10 @@
                         <property name="growablerows"></property>
                         <property name="hgap">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">fgSizer1</property>
+                        <property name="name">fgSizer16</property>
                         <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                         <property name="permission">none</property>
-                        <property name="rows">2</property>
+                        <property name="rows">11</property>
                         <property name="vgap">0</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
@@ -222,7 +222,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Set Isocenter</property>
                                 <property name="max_size"></property>
@@ -306,7 +306,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label"></property>
                                 <property name="max_size"></property>
@@ -393,9 +393,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Isocenter</property>
+                                <property name="label">Isocenter X,Y,Z [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -452,7 +452,7 @@
                             <property name="proportion">1</property>
                             <object class="wxBoxSizer" expanded="0">
                                 <property name="minimum_size"></property>
-                                <property name="name">bSizer29</property>
+                                <property name="name">bSizer42</property>
                                 <property name="orient">wxHORIZONTAL</property>
                                 <property name="permission">none</property>
                                 <object class="sizeritem" expanded="0">
@@ -485,7 +485,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -576,7 +576,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -667,7 +667,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -760,9 +760,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Gantry</property>
+                                <property name="label">Gantry angle [deg]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -843,7 +843,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -934,9 +934,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Couch</property>
+                                <property name="label">Couch angle [deg]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -1017,7 +1017,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -1108,9 +1108,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Fwhm</property>
+                                <property name="label">Spot size FWHM [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -1191,7 +1191,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -1282,9 +1282,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Raster Spacing</property>
+                                <property name="label">Raster Spacing X,Y [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -1341,7 +1341,7 @@
                             <property name="proportion">1</property>
                             <object class="wxBoxSizer" expanded="0">
                                 <property name="minimum_size"></property>
-                                <property name="name">bSizer12</property>
+                                <property name="name">bSizer43</property>
                                 <property name="orient">wxHORIZONTAL</property>
                                 <property name="permission">none</property>
                                 <object class="sizeritem" expanded="0">
@@ -1374,7 +1374,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -1393,7 +1393,7 @@
                                         <property name="pos"></property>
                                         <property name="resize">Resizable</property>
                                         <property name="show">1</property>
-                                        <property name="size">40,-1</property>
+                                        <property name="size">50,-1</property>
                                         <property name="style"></property>
                                         <property name="subclass"></property>
                                         <property name="toolbar_pane">0</property>
@@ -1465,7 +1465,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -1484,7 +1484,7 @@
                                         <property name="pos"></property>
                                         <property name="resize">Resizable</property>
                                         <property name="show">1</property>
-                                        <property name="size">40,-1</property>
+                                        <property name="size">50,-1</property>
                                         <property name="style"></property>
                                         <property name="subclass"></property>
                                         <property name="toolbar_pane">0</property>
@@ -1558,7 +1558,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Doseext</property>
                                 <property name="max_size"></property>
@@ -1641,7 +1641,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -1732,7 +1732,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Contourext</property>
                                 <property name="max_size"></property>
@@ -1815,7 +1815,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -1906,9 +1906,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">ZSteps</property>
+                                <property name="label">Depth steps [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -1989,7 +1989,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -2080,7 +2080,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Projectile</property>
                                 <property name="max_size"></property>
@@ -2164,7 +2164,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -2229,7 +2229,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer3</property>
+                        <property name="name">bSizer44</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -2263,7 +2263,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -2351,8 +2351,8 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
-                                <property name="id">wxID_OK</property>
+                                <property name="hidden"></property>
+                                <property name="id">wxID_ANY</property>
                                 <property name="label">Ok</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -2424,7 +2424,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -2432,7 +2432,7 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.plandialog.PlanDialog; </property>
+            <property name="subclass">pytripgui.dialogs.plandialog.PlanDialog</property>
             <property name="title">Plan</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -2476,12 +2476,12 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer5</property>
+                <property name="name">bSizer45</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND | wxALL</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
                     <property name="proportion">1</property>
                     <object class="wxNotebook" expanded="0">
                         <property name="BottomDockable">1</property>
@@ -2510,7 +2510,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="max_size"></property>
                         <property name="maximize_button">0</property>
@@ -2563,7 +2563,7 @@
                         <event name="OnUpdateUI"></event>
                         <object class="notebookpage" expanded="0">
                             <property name="bitmap"></property>
-                            <property name="label">General</property>
+                            <property name="label">Tissue Types</property>
                             <property name="select">0</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -2641,7 +2641,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer17</property>
+                                    <property name="name">bSizer46</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -2655,7 +2655,7 @@
                                             <property name="growablerows"></property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">fgSizer41</property>
+                                            <property name="name">fgSizer17</property>
                                             <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                             <property name="permission">none</property>
                                             <property name="rows">2</property>
@@ -2671,7 +2671,7 @@
                                                     <property name="growablerows"></property>
                                                     <property name="hgap">0</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">gbSizer2</property>
+                                                    <property name="name">gbSizer3</property>
                                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                     <property name="permission">none</property>
                                                     <property name="vgap">0</property>
@@ -2710,7 +2710,7 @@
                                                             <property name="gripper">0</property>
                                                             <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">If biological optimization or calculation are choosen, tissue type should be set</property>
+                                                            <property name="label">If biological optimization or calculation are choosen, tissue type must be specified</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -3124,7 +3124,7 @@
                         </object>
                         <object class="notebookpage" expanded="0">
                             <property name="bitmap"></property>
-                            <property name="label">TRiP</property>
+                            <property name="label">TRiP98</property>
                             <property name="select">1</property>
                             <object class="wxPanel" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -3152,7 +3152,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -3202,7 +3202,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer8</property>
+                                    <property name="name">bSizer47</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -3211,7 +3211,7 @@
                                         <property name="proportion">0</property>
                                         <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
-                                            <property name="name">bSizer7</property>
+                                            <property name="name">bSizer48</property>
                                             <property name="orient">wxHORIZONTAL</property>
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
@@ -3244,9 +3244,9 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">Location of TRiP</property>
+                                                    <property name="label">Location of TRiP98 installation</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
                                                     <property name="maximum_size"></property>
@@ -3315,7 +3315,7 @@
                                                     <property name="caption"></property>
                                                     <property name="caption_visible">1</property>
                                                     <property name="center_pane">0</property>
-                                                    <property name="choices">&quot;Local&quot; &quot;Remote&quot;</property>
+                                                    <property name="choices">&quot;Local&quot; &quot;Remote server&quot;</property>
                                                     <property name="close_button">1</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
@@ -3328,7 +3328,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -3395,7 +3395,7 @@
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Working Directory</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">sbSizer2</property>
+                                            <property name="name">sbSizer3</property>
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="parent">1</property>
                                             <property name="permission">none</property>
@@ -3430,9 +3430,9 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">If working directory is not specified, input folder will be used</property>
+                                                    <property name="label">If working directory is not specified, the local CT-dir will be used</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
                                                     <property name="maximum_size"></property>
@@ -3489,7 +3489,7 @@
                                                 <property name="proportion">1</property>
                                                 <object class="wxBoxSizer" expanded="0">
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">bSizer11</property>
+                                                    <property name="name">bSizer49</property>
                                                     <property name="orient">wxHORIZONTAL</property>
                                                     <property name="permission">none</property>
                                                     <object class="sizeritem" expanded="0">
@@ -3522,7 +3522,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -3614,7 +3614,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="label">Browse</property>
                                                             <property name="max_size"></property>
@@ -3683,7 +3683,7 @@
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Remote</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">sbSizer3</property>
+                                            <property name="name">sbSizer4</property>
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="parent">1</property>
                                             <property name="permission">none</property>
@@ -3699,10 +3699,10 @@
                                                     <property name="growablerows"></property>
                                                     <property name="hgap">0</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">fgSizer4</property>
+                                                    <property name="name">fgSizer18</property>
                                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                     <property name="permission">none</property>
-                                                    <property name="rows">2</property>
+                                                    <property name="rows">3</property>
                                                     <property name="vgap">0</property>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
@@ -3734,9 +3734,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Server IP/Name</property>
+                                                            <property name="label">Server IP/Hostname</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -3817,7 +3817,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -3908,7 +3908,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="label">Username</property>
                                                             <property name="max_size"></property>
@@ -3991,7 +3991,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -4082,7 +4082,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="label">Password</property>
                                                             <property name="max_size"></property>
@@ -4165,7 +4165,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -4263,7 +4263,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -4313,7 +4313,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer42</property>
+                                    <property name="name">bSizer50</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -4346,9 +4346,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Select what TRiP should calculate</property>
+                                            <property name="label">Select what TRiP98 should calculate</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -4430,7 +4430,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Physical Dose</property>
                                             <property name="max_size"></property>
@@ -4518,7 +4518,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Biological Dose</property>
                                             <property name="max_size"></property>
@@ -4605,9 +4605,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">If Biological Dose is checked target and residual tissue type should be specified</property>
+                                            <property name="label">(Biological Dose need target and residual tissue type to be specified)</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -4689,9 +4689,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Dose Mean LET</property>
+                                            <property name="label">Dose-averaged LET</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -4777,9 +4777,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Field</property>
+                                            <property name="label">Raster Scan File (.rst) / Field</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -4867,7 +4867,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -4917,7 +4917,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer35</property>
+                                    <property name="name">bSizer51</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -5011,9 +5011,9 @@
                                             <property name="cols">2</property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">gSizer1</property>
+                                            <property name="name">gSizer2</property>
                                             <property name="permission">none</property>
-                                            <property name="rows">2</property>
+                                            <property name="rows">8</property>
                                             <property name="vgap">0</property>
                                             <object class="sizeritem" expanded="0">
                                                 <property name="border">5</property>
@@ -5638,7 +5638,7 @@
                                                     <property name="caption"></property>
                                                     <property name="caption_visible">1</property>
                                                     <property name="center_pane">0</property>
-                                                    <property name="choices">&quot;Phys&quot; &quot;Bio&quot;</property>
+                                                    <property name="choices">&quot;Physical Dose&quot; &quot;Biological Dose (LEM)&quot;</property>
                                                     <property name="close_button">1</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
@@ -6322,7 +6322,7 @@
                                                     <property name="caption"></property>
                                                     <property name="caption_visible">1</property>
                                                     <property name="center_pane">0</property>
-                                                    <property name="choices">&quot;cl&quot; &quot;cg&quot; &quot;gr&quot; &quot;bf&quot; &quot;fr&quot;</property>
+                                                    <property name="choices">&quot;Classic&quot; &quot;Conjugate Gradients&quot; &quot;Plain Gradients&quot; &quot;Bortfeld&quot; &quot;Fletcher-Reeves&quot;</property>
                                                     <property name="close_button">1</property>
                                                     <property name="context_help"></property>
                                                     <property name="context_menu">1</property>
@@ -6427,7 +6427,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -6477,7 +6477,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer171</property>
+                                    <property name="name">bSizer52</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -6491,7 +6491,7 @@
                                             <property name="growablerows"></property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">gbSizer3</property>
+                                            <property name="name">gbSizer4</property>
                                             <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                             <property name="permission">none</property>
                                             <property name="vgap">0</property>
@@ -6528,7 +6528,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Choose DDD directory</property>
                                                     <property name="max_size"></property>
@@ -6614,7 +6614,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -6709,7 +6709,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Browse...</property>
                                                     <property name="max_size"></property>
@@ -6799,7 +6799,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Choose SPC directory</property>
                                                     <property name="max_size"></property>
@@ -6885,7 +6885,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -6980,7 +6980,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Browse...</property>
                                                     <property name="max_size"></property>
@@ -7070,9 +7070,9 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">Choose SIS file (leave empty for dummy file)</property>
+                                                    <property name="label">Choose SIS file (optional)</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
                                                     <property name="maximum_size"></property>
@@ -7156,7 +7156,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -7251,7 +7251,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Browse..</property>
                                                     <property name="max_size"></property>
@@ -7343,7 +7343,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -7398,10 +7398,10 @@
                                     <property name="growablerows"></property>
                                     <property name="hgap">0</property>
                                     <property name="minimum_size"></property>
-                                    <property name="name">fgSizer13</property>
+                                    <property name="name">fgSizer19</property>
                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                     <property name="permission">none</property>
-                                    <property name="rows">2</property>
+                                    <property name="rows">3</property>
                                     <property name="vgap">0</property>
                                     <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
@@ -7433,7 +7433,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Projectile</property>
                                             <property name="max_size"></property>
@@ -7517,7 +7517,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -7604,7 +7604,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Dose %</property>
                                             <property name="max_size"></property>
@@ -7687,7 +7687,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -7779,7 +7779,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Set</property>
                                             <property name="max_size"></property>
@@ -7847,7 +7847,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer43</property>
+                        <property name="name">bSizer53</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -7881,7 +7881,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -7969,7 +7969,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Ok</property>
                                 <property name="max_size"></property>
@@ -8042,7 +8042,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -8050,8 +8050,8 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.tripvoidialog.TripVoiDialog; </property>
-            <property name="title">Voi</property>
+            <property name="subclass">pytripgui.dialogs.tripvoidialog.TripVoiDialog</property>
+            <property name="title">ROI Properties</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -8094,12 +8094,12 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer26</property>
+                <property name="name">bSizer54</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
-                    <property name="flag">wxEXPAND | wxALL</property>
+                    <property name="flag">wxEXPAND|wxALL</property>
                     <property name="proportion">1</property>
                     <object class="wxNotebook" expanded="0">
                         <property name="BottomDockable">1</property>
@@ -8128,7 +8128,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="max_size"></property>
                         <property name="maximize_button">0</property>
@@ -8209,7 +8209,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -8264,10 +8264,10 @@
                                     <property name="growablerows"></property>
                                     <property name="hgap">0</property>
                                     <property name="minimum_size"></property>
-                                    <property name="name">fgSizer6</property>
+                                    <property name="name">fgSizer20</property>
                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                     <property name="permission">none</property>
-                                    <property name="rows">2</property>
+                                    <property name="rows">5</property>
                                     <property name="vgap">0</property>
                                     <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
@@ -8299,7 +8299,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label"></property>
                                             <property name="max_size"></property>
@@ -8382,7 +8382,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label"></property>
                                             <property name="max_size"></property>
@@ -8465,9 +8465,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Target</property>
+                                            <property name="label">Set as Target</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -8549,7 +8549,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label"></property>
                                             <property name="max_size"></property>
@@ -8636,9 +8636,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Dose (Gy)</property>
+                                            <property name="label">Dose [Gy]</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -8719,7 +8719,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -8810,9 +8810,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">OAR</property>
+                                            <property name="label">Set as OAR</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -8894,7 +8894,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label"></property>
                                             <property name="max_size"></property>
@@ -8981,9 +8981,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Max Dose Fraction</property>
+                                            <property name="label">Max Dose Fraction [%]</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -9064,7 +9064,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -9158,7 +9158,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -9208,7 +9208,7 @@
                                 <event name="OnUpdateUI"></event>
                                 <object class="wxBoxSizer" expanded="0">
                                     <property name="minimum_size"></property>
-                                    <property name="name">bSizer15</property>
+                                    <property name="name">bSizer55</property>
                                     <property name="orient">wxVERTICAL</property>
                                     <property name="permission">none</property>
                                     <object class="sizeritem" expanded="0">
@@ -9241,9 +9241,9 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Override existing HU values for voi </property>
+                                            <property name="label">Override existing HU values for ROI </property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -9305,7 +9305,7 @@
                                             <property name="growablerows"></property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
-                                            <property name="name">fgSizer8</property>
+                                            <property name="name">fgSizer21</property>
                                             <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                             <property name="permission">none</property>
                                             <property name="rows">2</property>
@@ -9340,9 +9340,9 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">HU Value</property>
+                                                    <property name="label">Set all HU values in ROI to [HU]</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
                                                     <property name="maximum_size"></property>
@@ -9423,7 +9423,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -9446,7 +9446,7 @@
                                                     <property name="style"></property>
                                                     <property name="subclass"></property>
                                                     <property name="toolbar_pane">0</property>
-                                                    <property name="tooltip">Overrides the original HU value</property>
+                                                    <property name="tooltip">Overrides the original HU value with the HU value given</property>
                                                     <property name="validator_data_type"></property>
                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                     <property name="validator_type">wxDefaultValidator</property>
@@ -9514,9 +9514,9 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="label">HU Offset</property>
+                                                    <property name="label">Add offset to HU in ROI [HU]</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
                                                     <property name="maximum_size"></property>
@@ -9597,7 +9597,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="max_size"></property>
                                                     <property name="maximize_button">0</property>
@@ -9620,7 +9620,7 @@
                                                     <property name="style"></property>
                                                     <property name="subclass"></property>
                                                     <property name="toolbar_pane">0</property>
-                                                    <property name="tooltip">Add an offset to the HU values</property>
+                                                    <property name="tooltip">Adds this HU value to the HU values in ROI</property>
                                                     <property name="validator_data_type"></property>
                                                     <property name="validator_style">wxFILTER_NONE</property>
                                                     <property name="validator_type">wxDefaultValidator</property>
@@ -9693,7 +9693,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -9748,10 +9748,10 @@
                                     <property name="growablerows"></property>
                                     <property name="hgap">0</property>
                                     <property name="minimum_size"></property>
-                                    <property name="name">fgSizer13</property>
+                                    <property name="name">fgSizer22</property>
                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                     <property name="permission">none</property>
-                                    <property name="rows">2</property>
+                                    <property name="rows">3</property>
                                     <property name="vgap">0</property>
                                     <object class="sizeritem" expanded="0">
                                         <property name="border">5</property>
@@ -9783,7 +9783,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Projectile</property>
                                             <property name="max_size"></property>
@@ -9867,7 +9867,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -9954,7 +9954,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Dose %</property>
                                             <property name="max_size"></property>
@@ -10037,7 +10037,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
@@ -10129,7 +10129,7 @@
                                             <property name="floatable">1</property>
                                             <property name="font"></property>
                                             <property name="gripper">0</property>
-                                            <property name="hidden">0</property>
+                                            <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
                                             <property name="label">Set</property>
                                             <property name="max_size"></property>
@@ -10197,7 +10197,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer27</property>
+                        <property name="name">bSizer56</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -10231,7 +10231,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -10319,7 +10319,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Ok</property>
                                 <property name="max_size"></property>
@@ -10392,7 +10392,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -10400,7 +10400,7 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.dosedialog.DoseDialog; </property>
+            <property name="subclass">pytripgui.dialogs.dosedialog.DoseDialog</property>
             <property name="title">DoseDialog</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -10444,7 +10444,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer17</property>
+                <property name="name">bSizer57</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -10458,7 +10458,7 @@
                         <property name="growablerows"></property>
                         <property name="hgap">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">fgSizer10</property>
+                        <property name="name">fgSizer23</property>
                         <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                         <property name="permission">none</property>
                         <property name="rows">2</property>
@@ -10493,9 +10493,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Target Dose (Gy)</property>
+                                <property name="label">Target Dose [Gy]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -10576,7 +10576,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -10645,7 +10645,7 @@
                     <property name="proportion">1</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer18</property>
+                        <property name="name">bSizer58</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -10679,7 +10679,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -10767,7 +10767,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Ok</property>
                                 <property name="max_size"></property>
@@ -10840,7 +10840,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -10848,8 +10848,8 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.triplogdialog.TripLogDialog; </property>
-            <property name="title">Trip Log</property>
+            <property name="subclass">pytripgui.dialogs.triplogdialog.TripLogDialog</property>
+            <property name="title">TRiP98 Log</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -10892,7 +10892,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer18</property>
+                <property name="name">bSizer59</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -10925,7 +10925,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="max_size"></property>
                         <property name="maximize_button">0</property>
@@ -10944,8 +10944,8 @@
                         <property name="pos"></property>
                         <property name="resize">Resizable</property>
                         <property name="show">1</property>
-                        <property name="size">400,400</property>
-                        <property name="style">wxHSCROLL|wxTE_MULTILINE|wxTE_READONLY</property>
+                        <property name="size">800,400</property>
+                        <property name="style">wxTE_MULTILINE|wxTE_READONLY</property>
                         <property name="subclass"></property>
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip"></property>
@@ -10956,7 +10956,7 @@
                         <property name="value"></property>
                         <property name="window_extra_style"></property>
                         <property name="window_name"></property>
-                        <property name="window_style"></property>
+                        <property name="window_style">wxHSCROLL</property>
                         <event name="OnChar"></event>
                         <event name="OnEnterWindow"></event>
                         <event name="OnEraseBackground"></event>
@@ -10992,7 +10992,7 @@
                     <property name="proportion">1</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer19</property>
+                        <property name="name">bSizer60</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -11026,7 +11026,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Ok</property>
                                 <property name="max_size"></property>
@@ -11114,9 +11114,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Close window when calculation done</property>
+                                <property name="label">Close window when calculation has completed</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -11187,7 +11187,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -11195,8 +11195,8 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.createcubedialog.CreateCubeDialog; </property>
-            <property name="title">Create Cube</property>
+            <property name="subclass">pytripgui.dialogs.createcubedialog.CreateCubeDialog</property>
+            <property name="title">Create CT-Cube</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -11239,7 +11239,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer21</property>
+                <property name="name">bSizer61</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -11253,10 +11253,10 @@
                         <property name="growablerows"></property>
                         <property name="hgap">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">fgSizer7</property>
+                        <property name="name">fgSizer24</property>
                         <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                         <property name="permission">none</property>
-                        <property name="rows">2</property>
+                        <property name="rows">7</property>
                         <property name="vgap">0</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
@@ -11288,7 +11288,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Name</property>
                                 <property name="max_size"></property>
@@ -11371,7 +11371,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -11462,7 +11462,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">HU Value</property>
                                 <property name="max_size"></property>
@@ -11545,7 +11545,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -11636,9 +11636,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Dimx</property>
+                                <property name="label"># of Pixels X</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -11719,7 +11719,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -11810,9 +11810,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Dimy</property>
+                                <property name="label"># of Pixels Y</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -11893,7 +11893,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -11984,9 +11984,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Dimz</property>
+                                <property name="label"># of Slices</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -12067,7 +12067,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -12158,9 +12158,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Pixel Size</property>
+                                <property name="label">Pixel Size [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -12241,7 +12241,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -12332,9 +12332,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Slice Distance</property>
+                                <property name="label">Slice Distance [mm]</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -12415,7 +12415,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -12484,7 +12484,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer22</property>
+                        <property name="name">bSizer62</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -12518,7 +12518,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -12606,7 +12606,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Create</property>
                                 <property name="max_size"></property>
@@ -12679,7 +12679,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -12687,8 +12687,8 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.createstructuredialog.CreateStructureDialog; </property>
-            <property name="title">Create Structure</property>
+            <property name="subclass">pytripgui.dialogs.createstructuredialog.CreateStructureDialog</property>
+            <property name="title">Create ROI</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -12731,7 +12731,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer22</property>
+                <property name="name">bSizer63</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -12740,7 +12740,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer26</property>
+                        <property name="name">bSizer64</property>
                         <property name="orient">wxVERTICAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -12773,9 +12773,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Define center of structure</property>
+                                <property name="label">Define center of ROI</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -12837,10 +12837,10 @@
                                 <property name="growablerows"></property>
                                 <property name="hgap">0</property>
                                 <property name="minimum_size"></property>
-                                <property name="name">fgSizer9</property>
+                                <property name="name">fgSizer25</property>
                                 <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                 <property name="permission">none</property>
-                                <property name="rows">2</property>
+                                <property name="rows">4</property>
                                 <property name="vgap">0</property>
                                 <object class="sizeritem" expanded="0">
                                     <property name="border">5</property>
@@ -12872,7 +12872,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="label">Name</property>
                                         <property name="max_size"></property>
@@ -12955,7 +12955,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -13046,9 +13046,9 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">X (mm)</property>
+                                        <property name="label">X [mm]</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
@@ -13129,7 +13129,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -13220,9 +13220,9 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">Y (mm)</property>
+                                        <property name="label">Y [mm]</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
@@ -13303,7 +13303,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -13394,9 +13394,9 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
-                                        <property name="label">Z (mm)</property>
+                                        <property name="label">Z [mm]</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
                                         <property name="maximum_size"></property>
@@ -13477,7 +13477,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -13548,12 +13548,12 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer23</property>
+                        <property name="name">bSizer65</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
-                            <property name="flag">wxEXPAND | wxALL</property>
+                            <property name="flag">wxEXPAND|wxALL</property>
                             <property name="proportion">1</property>
                             <object class="wxNotebook" expanded="0">
                                 <property name="BottomDockable">1</property>
@@ -13582,7 +13582,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -13663,7 +13663,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -13713,7 +13713,7 @@
                                         <event name="OnUpdateUI"></event>
                                         <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
-                                            <property name="name">bSizer24</property>
+                                            <property name="name">bSizer66</property>
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
@@ -13746,7 +13746,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Define size of cube</property>
                                                     <property name="max_size"></property>
@@ -13810,10 +13810,10 @@
                                                     <property name="growablerows"></property>
                                                     <property name="hgap">0</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">fgSizer10</property>
+                                                    <property name="name">fgSizer26</property>
                                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                     <property name="permission">none</property>
-                                                    <property name="rows">2</property>
+                                                    <property name="rows">3</property>
                                                     <property name="vgap">0</property>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
@@ -13845,9 +13845,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Width (mm)</property>
+                                                            <property name="label">Width [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -13928,7 +13928,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -14019,9 +14019,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Height (mm)</property>
+                                                            <property name="label">Height [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -14102,7 +14102,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -14193,9 +14193,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Depth (mm)</property>
+                                                            <property name="label">Depth [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -14276,7 +14276,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -14372,7 +14372,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -14422,7 +14422,7 @@
                                         <event name="OnUpdateUI"></event>
                                         <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
-                                            <property name="name">bSizer271</property>
+                                            <property name="name">bSizer67</property>
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
@@ -14455,7 +14455,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Define size of cylinder</property>
                                                     <property name="max_size"></property>
@@ -14519,7 +14519,7 @@
                                                     <property name="growablerows"></property>
                                                     <property name="hgap">0</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">fgSizer11</property>
+                                                    <property name="name">fgSizer27</property>
                                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                     <property name="permission">none</property>
                                                     <property name="rows">2</property>
@@ -14554,9 +14554,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Radius (mm)</property>
+                                                            <property name="label">Radius [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -14637,7 +14637,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -14728,9 +14728,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Depth (mm)</property>
+                                                            <property name="label">Depth [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -14811,7 +14811,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -14907,7 +14907,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -14957,7 +14957,7 @@
                                         <event name="OnUpdateUI"></event>
                                         <object class="wxBoxSizer" expanded="0">
                                             <property name="minimum_size"></property>
-                                            <property name="name">bSizer2711</property>
+                                            <property name="name">bSizer68</property>
                                             <property name="orient">wxVERTICAL</property>
                                             <property name="permission">none</property>
                                             <object class="sizeritem" expanded="0">
@@ -14990,7 +14990,7 @@
                                                     <property name="floatable">1</property>
                                                     <property name="font"></property>
                                                     <property name="gripper">0</property>
-                                                    <property name="hidden">0</property>
+                                                    <property name="hidden"></property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="label">Define size of sphere</property>
                                                     <property name="max_size"></property>
@@ -15054,7 +15054,7 @@
                                                     <property name="growablerows"></property>
                                                     <property name="hgap">0</property>
                                                     <property name="minimum_size"></property>
-                                                    <property name="name">fgSizer111</property>
+                                                    <property name="name">fgSizer28</property>
                                                     <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                     <property name="permission">none</property>
                                                     <property name="rows">2</property>
@@ -15089,9 +15089,9 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
-                                                            <property name="label">Radius (mm)</property>
+                                                            <property name="label">Radius [mm]</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
                                                             <property name="maximum_size"></property>
@@ -15172,7 +15172,7 @@
                                                             <property name="floatable">1</property>
                                                             <property name="font"></property>
                                                             <property name="gripper">0</property>
-                                                            <property name="hidden">0</property>
+                                                            <property name="hidden"></property>
                                                             <property name="id">wxID_ANY</property>
                                                             <property name="max_size"></property>
                                                             <property name="maximize_button">0</property>
@@ -15248,7 +15248,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer27</property>
+                        <property name="name">bSizer69</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -15282,7 +15282,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -15370,7 +15370,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Create</property>
                                 <property name="max_size"></property>
@@ -15443,7 +15443,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -15451,7 +15451,7 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.progressdialog.ProgressDialog; </property>
+            <property name="subclass">pytripgui.dialogs.progressdialog.ProgressDialog</property>
             <property name="title"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -15495,7 +15495,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer30</property>
+                <property name="name">bSizer70</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -15528,7 +15528,7 @@
                         <property name="floatable">1</property>
                         <property name="font"></property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="label">Please wait while the choosen action is performed</property>
                         <property name="max_size"></property>
@@ -15549,7 +15549,7 @@
                         <property name="show">1</property>
                         <property name="size"></property>
                         <property name="style"></property>
-                        <property name="subclass">; </property>
+                        <property name="subclass"></property>
                         <property name="toolbar_pane">0</property>
                         <property name="tooltip"></property>
                         <property name="window_extra_style"></property>
@@ -15595,7 +15595,7 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
@@ -15603,8 +15603,8 @@
             <property name="pos"></property>
             <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.tripexportdialog.TripExportDialog; </property>
-            <property name="title">Export Voxelplan</property>
+            <property name="subclass">pytripgui.dialogs.tripexportdialog.TripExportDialog</property>
+            <property name="title">Export plan</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -15647,7 +15647,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer31</property>
+                <property name="name">bSizer71</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -15661,10 +15661,10 @@
                         <property name="growablerows"></property>
                         <property name="hgap">0</property>
                         <property name="minimum_size"></property>
-                        <property name="name">fgSizer12</property>
+                        <property name="name">fgSizer29</property>
                         <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                         <property name="permission">none</property>
-                        <property name="rows">2</property>
+                        <property name="rows">3</property>
                         <property name="vgap">0</property>
                         <object class="sizeritem" expanded="0">
                             <property name="border">5</property>
@@ -15696,7 +15696,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">What to export</property>
                                 <property name="max_size"></property>
@@ -15767,7 +15767,7 @@
                                 <property name="caption"></property>
                                 <property name="caption_visible">1</property>
                                 <property name="center_pane">0</property>
-                                <property name="choices">&quot;Full Export&quot; &quot;Only Exec File&quot; &quot;Only Data&quot;</property>
+                                <property name="choices">&quot;Export all&quot; &quot;Only .exec file&quot; &quot;Only .ctx and .vdx&quot;</property>
                                 <property name="close_button">1</property>
                                 <property name="context_help"></property>
                                 <property name="context_menu">1</property>
@@ -15780,7 +15780,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -15867,9 +15867,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">File Prefix</property>
+                                <property name="label">Filename</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -15950,7 +15950,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
@@ -16041,9 +16041,9 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
-                                <property name="label">Folder</property>
+                                <property name="label">Export directory</property>
                                 <property name="max_size"></property>
                                 <property name="maximize_button">0</property>
                                 <property name="maximum_size"></property>
@@ -16125,7 +16125,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Browse...</property>
                                 <property name="max_size"></property>
@@ -16214,7 +16214,7 @@
                         <property name="floatable">1</property>
                         <property name="font">,93,90,-1,70,0</property>
                         <property name="gripper">0</property>
-                        <property name="hidden">0</property>
+                        <property name="hidden"></property>
                         <property name="id">wxID_ANY</property>
                         <property name="label"></property>
                         <property name="max_size"></property>
@@ -16273,7 +16273,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer32</property>
+                        <property name="name">bSizer72</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -16307,7 +16307,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Cancel</property>
                                 <property name="max_size"></property>
@@ -16395,7 +16395,7 @@
                                 <property name="floatable">1</property>
                                 <property name="font"></property>
                                 <property name="gripper">0</property>
-                                <property name="hidden">0</property>
+                                <property name="hidden"></property>
                                 <property name="id">wxID_ANY</property>
                                 <property name="label">Generate</property>
                                 <property name="max_size"></property>
@@ -16468,16 +16468,16 @@
             <property name="extra_style"></property>
             <property name="fg"></property>
             <property name="font"></property>
-            <property name="hidden">0</property>
+            <property name="hidden"></property>
             <property name="id">wxID_ANY</property>
             <property name="maximum_size"></property>
             <property name="minimum_size"></property>
             <property name="name">TripExportCubeDialog</property>
             <property name="pos"></property>
-            <property name="size">-1,-1</property>
+            <property name="size"></property>
             <property name="style">wxDEFAULT_DIALOG_STYLE</property>
-            <property name="subclass">pytripgui.dialogs.tripexportcubedialog.TripExportCubeDialog; </property>
-            <property name="title">Export Cube</property>
+            <property name="subclass">pytripgui.dialogs.tripexportcubedialog.TripExportCubeDialog</property>
+            <property name="title">Export ROI cube</property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -16520,7 +16520,7 @@
             <event name="OnUpdateUI"></event>
             <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
-                <property name="name">bSizer36</property>
+                <property name="name">bSizer73</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
                 <object class="sizeritem" expanded="0">
@@ -16529,7 +16529,7 @@
                     <property name="proportion">0</property>
                     <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
-                        <property name="name">bSizer37</property>
+                        <property name="name">bSizer74</property>
                         <property name="orient">wxHORIZONTAL</property>
                         <property name="permission">none</property>
                         <object class="sizeritem" expanded="0">
@@ -16538,7 +16538,7 @@
                             <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="0">
                                 <property name="minimum_size"></property>
-                                <property name="name">bSizer38</property>
+                                <property name="name">bSizer75</property>
                                 <property name="orient">wxVERTICAL</property>
                                 <property name="permission">none</property>
                                 <object class="sizeritem" expanded="0">
@@ -16572,7 +16572,7 @@
                                         <property name="floatable">1</property>
                                         <property name="font"></property>
                                         <property name="gripper">0</property>
-                                        <property name="hidden">0</property>
+                                        <property name="hidden"></property>
                                         <property name="id">wxID_ANY</property>
                                         <property name="max_size"></property>
                                         <property name="maximize_button">0</property>
@@ -16588,7 +16588,7 @@
                                         <property name="permission">protected</property>
                                         <property name="pin_button">1</property>
                                         <property name="pos"></property>
-                                        <property name="resize">Fixed</property>
+                                        <property name="resize">Resizable</property>
                                         <property name="show">1</property>
                                         <property name="size">200,300</property>
                                         <property name="style"></property>
@@ -16638,7 +16638,7 @@
                             <property name="proportion">0</property>
                             <object class="wxBoxSizer" expanded="0">
                                 <property name="minimum_size"></property>
-                                <property name="name">bSizer381</property>
+                                <property name="name">bSizer76</property>
                                 <property name="orient">wxHORIZONTAL</property>
                                 <property name="permission">none</property>
                                 <object class="sizeritem" expanded="0">
@@ -16647,7 +16647,7 @@
                                     <property name="proportion">0</property>
                                     <object class="wxBoxSizer" expanded="0">
                                         <property name="minimum_size"></property>
-                                        <property name="name">bSizer391</property>
+                                        <property name="name">bSizer77</property>
                                         <property name="orient">wxVERTICAL</property>
                                         <property name="permission">none</property>
                                         <object class="sizeritem" expanded="0">
@@ -16656,7 +16656,7 @@
                                             <property name="proportion">1</property>
                                             <object class="wxBoxSizer" expanded="0">
                                                 <property name="minimum_size"></property>
-                                                <property name="name">bSizer41</property>
+                                                <property name="name">bSizer78</property>
                                                 <property name="orient">wxVERTICAL</property>
                                                 <property name="permission">none</property>
                                                 <object class="sizeritem" expanded="0">
@@ -16670,7 +16670,7 @@
                                                         <property name="growablerows"></property>
                                                         <property name="hgap">0</property>
                                                         <property name="minimum_size"></property>
-                                                        <property name="name">fgSizer15</property>
+                                                        <property name="name">fgSizer30</property>
                                                         <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
                                                         <property name="permission">none</property>
                                                         <property name="rows">0</property>
@@ -16705,9 +16705,9 @@
                                                                 <property name="floatable">1</property>
                                                                 <property name="font"></property>
                                                                 <property name="gripper">0</property>
-                                                                <property name="hidden">0</property>
+                                                                <property name="hidden"></property>
                                                                 <property name="id">wxID_ANY</property>
-                                                                <property name="label">Value</property>
+                                                                <property name="label">Value in ROI</property>
                                                                 <property name="max_size"></property>
                                                                 <property name="maximize_button">0</property>
                                                                 <property name="maximum_size"></property>
@@ -16788,12 +16788,12 @@
                                                                 <property name="floatable">1</property>
                                                                 <property name="font"></property>
                                                                 <property name="gripper">0</property>
-                                                                <property name="hidden">0</property>
+                                                                <property name="hidden"></property>
                                                                 <property name="id">wxID_ANY</property>
                                                                 <property name="max_size"></property>
                                                                 <property name="maximize_button">0</property>
                                                                 <property name="maximum_size"></property>
-                                                                <property name="maxlength"></property>
+                                                                <property name="maxlength">0</property>
                                                                 <property name="min_size"></property>
                                                                 <property name="minimize_button">0</property>
                                                                 <property name="minimum_size"></property>
@@ -16859,7 +16859,7 @@
                                             <property name="proportion">0</property>
                                             <object class="wxBoxSizer" expanded="0">
                                                 <property name="minimum_size"></property>
-                                                <property name="name">bSizer42</property>
+                                                <property name="name">bSizer79</property>
                                                 <property name="orient">wxVERTICAL</property>
                                                 <property name="permission">none</property>
                                                 <object class="sizeritem" expanded="0">
@@ -16893,7 +16893,7 @@
                                                         <property name="floatable">1</property>
                                                         <property name="font"></property>
                                                         <property name="gripper">0</property>
-                                                        <property name="hidden">0</property>
+                                                        <property name="hidden"></property>
                                                         <property name="id">wxID_ANY</property>
                                                         <property name="label">Reset</property>
                                                         <property name="max_size"></property>
@@ -16958,7 +16958,7 @@
                                             <property name="proportion">0</property>
                                             <object class="wxBoxSizer" expanded="0">
                                                 <property name="minimum_size"></property>
-                                                <property name="name">bSizer39</property>
+                                                <property name="name">bSizer80</property>
                                                 <property name="orient">wxHORIZONTAL</property>
                                                 <property name="permission">none</property>
                                                 <object class="sizeritem" expanded="0">
@@ -16992,7 +16992,7 @@
                                                         <property name="floatable">1</property>
                                                         <property name="font"></property>
                                                         <property name="gripper">0</property>
-                                                        <property name="hidden">0</property>
+                                                        <property name="hidden"></property>
                                                         <property name="id">wxID_ANY</property>
                                                         <property name="label">Close</property>
                                                         <property name="max_size"></property>
@@ -17080,7 +17080,7 @@
                                                         <property name="floatable">1</property>
                                                         <property name="font"></property>
                                                         <property name="gripper">0</property>
-                                                        <property name="hidden">0</property>
+                                                        <property name="hidden"></property>
                                                         <property name="id">wxID_ANY</property>
                                                         <property name="label">Generate</property>
                                                         <property name="max_size"></property>
