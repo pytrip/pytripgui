@@ -1941,7 +1941,7 @@
 	</object>
 	<object class="wxDialog" name="TripExportDialog" subclass="pytripgui.dialogs.tripexportdialog.TripExportDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Export Voxelplan</title>
+		<title>Export plan</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -1950,7 +1950,7 @@
 				<flag>wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxFlexGridSizer">
-					<rows>2</rows>
+					<rows>3</rows>
 					<cols>2</cols>
 					<vgap>0</vgap>
 					<hgap>0</hgap>
@@ -1972,9 +1972,9 @@
 						<object class="wxChoice" name="drop_type">
 							<selection>0</selection>
 							<content>
-								<item>Full Export</item>
-								<item>Only Exec File</item>
-								<item>Only Data</item>
+								<item>Export all</item>
+								<item>Only .exec file</item>
+								<item>Only .ctx and .vdx</item>
 							</content>
 						</object>
 					</object>
@@ -1983,7 +1983,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText68">
-							<label>File Prefix</label>
+							<label>Filename</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -2001,7 +2001,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText70">
-							<label>Folder</label>
+							<label>Export directory</label>
 							<wrap>-1</wrap>
 						</object>
 					</object>
@@ -2060,7 +2060,7 @@
 	</object>
 	<object class="wxDialog" name="TripExportCubeDialog" subclass="pytripgui.dialogs.tripexportcubedialog.TripExportCubeDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
-		<title>Export Cube</title>
+		<title>Export ROI cube</title>
 		<centered>1</centered>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
@@ -2121,7 +2121,7 @@
 														<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 														<border>5</border>
 														<object class="wxStaticText" name="m_staticText74">
-															<label>Value</label>
+															<label>Value in ROI</label>
 															<wrap>-1</wrap>
 														</object>
 													</object>
