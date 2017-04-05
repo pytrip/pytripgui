@@ -232,8 +232,13 @@
 		</object>
 		<object class="wxMenu" name="m_menu5">
 			<label>Settings</label>
-			<object class="wxMenuItem" name="m_menuItem16">
+			<object class="wxMenuItem" name="menuItem_preferences">
 				<label>Preferences</label>
+				<help></help>
+				<enabled>0</enabled>
+			</object>
+			<object class="wxMenuItem" name="menuItem_tripconfig">
+				<label>TRiP98 Config</label>
 				<help></help>
 			</object>
 		</object>

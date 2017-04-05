@@ -124,6 +124,8 @@ class MainFrame(wx.Frame):
         self.statusbar.SetStatusText("", 2)
 
     def load_dialog(self, msg):
+        """
+        """
         dialogs = {"field": "FieldDialog",
                    "tripplan": "PlanDialog",
                    "tripvoi": "TripVoiDialog",
@@ -131,8 +133,11 @@ class MainFrame(wx.Frame):
                    "triplog": "TripLogDialog",
                    "wait": "ProgressDialog",
                    "tripexport": "TripExportDialog",
-                   "tripcubeexport": "TripExportCubeDialog"}
+                   "tripcubeexport": "TripExportCubeDialog",
+                   "tripconfig": "TripConfigDialog"}
+
         panels = {"dvh": DVHPanel, "lvh": LVHPanel}
+
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
                 logger.debug("GUI: Opening {:s} Dialog".format(msg.topic[1]))
@@ -189,6 +194,8 @@ class MainFrame(wx.Frame):
         self.settings_manager.load_settings()
 
     def bind_menu(self):
+        """ Attach callback methods to menu events.
+        """
         self.top_menu = self.res.LoadMenuBar("top_menu")
         self.SetMenuBar(self.top_menu)
         self.import_menu = self.top_menu.FindItemById(XRCID("submenu_import")).GetSubMenu()
@@ -205,9 +212,16 @@ class MainFrame(wx.Frame):
         wx.EVT_MENU(self, XRCID("menuitem_save"), self.save)
         wx.EVT_MENU(self, XRCID("menuitem_saveas"), self.saveas)
         wx.EVT_MENU(self, XRCID("menuitem_load"), self.load)
+
+        # -> Settings ->
+        wx.EVT_MENU(self, XRCID("menuitem_preferences"), self.preferences_dialog)
+        wx.EVT_MENU(self, XRCID("menuitem_tripconfig"), self.tripconfig_dialog)
+
+        # -> Help ->
         wx.EVT_MENU(self, XRCID("menuitem_license"), self.view_licence)
         wx.EVT_MENU(self, XRCID("menuitem_about"), self.view_about)
 
+        # -> View ->
         wx.EVT_MENU(self, XRCID("menuitem_view_dvh"), self.view_dvh)
         wx.EVT_MENU(self, XRCID("menuitem_view_lvh"), self.view_lvh)
         self.top_menu.Enable(XRCID("menuitem_view_dvh"), False)
@@ -240,6 +254,7 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def view_licence(self, evt):
+        logger.debug("View license dialog")
         with open(os.path.join(util.get_main_dir(), "res", "LICENSE.rst"), "rU") as fp:
             msg = fp.read()
         dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiPGUI License")
@@ -358,6 +373,21 @@ class MainFrame(wx.Frame):
             pub.sendMessage("settings.value.updated", {"general.import.dicom_path": path})
             data_obj.load_from_dicom(path)
 
+    def preferences_dialog(self, evt):
+        """ Open the Preferences dialog.
+        """
+        logger.debug("Callback preferences_dialog (not implemented)")
+
+    def tripconfig_dialog(self, evt):
+        """ Open the TRiP98 configuration dialog
+        """
+        logger.debug("TripConfigDialog")
+        dia = self.res.LoadDialog(self, "TripConfigDialog")
+        dia.Init(self)
+        self.Enable(False)
+        dia.ShowModal()
+        self.Enable(True)
+            
     def clean_up(self):
         gc.collect()
 
