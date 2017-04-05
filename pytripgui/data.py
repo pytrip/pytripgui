@@ -14,25 +14,20 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import copy
 import sys
 import json
-import time
-import gc
 import threading
 
 import wx
-
-import numpy as np
+import os
 
 from pytrip import dicomhelper
-from pytrip.error import *
+from pytrip.error import InputError
 from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube
 from pytrip.dos import DosCube
-from pytrip.let import LETCube
-from pytrip.ctimage import *
-import pytrip.tripexecuter as pte
+from pytrip.ctimage import CTImages
+
 import pytrip.tripexecuter.tripexecuter as pte_te
 import pytrip.tripexecuter.voi as pte_v
 import pytrip.tripexecuter.tripvoi as pte_tv
@@ -42,20 +37,18 @@ import pytrip.tripexecuter.voicollection as pte_vc
 import pytrip.tripexecuter.tripplan as pte_tp
 import pytrip.tripexecuter.tripplancollection as pte_tpc
 
-from pytripgui.rbehandler import *
-from pytripgui.util import *
-from pytripgui.dose import *
-from pytripgui.tripexecparser import *
-from pytripgui.closeobj import *
+from pytripgui.rbehandler import RBEHandler
+from pytripgui.util import get_class_name
+from pytripgui.dose import DoseCube
+from pytripgui.tripexecparser import TripExecParser
+from pytripgui.closeobj import CloseObj
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
 notify = 1
@@ -156,19 +149,19 @@ class PytripData:
             self.load_from_dicom_thread(dcm)
 
     def load_from_dicom_thread(self, dicom, close=None):
-        if dicom.has_key('images'):
+        if 'images' in dicom:
             c = CtxCube()
             c.read_dicom(dicom)
             self.ct_images = CTImages(c)
             self.patient_name = c.patient_name
 
         self.structures = VoiCollection(self)
-        if dicom.has_key('rtss'):
+        if 'rtss' in dicom:
             structures = VdxCube(c)
             structures.read_dicom(dicom)
             for voi in structures.vois:
                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
-        if not close is None:
+        if close is not None:
             wx.CallAfter(close.close)
 
         wx.CallAfter(self.patient_load)
@@ -212,12 +205,12 @@ class PytripData:
         ctx_path = ctx_basename + ".vdx"
         self.structures = VoiCollection(self)
         if os.path.exists(ctx_path):
-             structures = VdxCube(c)
-             structures.read(ctx_path)
-             for voi in structures.vois:
-                 self.structures.add_voi(Voi(voi.get_name(), voi), 0)
+            structures = VdxCube(c)
+            structures.read(ctx_path)
+            for voi in structures.vois:
+                self.structures.add_voi(Voi(voi.get_name(), voi), 0)
         self.patient_name = c.patient_name
-        if not close is None:
+        if close is not None:
             wx.CallAfter(close.close)
         wx.CallAfter(self.patient_load)
 
@@ -380,7 +373,7 @@ class TripPlan(pte_tp.TripPlan):
         pub.sendMessage("plan.let.added", {"plan": self, "let": let, "name": "LET"})
 
     def remove_let(self, let):
-        super(TripPlan, self).remove_let(path)
+        super(TripPlan, self).remove_let(let)
         pub.sendMessage("plan.let.removed", {"plan": self, "let": let})
 
     def remove_dose(self, dos):
@@ -389,7 +382,7 @@ class TripPlan(pte_tp.TripPlan):
 
     def remove_dose_by_type(self, type):
         dos = super(TripPlan, self).remove_dose_by_type(type)
-        if not dos is None:
+        if dos is not None:
             pub.sendMessage("plan.dose.removed", {"plan": self, "dose": dos})
 
     def add_dose(self, dos, t=""):
@@ -432,6 +425,6 @@ class TripPlanCollection(pte_tpc.TripPlanCollection):
 
     def delete_plan(self, plan):
         new_plan = super(TripPlanCollection, self).delete_plan(plan)
-        if not new_plan is None:
+        if new_plan is not None:
             pub.sendMessage("plan.active.changed", new_plan)
         pub.sendMessage("plan.deleted", plan)
