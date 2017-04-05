@@ -15,10 +15,11 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import wx
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+from wx.xrc import XRCCTRL, XRCID
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class TripLogDialog(wx.Dialog):
     def __init__(self):
