@@ -15,7 +15,10 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import wx
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+from wx.xrc import XRCCTRL, XRCID
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TripLogDialog(wx.Dialog):
@@ -27,7 +30,9 @@ class TripLogDialog(wx.Dialog):
         self.tripexecuter = tripexecuter
         self.tripexecuter.add_log_listener(self)
         self.txt_log = XRCCTRL(self, "txt_log")
-
+        # use some fixed width font to mimic a proper terminal
+        font_log = wx.Font(10, wx.FONTFAMILY_TELETYPE, wx.NORMAL, wx.NORMAL)
+        self.txt_log.SetFont(font_log)
         wx.EVT_BUTTON(self, XRCID("btn_ok"), self.close)
         self.btn_ok = XRCCTRL(self, "btn_ok")
         self.btn_ok.Enable(False)
@@ -42,4 +47,5 @@ class TripLogDialog(wx.Dialog):
             self.Close()
 
     def write(self, txt):
-        self.txt_log.AppendText("%s\n" % txt)
+        logger.debug("{:s}\n".format(txt))
+        self.txt_log.AppendText("{:s}\n".format(txt))

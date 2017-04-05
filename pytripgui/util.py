@@ -14,7 +14,8 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import os, sys
+import os
+import sys
 
 
 def get_class_name(item):
@@ -56,7 +57,7 @@ def find_path(path, active_folder=None):
     path = os.path.expandvars(path)
     if os.path.exists(path):
         return path
-    elif not active_folder is None and os.path.exists(os.path.join(active_folder, path)):
+    elif active_folder is not None and os.path.exists(os.path.join(active_folder, path)):
         return os.path.join(active_folder, path)
     return None
 
@@ -77,11 +78,13 @@ def is_ms_windows():
     """Are we running on Windows?
 
     @rtype: Bool"""
-    return wx.Platform == '__WXMSW__'
+    from wx import Platform
+    return Platform == '__WXMSW__'
 
 
 def is_mac():
     """Are we running on Mac
 
     @rtype: Bool"""
-    return wx.Platform == '__WXMAC__'
+    from wx import Platform
+    return Platform == '__WXMAC__'
