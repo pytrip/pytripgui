@@ -164,27 +164,27 @@
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_openpatient">
-				<label>Open DICOM\tCTRL+o</label>
+				<label>Open DICOM patient\tCTRL+o</label>
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_voxelplan">
-				<label>Open Voxelplan</label>
+				<label>Open VOXELPLAN patient</label>
 				<help></help>
 			</object>
 			<object class="separator" />
 			<object class="wxMenuItem" name="menuitem_save">
-				<label>Save</label>
+				<label>Save project</label>
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_saveas">
-				<label>Save as</label>
+				<label>Save project as</label>
 				<help></help>
 			</object>
 			<object class="separator" />
 			<object class="wxMenu" name="submenu_import">
 				<label>Import</label>
 				<object class="wxMenuItem" name="menuitem_importexec">
-					<label>Import Exec</label>
+					<label>.exec</label>
 					<help></help>
 				</object>
 			</object>

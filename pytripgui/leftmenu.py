@@ -43,9 +43,9 @@ class LeftMenuTree(wx.TreeCtrl):
         self.context_menu = {"images": [{"text": "View"}],
                              "image": [{"text": "View",
                                         "callback": self.show_image}],
-                             "plans": [{"text": "New Plan",
+                             "plans": [{"text": "New plan with ROIs",
                                         "callback": self.new_plan},
-                                       {"text": "New Empty Plan",
+                                       {"text": "New empty plan",
                                         "callback": self.new_empty_plan}],
                              "TripPlan": [{"text": "Set Active",
                                            "callback": self.plan_set_active},
@@ -379,7 +379,7 @@ class LeftMenuTree(wx.TreeCtrl):
         plan = msg.data["plan"]
         voi = msg.data["voi"]
         node = self.get_child_from_data(self.plans_node, plan)
-        item = self.get_or_create_child(node, "Structures", plan.get_vois())
+        item = self.get_or_create_child(node, "ROIs", plan.get_vois())
         data = wx.TreeItemData()
         data.SetData(voi)
         i2 = self.AppendItem(item, voi.get_name(), data=data)
@@ -392,7 +392,7 @@ class LeftMenuTree(wx.TreeCtrl):
         voi = msg.data["voi"]
         step = msg.data["step"]
         node = self.get_child_from_data(self.plans_node, plan)
-        item = self.get_or_create_child(node, "Structures", plan.get_vois())
+        item = self.get_or_create_child(node, "ROIs", plan.get_vois())
         child = self.get_child_from_data(item, voi)
         child2 = child
         if step < 0:
@@ -498,7 +498,7 @@ class LeftMenuTree(wx.TreeCtrl):
         self.rootnode = self.AddRoot(self.data.patient_name)
         data = wx.TreeItemData()
         data.SetData("structures")
-        self.structure_node = self.AppendItem(self.rootnode, "Structures", data=data)
+        self.structure_node = self.AppendItem(self.rootnode, "ROIs", data=data)
         data = wx.TreeItemData()
         data.SetData("plans")
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
@@ -515,10 +515,10 @@ class LeftMenuTree(wx.TreeCtrl):
             data.SetData(plan)
             p_id = self.AppendItem(self.plans_node, plan.name, data=data)
             if len(plan.get_vois()):
-                item = self.get_or_create_child(p_id, "Structures", plan.get_vois())
+                item = self.get_or_create_child(p_id, "ROIs", plan.get_vois())
                 for voi in plan.get_vois():
                     node = self.get_child_from_data(self.plans_node, plan)
-                    item = self.get_or_create_child(node, "Structures", plan.get_vois())
+                    item = self.get_or_create_child(node, "ROIs", plan.get_vois())
                     data = wx.TreeItemData()
                     data.SetData(voi)
                     i2 = self.AppendItem(item, voi.get_name(), data=data)
@@ -535,6 +535,8 @@ class LeftMenuTree(wx.TreeCtrl):
         self.Expand(self.plans_node)
 
     def new_plan(self, evt):
+        """ Adds a new plan with all ROIs from the current patient.
+        """
         plan = TripPlan()
         self.data.plans.add_plan(plan)
         for voi in self.data.get_vois():
@@ -542,6 +544,8 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.add_field(Field("Field 1"))
 
     def new_empty_plan(self, evt):
+        """ Creates a new plan without any ROIs.
+        """
         self.data.plans.add_plan(TripPlan())
 
     def generate_voi_menu(self, node):
