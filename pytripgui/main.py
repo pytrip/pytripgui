@@ -136,11 +136,12 @@ class MainFrame(wx.Frame):
                    "tripcubeexport": "TripExportCubeDialog",
                    "tripconfig": "TripConfigDialog"}
 
-        panels = {"dvh": DVHPanel, "lvh": LVHPanel}
+        panels = {"dvh": DVHPanel,
+                  "lvh": LVHPanel}
 
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
-                logger.debug("GUI: Opening {:s} Dialog".format(msg.topic[1]))
+                logger.debug("load_dialog: Opening {:s} Dialog".format(msg.topic[1]))
                 pytripDialog = self.res.LoadDialog(self, dialogs[msg.topic[1]])
                 pytripDialog.Init(msg.data)
                 self.Enable(False)
@@ -390,11 +391,7 @@ class MainFrame(wx.Frame):
         """ Open the TRiP98 configuration dialog
         """
         logger.debug("Callback tripconfig_dialog")
-        dia = self.res.LoadDialog(self, "TripConfigDialog")
-        dia.Init(self)
-        self.Enable(False)
-        dia.ShowModal()
-        self.Enable(True)
+        pub.sendMessage("gui.tripconfig.open", None)
 
     def clean_up(self):
         gc.collect()
@@ -405,6 +402,8 @@ class MainFrame(wx.Frame):
 
 class pytripgui(wx.App):
     def OnInit(self):
+        from pytripgui import __version__ as pytripgui_version
+        
         wx.GetApp().SetAppName("pytrip")
         # Load the XRC file for our gui resources
         self.res = XmlResource(util.get_resource_path('main.xrc'))
@@ -412,6 +411,7 @@ class pytripgui(wx.App):
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         pytripFrame.SetFont(font)
         pytripFrame.Init(self.res)
+        pytripFrame.SetTitle("PyTRiPGUI v.{:s}".format(pytripgui_version))
         dt1 = FileDropTarget(pytripFrame)
         pytripFrame.SetDropTarget(dt1)
         self.SetTopWindow(pytripFrame)

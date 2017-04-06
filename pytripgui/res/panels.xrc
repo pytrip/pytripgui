@@ -2190,7 +2190,7 @@
 			</object>
 		</object>
 	</object>
-	<object class="wxDialog" name="TripConfigDialog">
+	<object class="wxDialog" name="TripConfigDialog" subclass="pytripgui.dialogs.tripconfigdialog.TripConfigDialog">
 		<style>wxDEFAULT_DIALOG_STYLE</style>
 		<title>TRiP98 Configuration</title>
 		<centered>1</centered>
@@ -2203,7 +2203,7 @@
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
 						<label>Access</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel1">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2228,7 +2228,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxChoice" name="drop_location">
-												<selection>0</selection>
+												<selection>1</selection>
 												<content>
 													<item>Local</item>
 													<item>Remote server</item>
@@ -2273,7 +2273,7 @@
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="btn_working_dir">
+													<object class="wxButton" name="btn_browse_wdir">
 														<label>Browse</label>
 														<default>0</default>
 													</object>
@@ -2391,7 +2391,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>Kernel files</label>
-						<selected>1</selected>
+						<selected>0</selected>
 						<object class="wxPanel" name="m_panel7">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2658,7 +2658,7 @@
 						<option>0</option>
 						<flag>wxALL</flag>
 						<border>5</border>
-						<object class="wxButton" name="btn_ok">
+						<object class="wxButton" name="btn_save">
 							<label>Save</label>
 							<default>0</default>
 						</object>

@@ -16,6 +16,9 @@
 """
 import wx
 import sys
+import logging
+
+from wx.xrc import XmlResource, XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import setuparg1  # noqa
@@ -27,7 +30,7 @@ else:
         from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+logger = logging.getLogger(__name__)
 
 
 class TripConfigDialog(wx.Dialog):
@@ -36,6 +39,21 @@ class TripConfigDialog(wx.Dialog):
         self.PostCreate(pre)
 
     def Init(self, obj):
-        # here attach all the callbacks
-        self.btn_save = XRCCTRL(self, "btn_save_conf")
+        """ Setup the machinery for tripconfigdialog
+        """
+        # lookup widgets and attach them to this class
+        self.btn_save = XRCCTRL(self, "btn_save")
         self.btn_close = XRCCTRL(self, "btn_close")
+
+        # here attach all the callbacks
+        wx.EVT_BUTTON(self, XRCID("btn_close"), self.close)
+
+    def close(self, evt):
+        """ Close the dialog.
+        """
+        self.Close()
+
+    def foobar(self, evt):
+        """ Just testing a callback
+        """
+        print("Hey ho")
