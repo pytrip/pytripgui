@@ -15,22 +15,24 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-
+import logging
 import wx
 
-from pytripgui.data import *
-from pytripgui.util import *
+from pytripgui.data import TripPlan, Field
+from pytripgui.util import get_class_name
 import pytripgui.guihelper
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
+
+logger = logging.getLogger(__name__)
 
 
 class LeftMenuTree(wx.TreeCtrl):
@@ -153,7 +155,7 @@ class LeftMenuTree(wx.TreeCtrl):
             self.voxelplan_path = ""
 
     def show_image(self, evt):
-        a = plan = self.GetItemData(self.selected_item).GetData()
+        a = self.GetItemData(self.selected_item).GetData()
         id = int(a.split(" ")[1])
         pub.sendMessage("2dplot.image.active_id", id)
 
@@ -295,7 +297,7 @@ class LeftMenuTree(wx.TreeCtrl):
     def plan_let_add(self, msg):
         plan = msg.data["plan"]
         let = msg.data["let"]
-        name = msg.data["name"]
+        # name = msg.data["name"]
         plan_node = self.get_child_from_data(self.plans_node, plan)
         let = self.get_or_create_child(plan_node, "LET", let)
 
@@ -485,7 +487,9 @@ class LeftMenuTree(wx.TreeCtrl):
         data = wx.TreeItemData()
         data.SetData(voi)
         item = self.AppendItem(self.structure_node, voi.get_name(), data=data)
-        img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0], self.icon_size[1], voi.get_color()))
+        img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0],
+                                                                       self.icon_size[1],
+                                                                       voi.get_color()))
         voi.set_icon(img)
         self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
 
@@ -502,12 +506,15 @@ class LeftMenuTree(wx.TreeCtrl):
         data = wx.TreeItemData()
         data.SetData("plans")
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
-        ctx = self.data.get_images().get_voxelplan()
+
+        # ctx = self.data.get_images().get_voxelplan()
         for voi in self.data.get_vois():
             data = wx.TreeItemData()
             data.SetData(voi)
             item = self.AppendItem(self.structure_node, voi.get_name(), data=data)
-            img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0], self.icon_size[1], voi.get_color()))
+            img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0],
+                                                                           self.icon_size[1],
+                                                                           voi.get_color()))
             voi.set_icon(img)
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
         for plan in self.data.get_plans():
@@ -561,10 +568,9 @@ class LeftMenuTree(wx.TreeCtrl):
             menu_name = selected_data.split(" ")[0]
         else:
             menu_name = get_class_name(selected_data)
-        if menu_name in self.context_menu:
-            show_menu = False
-            self.selected_item = evt.GetItem()
 
+        if menu_name in self.context_menu:
+            self.selected_item = evt.GetItem()
             menu_points = self.context_menu[menu_name]
             if type(menu_points) is not list:
                 menu_points = menu_points(self.selected_item)
@@ -580,7 +586,7 @@ class LeftMenuTree(wx.TreeCtrl):
             if "require" in menu_item:
                 if getattr(selected_data, menu_item["require"])() is None:
                     continue
-            if not "type" in menu_item:
+            if "type" not in menu_item:
                 item = wx.MenuItem(menu, id, menu_item["text"])
                 menu.AppendItem(item)
             elif menu_item["type"] == "check":

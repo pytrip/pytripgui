@@ -22,11 +22,13 @@ import pytrip.tripexecuter.rbehandler as rh
 from pytripgui.util import get_user_directory
 
 if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
 
