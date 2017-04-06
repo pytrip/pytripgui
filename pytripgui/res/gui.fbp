@@ -1255,7 +1255,7 @@
                     <property name="id">wxID_ANY</property>
                     <property name="kind">wxITEM_NORMAL</property>
                     <property name="label">Preferences</property>
-                    <property name="name">menuItem_preferences</property>
+                    <property name="name">menuitem_preferences</property>
                     <property name="permission">none</property>
                     <property name="shortcut"></property>
                     <property name="unchecked_bitmap"></property>
@@ -1270,7 +1270,7 @@
                     <property name="id">wxID_ANY</property>
                     <property name="kind">wxITEM_NORMAL</property>
                     <property name="label">TRiP98 Config</property>
-                    <property name="name">menuItem_tripconfig</property>
+                    <property name="name">menuitem_tripconfig</property>
                     <property name="permission">none</property>
                     <property name="shortcut"></property>
                     <property name="unchecked_bitmap"></property>

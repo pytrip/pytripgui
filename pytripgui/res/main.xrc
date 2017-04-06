@@ -232,12 +232,12 @@
 		</object>
 		<object class="wxMenu" name="m_menu5">
 			<label>Settings</label>
-			<object class="wxMenuItem" name="menuItem_preferences">
+			<object class="wxMenuItem" name="menuitem_preferences">
 				<label>Preferences</label>
 				<help></help>
 				<enabled>0</enabled>
 			</object>
-			<object class="wxMenuItem" name="menuItem_tripconfig">
+			<object class="wxMenuItem" name="menuitem_tripconfig">
 				<label>TRiP98 Config</label>
 				<help></help>
 			</object>
