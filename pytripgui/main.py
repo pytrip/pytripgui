@@ -389,7 +389,7 @@ class MainFrame(wx.Frame):
     def tripconfig_dialog(self, evt):
         """ Open the TRiP98 configuration dialog
         """
-        logger.debug("TripConfigDialog")
+        logger.debug("Callback tripconfig_dialog")
         dia = self.res.LoadDialog(self, "TripConfigDialog")
         dia.Init(self)
         self.Enable(False)

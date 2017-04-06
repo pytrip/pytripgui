@@ -14,20 +14,28 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-__all__ = ['tripexportcubedialog', 'tripexportdialog', 'createcubedialog', 'progressdialog', 'createstructuredialog',
-           'dosedialog', 'fielddialog', 'plandialog', 'progressdialog', 'triplogdialog', 'tripvoidialog', 'voidialog',
-           'tripconfigdialog']
+import wx
+import sys
 
-import progressdialog
-import createcubedialog
-import createstructuredialog
-import dosedialog
-import fielddialog
-import plandialog
-import progressdialog
-import triplogdialog
-import tripvoidialog
-import voidialog
-import tripexportdialog
-import tripexportcubedialog
-import tripconfigdialog
+if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import setuparg1  # noqa
+    from wx.lib.pubsub import pub
+else:
+    try:
+        from wx.lib.pubsub import Publisher as pub
+    except:
+        from wx.lib.pubsub import setuparg1  # noqa
+        from wx.lib.pubsub import pub
+
+from wx.xrc import XmlResource, XRCCTRL, XRCID
+
+
+class TripConfigDialog(wx.Dialog):
+    def __init__(self):
+        pre = wx.PreDialog()
+        self.PostCreate(pre)
+
+    def Init(self, obj):
+        # here attach all the callbacks
+        self.btn_save = XRCCTRL(self, "btn_save_conf")
+        self.btn_close = XRCCTRL(self, "btn_close")
