@@ -23,29 +23,27 @@ import argparse
 
 import wx
 import wx.lib.dialogs
-from wx.xrc import *
+from wx.xrc import XRCCTRL, XRCID, XmlResource
 
-from pytrip.error import *
+from pytrip.error import InputError
 
-from pytripgui.leftmenu import *
-from pytripgui.settings import *
-from pytripgui.plugin import *
+from pytripgui.leftmenu import LeftMenuTree
+from pytripgui.settings import SettingsManager
+from pytripgui.plugin import PluginManager
 
-from pytripgui.panels.plotpanel import *
-from pytripgui.panels.dvh import *
+from pytripgui.panels.plotpanel import PlotPanel
+from pytripgui.panels.dvh import DVHPanel, LVHPanel
 
-from pytripgui.tripexecparser import *
-from pytripgui.data import *
+from pytripgui.data import PytripData
+from pytripgui.util import get_resource_path
 from pytripgui import util
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
 logger = logging.getLogger(__name__)
@@ -273,12 +271,16 @@ class MainFrame(wx.Frame):
         self.data.load(path)
 
     def save(self, evt):
+        """ Saves the .pyt project
+        """
         if not hasattr(self, "savepath"):
             self.saveas(evt)
         else:
             self.data.save(self.savepath)
 
     def saveas(self, evt):
+        """ Saves the .pyt project under a new filename.
+        """
         dlg = wx.FileDialog(
             self, wildcard="PyTRiP project files (*.pyt)|*.pyt", message="Save Project", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
@@ -353,6 +355,8 @@ class MainFrame(wx.Frame):
             data.load_trip_exec(path)
 
     def voxelplan_load_dialog(self, evt):
+        """ Callback for opening a voxelplan patient.
+        """
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
@@ -365,8 +369,10 @@ class MainFrame(wx.Frame):
             data_obj.load_from_voxelplan(path)
 
     def open_patient_load_dialog(self, evt):
+        """ Open a DICOM patient
+        """
         dlg = wx.DirDialog(
-            self, defaultPath=self.dicom_path, message="Choose the folder where the dicom files are stored")
+            self, defaultPath=self.dicom_path, message="Choose the folder where the DICOM files are stored")
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()
@@ -387,7 +393,7 @@ class MainFrame(wx.Frame):
         self.Enable(False)
         dia.ShowModal()
         self.Enable(True)
-            
+
     def clean_up(self):
         gc.collect()
 
