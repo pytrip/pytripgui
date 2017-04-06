@@ -2264,7 +2264,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxTextCtrl" name="txt_working_dir">
-														<size>200,-1</size>
+														<size>400,-1</size>
 														<value></value>
 														<maxlength>0</maxlength>
 													</object>
@@ -2314,6 +2314,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxTextCtrl" name="txt_server">
+														<size>400,-1</size>
 														<value></value>
 														<maxlength>0</maxlength>
 													</object>
@@ -2341,6 +2342,7 @@
 													<flag>wxALL</flag>
 													<border>5</border>
 													<object class="wxTextCtrl" name="txt_username">
+														<size>300,-1</size>
 														<value></value>
 														<maxlength>0</maxlength>
 													</object>
@@ -2369,13 +2371,14 @@
 													<border>5</border>
 													<object class="wxTextCtrl" name="txt_password">
 														<style>wxTE_PASSWORD</style>
+														<size>300,-1</size>
 														<value></value>
 														<maxlength>0</maxlength>
 													</object>
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
-													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText127">
 														<label>(will be stored unencrypted!)</label>

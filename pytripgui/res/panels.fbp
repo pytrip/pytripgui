@@ -17715,7 +17715,7 @@
                                                             <property name="pos"></property>
                                                             <property name="resize">Resizable</property>
                                                             <property name="show">1</property>
-                                                            <property name="size">200,-1</property>
+                                                            <property name="size">400,-1</property>
                                                             <property name="style"></property>
                                                             <property name="subclass"></property>
                                                             <property name="toolbar_pane">0</property>
@@ -17999,7 +17999,7 @@
                                                             <property name="maxlength">0</property>
                                                             <property name="min_size"></property>
                                                             <property name="minimize_button">0</property>
-                                                            <property name="minimum_size"></property>
+                                                            <property name="minimum_size">-1,-1</property>
                                                             <property name="moveable">1</property>
                                                             <property name="name">txt_server</property>
                                                             <property name="pane_border">1</property>
@@ -18010,7 +18010,7 @@
                                                             <property name="pos"></property>
                                                             <property name="resize">Resizable</property>
                                                             <property name="show">1</property>
-                                                            <property name="size"></property>
+                                                            <property name="size">400,-1</property>
                                                             <property name="style"></property>
                                                             <property name="subclass"></property>
                                                             <property name="toolbar_pane">0</property>
@@ -18267,7 +18267,7 @@
                                                             <property name="pos"></property>
                                                             <property name="resize">Resizable</property>
                                                             <property name="show">1</property>
-                                                            <property name="size"></property>
+                                                            <property name="size">300,-1</property>
                                                             <property name="style"></property>
                                                             <property name="subclass"></property>
                                                             <property name="toolbar_pane">0</property>
@@ -18524,7 +18524,7 @@
                                                             <property name="pos"></property>
                                                             <property name="resize">Resizable</property>
                                                             <property name="show">1</property>
-                                                            <property name="size"></property>
+                                                            <property name="size">300,-1</property>
                                                             <property name="style">wxTE_PASSWORD</property>
                                                             <property name="subclass"></property>
                                                             <property name="toolbar_pane">0</property>
@@ -18568,7 +18568,7 @@
                                                     </object>
                                                     <object class="sizeritem" expanded="0">
                                                         <property name="border">5</property>
-                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxALL</property>
+                                                        <property name="flag">wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</property>
                                                         <property name="proportion">0</property>
                                                         <object class="wxStaticText" expanded="0">
                                                             <property name="BottomDockable">1</property>

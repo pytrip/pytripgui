@@ -95,6 +95,15 @@ class SettingsManager:
                 return None
         return temp
 
+    def get_value_str(self, query):
+        """ Wrapper which will return empty string if key is not found.
+        """
+        # TODO: better to test if temp is string, and if not return ""
+        temp = self.get_value(query)
+        if temp is None:
+            return ""
+        return temp
+
     def load_template(self, template):
         self.template = template
         save = False
