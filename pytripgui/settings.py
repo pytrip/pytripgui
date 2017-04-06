@@ -15,23 +15,29 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
+import os
+import json
+import logging
 
-from pytripgui.util import *
+from pytripgui.util import get_user_directory
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    # from wx.lib.pubsub import setuparg1
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        # from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
 
-import json
+logger = logging.getLogger(__name__)
 
 
 class SettingsManager:
+    """
+    Manager for handling settings which are saved in .pytrip/ as JSON object.
+    """
     def __init__(self):
         self.path = os.path.join(get_user_directory(), "preferences.dat")
         self.values = {}
@@ -39,6 +45,7 @@ class SettingsManager:
         pub.subscribe(self.get_requested_value, "settings.value.request")
         pub.subscribe(self.get_requested_values, "settings.values.request")
         pub.subscribe(self.value_updated, "settings.value.updated")
+        logger.debug("preferences path: {:s}".format(self.path))
 
     def value_updated(self, msg):
         for key, value in msg.data.iteritems():
@@ -57,6 +64,8 @@ class SettingsManager:
             pub.sendMessage(msg.data + "." + key, value)
 
     def load_settings(self, path=""):
+        """ Loads the settings from path
+        """
         if path == "":
             path = self.path
         if os.path.exists(path):
@@ -69,6 +78,8 @@ class SettingsManager:
             self.values = {}
 
     def save_settings(self, path=""):
+        """ Saves the settings to path as json object.
+        """
         if path == "":
             path = self.path
         with open(path, mode='w+') as set_file:
@@ -100,7 +111,7 @@ class SettingsManager:
         last_key = q.pop()
         temp = self.values
         for key in q:
-            if not temp.has_key(key):
+            if key not in temp:
                 temp[key] = {}
             temp = temp[key]
         temp[last_key] = value
