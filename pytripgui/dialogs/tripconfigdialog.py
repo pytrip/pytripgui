@@ -214,7 +214,7 @@ class TripConfigDialog(wx.Dialog):
         # wxChoice attributes need special attention, since it has a different method to update, and wants an integer,
         # not a string.
         if "trip98.choice." in _topic:
-            if _val is None:
+            if not _val:
                 _val = "0"
             XRCCTRL(self, _attr).SetSelection(int(_val))  # all messages are stored as strings
 
