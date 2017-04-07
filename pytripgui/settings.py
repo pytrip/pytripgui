@@ -102,7 +102,7 @@ class SettingsManager:
         return temp
 
     def get_value_str(self, query):
-        """ Wrapper which will return empty string if key is not found.
+        """ Wrapper to get_value() which will return empty string if key is not found.
         """
         # TODO: better to test if temp is string, and if not return ""
         temp = self.get_value(query)
