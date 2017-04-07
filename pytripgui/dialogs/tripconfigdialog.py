@@ -110,22 +110,21 @@ class TripConfigDialog(wx.Dialog):
         self.m_choice_ion = XRCCTRL(self, 'm_choice_ion')
         self.m_choice_rifi = XRCCTRL(self, 'm_choice_rifi')
 
-        # loop over those which can be attached automatically (all with the "trip98.s" string in key)
+        # loop over those which can be attached automatically (all with the "trip98.s." string in key)
         for _key in self.params:
-            if "trip98.s" in _key:
+            if "trip98.s." in _key:
                 _attr = self.params[_key]  # string holding the attribute names
                 setattr(self, _attr, XRCCTRL(self, _attr))  # lookup attributes names and populate with classes
-                pub.subscribe(self._store_parameter, _key)
-        
+
         # manually add the DDD, SPC and SIS widgets to self:
-        self.txt_ddd = XRCCTRL(self, "txt_ddd")
-        self.txt_spc = XRCCTRL(self, "txt_spc")
-        self.txt_sis = XRCCTRL(self, "txt_sis")
+        self.txt_ddd = XRCCTRL(self, 'txt_ddd')
+        self.txt_spc = XRCCTRL(self, 'txt_spc')
+        self.txt_sis = XRCCTRL(self, 'txt_sis')
 
         # --- Attach Callback functions --------
         # Main window
-        wx.EVT_BUTTON(self, XRCID("btn_close"), self.close)
-        wx.EVT_BUTTON(self, XRCID("btn_save"), self.save)
+        wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
+        wx.EVT_BUTTON(self, XRCID('btn_save'), self.save)
 
         # Access panel:
         wx.EVT_BUTTON(self, XRCID('btn_wdir'), self.on_browse_wdir)
@@ -146,10 +145,14 @@ class TripConfigDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_hlut'), self.on_browse_hlut)
         wx.EVT_BUTTON(self, XRCID('btn_dedx'), self.on_browse_dedx)
 
-        # finally: load and set all attributes from preference file
+        # Read the preference file.
+        # First attach the _store_parameter() callback to all _keys which may be sent as a pubsub message,
+        # or in other words: we must make sure, when we request a value from the preference file,
+        # that we are ready to handle the answer.
+        # Once this is set up we send a message to request the value from the preference file
         for _key in self.params:
-            pub.sendMessage('settings.value.request', _key)
-
+            pub.subscribe(self._store_parameter, _key)  # subscribe to possible answer for _key
+            pub.sendMessage('settings.value.request', _key)  # get value for _key from peference file
 
     def close(self, evt):
         """ Close the dialog.
@@ -157,15 +160,22 @@ class TripConfigDialog(wx.Dialog):
         self.Close()
 
     def on_select(self, evt):
+        self._update_kernel_panel()
+
+    def _update_kernel_panel(self):
+        """ Update DDD, SPC and SIS entry fields according to self.*_paths
+        """
         _ion = self.m_choice_ion.GetSelection()
         _rifi = self.m_choice_rifi.GetSelection()
 
         logger.debug("choice {:d} {:d}".format(_ion, _rifi))
-
+        print(self.spc_paths)
+        
         self.txt_ddd.SetValue(self.ddd_paths[_rifi][_ion])
         self.txt_spc.SetValue(self.spc_paths[_rifi][_ion])
         self.txt_sis.SetValue(self.sis_paths[_ion])
-
+        
+        
     def _store_parameter(self, msg):
         """
         Callback function for the answer from SettingsManager, when a parameter was requested.
@@ -174,20 +184,45 @@ class TripConfigDialog(wx.Dialog):
         _topic = ".".join(msg.topic)
         _val = msg.data
 
-        logger.debug("tripconfigdialog: recieved answer {:s} : {:s} from SettingsManager".format(_topic, _val))
+        if _val is None:
+            _val = ""
 
-        _topic_list = ("trip98.s", "trip98.ddd", "trip98.spc", "trip98.sis")
+        _attr = self.params[_topic]  # gets class attribute from topic
+
+        logger.debug("_store_parameter: received answer {:s} : {:s} from SettingsManager".format(_topic, _val))
+
         
-        if any(_x in _topic for _x in _topic_list):  # handler for trivial strings
-            _attr = self.params[_topic]
+        # Handler for trivial strings: in this case, the corresponding text entries
+        # must simply be updated with the _val.
+        if "trip98.s." in _topic:
+            print("ANY:",_topic, _attr, _val)
             if _val is None:
-                _val = ""                
+                _val = ""
             XRCCTRL(self, _attr).SetValue(_val)
 
-        # wxChoice attributes need special attention
+        # wxChoice attributes need special attention, since it has a different method to update, and wants an integer,
+        # not a string.
         if "trip98.choice." in _topic:
-            _attr = self.params[_topic]
             XRCCTRL(self, _attr).SetSelection(int(_val))  # all messages are stored as strings
+
+        # Finally the text fields in the Kernel panel must be updated. This depends on what ion is selected,
+        # and is updated via the internal list of paths.
+        _topic_list = ("trip98.ddd.", "trip98.spc.", "trip98.sis.")
+
+        if "trip98.ddd." in _topic:
+            _ion, _rifi = self._selection_id_from_topic(_topic)
+            self.ddd_paths[_rifi][_ion] = _val
+
+        if "trip98.spc." in _topic:
+            _ion, _rifi = self._selection_id_from_topic(_topic)
+            self.spc_paths[_rifi][_ion] = _val
+
+        if "trip98.sis." in _topic:
+            _ion, _rifi = self._selection_id_from_topic(_topic)
+            self.sis_paths[_ion] = _val
+
+        # bump all text fields in the Kernel panel based on the updated database:
+        self._update_kernel_panel()
 
     def _on_ddd_set(self, evt):
         """ When the DDD text entry has been set
@@ -230,7 +265,7 @@ class TripConfigDialog(wx.Dialog):
 
         _ion = _topic.split(".")[2]
         _rifi = _topic.split(".")[3]
-        
+        print("FOOOO:",_ion, _rifi)
         return _dion[_ion], _drifi[_rifi]
        
     def on_browse_wdir(self, evt):
@@ -322,11 +357,10 @@ class TripConfigDialog(wx.Dialog):
         _save_dict = {}
 
         # sensitive topics, where values should be extracted from variables instead of text_entry widgets:
-        _topics = ("trip98.ddd", "trip98.spc", "trip98.sis")
+        _topics = ("trip98.ddd.", "trip98.spc.", "trip98.sis.")
         
         # make a new dict of parameters to be saved
         for _key in self.params:
-
             # _val to be stored in preference files for DDD, SPC and SIS are not from text fields.
             if any(_x in _key for _x in _topics):
                 _ion, _rifi = self._selection_id_from_topic(_key)  # translate "trip98.ddd.z6.rifi0" to proper indices for table lookup
@@ -336,7 +370,8 @@ class TripConfigDialog(wx.Dialog):
                     _val = self.spc_paths[_rifi][_ion]
                 if "trip98.sis." in _key:
                     _val = self.sis_paths[_ion]
-            elif "trip98.s" in _key: # all parameters which can be read directly from the txt_* widgets.
+                print("NB,",_val, _ion, _rifi)
+            elif "trip98.s." in _key: # all parameters which can be read directly from the txt_* widgets.
                 _attr = self.params[_key]  # string holding the attribute names
                 _val = XRCCTRL(self, _attr).GetValue()  # look up values in the various fields
             elif "trip98.choice." in _key:
@@ -344,7 +379,7 @@ class TripConfigDialog(wx.Dialog):
                 _val = str(XRCCTRL(self, _attr).GetSelection())  # look up values in the various fields
 
             _save_dict[_key] = _val
-            logger.debug("{:s} : {:s}".format(_key, _val))
+            logger.debug("STORED: {:s} : {:s}".format(_key, _val))
 
         # now _save_dict is a dict holding all parameters from TripConfigDialog which should be saved to .preferences
         pub.sendMessage('settings.value.updated', _save_dict)

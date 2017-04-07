@@ -58,7 +58,7 @@ class SettingsManager:
         query = msg.data
         value = self.get_value(query)
         pub.sendMessage(msg.data, value)
-        logger.debug("SettingsManager::get_requested_value: {:s} {:s}".format(msg.data, value))
+        #logger.debug("SettingsManager::get_requested_value: {:s} {:s}".format(msg.data, value))
         
     def get_requested_values(self, msg):
         """ callback function for "settings.values.request" message
