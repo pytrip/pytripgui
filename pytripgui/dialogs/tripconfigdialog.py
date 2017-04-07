@@ -18,7 +18,6 @@ import wx
 import sys
 import logging
 
-from pytripgui.settings import SettingsManager
 from wx.xrc import XmlResource, XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
@@ -32,19 +31,26 @@ else:
         from wx.lib.pubsub import pub
 
 logger = logging.getLogger(__name__)
-sm = SettingsManager()
+
 
 class TripConfigDialog(wx.Dialog):
     def __init__(self):
         pre = wx.PreDialog()
         self.PostCreate(pre)
-
+        
     def Init(self, plan):
         """ Setup the machinery for tripconfigdialog
         :params plan: tripplan
         """
         self.plan = plan
-        sm.load_settings()
+
+        # list of all parameters which are to be stored, listed by topic : attribute name of widget object set in .xrc file
+        self.params = {"trip98.s.wdir": "txt_working_dir",
+                       "trip98.s.username": "txt_username",
+                       "trip98.s.password": "txt_password",
+                       "trip98.s.server": "txt_server",
+                       "trip98.b.remote": "drop_location"}
+        
         # lookup widgets and attach them to this class
         self.btn_save = XRCCTRL(self, "btn_save")
         self.btn_close = XRCCTRL(self, "btn_close")
@@ -63,24 +69,37 @@ class TripConfigDialog(wx.Dialog):
     def init_trip_panel(self):
         """ Initialize the TRiP98 Configuration Panel from saved preferences.
         """
+
+        # load all parameter values into a dict
+
         self.drop_location = XRCCTRL(self, "drop_location")
 
-        if sm.get_value_str("trip98.remote") is True:
-            self.drop_location.SetSelection(1)
+        for _key in self.params:
+            _attr = self.params[_key]  # string holding the attribute names
+            if "trip98." in _key:
+                setattr(self, _attr, XRCCTRL(self, _attr))  # lookup attributes names and populate with classes
+                pub.subscribe(self._save_parameter, _key)
 
-        self.txt_working_dir = XRCCTRL(self, "txt_working_dir")
-        self.txt_working_dir.SetValue(sm.get_value_str("trip98.wdir"))
+        # load and set all attributes from preference file
+        for _key in self.params:
+            pub.sendMessage('settings.value.request', _key)
 
         wx.EVT_BUTTON(self, XRCID('btn_browse_wdir'), self.on_browse_working_dir)
 
-        self.txt_username = XRCCTRL(self, "txt_username")
-        self.txt_username.SetValue(sm.get_value_str("trip98.username"))
+    def _save_parameter(self, msg):
+        logger.debug("RECEIVED VALUE {:s}".format(msg.data))
+        
+        _topic = ".".join(msg.topic)
+        _val = msg.data
+        
+        if "trip98.s." in _topic:
+            _attr = self.params[_topic]
+            if _val is None:
+                _val = ""                
+            XRCCTRL(self, _attr).SetValue(_val)
 
-        self.txt_password = XRCCTRL(self, "txt_password")
-        self.txt_password.SetValue(sm.get_value_str("trip98.password"))
-
-        self.txt_server = XRCCTRL(self, "txt_server")
-        self.txt_server.SetValue(sm.get_value_str("trip98.server"))
+        # however attributes need special attention
+        
 
     def on_browse_working_dir(self, evt):
         """ Select working directory for TRiP98 via file dialog
@@ -99,8 +118,17 @@ class TripConfigDialog(wx.Dialog):
         """ Saves the dialog settings
         TODO: could probably be omitted, moder GUIs has no Save button for prefs.
         """
+        logger.debug("save preferences...")
+        _save_dict = {}
+        
+        # make a new dict of parameters to be saved
+        for _key in self.params:
+            _attr = self.params[_key]  # string holding the attribute names
+            _val = XRCCTRL(self, _attr).GetValue()  # look up values in the various fields
 
-        sm.set_value("trip98.wdir", self.txt_working_dir.GetValue())
-        sm.set_value("trip98.username", self.txt_username.GetValue())
-        sm.set_value("trip98.password", self.txt_password.GetValue())
-        sm.set_value("trip98.server", self.txt_server.GetValue())
+            _save_dict[_key] = _val
+            logger.debug("{:s} : {:s}".format(_key,_val))
+            
+            
+        pub.sendMessage('settings.value.updated', _save_dict)
+        

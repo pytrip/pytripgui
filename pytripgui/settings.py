@@ -56,9 +56,11 @@ class SettingsManager:
         query = msg.data
         value = self.get_value(query)
         pub.sendMessage(msg.data, value)
+        print("NBNB: {:s} {:s}".format(msg.data, value))
 
     def get_requested_values(self, msg):
         query = msg.data
+        print("NB:",query)
         values = self.get_value(query)
         for key, value in values.iteritems():
             pub.sendMessage(msg.data + "." + key, value)
