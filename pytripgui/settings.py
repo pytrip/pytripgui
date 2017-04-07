@@ -53,15 +53,20 @@ class SettingsManager:
             pub.sendMessage(key, value)
 
     def get_requested_value(self, msg):
+        """ callback function for "settings.value.request" message
+        """
         query = msg.data
         value = self.get_value(query)
         pub.sendMessage(msg.data, value)
-        print("NBNB: {:s} {:s}".format(msg.data, value))
-
+        logger.debug("SettingsManager::get_requested_value: {:s} {:s}".format(msg.data, value))
+        
     def get_requested_values(self, msg):
-        query = msg.data
-        print("NB:",query)
-        values = self.get_value(query)
+        """ callback function for "settings.values.request" message
+        this one may contain multiple values, and interates over these, sending 
+        one message back for each value.
+        """
+        _query = msg.data
+        values = self.get_value(_query)
         for key, value in values.iteritems():
             pub.sendMessage(msg.data + "." + key, value)
 

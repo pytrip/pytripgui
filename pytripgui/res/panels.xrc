@@ -2273,7 +2273,7 @@
 													<option>0</option>
 													<flag>wxALL</flag>
 													<border>5</border>
-													<object class="wxButton" name="btn_browse_wdir">
+													<object class="wxButton" name="btn_wdir">
 														<label>Browse</label>
 														<default>0</default>
 													</object>
@@ -2418,7 +2418,7 @@
 											<option>0</option>
 											<flag>wxALL</flag>
 											<border>5</border>
-											<object class="wxChoice" name="m_choice31">
+											<object class="wxChoice" name="m_choice_ion">
 												<selection>0</selection>
 												<content>
 													<item>Protons H-1</item>
@@ -2426,7 +2426,6 @@
 													<item>C-12</item>
 													<item>O-16</item>
 													<item>Ne-20</item>
-													<item>(add new)</item>
 												</content>
 											</object>
 										</object>
@@ -2434,12 +2433,11 @@
 											<option>0</option>
 											<flag>wxALL</flag>
 											<border>5</border>
-											<object class="wxChoice" name="m_choice32">
+											<object class="wxChoice" name="m_choice_rifi">
 												<selection>0</selection>
 												<content>
 													<item>RiFi 0mm</item>
 													<item>RiFi 3mm</item>
-													<item>(add new)</item>
 												</content>
 											</object>
 										</object>
@@ -2471,7 +2469,6 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_ddd">
 												<size>400,-1</size>
-												<enabled>0</enabled>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2503,7 +2500,6 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_spc">
 												<size>400,-1</size>
-												<enabled>0</enabled>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2535,7 +2531,6 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_sis">
 												<size>400,-1</size>
-												<enabled>0</enabled>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2588,7 +2583,6 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_hlut">
 												<size>400,-1</size>
-												<enabled>0</enabled>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2620,7 +2614,6 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_dedx">
 												<size>400,-1</size>
-												<enabled>0</enabled>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
