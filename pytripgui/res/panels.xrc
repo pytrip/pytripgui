@@ -2210,36 +2210,7 @@
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
 									<option>0</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxBoxSizer">
-										<orient>wxHORIZONTAL</orient>
-										<object class="sizeritem">
-											<option>0</option>
-											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText17">
-												<label>Location of TRiP98 installation</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<option>0</option>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxChoice" name="drop_location">
-												<selection>1</selection>
-												<content>
-													<item>Local</item>
-													<item>Remote server</item>
-												</content>
-											</object>
-										</object>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxEXPAND</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<object class="wxStaticBoxSizer">
 										<orient>wxVERTICAL</orient>
@@ -2286,6 +2257,35 @@
 									<option>0</option>
 									<flag>wxEXPAND</flag>
 									<border>5</border>
+									<object class="wxBoxSizer">
+										<orient>wxHORIZONTAL</orient>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+											<border>5</border>
+											<object class="wxStaticText" name="m_staticText17">
+												<label>Location of TRiP98 installation</label>
+												<wrap>-1</wrap>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxChoice" name="m_choice_location">
+												<selection>0</selection>
+												<content>
+													<item>Local</item>
+													<item>Remote server</item>
+												</content>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
 									<object class="wxStaticBoxSizer">
 										<orient>wxVERTICAL</orient>
 										<label>Remote</label>
@@ -2302,9 +2302,10 @@
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
-													<flag>wxALL</flag>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText20">
+														<tooltip>such as titan.phys.au.dk</tooltip>
 														<label>Server IP/Hostname</label>
 														<wrap>-1</wrap>
 													</object>
@@ -2321,7 +2322,7 @@
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
-													<flag>wxALL</flag>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText126">
 														<label></label>
@@ -2330,7 +2331,7 @@
 												</object>
 												<object class="sizeritem">
 													<option>0</option>
-													<flag>wxALL</flag>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText21">
 														<label>Username</label>
@@ -2361,6 +2362,7 @@
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
 													<object class="wxStaticText" name="m_staticText22">
+														<tooltip>Setup ssh-keys for passwordless login.</tooltip>
 														<label>Password</label>
 														<wrap>-1</wrap>
 													</object>
@@ -2646,7 +2648,7 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxButton" name="btn_close">
-							<label>Cancel</label>
+							<label>Close</label>
 							<default>0</default>
 						</object>
 					</object>

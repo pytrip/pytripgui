@@ -46,16 +46,18 @@ class TripConfigDialog(wx.Dialog):
 
         # TODO: database for all paths. This should later be made accessible somehow on global level later.
         # TODO: 5 ions and 2 rifis hardcoded. Better would be to have a user defined list of configurations.
-        self.ddd_paths = [[""] * 5] * 2
-        self.spc_paths = [[""] * 5] * 2
-        self.sis_paths = [""] * 5 # SIS depends on ion only.
+        nions = 5
+        nrifi = 2
+        self.ddd_paths = [["" for _ in range(nions)] for _ in range(nrifi)]
+        self.spc_paths = [["" for _ in range(nions)] for _ in range(nrifi)]
+        self.sis_paths = ["" for _ in range(nions)] # SIS depends on ion only.
 
         # list of all parameters which are to be stored, listed by topic : attribute name of widget object set in .xrc file
         self.params = {"trip98.s.wdir": "txt_working_dir",
                        "trip98.s.username": "txt_username",
                        "trip98.s.password": "txt_password",
                        "trip98.s.server": "txt_server",
-                       "trip98.choice.remote": "drop_location",
+                       "trip98.choice.remote": "m_choice_location",
                        "trip98.s.hlut": "txt_hlut",
                        "trip98.s.dedx": "txt_dedx",
 
@@ -104,7 +106,7 @@ class TripConfigDialog(wx.Dialog):
         self.btn_close = XRCCTRL(self, "btn_close")
 
         # selector in Access panel for remote/local operation:
-        self.drop_location = XRCCTRL(self, "drop_location")        
+        self.m_choice_location = XRCCTRL(self, "m_choice_location")
 
         # Kernel files panel:
         self.m_choice_ion = XRCCTRL(self, 'm_choice_ion')
@@ -125,11 +127,12 @@ class TripConfigDialog(wx.Dialog):
         # Main window
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
         wx.EVT_BUTTON(self, XRCID('btn_save'), self.save)
-
+        
         # Access panel:
         wx.EVT_BUTTON(self, XRCID('btn_wdir'), self.on_browse_wdir)
+        wx.EVT_CHOICE(self, XRCID('m_choice_location'), self.on_select_location)
 
-        # Kenrel panel:
+        # Kernel panel:
         wx.EVT_CHOICE(self, XRCID('m_choice_ion'), self.on_select)
         wx.EVT_CHOICE(self, XRCID('m_choice_rifi'), self.on_select)
 
@@ -168,13 +171,24 @@ class TripConfigDialog(wx.Dialog):
         _ion = self.m_choice_ion.GetSelection()
         _rifi = self.m_choice_rifi.GetSelection()
 
-        logger.debug("choice {:d} {:d}".format(_ion, _rifi))
-        print(self.spc_paths)
-        
         self.txt_ddd.SetValue(self.ddd_paths[_rifi][_ion])
         self.txt_spc.SetValue(self.spc_paths[_rifi][_ion])
         self.txt_sis.SetValue(self.sis_paths[_ion])
         
+    def on_select_location(self, evt):
+        self._update_access_panel()
+
+    def _update_access_panel(self):
+        """ Enable/disable text fiels, whether Trip is access locally or remotely.
+        """
+        if self.m_choice_location.GetSelection() == 0: # local
+            self.txt_server.Disable()
+            self.txt_username.Disable()
+            self.txt_password.Disable()
+        else:
+            self.txt_server.Enable()
+            self.txt_username.Enable()
+            self.txt_password.Enable()
         
     def _store_parameter(self, msg):
         """
@@ -189,13 +203,9 @@ class TripConfigDialog(wx.Dialog):
 
         _attr = self.params[_topic]  # gets class attribute from topic
 
-        logger.debug("_store_parameter: received answer {:s} : {:s} from SettingsManager".format(_topic, _val))
-
-        
         # Handler for trivial strings: in this case, the corresponding text entries
         # must simply be updated with the _val.
         if "trip98.s." in _topic:
-            print("ANY:",_topic, _attr, _val)
             if _val is None:
                 _val = ""
             XRCCTRL(self, _attr).SetValue(_val)
@@ -224,6 +234,9 @@ class TripConfigDialog(wx.Dialog):
         # bump all text fields in the Kernel panel based on the updated database:
         self._update_kernel_panel()
 
+        # bump Access panel whether remote fields must be greyed or not.
+        self._update_access_panel()
+
     def _on_ddd_set(self, evt):
         """ When the DDD text entry has been set
         """
@@ -240,14 +253,12 @@ class TripConfigDialog(wx.Dialog):
         _path = self.txt_spc.GetValue()
         self.spc_paths[_rifi][_ion] = _path
 
-
     def _on_sis_set(self, evt):
         """ When the SIS text entry has been set
         """
         _ion = self.m_choice_ion.GetSelection()
         _path = self.txt_sis.GetValue()
         self.sis_paths[_ion] = _path
-        
 
     def _selection_id_from_topic(self, _topic):
         """ Translates a topic such as "trip98.ddd.z6.rifi3" into a ion and rifi integer number for the 
@@ -265,7 +276,6 @@ class TripConfigDialog(wx.Dialog):
 
         _ion = _topic.split(".")[2]
         _rifi = _topic.split(".")[3]
-        print("FOOOO:",_ion, _rifi)
         return _dion[_ion], _drifi[_rifi]
        
     def on_browse_wdir(self, evt):
@@ -279,34 +289,31 @@ class TripConfigDialog(wx.Dialog):
     def on_browse_ddddir(self, evt):
         """ Browse DDD dir clicked
         """
-        path = self._on_browse(self.txt_working_dir.GetValue(),
+        path = self._on_browse(self.txt_ddd.GetValue(),
                           "Select DDD directory",
                           True)
         self.txt_ddd.SetValue(path)
-        #_ion = self.m_choice_ion.GetSelection()
-        #_rifi = self.m_choice_rifi.GetSelection()
-        #self.ddd_paths[_rifi][_ion] = path
 
     def on_browse_spcdir(self, evt):
-        path = self._on_browse(self.txt_working_dir.GetValue(),
+        path = self._on_browse(self.txt_spc.GetValue(),
                           "Select SPC directory",
                           True)
         self.txt_spc.SetValue(path)
     
     def on_browse_sis(self, evt):
-        path = self._on_browse(self.txt_working_dir.GetValue(),
+        path = self._on_browse(self.txt_sis.GetValue(),
                           "Select SIS File",
                           False)
         self.txt_sis.SetValue(path)
 
     def on_browse_hlut(self, evt):
-        path = self._on_browse(self.txt_working_dir.GetValue(),
+        path = self._on_browse(self.txt_hlut.GetValue(),
                           "Select HLUT File",
                           False)
         self.txt_hlut.SetValue(path)
 
     def on_browse_dedx(self, evt):
-        path = self._on_browse(self.txt_working_dir.GetValue(),
+        path = self._on_browse(self.txt_dedx.GetValue(),
                           "Select dE/dx File",
                           False)
         self.txt_dedx.SetValue(path)
@@ -319,6 +326,8 @@ class TripConfigDialog(wx.Dialog):
 
         :returns: the dir which was selected
         """
+        path = None
+
         if _dir: 
             dlg = wx.DirDialog(
                 self,
@@ -332,10 +341,11 @@ class TripConfigDialog(wx.Dialog):
 
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            if path is None:
-                path = ""
             return path
-            
+        
+        if path is None:
+            return defpath
+        
     def on_browse_file(self, evt):
         """ Select working directory for TRiP98 via file dialog
         :returns: the dir which was selected
@@ -370,7 +380,6 @@ class TripConfigDialog(wx.Dialog):
                     _val = self.spc_paths[_rifi][_ion]
                 if "trip98.sis." in _key:
                     _val = self.sis_paths[_ion]
-                print("NB,",_val, _ion, _rifi)
             elif "trip98.s." in _key: # all parameters which can be read directly from the txt_* widgets.
                 _attr = self.params[_key]  # string holding the attribute names
                 _val = XRCCTRL(self, _attr).GetValue()  # look up values in the various fields
@@ -379,7 +388,6 @@ class TripConfigDialog(wx.Dialog):
                 _val = str(XRCCTRL(self, _attr).GetSelection())  # look up values in the various fields
 
             _save_dict[_key] = _val
-            logger.debug("STORED: {:s} : {:s}".format(_key, _val))
 
         # now _save_dict is a dict holding all parameters from TripConfigDialog which should be saved to .preferences
         pub.sendMessage('settings.value.updated', _save_dict)
