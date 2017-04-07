@@ -47,28 +47,12 @@ class PlanDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
 
         self.init_general()
-        self.init_trip_panel()
         self.init_opt_panel()
         self.init_calculation_panel()
-        self.init_files_panel()
         self.init_advanved_dose()
 
     def patient_data_updated(self, msg):
         self.data = msg.data
-
-    def init_files_panel(self):
-        self.txt_ddd = XRCCTRL(self, "txt_ddd")
-        self.txt_ddd.SetValue(self.plan.get_ddd_folder())
-
-        self.txt_spc = XRCCTRL(self, "txt_spc")
-        self.txt_spc.SetValue(self.plan.get_spc_folder())
-
-        self.txt_sis = XRCCTRL(self, "txt_sis")
-        self.txt_sis.SetValue(self.plan.get_sis_file())
-
-        wx.EVT_BUTTON(self, XRCID("btn_ddd"), self.on_btn_ddd_clicked)
-        wx.EVT_BUTTON(self, XRCID("btn_spc"), self.on_btn_spc_clicked)
-        wx.EVT_BUTTON(self, XRCID("btn_sis"), self.on_btn_sis_clicked)
 
     def init_general(self):
         self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
@@ -123,25 +107,6 @@ class PlanDialog(wx.Dialog):
 
         self.drop_opt_alg = XRCCTRL(self, "drop_opt_alg")
         self.select_drop_by_value(self.drop_opt_alg, self.plan.get_opt_algorithm())
-
-    def init_trip_panel(self):
-        self.drop_location = XRCCTRL(self, "drop_location")
-        if self.plan.is_remote():
-            self.drop_location.SetSelection(1)
-
-        self.txt_working_dir = XRCCTRL(self, "txt_working_dir")
-        self.txt_working_dir.SetValue(self.plan.get_working_dir())
-
-        wx.EVT_BUTTON(self, XRCID('btn_working_dir'), self.on_browse_working_dir)
-
-        self.txt_username = XRCCTRL(self, "txt_username")
-        self.txt_username.SetValue(self.plan.get_username())
-
-        self.txt_password = XRCCTRL(self, "txt_password")
-        self.txt_password.SetValue(self.plan.get_password())
-
-        self.txt_server = XRCCTRL(self, "txt_server")
-        self.txt_server.SetValue(self.plan.get_server())
 
     def init_advanved_dose(self):
         self.drop_projectile = XRCCTRL(self, "drop_projectile")

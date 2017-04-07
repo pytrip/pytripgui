@@ -301,251 +301,6 @@
 				<border>5</border>
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
-						<label>Tissue Types</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel41">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxBoxSizer">
-								<orient>wxVERTICAL</orient>
-								<object class="sizeritem">
-									<option>1</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxFlexGridSizer">
-										<rows>2</rows>
-										<cols>2</cols>
-										<vgap>0</vgap>
-										<hgap>0</hgap>
-										<growablecols></growablecols>
-										<growablerows></growablerows>
-										<object class="sizeritem">
-											<option>1</option>
-											<flag>wxEXPAND</flag>
-											<border>5</border>
-											<object class="wxGridBagSizer">
-												<vgap>0</vgap>
-												<hgap>0</hgap>
-												<growablecols></growablecols>
-												<growablerows></growablerows>
-												<object class="sizeritem">
-													<cellpos>0,0</cellpos>
-													<cellspan>1,2</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText38">
-														<label>If biological optimization or calculation are choosen, tissue type must be specified</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>2,0</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText39">
-														<label>Resdidual Tissue Type</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>2,1</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxChoice" name="drop_res_tissue_type">
-														<selection>0</selection>
-														<content />
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>1,0</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText40">
-														<label>Target Tissue Type</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>1,1</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxChoice" name="drop_target_tissue_type">
-														<selection>0</selection>
-														<content />
-													</object>
-												</object>
-											</object>
-										</object>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>TRiP98</label>
-						<selected>1</selected>
-						<object class="wxPanel" name="m_panel1">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxBoxSizer">
-								<orient>wxVERTICAL</orient>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxBoxSizer">
-										<orient>wxHORIZONTAL</orient>
-										<object class="sizeritem">
-											<option>0</option>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText17">
-												<label>Location of TRiP98 installation</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<option>0</option>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxChoice" name="drop_location">
-												<selection>0</selection>
-												<content>
-													<item>Local</item>
-													<item>Remote server</item>
-												</content>
-											</object>
-										</object>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxStaticBoxSizer">
-										<orient>wxVERTICAL</orient>
-										<label>Working Directory</label>
-										<object class="sizeritem">
-											<option>0</option>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText18">
-												<label>If working directory is not specified, the local CT-dir will be used</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<option>1</option>
-											<flag>wxEXPAND</flag>
-											<border>5</border>
-											<object class="wxBoxSizer">
-												<orient>wxHORIZONTAL</orient>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxTextCtrl" name="txt_working_dir">
-														<size>200,-1</size>
-														<value></value>
-														<maxlength>0</maxlength>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxButton" name="btn_working_dir">
-														<label>Browse</label>
-														<default>0</default>
-													</object>
-												</object>
-											</object>
-										</object>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxStaticBoxSizer">
-										<orient>wxVERTICAL</orient>
-										<label>Remote</label>
-										<object class="sizeritem">
-											<option>1</option>
-											<flag>wxEXPAND</flag>
-											<border>5</border>
-											<object class="wxFlexGridSizer">
-												<rows>3</rows>
-												<cols>2</cols>
-												<vgap>0</vgap>
-												<hgap>0</hgap>
-												<growablecols></growablecols>
-												<growablerows></growablerows>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText20">
-														<label>Server IP/Hostname</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxTextCtrl" name="txt_server">
-														<value></value>
-														<maxlength>0</maxlength>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText21">
-														<label>Username</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxTextCtrl" name="txt_username">
-														<value></value>
-														<maxlength>0</maxlength>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText22">
-														<label>Password</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<option>0</option>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxTextCtrl" name="txt_password">
-														<style>wxTE_PASSWORD</style>
-														<value></value>
-														<maxlength>0</maxlength>
-													</object>
-												</object>
-											</object>
-										</object>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
 						<label>Calculation</label>
 						<selected>0</selected>
 						<object class="wxPanel" name="m_panel3">
@@ -803,124 +558,7 @@
 						</object>
 					</object>
 					<object class="notebookpage">
-						<label>Files</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel7">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxBoxSizer">
-								<orient>wxVERTICAL</orient>
-								<object class="sizeritem">
-									<option>1</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxGridBagSizer">
-										<vgap>0</vgap>
-										<hgap>0</hgap>
-										<growablecols></growablecols>
-										<growablerows></growablerows>
-										<object class="sizeritem">
-											<cellpos>0,0</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText44">
-												<label>Choose DDD directory</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>1,0</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxTextCtrl" name="txt_ddd">
-												<size>200,-1</size>
-												<enabled>0</enabled>
-												<value></value>
-												<maxlength>0</maxlength>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>1,1</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxButton" name="btn_ddd">
-												<label>Browse...</label>
-												<default>0</default>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>2,0</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText46">
-												<label>Choose SPC directory</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>3,0</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxTextCtrl" name="txt_spc">
-												<size>200,-1</size>
-												<enabled>0</enabled>
-												<value></value>
-												<maxlength>0</maxlength>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>3,1</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxButton" name="btn_spc">
-												<label>Browse...</label>
-												<default>0</default>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>4,0</cellpos>
-											<cellspan>1,2</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxStaticText" name="m_staticText75">
-												<label>Choose SIS file (optional)</label>
-												<wrap>-1</wrap>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>5,0</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxTextCtrl" name="txt_sis">
-												<size>200,-1</size>
-												<enabled>0</enabled>
-												<value></value>
-												<maxlength>0</maxlength>
-											</object>
-										</object>
-										<object class="sizeritem">
-											<cellpos>5,1</cellpos>
-											<cellspan>1,1</cellspan>
-											<flag>wxALL</flag>
-											<border>5</border>
-											<object class="wxButton" name="btn_sis">
-												<label>Browse..</label>
-												<default>0</default>
-											</object>
-										</object>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Advanced Dose</label>
+						<label>Dose Delivery</label>
 						<selected>0</selected>
 						<object class="wxPanel" name="m_panel14">
 							<style>wxTAB_TRAVERSAL</style>
@@ -974,6 +612,90 @@
 									<object class="wxButton" name="btn_set_dosepercent">
 										<label>Set</label>
 										<default>0</default>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Tissue Types</label>
+						<selected>1</selected>
+						<object class="wxPanel" name="m_panel41">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxFlexGridSizer">
+										<rows>2</rows>
+										<cols>2</cols>
+										<vgap>0</vgap>
+										<hgap>0</hgap>
+										<growablecols></growablecols>
+										<growablerows></growablerows>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxGridBagSizer">
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<cellpos>0,0</cellpos>
+													<cellspan>1,2</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText38">
+														<label>If biological optimization or calculation are choosen, tissue type must be specified</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>2,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText39">
+														<label>Resdidual Tissue Type</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>2,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_res_tissue_type">
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>1,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText40">
+														<label>Target Tissue Type</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>1,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_target_tissue_type">
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+											</object>
+										</object>
 									</object>
 								</object>
 							</object>
