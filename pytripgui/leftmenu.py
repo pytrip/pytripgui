@@ -297,7 +297,6 @@ class LeftMenuTree(wx.TreeCtrl):
     def plan_let_add(self, msg):
         plan = msg.data["plan"]
         let = msg.data["let"]
-        # name = msg.data["name"]
         plan_node = self.get_child_from_data(self.plans_node, plan)
         let = self.get_or_create_child(plan_node, "LET", let)
 

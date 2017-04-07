@@ -18,7 +18,7 @@ import wx
 import sys
 import logging
 
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+from wx.xrc import XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import setuparg1  # noqa
@@ -37,7 +37,7 @@ class TripConfigDialog(wx.Dialog):
     def __init__(self):
         pre = wx.PreDialog()
         self.PostCreate(pre)
-        
+
     def Init(self, plan):
         """ Setup the machinery for tripconfigdialog
         :params plan: tripplan
@@ -50,9 +50,10 @@ class TripConfigDialog(wx.Dialog):
         nrifi = 2
         self.ddd_paths = [["" for _ in range(nions)] for _ in range(nrifi)]
         self.spc_paths = [["" for _ in range(nions)] for _ in range(nrifi)]
-        self.sis_paths = ["" for _ in range(nions)] # SIS depends on ion only.
+        self.sis_paths = ["" for _ in range(nions)]  # SIS depends on ion only.
 
-        # list of all parameters which are to be stored, listed by topic : attribute name of widget object set in .xrc file
+        # list of all parameters which are to be stored,
+        # listed by {topic : attribute name of widget object set in .xrc file}
         self.params = {"trip98.s.wdir": "txt_working_dir",
                        "trip98.s.username": "txt_username",
                        "trip98.s.password": "txt_password",
@@ -67,7 +68,7 @@ class TripConfigDialog(wx.Dialog):
                        "trip98.ddd.z6.rifi0": "txt_ddd",
                        "trip98.ddd.z8.rifi0": "txt_ddd",
                        "trip98.ddd.z10.rifi0": "txt_ddd",
-                       
+
                        "trip98.ddd.z1.rifi3": "txt_ddd",
                        "trip98.ddd.z4.rifi3": "txt_ddd",
                        "trip98.ddd.z6.rifi3": "txt_ddd",
@@ -80,7 +81,7 @@ class TripConfigDialog(wx.Dialog):
                        "trip98.spc.z6.rifi0": "txt_spc",
                        "trip98.spc.z8.rifi0": "txt_spc",
                        "trip98.spc.z10.rifi0": "txt_spc",
-                       
+
                        "trip98.spc.z1.rifi3": "txt_spc",
                        "trip98.spc.z4.rifi3": "txt_spc",
                        "trip98.spc.z6.rifi3": "txt_spc",
@@ -93,7 +94,7 @@ class TripConfigDialog(wx.Dialog):
                        "trip98.sis.z6.rifi0": "txt_sis",
                        "trip98.sis.z8.rifi0": "txt_sis",
                        "trip98.sis.z10.rifi0": "txt_sis",
-                       
+
                        "trip98.sis.z1.rifi3": "txt_sis",
                        "trip98.sis.z4.rifi3": "txt_sis",
                        "trip98.sis.z6.rifi3": "txt_sis",
@@ -127,7 +128,7 @@ class TripConfigDialog(wx.Dialog):
         # Main window
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
         wx.EVT_BUTTON(self, XRCID('btn_save'), self.save)
-        
+
         # Access panel:
         wx.EVT_BUTTON(self, XRCID('btn_wdir'), self.on_browse_wdir)
         wx.EVT_CHOICE(self, XRCID('m_choice_location'), self.on_select_location)
@@ -143,8 +144,8 @@ class TripConfigDialog(wx.Dialog):
         wx.EVT_TEXT(self, XRCID('txt_ddd'), self._on_ddd_set)
         wx.EVT_TEXT(self, XRCID('txt_spc'), self._on_spc_set)
         wx.EVT_TEXT(self, XRCID('txt_sis'), self._on_sis_set)
-        
-        # LUT panel: 
+
+        # LUT panel:
         wx.EVT_BUTTON(self, XRCID('btn_hlut'), self.on_browse_hlut)
         wx.EVT_BUTTON(self, XRCID('btn_dedx'), self.on_browse_dedx)
 
@@ -174,14 +175,14 @@ class TripConfigDialog(wx.Dialog):
         self.txt_ddd.SetValue(self.ddd_paths[_rifi][_ion])
         self.txt_spc.SetValue(self.spc_paths[_rifi][_ion])
         self.txt_sis.SetValue(self.sis_paths[_ion])
-        
+
     def on_select_location(self, evt):
         self._update_access_panel()
 
     def _update_access_panel(self):
         """ Enable/disable text fiels, whether Trip is access locally or remotely.
         """
-        if self.m_choice_location.GetSelection() == 0: # local
+        if self.m_choice_location.GetSelection() == 0:  # local
             self.txt_server.Disable()
             self.txt_username.Disable()
             self.txt_password.Disable()
@@ -189,7 +190,7 @@ class TripConfigDialog(wx.Dialog):
             self.txt_server.Enable()
             self.txt_username.Enable()
             self.txt_password.Enable()
-        
+
     def _store_parameter(self, msg):
         """
         Callback function for the answer from SettingsManager, when a parameter was requested.
@@ -217,7 +218,6 @@ class TripConfigDialog(wx.Dialog):
 
         # Finally the text fields in the Kernel panel must be updated. This depends on what ion is selected,
         # and is updated via the internal list of paths.
-        _topic_list = ("trip98.ddd.", "trip98.spc.", "trip98.sis.")
 
         if "trip98.ddd." in _topic:
             _ion, _rifi = self._selection_id_from_topic(_topic)
@@ -261,7 +261,7 @@ class TripConfigDialog(wx.Dialog):
         self.sis_paths[_ion] = _path
 
     def _selection_id_from_topic(self, _topic):
-        """ Translates a topic such as "trip98.ddd.z6.rifi3" into a ion and rifi integer number for the 
+        """ Translates a topic such as "trip98.ddd.z6.rifi3" into a ion and rifi integer number for the
         wxChoice class SetChoice() method.
         """
 
@@ -272,52 +272,60 @@ class TripConfigDialog(wx.Dialog):
                  "z10": 4}
 
         _drifi = {"rifi0": 0,
-                 "rifi3": 1}
+                  "rifi3": 1}
 
         _ion = _topic.split(".")[2]
         _rifi = _topic.split(".")[3]
         return _dion[_ion], _drifi[_rifi]
-       
+
     def on_browse_wdir(self, evt):
         """ Browse working dir clicked
         """
         path = self._on_browse(self.txt_working_dir.GetValue(),
-                   "Select the TRiP98 working directory",
-                   True)
+                               "Select the TRiP98 working directory",
+                               True)
         self.txt_working_dir.SetValue(path)
 
     def on_browse_ddddir(self, evt):
         """ Browse DDD dir clicked
         """
         path = self._on_browse(self.txt_ddd.GetValue(),
-                          "Select DDD directory",
-                          True)
+                               "Select DDD directory",
+                               True)
         self.txt_ddd.SetValue(path)
 
     def on_browse_spcdir(self, evt):
+        """ Browse SPC dir clicked
+        """
         path = self._on_browse(self.txt_spc.GetValue(),
-                          "Select SPC directory",
-                          True)
+                               "Select SPC directory",
+                               True)
         self.txt_spc.SetValue(path)
-    
+
     def on_browse_sis(self, evt):
+        """ Browse SIS dir clicked
+        """
         path = self._on_browse(self.txt_sis.GetValue(),
-                          "Select SIS File",
-                          False)
+                               "Select SIS file",
+                               False)
         self.txt_sis.SetValue(path)
 
     def on_browse_hlut(self, evt):
+        """ Browse HLUT dir clicked
+        """
         path = self._on_browse(self.txt_hlut.GetValue(),
-                          "Select HLUT File",
-                          False)
+                               "Select HLUT file",
+                               False)
         self.txt_hlut.SetValue(path)
 
     def on_browse_dedx(self, evt):
+        """ Browse dE/dx dir clicked
+        """
         path = self._on_browse(self.txt_dedx.GetValue(),
-                          "Select dE/dx File",
-                          False)
+                               "Select dE/dx file",
+                               False)
         self.txt_dedx.SetValue(path)
-    
+
     def _on_browse(self, defpath, message, _dir=True):
         """ Select working directory for TRiP98 via file dialog
         :params defpath: default path to open dialog in
@@ -328,7 +336,7 @@ class TripConfigDialog(wx.Dialog):
         """
         path = None
 
-        if _dir: 
+        if _dir:
             dlg = wx.DirDialog(
                 self,
                 defaultPath=defpath,
@@ -342,10 +350,11 @@ class TripConfigDialog(wx.Dialog):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             return path
-        
+
+        # in case no file was selected, just return the defpath, so the stuff in the text field is retained.
         if path is None:
             return defpath
-        
+
     def on_browse_file(self, evt):
         """ Select working directory for TRiP98 via file dialog
         :returns: the dir which was selected
@@ -357,7 +366,6 @@ class TripConfigDialog(wx.Dialog):
 
         if dlg.ShowModal() == wx.ID_OK:
             return dlg.GetPath()
-        
 
     def save(self, evt):
         """ Saves the dialog settings to the preference file.
@@ -368,19 +376,21 @@ class TripConfigDialog(wx.Dialog):
 
         # sensitive topics, where values should be extracted from variables instead of text_entry widgets:
         _topics = ("trip98.ddd.", "trip98.spc.", "trip98.sis.")
-        
+
         # make a new dict of parameters to be saved
         for _key in self.params:
             # _val to be stored in preference files for DDD, SPC and SIS are not from text fields.
             if any(_x in _key for _x in _topics):
-                _ion, _rifi = self._selection_id_from_topic(_key)  # translate "trip98.ddd.z6.rifi0" to proper indices for table lookup
+                # translate "trip98.ddd.z6.rifi0" to proper indices for table lookup
+                _ion, _rifi = self._selection_id_from_topic(_key)
+
                 if "trip98.ddd." in _key:
                     _val = self.ddd_paths[_rifi][_ion]
                 if "trip98.spc." in _key:
                     _val = self.spc_paths[_rifi][_ion]
                 if "trip98.sis." in _key:
                     _val = self.sis_paths[_ion]
-            elif "trip98.s." in _key: # all parameters which can be read directly from the txt_* widgets.
+            elif "trip98.s." in _key:  # all parameters which can be read directly from the txt_* widgets.
                 _attr = self.params[_key]  # string holding the attribute names
                 _val = XRCCTRL(self, _attr).GetValue()  # look up values in the various fields
             elif "trip98.choice." in _key:
