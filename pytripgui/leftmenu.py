@@ -339,12 +339,13 @@ class LeftMenuTree(wx.TreeCtrl):
     def plan_run_trip(self, evt):
         plan = self.GetItemData(self.selected_item).GetData()
 
-        
-        plan.set_remote_state(True)
-        plan.set_working_dir()
-        plan.set_server()
-        plan.set_username()
-        plan.set_password()
+        # Load global parameters from settings file and attach them to this plan.
+        st = Settings()
+        plan.set_remote_state(st.load('trip98.choice.remote') == '1') # remote if set to '1'
+        plan.set_working_dir(st.load('trip98.s.wdir'))
+        plan.set_server(st.load('trip98.s.server'))
+        plan.set_username(st.load('trip98.s.username'))
+        plan.set_password(st.load('trip98.s.password'))
         ##TODO: select proper ddd,spc,sis depending on projectile and RiFi
         ##probe self.plan.set_dose_percent()
         ##self.plan.set_ddd_folder()
