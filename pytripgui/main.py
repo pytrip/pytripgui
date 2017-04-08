@@ -28,7 +28,6 @@ from wx.xrc import XRCCTRL, XRCID, XmlResource
 from pytrip.error import InputError
 
 from pytripgui.leftmenu import LeftMenuTree
-##from pytripgui.settingsmanager import SettingsManager
 from pytripgui.settings import Settings
 from pytripgui.plugin import PluginManager
 
@@ -86,19 +85,16 @@ class MainFrame(wx.Frame):
         self.res = res
         self.bind_menu()
         self.bind_toolbar()
-        ##self.load_settings()
 
         pub.subscribe(self.on_patient_load, "patient.load")
-        ##pub.subscribe(self.on_import_path_change, "general.import")
         pub.subscribe(self.statusbar_updated, "statusbar.update")
-        ##pub.sendMessage("settings.value.request", "general.import.dicom_path")
-        ##pub.sendMessage("settings.value.request", "general.import.voxelplan_path")
-        ##pub.sendMessage("settings.value.request", "general.import.tripexec_path")
+
+        # load settings from .pytrip/settings.dat
         st = Settings()
         self.dicom_path = st.load("general.import.dicom_path")
         self.voxelplan_path = st.load("general.import.voxelplan_path")
         self.tripexec_path = st.load("general.import.tripexec_path")
-        
+
         pub.subscribe(self.load_dialog, "gui")
 
         self.res = XmlResource(util.get_resource_path('panels.xrc'))
@@ -188,16 +184,6 @@ class MainFrame(wx.Frame):
         plot = PlotPanel(self.main_notebook)
         plot.Init()
         self.main_notebook.AddPage(plot, "2D Plot")
-
-    ##def on_import_path_change(self, msg):
-    ##    data = msg.data
-    ##    if data is None:
-    ##        data = ""
-    ##    setattr(self, msg.topic[2], data)
-
-    ##def load_settings(self):
-    ##    self.settings_manager = SettingsManager()
-    ##    self.settings_manager.load_settings()
 
     def bind_menu(self):
         """ Attach callback methods to menu events.
@@ -359,8 +345,8 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data = PytripData()
             path = dlg.GetPath()
-            ##pub.sendMessage("settings.value.updated", {"general.import.tripexec_path": path})
-            st = Settings() # save last used DICOM path to settings file.
+
+            st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.tripexec_path", path)
             data.load_trip_exec(path)
 
@@ -375,8 +361,8 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()
-            ##pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
-            st = Settings() # save last used DICOM path to settings file.
+
+            st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.voxelplan_path", path)
             data_obj.load_from_voxelplan(path)
 
@@ -388,8 +374,8 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()
-            ##pub.sendMessage("settings.value.updated", {"general.import.dicom_path": path})
-            st = Settings() # save last used DICOM path to settings file.
+
+            st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.dicom_path", path)
             data_obj.load_from_dicom(path)
 
@@ -414,7 +400,7 @@ class MainFrame(wx.Frame):
 class pytripgui(wx.App):
     def OnInit(self):
         from pytripgui import __version__ as pytripgui_version
-        
+
         wx.GetApp().SetAppName("pytrip")
         # Load the XRC file for our gui resources
         self.res = XmlResource(util.get_resource_path('main.xrc'))
