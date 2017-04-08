@@ -20,6 +20,7 @@ import wx
 
 from pytripgui.data import TripPlan, Field
 from pytripgui.util import get_class_name
+from pytripgui.settings import Settings
 import pytripgui.guihelper
 
 if getattr(sys, 'frozen', False):
@@ -129,10 +130,13 @@ class LeftMenuTree(wx.TreeCtrl):
         pub.subscribe(self.plan_let_removed, "plan.let.removed")
         pub.subscribe(self.plan_voi_moved, "plan.voi.moved")
 
-        pub.subscribe(self.on_import_path_change_dicom, "general.import.dicom_path")
-        pub.subscribe(self.on_import_path_change_voxelplan, "general.import.voxelplan_path")
-        pub.sendMessage("settings.value.request", "general.import.dicom_path")
-        pub.sendMessage("settings.value.request", "general.import.voxelplan_path")
+        ##pub.subscribe(self.on_import_path_change_dicom, "general.import.dicom_path")
+        ##pub.subscribe(self.on_import_path_change_voxelplan, "general.import.voxelplan_path")
+        ##pub.sendMessage("settings.value.request", "general.import.dicom_path")
+        ##pub.sendMessage("settings.value.request", "general.import.voxelplan_path")
+        st = Settings()
+        self.voxelplan_path = st.load("general.import.voxelplan_path")
+        self.dicom_path = st.load("general.import.dicom_path")
         self.prepare_icons()
 
     def prepare_icons(self):
@@ -144,15 +148,15 @@ class LeftMenuTree(wx.TreeCtrl):
         voi = self.GetItemData(self.selected_item).GetData()
         voi.toggle_selected()
 
-    def on_import_path_change_dicom(self, msg):
-        self.dicom_path = msg.data
-        if self.dicom_path is None:
-            self.dicom_path = ""
+    ##def on_import_path_change_dicom(self, msg):
+    ##    self.dicom_path = msg.data
+    ##    if self.dicom_path is None:
+    ##        self.dicom_path = ""
 
-    def on_import_path_change_voxelplan(self, msg):
-        self.voxelplan_path = msg.data
-        if self.voxelplan_path is None:
-            self.voxelplan_path = ""
+    ##def on_import_path_change_voxelplan(self, msg):
+    ##    self.voxelplan_path = msg.data
+    ##    if self.voxelplan_path is None:
+    ##        self.voxelplan_path = ""
 
     def show_image(self, evt):
         a = self.GetItemData(self.selected_item).GetData()
@@ -244,7 +248,9 @@ class LeftMenuTree(wx.TreeCtrl):
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
+            st = Settings()
+            st.save("general.import.voxelplan_path", path)
+            #pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
             plan.load_dose(path, "phys")
 
     def plan_load_let_voxelplan(self, evt):
@@ -256,7 +262,9 @@ class LeftMenuTree(wx.TreeCtrl):
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
+            st = Settings()
+            st.save("general.import.voxelplan_path", path)
+            #pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
             plan.load_let(path)
 
     def plan_delete_field(self, evt):

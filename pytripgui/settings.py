@@ -33,13 +33,22 @@ class Settings:
         """
         Looks up a value in the settings file.
         :params str key: string in the form of 'trip98.spc.z6.rifi3'
-        :retruns: a string holding the result.
+        :retruns: a string holding the result. If key is not found, return empty string.
         """
         self.config.read(self.path)
 
         # for 'trip98.spc.z6.rifi3' the first word before the dot is the section.
-        sec, subkey = key.split('.', 1)
-        return self.config.get(sec, subkey)  # this is python2 specific
+        _sec, _opt = key.split('.', 1)
+
+        if not self.config.has_section(_sec):
+            logger.debug("Settings: section {:s} not found, returning empty string".format(_sec))
+            return ""
+        if not self.config.has_option(_sec, _opt):
+            logger.debug("Settings: option {:s} not found, returning empty string".format(_opt))
+            return ""
+
+        # return value is always guaranteed to be a string.
+        return self.config.get(_sec, _opt)  # this is python2 specific
 
     def save(self, key, value):
         """
@@ -51,12 +60,12 @@ class Settings:
         self.config.read(self.path)
 
         # for 'trip98.spc.z6.rifi3' key the first word before the dot is the section.
-        sec, subkey = key.split('.', 1)
+        _sec, _opt = key.split('.', 1)
 
-        if not self.config.has_section(sec):
-            self.config.add_section(sec)
+        if not self.config.has_section(_sec):
+            self.config.add_section(_sec)
             
-        self.config.set(sec, subkey, value)  # this is python2 specific
+        self.config.set(_sec, _opt, value)  # this is python2 specific
 
         with open(self.path, 'wb') as configfile:
             self.config.write(configfile)
