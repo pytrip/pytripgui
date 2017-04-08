@@ -14,121 +14,49 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import sys
-import os
-import json
 import logging
+import ConfigParser as configparser  # this is python2 specific
 
 from pytripgui.util import get_user_directory
 
-if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1  # noqa
-    from wx.lib.pubsub import pub
-else:
-    try:
-        from wx.lib.pubsub import Publisher as pub
-    except:
-        from wx.lib.pubsub import setuparg1  # noqa
-        from wx.lib.pubsub import pub
-
 logger = logging.getLogger(__name__)
 
-
-class SettingsManager:
-    """
-    Manager for handling settings which are saved in .pytrip/ as JSON object.
+class Settings:
+    """ Class for interacting with saved configurations
     """
     def __init__(self):
-        self.path = os.path.join(get_user_directory(), "preferences.dat")
-        self.values = {}
-        self.template = {}
-        pub.subscribe(self.get_requested_value, "settings.value.request")
-        pub.subscribe(self.get_requested_values, "settings.values.request")
-        pub.subscribe(self.value_updated, "settings.value.updated")
-        logger.debug("preferences path: {:s}".format(self.path))
+        import os
+        self.path = os.path.join(get_user_directory(), "settings.dat")
+        self.config = configparser.SafeConfigParser()  # this is python2 specific
 
-    def value_updated(self, msg):
-        for key, value in msg.data.iteritems():
-            self.set_value(key, value)
-            pub.sendMessage(key, value)
-
-    def get_requested_value(self, msg):
-        """ callback function for "settings.value.request" message
+    def load(self, key):
         """
-        query = msg.data
-        value = self.get_value(query)
-        pub.sendMessage(msg.data, value)
-
-    def get_requested_values(self, msg):
-        """ callback function for "settings.values.request" message
-        this one may contain multiple values, and interates over these, sending
-        one message back for each value.
+        Looks up a value in the settings file.
+        :params str key: string in the form of 'trip98.spc.z6.rifi3'
+        :retruns: a string holding the result.
         """
-        _query = msg.data
-        values = self.get_value(_query)
-        for key, value in values.iteritems():
-            pub.sendMessage(msg.data + "." + key, value)
+        self.config.read(self.path)
 
-    def load_settings(self, path=""):
-        """ Loads the settings from path
+        # for 'trip98.spc.z6.rifi3' the first word before the dot is the section.
+        sec, subkey = key.split('.', 1)
+        return self.config.get(sec, subkey)  # this is python2 specific
+
+    def save(self, key, value):
         """
-        if path == "":
-            path = self.path
-        if os.path.exists(path):
-            with open(path, mode='r') as settings:
-                try:
-                    self.values = json.load(settings)
-                except ValueError:
-                    self.values = {}
-        else:
-            self.values = {}
-
-    def save_settings(self, path=""):
-        """ Saves the settings to path as json object.
+        Save a value for key. If config section does not exist, it is created.
+        :params str key:  string in the form of 'trip98.spc.z6.rifi3'
+        :params str value: the value to be stored. Must be string format.
         """
-        if path == "":
-            path = self.path
-        with open(path, mode='w+') as set_file:
-            json.dump(self.values, set_file, sort_keys=True, indent=4)
 
-    def get_value(self, query):
-        q = query.split(".")
-        temp = self.values
-        for key in q:
-            try:
-                temp = temp[key]
-            except KeyError:
-                return None
-        return temp
+        self.config.read(self.path)
 
-    def get_value_str(self, query):
-        """ Wrapper to get_value() which will return empty string if key is not found.
-        """
-        # TODO: better to test if temp is string, and if not return ""
-        temp = self.get_value(query)
-        if temp is None:
-            return ""
-        return temp
+        # for 'trip98.spc.z6.rifi3' key the first word before the dot is the section.
+        sec, subkey = key.split('.', 1)
 
-    def load_template(self, template):
-        self.template = template
-        save = False
-        for group in template:
-            for item in group:
-                if self.get_value(item["callback"]) is None:
-                    self.set_value(item["callback"], item["default"])
-                    save = True
-        if save is True:
-            self.save_settings()
+        if not self.config.has_section(sec):
+            self.config.add_section(sec)
+            
+        self.config.set(sec, subkey, value)  # this is python2 specific
 
-    def set_value(self, query, value, save_file=True):
-        q = query.split(".")
-        last_key = q.pop()
-        temp = self.values
-        for key in q:
-            if key not in temp:
-                temp[key] = {}
-            temp = temp[key]
-        temp[last_key] = value
-        if save_file is True:
-            self.save_settings()
+        with open(self.path, 'wb') as configfile:
+            self.config.write(configfile)

@@ -18,6 +18,8 @@ import wx
 import sys
 import logging
 
+from pytripgui.settings import Settings
+
 from wx.xrc import XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
@@ -149,15 +151,12 @@ class TripConfigDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_hlut'), self.on_browse_hlut)
         wx.EVT_BUTTON(self, XRCID('btn_dedx'), self.on_browse_dedx)
 
-        # Read the preference file.
-        # First attach the _store_parameter() callback to all _keys which may be sent as a pubsub message,
-        # or in other words: we must make sure, when we request a value from the preference file,
-        # that we are ready to handle the answer.
-        # Once this is set up we send a message to request the value from the preference file
-        for _key in self.params:
-            pub.subscribe(self._store_parameter, _key)  # subscribe to possible answer for _key
-            pub.sendMessage('settings.value.request', _key)  # get value for _key from peference file
+        # Read the settings file.
 
+        st = Settings()
+        for _key in self.params:
+            self._store_parameter(_key, st.load(_key))
+            
     def close(self, evt):
         """ Close the dialog.
         """
@@ -191,13 +190,11 @@ class TripConfigDialog(wx.Dialog):
             self.txt_username.Enable()
             self.txt_password.Enable()
 
-    def _store_parameter(self, msg):
+    def _store_parameter(self, _topic, _val):
         """
         Callback function for the answer from SettingsManager, when a parameter was requested.
         This will store the message in appropiate widget for this dialog, however it may require some filtering.
         """
-        _topic = ".".join(msg.topic)
-        _val = msg.data
 
         if _val is None:
             _val = ""
@@ -401,5 +398,6 @@ class TripConfigDialog(wx.Dialog):
 
             _save_dict[_key] = _val
 
-        # now _save_dict is a dict holding all parameters from TripConfigDialog which should be saved to .preferences
-        pub.sendMessage('settings.value.updated', _save_dict)
+        st = Settings()
+        for _key, _value in sorted(_save_dict.items()):
+            st.save(_key, _value)

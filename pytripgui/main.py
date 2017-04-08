@@ -28,7 +28,7 @@ from wx.xrc import XRCCTRL, XRCID, XmlResource
 from pytrip.error import InputError
 
 from pytripgui.leftmenu import LeftMenuTree
-from pytripgui.settings import SettingsManager
+from pytripgui.settingsmanager import SettingsManager
 from pytripgui.plugin import PluginManager
 
 from pytripgui.panels.plotpanel import PlotPanel
