@@ -110,6 +110,7 @@ class PlanDialog(wx.Dialog):
 
     def init_advanved_dose(self):
         self.drop_projectile = XRCCTRL(self, "drop_projectile")
+        ##TODO: add according to name of configurations
         self.drop_projectile.Append("H")
         self.drop_projectile.Append("C")
 
@@ -129,42 +130,9 @@ class PlanDialog(wx.Dialog):
         if not self.drop_projectile.GetStringSelection() == "":
             self.plan.set_dose_percent(self.drop_projectile.GetStringSelection(), self.txt_dose_percent.GetValue())
 
-    def on_browse_working_dir(self, evt):
-        dlg = wx.DirDialog(
-            self,
-            defaultPath=self.txt_working_dir.GetValue(),
-            message="Choose the folder pytripgui should use as working directory")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_working_dir.SetValue(dlg.GetPath())
-
-    def on_btn_ddd_clicked(self, evt):
-        dlg = wx.DirDialog(
-            self, defaultPath=self.txt_ddd.GetValue(), message="Choose folder where ddd files are located")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_ddd.SetValue(dlg.GetPath())
-
-    def on_btn_sis_clicked(self, evt):
-        dlg = wx.FileDialog(self, defaultFile=self.txt_sis.GetValue(), message="Choose sis file")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_sis.SetValue(dlg.GetPath())
-
-    def on_btn_spc_clicked(self, evt):
-        dlg = wx.DirDialog(
-            self, defaultPath=self.txt_spc.GetValue(), message="Choose folder where spc files are located")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_spc.SetValue(dlg.GetPath())
-
     def save_and_close(self, evt):
         self.plan.set_res_tissue_type(self.drop_res_tissue_type.GetStringSelection())
         self.plan.set_target_tissue_type(self.drop_target_tissue_type.GetStringSelection())
-        if self.drop_location.GetSelection() is 0:
-            self.plan.set_remote_state(False)
-        else:
-            self.plan.set_remote_state(True)
-        self.plan.set_working_dir(self.txt_working_dir.GetValue())
-        self.plan.set_server(self.txt_server.GetValue())
-        self.plan.set_username(self.txt_username.GetValue())
-        self.plan.set_password(self.txt_password.GetValue())
 
         self.plan.set_iterations(self.txt_iterations.GetValue())
         self.plan.set_eps(self.txt_eps.GetValue())
@@ -179,10 +147,6 @@ class PlanDialog(wx.Dialog):
         self.plan.set_out_bio_dose(self.check_bio_dose.GetValue())
         self.plan.set_out_dose_mean_let(self.check_dose_mean_let.GetValue())
         self.plan.set_out_field(self.check_field.GetValue())
-
-        self.plan.set_ddd_folder(self.txt_ddd.GetValue())
-        self.plan.set_spc_folder(self.txt_ddd.GetValue())
-        self.plan.set_sis_file(self.txt_sis.GetValue())
 
         self.Close()
 

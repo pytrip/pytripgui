@@ -330,6 +330,20 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_run_trip(self, evt):
         plan = self.GetItemData(self.selected_item).GetData()
+        ##TODO: attach remaining options from preferences
+        ##if self.drop_location.GetSelection() is 0:
+        ##    self.plan.set_remote_state(False)
+        ##else:
+        ##    self.plan.set_remote_state(True)
+        ##self.plan.set_working_dir()
+        ##self.plan.set_server()
+        ##self.plan.set_username()
+        ##self.plan.set_password()
+        ##TODO: select proper ddd,spc,sis depending on projectile and RiFi
+        ##probe self.plan.set_dose_percent()
+        ##self.plan.set_ddd_folder()
+        ##self.plan.set_spc_folder()
+        ##self.plan.set_sis_file()
         self.data.execute_trip(plan)
 
     def plan_add_field(self, evt):
