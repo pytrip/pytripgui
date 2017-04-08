@@ -130,10 +130,6 @@ class LeftMenuTree(wx.TreeCtrl):
         pub.subscribe(self.plan_let_removed, "plan.let.removed")
         pub.subscribe(self.plan_voi_moved, "plan.voi.moved")
 
-        ##pub.subscribe(self.on_import_path_change_dicom, "general.import.dicom_path")
-        ##pub.subscribe(self.on_import_path_change_voxelplan, "general.import.voxelplan_path")
-        ##pub.sendMessage("settings.value.request", "general.import.dicom_path")
-        ##pub.sendMessage("settings.value.request", "general.import.voxelplan_path")
         st = Settings()
         self.voxelplan_path = st.load("general.import.voxelplan_path")
         self.dicom_path = st.load("general.import.dicom_path")
@@ -147,16 +143,6 @@ class LeftMenuTree(wx.TreeCtrl):
     def toggle_selected_voi(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
         voi.toggle_selected()
-
-    ##def on_import_path_change_dicom(self, msg):
-    ##    self.dicom_path = msg.data
-    ##    if self.dicom_path is None:
-    ##        self.dicom_path = ""
-
-    ##def on_import_path_change_voxelplan(self, msg):
-    ##    self.voxelplan_path = msg.data
-    ##    if self.voxelplan_path is None:
-    ##        self.voxelplan_path = ""
 
     def show_image(self, evt):
         a = self.GetItemData(self.selected_item).GetData()
@@ -250,7 +236,6 @@ class LeftMenuTree(wx.TreeCtrl):
             path = dlg.GetPath()
             st = Settings()
             st.save("general.import.voxelplan_path", path)
-            #pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
             plan.load_dose(path, "phys")
 
     def plan_load_let_voxelplan(self, evt):
@@ -264,7 +249,6 @@ class LeftMenuTree(wx.TreeCtrl):
             path = dlg.GetPath()
             st = Settings()
             st.save("general.import.voxelplan_path", path)
-            #pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
             plan.load_let(path)
 
     def plan_delete_field(self, evt):
@@ -337,20 +321,38 @@ class LeftMenuTree(wx.TreeCtrl):
         self.AppendItem(fields, field.get_name(), data=data)
 
     def plan_run_trip(self, evt):
+        """
+        Callback for TRiP98 Execution.
+        This will set the last global parameters and then execute TRiP for the attached plan.
+        """
         plan = self.GetItemData(self.selected_item).GetData()
 
         # Load global parameters from settings file and attach them to this plan.
         st = Settings()
-        plan.set_remote_state(st.load('trip98.choice.remote') == '1') # remote if set to '1'
+        plan.set_remote_state(st.load('trip98.choice.remote') == '1')  # remote if set to '1'
         plan.set_working_dir(st.load('trip98.s.wdir'))
         plan.set_server(st.load('trip98.s.server'))
         plan.set_username(st.load('trip98.s.username'))
         plan.set_password(st.load('trip98.s.password'))
-        ##TODO: select proper ddd,spc,sis depending on projectile and RiFi
-        ##probe self.plan.set_dose_percent()
-        ##self.plan.set_ddd_folder()
-        ##self.plan.set_spc_folder()
-        ##self.plan.set_sis_file()
+
+        # tell what configuration files to be used, depending on the
+        # projectile / rifi configuration
+
+        # if not specified, use protons without RiFi
+        if not hasattr(plan, "_projectile"):
+            plan._projectile = 0
+        if not hasattr(plan, "_rifi"):
+            plan._rifi = 0
+
+        _dion = ('z1', 'z2', 'z6', 'z8', 'z10')
+        _drifi = ("rifi0", "rifi3")
+
+        _suffix = '{:s}{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
+
+        plan.set_ddd_folder(st.load('trip98.ddd.{:s}'.format(_suffix)))
+        plan.set_spc_folder(st.load('trip98.spc.{:s}'.format(_suffix)))
+        plan.set_sis_file(st.load('trip98.sis.{:s}'.format(_suffix)))
+
         self.data.execute_trip(plan)
 
     def plan_add_field(self, evt):

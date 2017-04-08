@@ -559,22 +559,22 @@
 					</object>
 					<object class="notebookpage">
 						<label>Dose Delivery</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel14">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
 								<rows>3</rows>
-								<cols>2</cols>
+								<cols>3</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
 								<growablecols></growablecols>
 								<growablerows></growablerows>
 								<object class="sizeritem">
 									<option>0</option>
-									<flag>wxALL</flag>
+									<flag>wxALIGN_CENTER|wxALL</flag>
 									<border>5</border>
 									<object class="wxStaticText" name="m_staticText711">
-										<label>Projectile</label>
+										<label>Projectile and ripple filter</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -584,15 +584,33 @@
 									<border>5</border>
 									<object class="wxChoice" name="drop_projectile">
 										<selection>0</selection>
-										<content />
+										<content>
+											<item>H-1</item>
+											<item>He-4</item>
+											<item>C-12</item>
+											<item>O-16</item>
+											<item>Ne-20</item>
+										</content>
 									</object>
 								</object>
 								<object class="sizeritem">
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
+									<object class="wxChoice" name="drop_rifi">
+										<selection>1</selection>
+										<content>
+											<item>RiFi 0 mm</item>
+											<item>RiFi 3 mm</item>
+										</content>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+									<border>5</border>
 									<object class="wxStaticText" name="m_staticText721">
-										<label>Dose %</label>
+										<label>Target dose in [%]</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -619,8 +637,8 @@
 					</object>
 					<object class="notebookpage">
 						<label>Tissue Types</label>
-						<selected>1</selected>
-						<object class="wxPanel" name="m_panel41">
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel_tissue">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
 								<orient>wxVERTICAL</orient>
@@ -1083,7 +1101,7 @@
 				<flag>wxALL</flag>
 				<border>5</border>
 				<object class="wxTextCtrl" name="txt_log">
-					<style>wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL</style>
+					<style>wxTE_READONLY|wxTE_WORDWRAP|wxHSCROLL</style>
 					<size>800,400</size>
 					<value></value>
 					<maxlength>0</maxlength>
@@ -1925,7 +1943,7 @@
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
 						<label>Access</label>
-						<selected>1</selected>
+						<selected>0</selected>
 						<object class="wxPanel" name="m_panel1">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2118,7 +2136,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>Kernel files</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel7">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2145,7 +2163,7 @@
 											<object class="wxChoice" name="m_choice_ion">
 												<selection>0</selection>
 												<content>
-													<item>Protons H-1</item>
+													<item>H-1</item>
 													<item>He-4</item>
 													<item>C-12</item>
 													<item>O-16</item>
@@ -2160,8 +2178,8 @@
 											<object class="wxChoice" name="m_choice_rifi">
 												<selection>0</selection>
 												<content>
-													<item>RiFi 0mm</item>
-													<item>RiFi 3mm</item>
+													<item>RiFi 0 mm</item>
+													<item>RiFi 3 mm</item>
 												</content>
 											</object>
 										</object>

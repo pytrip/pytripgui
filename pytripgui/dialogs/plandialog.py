@@ -16,18 +16,21 @@
 """
 import wx
 import sys
+import logging
+
+from wx.xrc import XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+logger = logging.getLogger(__name__)
 
 
 class PlanDialog(wx.Dialog):
@@ -49,7 +52,7 @@ class PlanDialog(wx.Dialog):
         self.init_general()
         self.init_opt_panel()
         self.init_calculation_panel()
-        self.init_advanved_dose()
+        self.init_dose_delivery()
 
     def patient_data_updated(self, msg):
         self.data = msg.data
@@ -108,25 +111,51 @@ class PlanDialog(wx.Dialog):
         self.drop_opt_alg = XRCCTRL(self, "drop_opt_alg")
         self.select_drop_by_value(self.drop_opt_alg, self.plan.get_opt_algorithm())
 
-    def init_advanved_dose(self):
+    def init_dose_delivery(self):
         self.drop_projectile = XRCCTRL(self, "drop_projectile")
-        ##TODO: add according to name of configurations
-        self.drop_projectile.Append("H")
-        self.drop_projectile.Append("C")
-
+        self.drop_rifi = XRCCTRL(self, "drop_rifi")
         self.txt_dose_percent = XRCCTRL(self, "txt_dose_percent")
+
         wx.EVT_BUTTON(self, XRCID('btn_set_dosepercent'), self.set_dose_percent)
         wx.EVT_CHOICE(self, XRCID('drop_projectile'), self.on_projectile_changed)
+        wx.EVT_CHOICE(self, XRCID('drop_rifi'), self.on_rifi_changed)
+
+    def on_rifi_changed(self, evt):
+        """ Callback function if ripple filter was changed."
+        """
+        # This is only minimal ripple filter implementation.
+        # this must be improved, once there is proper support for it in pytrip.tripexecuter
+        # https://github.com/pytrip/pytrip/issues/347
+        # For now we will simply add the ripple filter (single ion plan only supported)
+        # as a new internal attribute to plan.
+        self.plan._rifi = self.drop_rifi.GetSelection()  # 0: no rifi, 1: 3 mm rifi
+        logger.debug("RiFi set to {:d}".format(self.plan._rifi))
 
     def on_projectile_changed(self, evt):
-        projectile = self.drop_projectile.GetStringSelection()
+        """ One dose_percent may be attached to each projectile.
+        """
+        # projectile string is in the form of 'Ne-20'
+        # pytrip currently understands 'H' 'C' 'O' and 'Ne'
+        # TODO: this needs to be handled in a much better way.
+        # https://github.com/pytrip/pytrip/issues/346
+        # He ions will break.
+        projectile = self.drop_projectile.GetStringSelection().split("-")[0]
         dose_percent = self.plan.get_dose_percent(projectile)
         if dose_percent is None:
             self.txt_dose_percent.SetValue("")
         else:
             self.txt_dose_percent.SetValue("%d" % dose_percent)
 
+        # similar strategy as in on_rifi_changed():
+        # for now we will ignor multi-ion planning, and just try to get planning with
+        # single ions.
+        # we will store the integer number, as it will be used as an index later in leftmenu.py:plan_run_trip()
+        self.plan._projectile = self.drop_projectile.GetSelection()  # store integer
+        logger.debug("Projectile set to {:s}".format(self.plan._projectile))
+
     def set_dose_percent(self, evt):
+        """ Set dose percent for a single projectile.
+        """
         if not self.drop_projectile.GetStringSelection() == "":
             self.plan.set_dose_percent(self.drop_projectile.GetStringSelection(), self.txt_dose_percent.GetValue())
 

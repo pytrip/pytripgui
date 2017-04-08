@@ -15,22 +15,11 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import wx
-import sys
 import logging
 
 from pytripgui.settings import Settings
 
 from wx.xrc import XRCCTRL, XRCID
-
-if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1  # noqa
-    from wx.lib.pubsub import pub
-else:
-    try:
-        from wx.lib.pubsub import Publisher as pub
-    except:
-        from wx.lib.pubsub import setuparg1  # noqa
-        from wx.lib.pubsub import pub
 
 logger = logging.getLogger(__name__)
 
@@ -66,39 +55,39 @@ class TripConfigDialog(wx.Dialog):
 
                        # DDD
                        "trip98.ddd.z1.rifi0": "txt_ddd",
-                       "trip98.ddd.z4.rifi0": "txt_ddd",
+                       "trip98.ddd.z2.rifi0": "txt_ddd",
                        "trip98.ddd.z6.rifi0": "txt_ddd",
                        "trip98.ddd.z8.rifi0": "txt_ddd",
                        "trip98.ddd.z10.rifi0": "txt_ddd",
 
                        "trip98.ddd.z1.rifi3": "txt_ddd",
-                       "trip98.ddd.z4.rifi3": "txt_ddd",
+                       "trip98.ddd.z2.rifi3": "txt_ddd",
                        "trip98.ddd.z6.rifi3": "txt_ddd",
                        "trip98.ddd.z8.rifi3": "txt_ddd",
                        "trip98.ddd.z10.rifi3": "txt_ddd",
 
                        # SPC
                        "trip98.spc.z1.rifi0": "txt_spc",
-                       "trip98.spc.z4.rifi0": "txt_spc",
+                       "trip98.spc.z2.rifi0": "txt_spc",
                        "trip98.spc.z6.rifi0": "txt_spc",
                        "trip98.spc.z8.rifi0": "txt_spc",
                        "trip98.spc.z10.rifi0": "txt_spc",
 
                        "trip98.spc.z1.rifi3": "txt_spc",
-                       "trip98.spc.z4.rifi3": "txt_spc",
+                       "trip98.spc.z2.rifi3": "txt_spc",
                        "trip98.spc.z6.rifi3": "txt_spc",
                        "trip98.spc.z8.rifi3": "txt_spc",
                        "trip98.spc.z10.rifi3": "txt_spc",
 
                        # SIS
                        "trip98.sis.z1.rifi0": "txt_sis",
-                       "trip98.sis.z4.rifi0": "txt_sis",
+                       "trip98.sis.z2.rifi0": "txt_sis",
                        "trip98.sis.z6.rifi0": "txt_sis",
                        "trip98.sis.z8.rifi0": "txt_sis",
                        "trip98.sis.z10.rifi0": "txt_sis",
 
                        "trip98.sis.z1.rifi3": "txt_sis",
-                       "trip98.sis.z4.rifi3": "txt_sis",
+                       "trip98.sis.z2.rifi3": "txt_sis",
                        "trip98.sis.z6.rifi3": "txt_sis",
                        "trip98.sis.z8.rifi3": "txt_sis",
                        "trip98.sis.z10.rifi3": "txt_sis"}
@@ -156,7 +145,7 @@ class TripConfigDialog(wx.Dialog):
         st = Settings()
         for _key in self.params:
             self._store_parameter(_key, st.load(_key))
-            
+
     def close(self, evt):
         """ Close the dialog.
         """
@@ -265,7 +254,7 @@ class TripConfigDialog(wx.Dialog):
         """
 
         _dion = {"z1": 0,
-                 "z4": 1,
+                 "z2": 1,
                  "z6": 2,
                  "z8": 3,
                  "z10": 4}
