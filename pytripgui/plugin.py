@@ -15,17 +15,18 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-import os, imp
+import os
+import imp
 from pytripgui import util
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
 
@@ -47,7 +48,7 @@ class PluginManager:
         for module in modules:
 
             name = module.split('.')[0]
-            if not name in loaded_modules:
+            if name not in loaded_modules:
                 if not (name == '__init__' or name == ''):
                     try:
                         f, filename, description = imp.find_module(module, [self.plugin_path, basedir])

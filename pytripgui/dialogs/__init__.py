@@ -15,17 +15,21 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 __all__ = ['tripexportcubedialog', 'tripexportdialog', 'createcubedialog', 'progressdialog', 'createstructuredialog',
-           'dosedialog', 'fielddialog', 'plandialog', 'progressdialog', 'triplogdialog', 'tripvoidialog', 'voidialog']
+           'dosedialog', 'fielddialog', 'plandialog', 'triplogdialog', 'tripvoidialog', 'voidialog',
+           'tripconfigdialog']
 
-import progressdialog
+
 import createcubedialog
 import createstructuredialog
+
 import dosedialog
 import fielddialog
 import plandialog
-import progressdialog
-import triplogdialog
-import tripvoidialog
 import voidialog
+import progressdialog
+
 import tripexportdialog
 import tripexportcubedialog
+import tripconfigdialog
+import triplogdialog
+import tripvoidialog

@@ -23,29 +23,29 @@ import argparse
 
 import wx
 import wx.lib.dialogs
-from wx.xrc import *
+from wx.xrc import XRCCTRL, XRCID, XmlResource
 
-from pytrip.error import *
+from pytrip.error import InputError
 
-from pytripgui.leftmenu import *
-from pytripgui.settings import *
-from pytripgui.plugin import *
+from pytripgui.leftmenu import LeftMenuTree
+from pytripgui.settings import Settings
+from pytripgui.plugin import PluginManager
 
-from pytripgui.panels.plotpanel import *
-from pytripgui.panels.dvh import *
+from pytripgui.panels.plotpanel import PlotPanel
+from pytripgui.panels.dvh import DVHPanel, LVHPanel
 
-from pytripgui.tripexecparser import *
-from pytripgui.data import *
+from pytripgui.data import PytripData
+from pytripgui.util import get_resource_path
 from pytripgui import util
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
 logger = logging.getLogger(__name__)
@@ -85,14 +85,15 @@ class MainFrame(wx.Frame):
         self.res = res
         self.bind_menu()
         self.bind_toolbar()
-        self.load_settings()
 
         pub.subscribe(self.on_patient_load, "patient.load")
-        pub.subscribe(self.on_import_path_change, "general.import")
         pub.subscribe(self.statusbar_updated, "statusbar.update")
-        pub.sendMessage("settings.value.request", "general.import.dicom_path")
-        pub.sendMessage("settings.value.request", "general.import.voxelplan_path")
-        pub.sendMessage("settings.value.request", "general.import.tripexec_path")
+
+        # load settings from .pytrip/settings.dat
+        st = Settings()
+        self.dicom_path = st.load("general.import.dicom_path")
+        self.voxelplan_path = st.load("general.import.voxelplan_path")
+        self.tripexec_path = st.load("general.import.tripexec_path")
 
         pub.subscribe(self.load_dialog, "gui")
 
@@ -124,6 +125,8 @@ class MainFrame(wx.Frame):
         self.statusbar.SetStatusText("", 2)
 
     def load_dialog(self, msg):
+        """
+        """
         dialogs = {"field": "FieldDialog",
                    "tripplan": "PlanDialog",
                    "tripvoi": "TripVoiDialog",
@@ -131,11 +134,15 @@ class MainFrame(wx.Frame):
                    "triplog": "TripLogDialog",
                    "wait": "ProgressDialog",
                    "tripexport": "TripExportDialog",
-                   "tripcubeexport": "TripExportCubeDialog"}
-        panels = {"dvh": DVHPanel, "lvh": LVHPanel}
+                   "tripcubeexport": "TripExportCubeDialog",
+                   "tripconfig": "TripConfigDialog"}
+
+        panels = {"dvh": DVHPanel,
+                  "lvh": LVHPanel}
+
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
-                logger.debug("GUI: Opening {:s} Dialog".format(msg.topic[1]))
+                logger.debug("load_dialog: Opening {:s} Dialog".format(msg.topic[1]))
                 pytripDialog = self.res.LoadDialog(self, dialogs[msg.topic[1]])
                 pytripDialog.Init(msg.data)
                 self.Enable(False)
@@ -178,17 +185,9 @@ class MainFrame(wx.Frame):
         plot.Init()
         self.main_notebook.AddPage(plot, "2D Plot")
 
-    def on_import_path_change(self, msg):
-        data = msg.data
-        if data is None:
-            data = ""
-        setattr(self, msg.topic[2], data)
-
-    def load_settings(self):
-        self.settings_manager = SettingsManager()
-        self.settings_manager.load_settings()
-
     def bind_menu(self):
+        """ Attach callback methods to menu events.
+        """
         self.top_menu = self.res.LoadMenuBar("top_menu")
         self.SetMenuBar(self.top_menu)
         self.import_menu = self.top_menu.FindItemById(XRCID("submenu_import")).GetSubMenu()
@@ -205,9 +204,16 @@ class MainFrame(wx.Frame):
         wx.EVT_MENU(self, XRCID("menuitem_save"), self.save)
         wx.EVT_MENU(self, XRCID("menuitem_saveas"), self.saveas)
         wx.EVT_MENU(self, XRCID("menuitem_load"), self.load)
+
+        # -> Settings ->
+        wx.EVT_MENU(self, XRCID("menuitem_preferences"), self.preferences_dialog)
+        wx.EVT_MENU(self, XRCID("menuitem_tripconfig"), self.tripconfig_dialog)
+
+        # -> Help ->
         wx.EVT_MENU(self, XRCID("menuitem_license"), self.view_licence)
         wx.EVT_MENU(self, XRCID("menuitem_about"), self.view_about)
 
+        # -> View ->
         wx.EVT_MENU(self, XRCID("menuitem_view_dvh"), self.view_dvh)
         wx.EVT_MENU(self, XRCID("menuitem_view_lvh"), self.view_lvh)
         self.top_menu.Enable(XRCID("menuitem_view_dvh"), False)
@@ -240,6 +246,7 @@ class MainFrame(wx.Frame):
         wx.AboutBox(info)
 
     def view_licence(self, evt):
+        logger.debug("View license dialog")
         with open(os.path.join(util.get_main_dir(), "res", "LICENSE.rst"), "rU") as fp:
             msg = fp.read()
         dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, "PyTRiPGUI License")
@@ -258,12 +265,16 @@ class MainFrame(wx.Frame):
         self.data.load(path)
 
     def save(self, evt):
+        """ Saves the .pyt project
+        """
         if not hasattr(self, "savepath"):
             self.saveas(evt)
         else:
             self.data.save(self.savepath)
 
     def saveas(self, evt):
+        """ Saves the .pyt project under a new filename.
+        """
         dlg = wx.FileDialog(
             self, wildcard="PyTRiP project files (*.pyt)|*.pyt", message="Save Project", style=wx.FD_SAVE)
         if dlg.ShowModal() == wx.ID_OK:
@@ -334,10 +345,14 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data = PytripData()
             path = dlg.GetPath()
-            pub.sendMessage("settings.value.updated", {"general.import.tripexec_path": path})
+
+            st = Settings()  # save last used DICOM path to settings file.
+            st.save("general.import.tripexec_path", path)
             data.load_trip_exec(path)
 
     def voxelplan_load_dialog(self, evt):
+        """ Callback for opening a voxelplan patient.
+        """
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
@@ -346,17 +361,34 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()
-            pub.sendMessage("settings.value.updated", {"general.import.voxelplan_path": path})
+
+            st = Settings()  # save last used DICOM path to settings file.
+            st.save("general.import.voxelplan_path", path)
             data_obj.load_from_voxelplan(path)
 
     def open_patient_load_dialog(self, evt):
+        """ Open a DICOM patient
+        """
         dlg = wx.DirDialog(
-            self, defaultPath=self.dicom_path, message="Choose the folder where the dicom files are stored")
+            self, defaultPath=self.dicom_path, message="Choose the folder where the DICOM files are stored")
         if dlg.ShowModal() == wx.ID_OK:
             data_obj = PytripData()
             path = dlg.GetPath()
-            pub.sendMessage("settings.value.updated", {"general.import.dicom_path": path})
+
+            st = Settings()  # save last used DICOM path to settings file.
+            st.save("general.import.dicom_path", path)
             data_obj.load_from_dicom(path)
+
+    def preferences_dialog(self, evt):
+        """ Open the Preferences dialog.
+        """
+        logger.debug("Callback preferences_dialog (not implemented)")
+
+    def tripconfig_dialog(self, evt):
+        """ Open the TRiP98 configuration dialog
+        """
+        logger.debug("Callback tripconfig_dialog")
+        pub.sendMessage("gui.tripconfig.open", None)
 
     def clean_up(self):
         gc.collect()
@@ -367,6 +399,8 @@ class MainFrame(wx.Frame):
 
 class pytripgui(wx.App):
     def OnInit(self):
+        from pytripgui import __version__ as pytripgui_version
+
         wx.GetApp().SetAppName("pytrip")
         # Load the XRC file for our gui resources
         self.res = XmlResource(util.get_resource_path('main.xrc'))
@@ -374,6 +408,7 @@ class pytripgui(wx.App):
         font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
         pytripFrame.SetFont(font)
         pytripFrame.Init(self.res)
+        pytripFrame.SetTitle("PyTRiPGUI v.{:s}".format(pytripgui_version))
         dt1 = FileDropTarget(pytripFrame)
         pytripFrame.SetDropTarget(dt1)
         self.SetTopWindow(pytripFrame)

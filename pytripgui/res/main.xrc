@@ -26,6 +26,7 @@
 							<flag>wxEXPAND</flag>
 							<border>5</border>
 							<object class="wxPanel" name="leftmenu_panel">
+								<style>wxTAB_TRAVERSAL</style>
 								<size>200,-1</size>
 							</object>
 						</object>
@@ -33,7 +34,7 @@
 				</object>
 				<object class="sizeritem">
 					<option>0</option>
-					<flag>wxEXPAND | wxALL</flag>
+					<flag>wxEXPAND|wxALL</flag>
 					<border>5</border>
 					<object class="wxStaticLine" name="m_staticline2">
 						<style>wxLI_VERTICAL</style>
@@ -47,7 +48,7 @@
 						<orient>wxVERTICAL</orient>
 						<object class="sizeritem">
 							<option>1</option>
-							<flag>wxEXPAND | wxALL</flag>
+							<flag>wxEXPAND|wxALL</flag>
 							<border>5</border>
 							<object class="wxNotebook" name="main_notebook">
 								<object class="notebookpage">
@@ -160,7 +161,7 @@
 		<object class="wxMenu" name="m_menu1">
 			<label>File</label>
 			<object class="wxMenuItem" name="menuitem_load">
-				<label>Load Project</label>
+				<label>Load project</label>
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_openpatient">
@@ -173,11 +174,11 @@
 			</object>
 			<object class="separator" />
 			<object class="wxMenuItem" name="menuitem_save">
-				<label>Save project</label>
+				<label>Save project\tCTRL+s</label>
 				<help></help>
 			</object>
 			<object class="wxMenuItem" name="menuitem_saveas">
-				<label>Save project as</label>
+				<label>Save project as\tSHIFT+CTRL+s</label>
 				<help></help>
 			</object>
 			<object class="separator" />
@@ -190,6 +191,16 @@
 			</object>
 			<object class="wxMenu" name="submenu_export">
 				<label>Export</label>
+				<object class="wxMenuItem" name="m_menuItem17">
+					<label>to DICOM</label>
+					<help></help>
+					<enabled>0</enabled>
+				</object>
+				<object class="wxMenuItem" name="m_menuItem18">
+					<label>to VOXELPLAN</label>
+					<help></help>
+					<enabled>0</enabled>
+				</object>
 			</object>
 			<object class="wxMenu" name="m_menu3">
 				<label>Create</label>
@@ -216,6 +227,18 @@
 			</object>
 			<object class="wxMenuItem" name="menuitem_view_lvh">
 				<label>LVH</label>
+				<help></help>
+			</object>
+		</object>
+		<object class="wxMenu" name="m_menu5">
+			<label>Settings</label>
+			<object class="wxMenuItem" name="menuitem_preferences">
+				<label>Preferences</label>
+				<help></help>
+				<enabled>0</enabled>
+			</object>
+			<object class="wxMenuItem" name="menuitem_tripconfig">
+				<label>TRiP98 Config</label>
 				<help></help>
 			</object>
 		</object>

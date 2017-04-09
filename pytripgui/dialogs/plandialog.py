@@ -16,18 +16,21 @@
 """
 import wx
 import sys
+import logging
+
+from wx.xrc import XRCCTRL, XRCID
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+logger = logging.getLogger(__name__)
 
 
 class PlanDialog(wx.Dialog):
@@ -47,28 +50,12 @@ class PlanDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
 
         self.init_general()
-        self.init_trip_panel()
         self.init_opt_panel()
         self.init_calculation_panel()
-        self.init_files_panel()
-        self.init_advanved_dose()
+        self.init_dose_delivery()
 
     def patient_data_updated(self, msg):
         self.data = msg.data
-
-    def init_files_panel(self):
-        self.txt_ddd = XRCCTRL(self, "txt_ddd")
-        self.txt_ddd.SetValue(self.plan.get_ddd_folder())
-
-        self.txt_spc = XRCCTRL(self, "txt_spc")
-        self.txt_spc.SetValue(self.plan.get_spc_folder())
-
-        self.txt_sis = XRCCTRL(self, "txt_sis")
-        self.txt_sis.SetValue(self.plan.get_sis_file())
-
-        wx.EVT_BUTTON(self, XRCID("btn_ddd"), self.on_btn_ddd_clicked)
-        wx.EVT_BUTTON(self, XRCID("btn_spc"), self.on_btn_spc_clicked)
-        wx.EVT_BUTTON(self, XRCID("btn_sis"), self.on_btn_sis_clicked)
 
     def init_general(self):
         self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
@@ -124,82 +111,57 @@ class PlanDialog(wx.Dialog):
         self.drop_opt_alg = XRCCTRL(self, "drop_opt_alg")
         self.select_drop_by_value(self.drop_opt_alg, self.plan.get_opt_algorithm())
 
-    def init_trip_panel(self):
-        self.drop_location = XRCCTRL(self, "drop_location")
-        if self.plan.is_remote():
-            self.drop_location.SetSelection(1)
-
-        self.txt_working_dir = XRCCTRL(self, "txt_working_dir")
-        self.txt_working_dir.SetValue(self.plan.get_working_dir())
-
-        wx.EVT_BUTTON(self, XRCID('btn_working_dir'), self.on_browse_working_dir)
-
-        self.txt_username = XRCCTRL(self, "txt_username")
-        self.txt_username.SetValue(self.plan.get_username())
-
-        self.txt_password = XRCCTRL(self, "txt_password")
-        self.txt_password.SetValue(self.plan.get_password())
-
-        self.txt_server = XRCCTRL(self, "txt_server")
-        self.txt_server.SetValue(self.plan.get_server())
-
-    def init_advanved_dose(self):
+    def init_dose_delivery(self):
         self.drop_projectile = XRCCTRL(self, "drop_projectile")
-        self.drop_projectile.Append("H")
-        self.drop_projectile.Append("C")
-
+        self.drop_rifi = XRCCTRL(self, "drop_rifi")
         self.txt_dose_percent = XRCCTRL(self, "txt_dose_percent")
+
         wx.EVT_BUTTON(self, XRCID('btn_set_dosepercent'), self.set_dose_percent)
         wx.EVT_CHOICE(self, XRCID('drop_projectile'), self.on_projectile_changed)
+        wx.EVT_CHOICE(self, XRCID('drop_rifi'), self.on_rifi_changed)
+
+    def on_rifi_changed(self, evt):
+        """ Callback function if ripple filter was changed."
+        """
+        # This is only minimal ripple filter implementation.
+        # this must be improved, once there is proper support for it in pytrip.tripexecuter
+        # https://github.com/pytrip/pytrip/issues/347
+        # For now we will simply add the ripple filter (single ion plan only supported)
+        # as a new internal attribute to plan.
+        self.plan._rifi = self.drop_rifi.GetSelection()  # 0: no rifi, 1: 3 mm rifi
+        logger.debug("RiFi set to {:d}".format(self.plan._rifi))
 
     def on_projectile_changed(self, evt):
-        projectile = self.drop_projectile.GetStringSelection()
+        """ One dose_percent may be attached to each projectile.
+        """
+        # projectile string is in the form of 'Ne-20'
+        # pytrip currently understands 'H' 'C' 'O' and 'Ne'
+        # TODO: this needs to be handled in a much better way.
+        # https://github.com/pytrip/pytrip/issues/346
+        # He ions will break.
+        projectile = self.drop_projectile.GetStringSelection().split("-")[0]
         dose_percent = self.plan.get_dose_percent(projectile)
         if dose_percent is None:
             self.txt_dose_percent.SetValue("")
         else:
             self.txt_dose_percent.SetValue("%d" % dose_percent)
 
+        # similar strategy as in on_rifi_changed():
+        # for now we will ignor multi-ion planning, and just try to get planning with
+        # single ions.
+        # we will store the integer number, as it will be used as an index later in leftmenu.py:plan_run_trip()
+        self.plan._projectile = self.drop_projectile.GetSelection()  # store integer
+        logger.debug("Projectile set to {:s}".format(self.plan._projectile))
+
     def set_dose_percent(self, evt):
+        """ Set dose percent for a single projectile.
+        """
         if not self.drop_projectile.GetStringSelection() == "":
             self.plan.set_dose_percent(self.drop_projectile.GetStringSelection(), self.txt_dose_percent.GetValue())
-
-    def on_browse_working_dir(self, evt):
-        dlg = wx.DirDialog(
-            self,
-            defaultPath=self.txt_working_dir.GetValue(),
-            message="Choose the folder pytripgui should use as working directory")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_working_dir.SetValue(dlg.GetPath())
-
-    def on_btn_ddd_clicked(self, evt):
-        dlg = wx.DirDialog(
-            self, defaultPath=self.txt_ddd.GetValue(), message="Choose folder where ddd files are located")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_ddd.SetValue(dlg.GetPath())
-
-    def on_btn_sis_clicked(self, evt):
-        dlg = wx.FileDialog(self, defaultFile=self.txt_sis.GetValue(), message="Choose sis file")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_sis.SetValue(dlg.GetPath())
-
-    def on_btn_spc_clicked(self, evt):
-        dlg = wx.DirDialog(
-            self, defaultPath=self.txt_spc.GetValue(), message="Choose folder where spc files are located")
-        if dlg.ShowModal() == wx.ID_OK:
-            self.txt_spc.SetValue(dlg.GetPath())
 
     def save_and_close(self, evt):
         self.plan.set_res_tissue_type(self.drop_res_tissue_type.GetStringSelection())
         self.plan.set_target_tissue_type(self.drop_target_tissue_type.GetStringSelection())
-        if self.drop_location.GetSelection() is 0:
-            self.plan.set_remote_state(False)
-        else:
-            self.plan.set_remote_state(True)
-        self.plan.set_working_dir(self.txt_working_dir.GetValue())
-        self.plan.set_server(self.txt_server.GetValue())
-        self.plan.set_username(self.txt_username.GetValue())
-        self.plan.set_password(self.txt_password.GetValue())
 
         self.plan.set_iterations(self.txt_iterations.GetValue())
         self.plan.set_eps(self.txt_eps.GetValue())
@@ -214,10 +176,6 @@ class PlanDialog(wx.Dialog):
         self.plan.set_out_bio_dose(self.check_bio_dose.GetValue())
         self.plan.set_out_dose_mean_let(self.check_dose_mean_let.GetValue())
         self.plan.set_out_field(self.check_field.GetValue())
-
-        self.plan.set_ddd_folder(self.txt_ddd.GetValue())
-        self.plan.set_spc_folder(self.txt_ddd.GetValue())
-        self.plan.set_sis_file(self.txt_sis.GetValue())
 
         self.Close()
 
