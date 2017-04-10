@@ -14,12 +14,24 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
+import sys
 import logging
 import ConfigParser as configparser  # this is python2 specific
 
 from pytripgui.util import get_user_directory
 
+if getattr(sys, 'frozen', False):
+    from wx.lib.pubsub import setuparg1  # noqa
+    from wx.lib.pubsub import pub
+else:
+    try:
+        from wx.lib.pubsub import Publisher as pub
+    except:
+        from wx.lib.pubsub import setuparg1  # noqa
+        from wx.lib.pubsub import pub
+
 logger = logging.getLogger(__name__)
+
 
 class Settings:
     """ Class for interacting with saved configurations
@@ -64,8 +76,11 @@ class Settings:
 
         if not self.config.has_section(_sec):
             self.config.add_section(_sec)
-            
+
         self.config.set(_sec, _opt, value)  # this is python2 specific
 
         with open(self.path, 'wb') as configfile:
             self.config.write(configfile)
+
+        text = "Updated {:s}".format(self.path)
+        pub.sendMessage("statusbar.update", {"number": 0, "text": text})
