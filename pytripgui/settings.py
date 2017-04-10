@@ -32,6 +32,7 @@ else:
 
 logger = logging.getLogger(__name__)
 
+
 class Settings:
     """ Class for interacting with saved configurations
     """
@@ -75,11 +76,11 @@ class Settings:
 
         if not self.config.has_section(_sec):
             self.config.add_section(_sec)
-            
+
         self.config.set(_sec, _opt, value)  # this is python2 specific
 
         with open(self.path, 'wb') as configfile:
             self.config.write(configfile)
-            
+
         text = "Updated {:s}".format(self.path)
         pub.sendMessage("statusbar.update", {"number": 0, "text": text})
