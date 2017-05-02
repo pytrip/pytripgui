@@ -29,13 +29,8 @@ from pytrip.dos import DosCube
 from pytrip.ctimage import CTImages
 
 import pytrip.tripexecuter.tripexecuter as pte_te
-import pytrip.tripexecuter.voi as pte_v
-import pytrip.tripexecuter.tripvoi as pte_tv
 import pytrip.tripexecuter.field as pte_f
-import pytrip.tripexecuter.fieldcollection as pte_fc
-import pytrip.tripexecuter.voicollection as pte_vc
-import pytrip.tripexecuter.tripplan as pte_tp
-import pytrip.tripexecuter.tripplancollection as pte_tpc
+import pytrip.tripexecuter.plan as pte_tp
 
 from pytripgui.rbehandler import RBEHandler
 from pytripgui.util import get_class_name
@@ -299,25 +294,6 @@ class Field(pte_f.Field):
         pub.sendMessage('plan.field.couch', self)
 
 
-class FieldCollection(pte_fc.FieldCollection):
-    def __init__(self, plan):
-        super(FieldCollection, self).__init__(plan)
-
-    def load(self, data):
-        for i in data["fields"]:
-            f = Field(i["name"])
-            self.add_field(f)
-            f.load(i)
-
-    def add_field(self, field):
-        super(FieldCollection, self).add_field(field)
-        if get_notify():
-            pub.sendMessage('plan.field.added', {"plan": self.plan, "field": field})
-
-    def remove_field(self, field):
-        super(FieldCollection, self).remove_field(field)
-        pub.sendMessage('plan.field.deleted', {"plan": self.plan, "field": field})
-
 
 class VoiCollection(pte_vc.VoiCollection):
     def __init__(self, parent):
@@ -404,9 +380,9 @@ class TripPlan(pte_tp.TripPlan):
         return False
 
 
-class TripPlanCollection(pte_tpc.TripPlanCollection):
+class TripPlanCollection(object):
     def __init__(self):
-        super(TripPlanCollection, self).__init__()
+        pass
 
     def load(self, data, structures):
         for plan in data:
@@ -415,18 +391,13 @@ class TripPlanCollection(pte_tpc.TripPlanCollection):
             p.load(plan, structures)
 
     def add_plan(self, plan):
-        super(TripPlanCollection, self).add_plan(plan)
         if get_notify():
             pub.sendMessage("plan.new", plan)
             pub.sendMessage("plan.active.changed", plan)
 
     def set_active_plan(self, plan):
-        super(TripPlanCollection, self).set_active_plan(plan)
         if get_notify():
             pub.sendMessage("plan.active.changed", plan)
 
     def delete_plan(self, plan):
-        new_plan = super(TripPlanCollection, self).delete_plan(plan)
-        if new_plan is not None:
-            pub.sendMessage("plan.active.changed", new_plan)
         pub.sendMessage("plan.deleted", plan)
