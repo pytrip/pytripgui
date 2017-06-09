@@ -1,4 +1,4 @@
 numpy>=1.10.4
 scipy
 matplotlib
-pytrip98
+pytrip98<2.0.0
