@@ -34,7 +34,7 @@ from pytripgui.plugin import PluginManager
 from pytripgui.panels.plotpanel import PlotPanel
 from pytripgui.panels.dvh import DVHPanel, LVHPanel
 
-from pytripgui.data import PytripData
+from pytripgui.tripdata import TRiPData
 from pytripgui.util import get_resource_path
 from pytripgui import util
 
@@ -81,7 +81,7 @@ class MainFrame(wx.Frame):
             self.leftmenu_panel, -1, size=(200, -1), style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
         sizer.Add(self.leftmenu, 1, wx.EXPAND, 0)
         self.leftmenu_panel.SetSizer(sizer)
-        self.data = PytripData()
+        self.data = TRiPData()
         self.res = res
         self.bind_menu()
         self.bind_toolbar()
@@ -104,8 +104,8 @@ class MainFrame(wx.Frame):
         self.welcome_intro = XRCCTRL(self, "m_staticText11")
         self.welcome_disclaimer = XRCCTRL(self, "m_staticText6")
 
-        self.welcome_title.SetLabel("Welcome to PyTRiPGUI")
-        self.welcome_intro.SetLabel("")
+        self.welcome_title.SetLabel("PyTRiPGUI")
+        self.welcome_intro.SetLabel("A graphical user interface for the TRiP98 treatment planning system.")
         disclaimer = "THIS PROGRAM AND INFORMATION ARE PROVIDED \"AS IS\" " + \
                      "WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT " + \
                      "LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A " + \
@@ -261,7 +261,7 @@ class MainFrame(wx.Frame):
             self.savepath = path
 
     def load_pyt(self, path):
-        self.data = PytripData()
+        self.data = TRiPData()
         self.data.load(path)
 
     def save(self, evt):
@@ -343,7 +343,7 @@ class MainFrame(wx.Frame):
             wildcard="TRiP Exec File (*.exec)|*.exec",
             message="Choose TRiP Exec File")
         if dlg.ShowModal() == wx.ID_OK:
-            data = PytripData()
+            data = TRiPData()
             path = dlg.GetPath()
 
             st = Settings()  # save last used DICOM path to settings file.
@@ -359,12 +359,12 @@ class MainFrame(wx.Frame):
             wildcard="Voxelplan headerfile (*.hed)|*.hed",
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
-            data_obj = PytripData()
+            data = TRiPData()
             path = dlg.GetPath()
 
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.voxelplan_path", path)
-            data_obj.load_from_voxelplan(path)
+            data.open_ctx_vdx(path)
 
     def open_patient_load_dialog(self, evt):
         """ Open a DICOM patient
@@ -372,7 +372,7 @@ class MainFrame(wx.Frame):
         dlg = wx.DirDialog(
             self, defaultPath=self.dicom_path, message="Choose the folder where the DICOM files are stored")
         if dlg.ShowModal() == wx.ID_OK:
-            data_obj = PytripData()
+            data_obj = TRiPData()
             path = dlg.GetPath()
 
             st = Settings()  # save last used DICOM path to settings file.

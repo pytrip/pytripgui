@@ -120,7 +120,7 @@ class LeftMenuTree(wx.TreeCtrl):
                              "FieldCollection": [{"text": "Add Field",
                                                   "callback": self.plan_add_field}],
                              "Field": [{"text": "Delete",
-                                        "callback": self.delete_field},
+                                        "callback": self.plan_delete_field},
                                        {"text": "Properties",
                                         "callback": self.field_properties}]}
 
@@ -627,6 +627,12 @@ class LeftMenuTree(wx.TreeCtrl):
             plan.vois.append(voi)
         self.data.plans.append(plan)
 
+    def new_plan_from_exec(self, evt):
+        """ Opens the import dialog and sets up a plan.
+        """
+        logger.debug("new_plan_from_exec()")
+        #TODO: implement me
+        
     def generate_voi_menu(self, node):
         data = self.GetItemData(self.GetItemParent(self.GetItemParent(node)))
         if data is not None and get_class_name(data.GetData()) == "TripPlan":
