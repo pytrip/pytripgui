@@ -90,7 +90,7 @@ class LeftMenuTree(wx.TreeCtrl):
                              "Voi": self.generate_voi_menu,
                              "TripVoi": [{"text": "Select",
                                           "type": "check",
-                                          "value": "is_selected",
+                                          "value": "selected",
                                           "callback": self.toggle_selected_voi},
                                          {"text": "Target",
                                           "type": "check",
@@ -112,7 +112,7 @@ class LeftMenuTree(wx.TreeCtrl):
                                           "callback": self.voi_properties}],
                              "MainVoi": [{"text": "Select",
                                           "type": "check",
-                                          "value": "is_selected",
+                                          "value": "selected",
                                           "callback": self.toggle_selected_voi},
                                          {"text": "Add To Plan",
                                           "type": "submenu",
@@ -162,7 +162,7 @@ class LeftMenuTree(wx.TreeCtrl):
         voi = self.GetItemData(self.selected_item).GetData()
         voi.selected = not voi.selected
         # add proper callback here smth like:
-        pub.sendMessage("voi.selection_changed", self)  # I am guessing here
+        pub.sendMessage("voi.selection_changed", voi)  # I am guessing here
 
     def show_image(self, evt):
         """
@@ -675,7 +675,7 @@ class LeftMenuTree(wx.TreeCtrl):
                 menu.AppendItem(item)
             elif menu_item["type"] == "check":
                 item = menu.AppendCheckItem(id, menu_item["text"])
-                if getattr(selected_data, menu_item["value"])() is True:
+                if getattr(selected_data, menu_item["value"]) is True:
                     item.Check()
             elif menu_item["type"] == "submenu":
                 if type(menu_item["submenu"]) is list:

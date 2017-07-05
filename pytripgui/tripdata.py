@@ -112,6 +112,8 @@ class TRiPData:
         if os.path.isfile(vdx_path):
             self.vdx = pt.VdxCube(self.ctx)
             self.vdx.read(vdx_path)
+            for voi in self.vdx.vois:
+                voi.selected = False
         else:
             logger.error("File not found '{:s}'".format(vdx_path))
 
@@ -144,6 +146,8 @@ class TRiPData:
         if 'rtss' in dicom:
             self.vdx = pt.VdxCube(self.ctx)
             self.vdx.read_dicom(dicom)
+            for voi in self.vdx.vois:
+                voi.selected = False
 
         if close is not None:
             wx.CallAfter(close.close)

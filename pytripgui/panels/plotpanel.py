@@ -206,10 +206,10 @@ class PlotPanel(wx.Panel):
 
     def voi_changed(self, msg):
         voi = msg.data
-        if voi.is_selected():
-            self.plotutil.add_voi(voi.voxelplan_voi)
+        if voi.selected:
+            self.plotutil.add_voi(voi)
         else:
-            self.plotutil.remove_voi(voi.voxelplan_voi)
+            self.plotutil.remove_voi(voi)
         self.Draw()
 
     def set_active_image(self, msg):
@@ -400,7 +400,7 @@ class PlotPanel(wx.Panel):
         for voi in self.data.get_vois():
             id = wx.NewId()
             item = voi_menu.AppendCheckItem(id, voi.get_name())
-            if voi.is_selected():
+            if voi.selected:
                 item.Check()
             wx.EVT_MENU(self, id, self.menu_voi_selected)
         if voi_menu.GetMenuItemCount() > 0:
@@ -454,7 +454,7 @@ class PlotPanel(wx.Panel):
             for field in active_plan.get_fields():
                 id = wx.NewId()
                 item = field_menu.AppendCheckItem(id, field.get_name())
-                if field.is_selected():
+                if field.selected:
                     item.Check()
                 wx.EVT_MENU(self, id, self.menu_field_selected)
             if field_menu.GetMenuItemCount() > 0:
