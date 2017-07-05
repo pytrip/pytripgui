@@ -127,6 +127,8 @@ class MainFrame(wx.Frame):
     def load_dialog(self, msg):
         """
         """
+        logging.debug("enter load_dialog()")
+
         dialogs = {"field": "FieldDialog",
                    "tripplan": "PlanDialog",
                    "tripvoi": "TripVoiDialog",
@@ -142,7 +144,7 @@ class MainFrame(wx.Frame):
 
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
-                logger.debug("load_dialog: Opening {:s} Dialog".format(msg.topic[1]))
+                logger.debug("load_dialog: Opening '{:s}' Dialog".format(msg.topic[1]))
                 pytripDialog = self.res.LoadDialog(self, dialogs[msg.topic[1]])
                 pytripDialog.Init(msg.data)
                 self.Enable(False)
@@ -156,6 +158,8 @@ class MainFrame(wx.Frame):
         elif msg.topic[2] == "close":
             self.dialog.Close()
 
+        logging.debug("exit load_dialog()")
+        
     def ini_plugins(self):
         self.plugins = PluginManager()
         self.plugins.load_modules()

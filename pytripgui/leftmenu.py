@@ -148,7 +148,7 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def prepare_icons(self):
         """
-        TODO: documentation. Possibly these are the colour boxes inside the treelist, which is 
+        TODO: documentation. Possibly these are the colour boxes inside the treelist, which is
         simply an empty 16x16 px large blank box.
         """
         self.icon_size = (16, 16)
@@ -567,6 +567,9 @@ class LeftMenuTree(wx.TreeCtrl):
         self.populate_tree()
 
     def populate_tree(self):
+        """ Setup the tree viewer in the left panel
+        """
+        logger.debug("enter populate_tree()")
         self.DeleteAllItems()
         self.rootnode = self.AddRoot(self.data.patient_name)
         data = wx.TreeItemData()
@@ -576,39 +579,42 @@ class LeftMenuTree(wx.TreeCtrl):
         data.SetData("plans")
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
 
-        # ctx = self.data.get_images().get_voxelplan()
-        for voi in self.data.get_vois():
+        ### ctx = self.data.get_images().get_voxelplan()
+        for voi in self.data.vdx.vois:
             data = wx.TreeItemData()
             data.SetData(voi)
-            item = self.AppendItem(self.structure_node, voi.get_name(), data=data)
+            item = self.AppendItem(self.structure_node, voi.name, data=data)
             img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0],
                                                                            self.icon_size[1],
-                                                                           voi.get_color()))
-            voi.set_icon(img)
+                                                                           voi.color))
+            voi.icon = img
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
-        for plan in self.data.get_plans():
+
+        for plan in self.data.plans:
             data = wx.TreeItemData()
             data.SetData(plan)
             p_id = self.AppendItem(self.plans_node, plan.name, data=data)
-            if len(plan.get_vois()):
-                item = self.get_or_create_child(p_id, "ROIs", plan.get_vois())
-                for voi in plan.get_vois():
+            if len(plan.vois):
+                item = self.get_or_create_child(p_id, "ROIs", plan.vois)
+                for voi in plan.vois:
                     node = self.get_child_from_data(self.plans_node, plan)
                     item = self.get_or_create_child(node, "ROIs", plan.get_vois())
                     data = wx.TreeItemData()
                     data.SetData(voi)
-                    i2 = self.AppendItem(item, voi.get_name(), data=data)
-                    self.SetItemImage(i2, voi.get_voi().get_icon(), wx.TreeItemIcon_Normal)
+                    i2 = self.AppendItem(item, voi.name, data=data)
+                    self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
             if len(plan.get_fields()):
                 fields = self.get_or_create_child(p_id, "Fields", plan.get_fields())
-                for field in plan.get_fields():
+                for field in plan.fields:
                     data = wx.TreeItemData()
                     data.SetData(field)
-                    self.AppendItem(fields, field.get_name(), data=data)
+                    self.AppendItem(fields, field.name, data=data)
         self.Expand(self.rootnode)
         self.Expand(self.plans_node)
+
+        logger.debug("exit populate_tree()")
 
     def new_empty_plan(self, evt):
         """ Creates a new plan without any ROIs.
@@ -632,7 +638,7 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         logger.debug("new_plan_from_exec()")
         #TODO: implement me
-        
+
     def generate_voi_menu(self, node):
         data = self.GetItemData(self.GetItemParent(self.GetItemParent(node)))
         if data is not None and get_class_name(data.GetData()) == "TripPlan":

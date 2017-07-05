@@ -219,7 +219,8 @@ class PlotPanel(wx.Panel):
 
     def on_patient_loaded(self, msg):
         self.data = msg.data
-        ctx = self.data.get_images().get_voxelplan()
+        #ctx = self.data.get_images().get_voxelplan()
+        ctx = self.data.ctx
 
         self.plotutil.set_ct(ctx)
 
@@ -355,7 +356,8 @@ class PlotPanel(wx.Panel):
 
             text = "X: %.2f mm Y: %.2f mm / X: %d px Y: %d px" % (point[1][0], point[1][1], point[0][0], point[0][1])
             pub.sendMessage("statusbar.update", {"number": 1, "text": text})
-            dim = self.data.get_image_dimensions()
+            c = self.data.ctx
+            dim = [c.dimx, c.dimy, c.dimz]
             if self.plotmode == "Transversal":
                 pos = [round(evt.xdata), round(evt.ydata), self.image_idx]
             elif self.plotmode == "Sagittal":
@@ -598,11 +600,13 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def on_size(self, evt):
-        """Refresh the view when the size of the panel changes."""
-
+        """ Refresh the view when the size of the panel changes.
+        """
         self.setSize()
 
     def on_mouse_wheel(self, evt):
+        """
+        """
         delta = evt.GetWheelDelta()
         rot = evt.GetWheelRotation()
         rot = rot / delta
@@ -613,7 +617,7 @@ class PlotPanel(wx.Panel):
             elif rot < 1:
                 self.zoom_out(None)
             return
-        n_images = self.data.get_images().get_voxelplan().dimz
+        n_images = self.data.ctx.dimz
         if n_images:
             if rot >= 1:
                 if self.image_idx > 0:
@@ -625,6 +629,8 @@ class PlotPanel(wx.Panel):
                     self.Draw()
 
     def on_key_down(self, evt):
+        """
+        """
         prevkey = [wx.WXK_UP, wx.WXK_PAGEUP]
         nextkey = [wx.WXK_DOWN, wx.WXK_PAGEDOWN]
         code = evt.GetKeyCode()
@@ -638,15 +644,18 @@ class PlotPanel(wx.Panel):
                 self.Draw()
 
     def on_mouse_enter(self, evt):
-        """Set a flag when the cursor enters the window."""
+        """ Set a flag when the cursor enters the window.
+        """
         self.mouse_in_window = True
 
     def on_mouse_leave(self, evt):
-        """Set a flag when the cursor leaves the window."""
-
+        """ Set a flag when the cursor leaves the window.
+        """
         self.mouse_in_window = False
 
     def setSize(self):
+        """
+        """
         size = self.parent.GetClientSize()
         size[1] = size[1] - 40
         size[0] = size[0] - 5
@@ -656,6 +665,8 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def Draw(self):
+        """
+        """
         self.plotutil.plot(self.image_idx)
 
         self.figure.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=None, hspace=None)

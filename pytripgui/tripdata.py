@@ -17,9 +17,11 @@
 """
 All plan data are stored here.
 """
+import os
 import sys
 import threading
 import logging
+import wx
 
 import pytrip as pt
 
@@ -34,7 +36,7 @@ else:
     except:
         from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
-        
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,10 +47,10 @@ class TRiPData:
     Structure:
 
     Each Patient will have its own TRiPData object
-    Each Data object holds
-    - a list of plans
-    - a list of VOIs for this particular patient
-
+    Each TRiPData object holds:
+    - a single CtxCube object
+    - a single VdxCube object
+    - a list of Plan objects
 
     Plans will be extended to hold VOIs as well.
     So each plan will also hold:
@@ -61,47 +63,62 @@ class TRiPData:
     def __init__(self):
         """
         """
-        self.patient_name = ""
+        self.patient_name = "(no patient loaded)"
+        self.ctx = None
+        self.vdx = None
         self.active_plan = None
         self.plans = []
-        self.vois = []
 
     def open_ctx_vdx(self, path, threaded=True):
         """
         Top method for opening a voxelplan ctx and vdx file.
-        
+
         :params str path: path pointing to common header file.
         :params bool threaded: enable threaded loading, GUI is not blocked while loading
         """
         self.patient_path = path
-        close = CloseObj()
-        if threaded:
-            self.t = threading.Thread(target=self._open_ctx_vdx_thread, args=(path, close))
-            self.t.start()
-            pub.sendMessage("gui.wait.open", close)
-        else:
-            self._open_ctx_vdx_thread(path)
+
+        ### Disable threaded during debugging
+        #close = CloseObj()
+        # if threaded:
+        #    self.t = threading.Thread(target=self._open_ctx_vdx_thread, args=(path, close))
+        #    self.t.start()
+        #    logger.debug("send gui.wait.open(close)")
+        #    pub.sendMessage("gui.wait.open", close)
+        #else:
+        self._open_ctx_vdx_thread(path)
 
     def _open_ctx_vdx_thread(self, path, close=None):
         """
         Attempts to load a .ctx and .vdx, and load onto self.
+
         :params str path: path pointing to common header file.
         """
-        # file is not compatible with required extension
 
         logger.debug("open path {:s}".format(path))
-        
-        c = pt.CtxCube()
-        c.read(path)
 
-        v = pt.VdxCube()
-        v.read(c, path)
+        # TODO: remove these once new file resolver is implemented in PyTRiP
+        ctx_path = path.replace(".hed", ".ctx.gz")
+        vdx_path = path.replace(".hed", ".vdx")
 
-        for voi in v.vois:
-            self.vois.append[voi]
-            
-        self.patient_name = c.patient_name
+        logger.debug("Opening {:s}".format(ctx_path))
+        if os.path.isfile(ctx_path):
+            self.ctx = pt.CtxCube()
+            self.ctx.read(ctx_path)
+        else:
+            logger.error("File not found '{:s}'".format(ctx_path))
+
+        logger.debug("Opening {:s}".format(vdx_path))
+        if os.path.isfile(vdx_path):
+            self.vdx = pt.VdxCube(self.ctx)
+            self.vdx.read(vdx_path)
+        else:
+            logger.error("File not found '{:s}'".format(vdx_path))
+
+        # TODO: send message to update patient name in window title
 
         if close is not None:
             wx.CallAfter(close.close)
 
+        ### wx.CallAfter(self.patient_load)
+        pub.sendMessage("patient.load", self)
