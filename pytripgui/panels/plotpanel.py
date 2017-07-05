@@ -99,7 +99,7 @@ class PlotPanel(wx.Panel):
         self.canvas = FigureCanvasWxAgg(self, -1, self.figure)
         # ~ self.canvas.SetDoubleBuffered(True)
         self.clear()
-        self.plotutil.set_draw_in_gui(True)
+        self.plotutil.draw_in_gui = True
         self.figure.set_frameon(True)
         rect = self.figure.patch
         rect.set_facecolor('black')
@@ -162,7 +162,7 @@ class PlotPanel(wx.Panel):
         wx.EVT_MENU(toolbar, id, self.zoom_out)
 
     def zoom_buttons_visible(self):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         self.zoom_in_btn.Enable(True)
         self.zoom_out_btn.Enable(True)
 
@@ -172,7 +172,7 @@ class PlotPanel(wx.Panel):
             self.zoom_out_btn.Enable(False)
 
     def zoom_in(self, evt):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         zoom_idx += 1
         if len(self.zoom_levels) > zoom_idx:
             zoom = self.zoom_levels[zoom_idx]
@@ -181,7 +181,7 @@ class PlotPanel(wx.Panel):
             self.Draw()
 
     def zoom_out(self, evt):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         zoom_idx -= 1
         if zoom_idx >= 0:
             zoom = self.zoom_levels[zoom_idx]
@@ -199,14 +199,14 @@ class PlotPanel(wx.Panel):
     def clear(self):
         self.figure.clear()
         self.subplot = self.figure.add_subplot(111)
-        self.plotutil.set_figure(self.subplot)
+        self.plotutil.figure = self.subplot
 
     def voi_changed(self, msg):
         voi = msg.data
         if voi.selected:
-            self.plotutil.add_voi(voi)
+            self.plotutil.vois.append(voi)
         else:
-            self.plotutil.remove_voi(voi)
+            self.plotutil.vois.remove(voi)
         self.Draw()
 
     def set_active_image(self, msg):
@@ -219,7 +219,7 @@ class PlotPanel(wx.Panel):
         #ctx = self.data.get_images().get_voxelplan()
         ctx = self.data.ctx
 
-        self.plotutil.set_ct(ctx)
+        self.plotutil.ctx = ctx
 
         self.image_idx = int(ctx.dimz / 2)
         self.setSize()
@@ -305,7 +305,7 @@ class PlotPanel(wx.Panel):
             # Adjust contrast of HU colour bar
             _stepsize = 10.0
             if self.plot_mouse_action == "contrast_top":
-                contrast = self.plotutil.get_contrast()
+                contrast = self.plotutil.contrast
                 if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
@@ -313,7 +313,7 @@ class PlotPanel(wx.Panel):
                 contrast[1] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
             elif self.plot_mouse_action == "contrast_bottom":
-                contrast = self.plotutil.get_contrast()
+                contrast = self.plotutil.contrast
                 if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
@@ -426,12 +426,12 @@ class PlotPanel(wx.Panel):
                 wx.EVT_MENU(self, id, self.change_dose_to_contour)
 
                 menu.AppendSubMenu(dose_type_menu, "Dose Visalization")
-                if self.plotutil.get_dose_plot() == "contour":
+                if self.plotutil.dose_plot == "contour":
                     dose_contour_menu = wx.Menu()
                     for level in self.dose_contour_levels:
                         id = wx.NewId()
                         item = dose_contour_menu.AppendCheckItem(id, "%d %%" % level)
-                        for contour in self.plotutil.get_dose_contours():
+                        for contour in self.plotutil.dosecontour_levels:
                             if contour["doselevel"] == level:
                                 item.Check()
                         wx.EVT_MENU(self, id, self.toggle_dose_contour)
@@ -557,11 +557,11 @@ class PlotPanel(wx.Panel):
     def toggle_dose_contour(self, evt):
         value = float(evt.GetEventObject().GetLabel(evt.GetId()).split()[0])
         if evt.IsChecked():
-            self.plotutil.add_dose_contour({"doselevel": value, "color": "b"})
+            self.plotutil.dosecontour_levels.append({"doselevel": value, "color": "b"})
         else:
-            for contour in self.plotutil.get_dose_contours():
+            for contour in self.plotutil.dosecontour_levels:
                 if contour["doselevel"] == value:
-                    self.plotutil.remove_dose_contour(contour)
+                    self.plotutil.dosecontour_levels.remove(contour)
         self.Draw()
 
     def toggle_dose(self, evt):

@@ -29,6 +29,8 @@ import pytrip.res.point
 
 class PlotUtil:
     def __init__(self):
+        """
+        """
         matplotlib.interactive(True)
         self.contrast = [-100, 400]
         self.vois = []
@@ -50,19 +52,9 @@ class PlotUtil:
         self.center = [50.0, 50.0]
         self.plan = None
 
-    def add_dose_contour(self, dose_contour):
-        self.dosecontour_levels.append(dose_contour)
-
-    def get_dose_contours(self):
-        return self.dosecontour_levels
-
-    def remove_dose_contour(self, dose_contour):
-        self.dosecontour_levels.remove(dose_contour)
-
-    def get_colorbar(self):
-        return self.dose_bar
-
     def set_zoom(self, zoom):
+        """
+        """
         if zoom < self.zoom:
             self.zoom = zoom
             offset = self.get_offset()
@@ -113,9 +105,6 @@ class PlotUtil:
             self.center[1] = center[1] / float(size[1]) * 100
         return True
 
-    def get_zoom(self):
-        return self.zoom
-
     def get_images_count(self):
         if self.plot_plan == "Transversal":
             return len(self.ctx.cube)
@@ -123,9 +112,6 @@ class PlotUtil:
             return len(self.ctx.cube[0, 0])
         elif self.plot_plan == "Coronal":
             return len(self.ctx.cube[0])
-
-    def set_draw_in_gui(self, yes):
-        self.draw_in_gui = yes
 
     def set_plot_plan(self, plot_plan):
         self.plot_plan = plot_plan
@@ -147,18 +133,9 @@ class PlotUtil:
         self.colormap_dose = colormap
         self.clear_dose_view()
 
-    def set_figure(self, figure):
-        self.figure = figure
-
     def set_dose_axis(self, dose_axis):
         self.dose_axis = dose_axis
         self.clear_dose_view()
-
-    def set_colormap_let(self, colormap):
-        self.colormap_let = colormap
-
-    def set_ct(self, ctx):
-        self.ctx = ctx
 
     def set_let(self, let):
         """
@@ -171,9 +148,6 @@ class PlotUtil:
     def set_dose_plot(self, type):
         self.dose_plot = type
         self.clear_dose_view()
-
-    def get_dose_plot(self):
-        return self.dose_plot
 
     def set_dose(self, dos):
         """
@@ -204,12 +178,6 @@ class PlotUtil:
 
     def get_min_max_let(self):
         return [self.min_let, self.max_let]
-
-    def add_voi(self, voi):
-        self.vois.append(voi)
-
-    def remove_voi(self, voi):
-        self.vois.remove(voi)
 
     def set_contrast(self, contrast):
         """ Sets the contrast if the CT image.
@@ -247,9 +215,6 @@ class PlotUtil:
             pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
                    (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         return [pixel, pos]
-
-    def get_contrast(self):
-        return self.contrast
 
     def get_dose(self):
         if hasattr(self, "dos"):
@@ -425,6 +390,8 @@ class PlotUtil:
         self.figure.plot(x, y, 'o', color=color)  # plot the dot
 
     def clean_plot(self):
+        """
+        """
         while len(self.figure.lines) > 0:
             self.figure.lines.pop(0)
         while len(self.figure.texts) > 0:
@@ -434,6 +401,8 @@ class PlotUtil:
         self.figure.show()
 
     def points_to_plane(self, point):
+        """
+        """
         d = point
         for data in d:
             if self.plot_plan == "Transversal":
