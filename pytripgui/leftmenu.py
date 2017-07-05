@@ -538,6 +538,7 @@ class LeftMenuTree(wx.TreeCtrl):
         self.AppendItem(self.plans_node, plan.basename, data=treedata)
         self.Expand(self.plans_node)
 
+        self.populate_tree()  ### TODO: fix this somehow better, how to update the tree properly?
         logger.debug("exit plan_added()")
 
     def plan_renamed(self, msg):
@@ -600,24 +601,24 @@ class LeftMenuTree(wx.TreeCtrl):
         for plan in self.data.plans:
             data = wx.TreeItemData()
             data.SetData(plan)
-            p_id = self.AppendItem(self.plans_node, plan.name, data=data)
+            p_id = self.AppendItem(self.plans_node, plan.basename, data=data)
             if len(plan.vois):
                 item = self.get_or_create_child(p_id, "ROIs", plan.vois)
                 for voi in plan.vois:
                     node = self.get_child_from_data(self.plans_node, plan)
-                    item = self.get_or_create_child(node, "ROIs", plan.get_vois())
+                    item = self.get_or_create_child(node, "ROIs", plan.vois)
                     data = wx.TreeItemData()
                     data.SetData(voi)
                     i2 = self.AppendItem(item, voi.name, data=data)
                     self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
-            if len(plan.get_fields()):
-                fields = self.get_or_create_child(p_id, "Fields", plan.get_fields())
+            if len(plan.fields):
+                fields = self.get_or_create_child(p_id, "Fields", plan.fields)
                 for field in plan.fields:
                     data = wx.TreeItemData()
                     data.SetData(field)
-                    self.AppendItem(fields, field.name, data=data)
+                    self.AppendItem(fields, field.basename, data=data)
         self.Expand(self.rootnode)
         self.Expand(self.plans_node)
 
@@ -628,13 +629,15 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         logger.debug("enter new_empty_plan()")
         plan = pte.Plan()
-        plan.basename = "New Plan"
-        self.data.plans.append(plan)
+        plan.basename = "New Plan {:d}".format(len(self.data.plans) + 1)
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
         plan.vois = []
         plan.dos = None
         plan.let = None
+
+        self.data.plans.append(plan)
+
         pub.sendMessage("plan.new", plan)
         pub.sendMessage("plan.active.changed", plan)
         logger.debug("exit new_empty_plan()")
@@ -644,10 +647,11 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         logger.debug("enter new_plan()")
         plan = pte.Plan()
-        plan.basename = "New Plan"
+        plan.basename = "New Plan {:d}".format(len(self.data.plans) + 1)
         field = pte.Field()
         field.basename = "Field {:d}".format(len(plan.fields) + 1)
         plan.fields.append(field)
+
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
         plan.vois = []
@@ -658,6 +662,7 @@ class LeftMenuTree(wx.TreeCtrl):
             plan.vois.append(voi)
 
         self.data.plans.append(plan)
+
         pub.sendMessage("plan.new", plan)
         pub.sendMessage("plan.active.changed", plan)  # update the plot
         logger.debug("exit new_plan()")
