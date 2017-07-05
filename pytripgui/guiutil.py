@@ -59,9 +59,6 @@ class PlotUtil:
     def remove_dose_contour(self, dose_contour):
         self.dosecontour_levels.remove(dose_contour)
 
-    def set_plan(self, plan):
-        self.plan = plan
-
     def get_colorbar(self):
         return self.dose_bar
 
@@ -164,6 +161,8 @@ class PlotUtil:
         self.ctx = ctx
 
     def set_let(self, let):
+        """
+        """
         self.let = let
         if self.let is not None:
             self.max_let = np.amax(let.cube)
@@ -177,6 +176,8 @@ class PlotUtil:
         return self.dose_plot
 
     def set_dose(self, dos):
+        """
+        """
         self.dos = dos
         if self.dos is not None:
             self.max_dose = np.amax(dos.cube) / self.factor
@@ -452,13 +453,14 @@ class PlotUtil:
         if self.plan is None:
             return
         targets = []
-        for v in self.plan.get_vois():
-            if v.is_target():
+        for v in self.plan.vois:
+            if v.target:
                 targets.append(v)
         if len(targets) is 0 or len(targets) > 1:
             return
 
-        target = targets[0].get_voi().get_voi_data()
+        # taget is of type Voi()
+        target = targets[0]
         # center = target.calculate_center() # TODO why not used ?
         data = None
         if self.plot_plan == "Transversal":
@@ -482,12 +484,12 @@ class PlotUtil:
 
         if data is None:
             return
-        for f in self.plan.get_fields():
-            if not f.is_selected():
+        for f in self.plan.fields:
+            if not f.selected:
                 continue
 
-            gantry = f.get_gantry()
-            couch = f.get_couch()
+            gantry = f.gantry
+            couch = f.couch
             field_vec = -pytrip.get_basis_from_angles(gantry, couch)[0]
 
             field_vec = field_vec - np.dot(field_vec, vec) * vec

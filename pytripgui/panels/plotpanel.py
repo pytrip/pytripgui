@@ -129,19 +129,16 @@ class PlotPanel(wx.Panel):
 
     def plan_changed(self, msg):
         self.active_plan = msg.data
+        self.plotutil.plan = self.active_plan
+
         if self.active_plan is None:
-            self.plotutil.set_plan(None)
             self.plotutil.set_dose(None)
             self.plotutil.set_let(None)
         else:
-            self.plotutil.set_plan(self.active_plan)
-            doseobj = self.active_plan.get_dose()
+            # plot any DosCube in plan
+            self.plotutil.set_dose(self.active_plan.dos)
+            self.plotutil.set_let(self.active_plan.let)
 
-            if doseobj is not None:
-                self.plotutil.set_dose(doseobj.get_dosecube())
-            else:
-                self.plotutil.set_dose(None)
-            self.plotutil.set_let(self.active_plan.get_let())
         self.Draw()
 
     def set_toolbar(self, toolbar):
@@ -354,7 +351,10 @@ class PlotPanel(wx.Panel):
         if hasattr(self.plotutil, "fig_ct") and evt.inaxes is self.plotutil.fig_ct.axes:
             point = self.plotutil.pixel_to_pos([round(evt.xdata), round(evt.ydata)])
 
-            text = "X: %.2f mm Y: %.2f mm / X: %d px Y: %d px" % (point[1][0], point[1][1], point[0][0], point[0][1])
+            text = "X: {:.2f} mm Y: {:.2f} mm / X: {:d} px Y: {:d} px".format(point[1][0],
+                                                                              point[1][1],
+                                                                              int(point[0][0]),
+                                                                              int(point[0][1]))
             pub.sendMessage("statusbar.update", {"number": 1, "text": text})
             c = self.data.ctx
             dim = [c.dimx, c.dimy, c.dimz]
@@ -367,28 +367,27 @@ class PlotPanel(wx.Panel):
 
             try:
                 _ct_values = self.data.get_image_cube()
-                text = "CT Value: %.1f HU" % (_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
+                text = "CT Value: {:.1f} HU".format(_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
             except:
                 pass
 
             try:
                 plan = self.active_plan
                 if plan is not None:
-                    dose = plan.get_dose_cube()
-                    if dose is not None:
-                        dose_value = dose[int(pos[2]), int(pos[1]), int(pos[0])]
-                        target_dose = plan.get_dose().get_dose()
-                        if not target_dose == 0.0:
-                            dose_value *= target_dose / 1000
-                            text += " / Dose: %.1f Gy" % (float(dose_value))
+                    dos = plan.dos  # TODO: refactor me
+                    if dos is not None:
+                        dose_value = dos.cube[int(pos[2]), int(pos[1]), int(pos[0])]
+                        if plan.target_dose != 0.0:
+                            dose_value *= plan.target_dose / 1000
+                            text += " / Dose: {:.1f} Gy".format(float(dose_value))
                         else:
                             dose_value /= 10
-                            text += " / Dose: %.1f %%" % (float(dose_value))
+                            text += " / Dose: {:.1f} %%".format(float(dose_value))
 
-                    let = plan.get_let_cube()
+                    let = plan.let
                     if let is not None:
-                        let_value = let[int(pos[2]), int(pos[1]), int(pos[0])]
-                        text += " / LET: %.1f keV/um" % (let_value)
+                        let_value = let.cube[int(pos[2]), int(pos[1]), int(pos[0])]
+                        text += " / LET: {:.1f} keV/um".format(let_value)
             except IndexError as e:
                 pass
             pub.sendMessage("statusbar.update", {"number": 2, "text": text})
@@ -567,14 +566,14 @@ class PlotPanel(wx.Panel):
 
     def toggle_dose(self, evt):
         if self.plotutil.get_dose() is None:
-            self.plotutil.set_dose(self.active_plan.get_dose().get_dosecube())
+            self.plotutil.set_dose(self.active_plan.dos)
         else:
             self.plotutil.set_dose(None)
         self.Draw()
 
     def toggle_let(self, evt):
         if self.plotutil.get_let() is None:
-            self.plotutil.set_let(self.active_plan.get_let())
+            self.plotutil.set_let(self.active_plan.let)
         else:
             self.plotutil.set_let(None)
         self.Draw()

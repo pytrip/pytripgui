@@ -528,9 +528,13 @@ class LeftMenuTree(wx.TreeCtrl):
         return i
 
     def plan_added(self, msg):
-        data = wx.TreeItemData()
-        data.SetData(msg.data)
-        self.AppendItem(self.plans_node, msg.data.name, data=data)
+        """ updates wx.Tree with new plan
+        """
+        plan = msg.data
+        treedata = wx.TreeItemData()  # <class 'wx._controls.TreeItemData'>
+        treedata.SetData(plan)  # store the entire plan into the tree item data slot
+
+        self.AppendItem(self.plans_node, plan.basename, data=treedata)
         self.Expand(self.plans_node)
 
     def plan_renamed(self, msg):
@@ -619,24 +623,44 @@ class LeftMenuTree(wx.TreeCtrl):
     def new_empty_plan(self, evt):
         """ Creates a new plan without any ROIs.
         """
+        logger.debug("enter new_empty_plan()")
         plan = pte.Plan()
         self.data.plans.append(plan)
+        # extend original Plan class with local attributes
+        # TODO: prefix them with _? They are however not private to the class.
+        plan.vois = []
+        plan.dos = None
+        plan.let = None
+        pub.sendMessage("plan.new", plan)
+        pub.sendMessage("plan.active.changed", plan)
+
+        logger.debug("exit new_empty_plan()")
 
     def new_plan(self, evt):
         """ Adds a new plan with all ROIs from the current patient, and a single default Field
         """
+        logger.debug("enter new_plan()")
         plan = pte.Plan()
         field = pte.Field()
         plan.fields.append(field)
-        plan.vois = []  # extend original class with vois attribute
-        for voi in self.data.vois:
+        # extend original Plan class with local attributes
+        # TODO: prefix them with _? They are however not private to the class.
+        plan.vois = []
+        plan.dos = None
+        plan.let = None
+        for voi in self.data.vdx.vois:
+            voi.target = False  # add new attribute
             plan.vois.append(voi)
+
         self.data.plans.append(plan)
+        pub.sendMessage("plan.new", plan)
+        pub.sendMessage("plan.active.changed", plan)
+        logger.debug("exit new_plan()")
 
     def new_plan_from_exec(self, evt):
         """ Opens the import dialog and sets up a plan.
         """
-        logger.debug("new_plan_from_exec()")
+        logger.debug("enter new_plan_from_exec()")
         #TODO: implement me
 
     def generate_voi_menu(self, node):

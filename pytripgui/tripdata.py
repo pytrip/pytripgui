@@ -54,9 +54,9 @@ class TRiPData:
 
     Plans will be extended to hold VOIs as well.
     So each plan will also hold:
-    - a list of VOIs (from a given VdxCube)
-    - a list of DosCubes (don't call them "dose", this is ambigous)
-    - a list of LETCubes
+    - a list of VOIs in plan.vois (from a given VdxCube)
+    - a DosCube      in plan.dos (don't call them "plan.dose", this is ambigous)
+    - a LETCube      in plan.let
 
     """
 
