@@ -15,7 +15,7 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-
+import logging
 import wx
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
@@ -40,6 +40,8 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
+        
+logger = logging.getLogger(__name__)
 
 
 def cmap_discretize(cmap, N):
@@ -128,6 +130,9 @@ class PlotPanel(wx.Panel):
             self.Draw()
 
     def plan_changed(self, msg):
+        """
+        """
+        logger.debug("enter plan_changed()")
         self.active_plan = msg.data
         self.plotutil.plan = self.active_plan
 
@@ -140,7 +145,8 @@ class PlotPanel(wx.Panel):
             self.plotutil.set_let(self.active_plan.let)
 
         self.Draw()
-
+        logger.debug("exit plan_changed()")
+        
     def set_toolbar(self, toolbar):
         id = wx.NewId()
         selector = wx.Choice(toolbar, id)

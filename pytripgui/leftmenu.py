@@ -408,7 +408,7 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_set_active(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
-        self.data.plans.set_active_plan(plan)
+        self.data.active_plan = plan
 
     def plan_toggle_oar(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
@@ -530,12 +530,15 @@ class LeftMenuTree(wx.TreeCtrl):
     def plan_added(self, msg):
         """ updates wx.Tree with new plan
         """
+        logger.debug("enter plan_added()")
         plan = msg.data
         treedata = wx.TreeItemData()  # <class 'wx._controls.TreeItemData'>
         treedata.SetData(plan)  # store the entire plan into the tree item data slot
 
         self.AppendItem(self.plans_node, plan.basename, data=treedata)
         self.Expand(self.plans_node)
+
+        logger.debug("exit plan_added()")
 
     def plan_renamed(self, msg):
         self.set_label_from_data(self.plans_node, msg.data, msg.data.get_name())
@@ -625,6 +628,7 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         logger.debug("enter new_empty_plan()")
         plan = pte.Plan()
+        plan.basename = "New Plan"
         self.data.plans.append(plan)
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
@@ -633,7 +637,6 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.let = None
         pub.sendMessage("plan.new", plan)
         pub.sendMessage("plan.active.changed", plan)
-
         logger.debug("exit new_empty_plan()")
 
     def new_plan(self, evt):
@@ -641,7 +644,9 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         logger.debug("enter new_plan()")
         plan = pte.Plan()
+        plan.basename = "New Plan"
         field = pte.Field()
+        field.basename = "Field {:d}".format(len(plan.fields) + 1)
         plan.fields.append(field)
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
@@ -654,7 +659,7 @@ class LeftMenuTree(wx.TreeCtrl):
 
         self.data.plans.append(plan)
         pub.sendMessage("plan.new", plan)
-        pub.sendMessage("plan.active.changed", plan)
+        pub.sendMessage("plan.active.changed", plan)  # update the plot
         logger.debug("exit new_plan()")
 
     def new_plan_from_exec(self, evt):

@@ -105,6 +105,7 @@ class TRiPData:
         if os.path.isfile(ctx_path):
             self.ctx = pt.CtxCube()
             self.ctx.read(ctx_path)
+            self.patient_name = self.ctx.patient_name
         else:
             logger.error("File not found '{:s}'".format(ctx_path))
 
@@ -128,7 +129,6 @@ class TRiPData:
         """
         dcm = pt.dicomhelper.read_dicom_dir(path)
         self.loaded_path = path
-
         ### disable threaded load during debugging
         #close = CloseObj()
         #if threaded:
@@ -142,6 +142,7 @@ class TRiPData:
         if 'images' in dicom:
             self.ctx = pt.CtxCube()
             self.ctx.read_dicom(dicom)
+            self.patient_name = self.ctx.patient_name
 
         if 'rtss' in dicom:
             self.vdx = pt.VdxCube(self.ctx)
