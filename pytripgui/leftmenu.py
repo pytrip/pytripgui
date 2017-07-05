@@ -602,7 +602,7 @@ class LeftMenuTree(wx.TreeCtrl):
             data = wx.TreeItemData()
             data.SetData(plan)
             p_id = self.AppendItem(self.plans_node, plan.basename, data=data)
-            if len(plan.vois):
+            if plan.vois:
                 item = self.get_or_create_child(p_id, "ROIs", plan.vois)
                 for voi in plan.vois:
                     node = self.get_child_from_data(self.plans_node, plan)
