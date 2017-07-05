@@ -115,10 +115,38 @@ class TRiPData:
         else:
             logger.error("File not found '{:s}'".format(vdx_path))
 
-        # TODO: send message to update patient name in window title
-
         if close is not None:
             wx.CallAfter(close.close)
 
         ### wx.CallAfter(self.patient_load)
+        pub.sendMessage("patient.load", self)
+
+    def open_dicom(self, path, threaded=True):
+        """
+        """
+        dcm = pt.dicomhelper.read_dicom_dir(path)
+        self.loaded_path = path
+
+        ### disable threaded load during debugging
+        #close = CloseObj()
+        #if threaded:
+        #    self.t = threading.Thread(target=self.load_from_dicom_thread, args=(dcm, close))
+        #    self.t.start()
+        #    pub.sendMessage("gui.wait.open", close)
+        #else:
+        self._open_dicom_thread(dcm)
+
+    def _open_dicom_thread(self, dicom, close=None):
+        if 'images' in dicom:
+            self.ctx = pt.CtxCube()
+            self.ctx.read_dicom(dicom)
+
+        if 'rtss' in dicom:
+            self.vdx = pt.VdxCube(self.ctx)
+            self.vdx.read_dicom(dicom)
+
+        if close is not None:
+            wx.CallAfter(close.close)
+
+        # wx.CallAfter(self.patient_load)
         pub.sendMessage("patient.load", self)

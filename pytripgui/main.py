@@ -159,7 +159,7 @@ class MainFrame(wx.Frame):
             self.dialog.Close()
 
         logging.debug("exit load_dialog()")
-        
+
     def ini_plugins(self):
         self.plugins = PluginManager()
         self.plugins.load_modules()
@@ -371,17 +371,17 @@ class MainFrame(wx.Frame):
             data.open_ctx_vdx(path)
 
     def open_patient_load_dialog(self, evt):
-        """ Open a DICOM patient
+        """ Open a DICOM patient with images and possible also structures
         """
         dlg = wx.DirDialog(
             self, defaultPath=self.dicom_path, message="Choose the folder where the DICOM files are stored")
         if dlg.ShowModal() == wx.ID_OK:
-            data_obj = TRiPData()
-            path = dlg.GetPath()
+            data = TRiPData()
+            path = dlg.GetPath()  # TODO: should be named "dir" instead
 
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.dicom_path", path)
-            data_obj.load_from_dicom(path)
+            data.open_dicom(path)
 
     def preferences_dialog(self, evt):
         """ Open the Preferences dialog.
