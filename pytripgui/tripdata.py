@@ -72,6 +72,8 @@ class TRiPData:
     def open_ctx_vdx(self, path, threaded=True):
         """
         Top method for opening a voxelplan ctx and vdx file.
+        There must be a matching .ctx file to the .hed file present.
+        .vdx is optional.
 
         :params str path: path pointing to common header file.
         :params bool threaded: enable threaded loading, GUI is not blocked while loading
@@ -97,17 +99,14 @@ class TRiPData:
 
         logger.debug("open path {:s}".format(path))
 
-        # TODO: remove these once new file resolver is implemented in PyTRiP
-        ctx_path = path.replace(".hed", ".ctx.gz")
-        vdx_path = path.replace(".hed", ".vdx")
+        # path will always have some .hed suffix due to the file dialog.
+        # so we strip "hed"/"HED", and replace by "vdx" for VdxCube.
+        vdx_path = path[:-3] + "vdx"
 
-        logger.debug("Opening {:s}".format(ctx_path))
-        if os.path.isfile(ctx_path):
-            self.ctx = pt.CtxCube()
-            self.ctx.read(ctx_path)
-            self.patient_name = self.ctx.patient_name
-        else:
-            logger.error("File not found '{:s}'".format(ctx_path))
+        logger.debug("Opening {:s} + *.ctx".format(path))
+        self.ctx = pt.CtxCube()
+        self.ctx.read(path)
+        self.patient_name = self.ctx.patient_name
 
         logger.debug("Opening {:s}".format(vdx_path))
         if os.path.isfile(vdx_path):
