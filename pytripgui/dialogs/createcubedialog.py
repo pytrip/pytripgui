@@ -16,8 +16,8 @@
 """
 import wx
 from wx.xrc import XmlResource, XRCCTRL, XRCID
-from pytrip.ctx import *
-from pytripgui.data import *
+import pytrip as pt
+from pytripgui.tripdata import TRiPData
 
 
 class CreateCubeDialog(wx.Dialog):
@@ -62,9 +62,9 @@ class CreateCubeDialog(wx.Dialog):
         slice_distance = float(self.txt_slicedistance.GetValue())
         hu = int(self.txt_hu.GetValue())
 
-        cube = CtxCube()
+        cube = pt.CtxCube()
         cube.patient_name = self.txt_name.GetValue()
         cube.create_empty_cube(hu, dimx, dimy, dimz, pixelsize, slice_distance)
-        self.parent.data = PytripData()
-        self.parent.data.load_ctx_cube(cube)
+        self.parent.data = TRiPData()
+        self.parent.data.ctx = cube
         self.Close()
