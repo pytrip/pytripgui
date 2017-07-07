@@ -723,7 +723,12 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_add_voi(self, evt):
         name = evt.GetEventObject().GetLabel(evt.GetId())
-        plan = self.data.plans.get_plan(name)
+        list_of_matching_plans = [plan for plan in self.data.plans if plan.basename == name]
+        if not list_of_matching_plans:
+            raise Exception("No plan found for name " + name)
+        if len(list_of_matching_plans) > 1:
+            raise Exception("More than one plan found for name " + name)
+        plan = list_of_matching_plans[0]
         voi = self.GetItemData(self.selected_item).GetData()
         plan.vois.append(voi)
 
@@ -731,7 +736,7 @@ class LeftMenuTree(wx.TreeCtrl):
         submenu = wx.Menu()
         for plan in self.data.plans:
             id = wx.NewId()
-            item = wx.MenuItem(submenu, id, plan.get_name())
+            item = wx.MenuItem(submenu, id, plan.basename)
             submenu.AppendItem(item)
             wx.EVT_MENU(submenu, id, self.plan_add_voi)
         return submenu

@@ -32,7 +32,7 @@ class FieldDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
 
         self.label_fieldname = XRCCTRL(self, 'label_fieldname')
-        self.label_fieldname.SetLabel(field.get_name())
+        self.label_fieldname.SetLabel(field.basename)
 
         self.check_isocenter = XRCCTRL(self, 'check_isocenter')
         target = field.get_target()
