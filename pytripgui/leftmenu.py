@@ -53,7 +53,7 @@ class LeftMenuTree(wx.TreeCtrl):
                                         "callback": self.new_empty_plan},
                                        {"text": "New plan from .exec",
                                         "callback": self.new_plan_from_exec}],
-                             "TripPlan": [{"text": "Set Active",
+                             "Plan": [{"text": "Set Active",
                                            "callback": self.plan_set_active},
                                           {"text": "Add Field",
                                            "callback": self.plan_add_field},
@@ -403,7 +403,7 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_add_field(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
-        field = Field("")
+        field = pte.Field("")
         plan.fields.append(field)
 
     def plan_set_active(self, evt):

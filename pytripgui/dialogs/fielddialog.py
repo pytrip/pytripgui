@@ -91,20 +91,20 @@ class FieldDialog(wx.Dialog):
             self.txt_targetz.Enable(False)
 
     def save_and_close(self, evt):
-        self.field.set_couch(self.txt_couch.GetValue())
-        self.field.set_gantry(self.txt_gantry.GetValue())
-        self.field.set_fwhm(self.txt_fwhm.GetValue())
+        self.field.couch = self.txt_couch.GetValue()
+        self.field.gantry = self.txt_gantry.GetValue()
+        self.field.fwhm = self.txt_fwhm.GetValue()
         if self.check_isocenter.IsChecked():
-            self.field.set_target(self.txt_targetx.GetValue() + "," + self.txt_targety.GetValue() + "," +
+            self.field.set_isocenter_from_string(self.txt_targetx.GetValue() + "," + self.txt_targety.GetValue() + "," +
                                   self.txt_targetz.GetValue())
         else:
-            self.field.set_target("")
-        self.field.set_zsteps(self.txt_zsteps.GetValue())
+            self.field.isocenter = []
+        self.field.zsteps = self.txt_zsteps.GetValue()
 
-        self.field.set_doseextension(self.txt_doseextension.GetValue())
-        self.field.set_contourextension(self.txt_contourextension.GetValue())
-        self.field.set_rasterstep(self.txt_raster1.GetValue(), self.txt_raster2.GetValue())
-        self.field.set_projectile(self.drop_projectile.GetStringSelection())
+        self.field.dose_extension = self.txt_doseextension.GetValue()
+        self.field.contour_extension = self.txt_contourextension.GetValue()
+        self.field.raster_step = [self.txt_raster1.GetValue(), self.txt_raster2.GetValue()]
+        self.field.projectile = self.drop_projectile.GetStringSelection()
         self.Close()
 
     def close(self, evt):

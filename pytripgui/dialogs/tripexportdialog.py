@@ -35,6 +35,7 @@ from wx.xrc import XmlResource, XRCCTRL, XRCID
 
 class TripExportDialog(wx.Dialog):
     def __init__(self):
+        self.data = None
         pre = wx.PreDialog()
         self.PostCreate(pre)
 
@@ -42,7 +43,7 @@ class TripExportDialog(wx.Dialog):
         self.output_path = ''
         self.drop_type = XRCCTRL(self, "drop_type")
         self.txt_prefix = XRCCTRL(self, "txt_prefix")
-        self.txt_prefix.SetValue(plan.get_name())
+        self.txt_prefix.SetValue(plan.basename)
 
         self.label_folder = XRCCTRL(self, "label_folder")
 
@@ -57,7 +58,7 @@ class TripExportDialog(wx.Dialog):
         pub.sendMessage("patient.request", None)
 
     def on_export_voxelplan_changed(self, msg):
-        if not msg.data is None:
+        if msg.data:
             self.output_path = msg.data
             self.label_folder.SetLabel(self.output_path)
 
@@ -81,14 +82,16 @@ class TripExportDialog(wx.Dialog):
             raise InputError("Output folder should be specified")
         path = os.path.join(self.output_path, file_prefix)
         exec_path = path + ".exec"
-        ctx = self.data.get_images().get_voxelplan()
-        if idx == 0:
-            self.plan.save_data(ctx, path)
-            self.plan.save_exec(ctx, exec_path)
-        elif idx == 1:
-            self.plan.save_exec(ctx, exec_path)
-        elif idx == 2:
-            self.plan.save_data(ctx, path)
+
+        if self.data:
+            ctx = self.data.get_images().get_voxelplan()
+            if idx == 0:
+                self.plan.save_data(ctx, path)
+                self.plan.save_exec(ctx, exec_path)
+            elif idx == 1:
+                self.plan.save_exec(ctx, exec_path)
+            elif idx == 2:
+                self.plan.save_data(ctx, path)
         self.Close()
 
     def close(self, evt):
