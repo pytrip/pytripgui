@@ -39,6 +39,7 @@ class PlanDialog(wx.Dialog):
         self.PostCreate(pre)
         pub.subscribe(self.patient_data_updated, "patient.loaded")
         pub.sendMessage("patient.request", {})
+        self.data = None
 
     def Init(self, plan):
         self.plan = plan
@@ -59,14 +60,15 @@ class PlanDialog(wx.Dialog):
 
     def init_general(self):
         self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
-        rbe_list = self.data.get_rbe()
-        for rbe in rbe_list.get_rbe_list():
-            self.drop_res_tissue_type.Append(rbe.get_name())
-        self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
         self.drop_target_tissue_type = XRCCTRL(self, "drop_target_tissue_type")
-        for rbe in rbe_list.get_rbe_list():
-            self.drop_target_tissue_type.Append(rbe.get_name())
-        self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
+        if self.data:
+            rbe_list = self.data.get_rbe()
+            for rbe in rbe_list.get_rbe_list():
+                self.drop_res_tissue_type.Append(rbe.get_name())
+            self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
+            for rbe in rbe_list.get_rbe_list():
+                self.drop_target_tissue_type.Append(rbe.get_name())
+            self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
 
     def select_drop_by_value(self, drop, value):
         for i, item in enumerate(drop.GetItems()):
@@ -74,42 +76,43 @@ class PlanDialog(wx.Dialog):
                 drop.SetSelection(i)
 
     def init_calculation_panel(self):
-        self.check_phys_dose = XRCCTRL(self, "check_phys_dose")
-        self.check_phys_dose.SetValue(self.plan.get_out_phys_dose())
-
-        self.check_bio_dose = XRCCTRL(self, "check_bio_dose")
-        self.check_bio_dose.SetValue(self.plan.get_out_bio_dose())
-
-        self.check_dose_mean_let = XRCCTRL(self, "check_mean_let")
-        self.check_dose_mean_let.SetValue(self.plan.get_out_dose_mean_let())
-
-        self.check_field = XRCCTRL(self, "check_field")
-        self.check_field.SetValue(self.plan.get_out_field())
+        pass
+        # self.check_phys_dose = XRCCTRL(self, "check_phys_dose")
+        # self.check_phys_dose.SetValue(self.plan.get_out_phys_dose())
+        #
+        # self.check_bio_dose = XRCCTRL(self, "check_bio_dose")
+        # self.check_bio_dose.SetValue(self.plan.get_out_bio_dose())
+        #
+        # self.check_dose_mean_let = XRCCTRL(self, "check_mean_let")
+        # self.check_dose_mean_let.SetValue(self.plan.get_out_dose_mean_let())
+        #
+        # self.check_field = XRCCTRL(self, "check_field")
+        # self.check_field.SetValue(self.plan.get_out_field())
 
     def init_opt_panel(self):
         self.txt_iterations = XRCCTRL(self, "txt_iterations")
-        self.txt_iterations.SetValue("%d" % self.plan.get_iterations())
+        self.txt_iterations.SetValue("%d" % self.plan.iterations)
 
         self.txt_eps = XRCCTRL(self, "txt_eps")
-        self.txt_eps.SetValue("%f" % self.plan.get_eps())
+        self.txt_eps.SetValue("%f" % self.plan.eps)
 
         self.txt_geps = XRCCTRL(self, "txt_geps")
-        self.txt_geps.SetValue("%f" % self.plan.get_geps())
+        self.txt_geps.SetValue("%f" % self.plan.geps)
 
         self.drop_opt_method = XRCCTRL(self, "drop_opt_method")
-        self.select_drop_by_value(self.drop_opt_method, self.plan.get_opt_method())
+        self.select_drop_by_value(self.drop_opt_method, self.plan.opt_method)
 
         self.drop_opt_principle = XRCCTRL(self, "drop_opt_principle")
-        self.select_drop_by_value(self.drop_opt_principle, self.plan.get_opt_princip())
+        self.select_drop_by_value(self.drop_opt_principle, self.plan.opt_principle)
 
         self.drop_dose_alg = XRCCTRL(self, "drop_dose_alg")
-        self.select_drop_by_value(self.drop_dose_alg, self.plan.get_dose_algorithm())
+        self.select_drop_by_value(self.drop_dose_alg, self.plan.dose_alg)
 
         self.drop_bio_alg = XRCCTRL(self, "drop_bio_alg")
-        self.select_drop_by_value(self.drop_bio_alg, self.plan.get_dose_algorithm())
+        self.select_drop_by_value(self.drop_bio_alg, self.plan.bio_alg)
 
         self.drop_opt_alg = XRCCTRL(self, "drop_opt_alg")
-        self.select_drop_by_value(self.drop_opt_alg, self.plan.get_opt_algorithm())
+        self.select_drop_by_value(self.drop_opt_alg, self.plan.opt_alg)
 
     def init_dose_delivery(self):
         self.drop_projectile = XRCCTRL(self, "drop_projectile")
@@ -160,22 +163,22 @@ class PlanDialog(wx.Dialog):
             self.plan.set_dose_percent(self.drop_projectile.GetStringSelection(), self.txt_dose_percent.GetValue())
 
     def save_and_close(self, evt):
-        self.plan.set_res_tissue_type(self.drop_res_tissue_type.GetStringSelection())
-        self.plan.set_target_tissue_type(self.drop_target_tissue_type.GetStringSelection())
+        self.plan.res_tissue_type = self.drop_res_tissue_type.GetStringSelection()
+        self.plan.target_tissue_type = self.drop_target_tissue_type.GetStringSelection()
 
-        self.plan.set_iterations(self.txt_iterations.GetValue())
-        self.plan.set_eps(self.txt_eps.GetValue())
-        self.plan.set_geps(self.txt_geps.GetValue())
-        self.plan.set_opt_method(self.drop_opt_method.GetStringSelection())
-        self.plan.set_opt_princip(self.drop_opt_principle.GetStringSelection())
-        self.plan.set_dose_algorithm(self.drop_dose_alg.GetStringSelection())
-        self.plan.set_bio_algorithm(self.drop_bio_alg.GetStringSelection())
-        self.plan.set_opt_algorithm(self.drop_opt_alg.GetStringSelection())
+        self.plan.iterations = self.txt_iterations.GetValue()
+        self.plan.eps = self.txt_eps.GetValue()
+        self.plan.geps = self.txt_geps.GetValue()
+        self.plan.opt_method = self.drop_opt_method.GetStringSelection()
+        self.plan.opt_principle = self.drop_opt_principle.GetStringSelection()
+        self.plan.dose_alg = self.drop_dose_alg.GetStringSelection()
+        self.plan.bio_alg = self.drop_bio_alg.GetStringSelection()
+        self.plan.opt_alg = self.drop_opt_alg.GetStringSelection()
 
-        self.plan.set_out_phys_dose(self.check_phys_dose.GetValue())
-        self.plan.set_out_bio_dose(self.check_bio_dose.GetValue())
-        self.plan.set_out_dose_mean_let(self.check_dose_mean_let.GetValue())
-        self.plan.set_out_field(self.check_field.GetValue())
+        # self.plan.set_out_phys_dose(self.check_phys_dose.GetValue())
+        # self.plan.set_out_bio_dose(self.check_bio_dose.GetValue())
+        # self.plan.set_out_dose_mean_let(self.check_dose_mean_let.GetValue())
+        # self.plan.set_out_field(self.check_field.GetValue())
 
         self.Close()
 
