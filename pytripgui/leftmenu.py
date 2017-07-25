@@ -401,14 +401,13 @@ class LeftMenuTree(wx.TreeCtrl):
         _dion = ('z1', 'z2', 'z6', 'z8', 'z10')
         _drifi = ("rifi0", "rifi3")
 
-        _suffix = '{:s}{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
+        _suffix = '{:s}.{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
 
         plan.ddd_dir = st.load('trip98.ddd.{:s}'.format(_suffix))
         plan.spc_dir = st.load('trip98.spc.{:s}'.format(_suffix))
         plan.sis_path = st.load('trip98.sis.{:s}'.format(_suffix))
 
-#        te.execute(plan, False)  # False = dry run
-        te.execute(plan)  # False = dry run
+        te.execute(plan, False)  # False = dry run
 
     def plan_add_field(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
