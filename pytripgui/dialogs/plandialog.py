@@ -56,19 +56,20 @@ class PlanDialog(wx.Dialog):
         self.init_dose_delivery()
 
     def patient_data_updated(self, msg):
-        self.data = msg.data
+        self.data = msg.data  # msg comes from on_patient_load (main.py), its a TripData object
 
     def init_general(self):
         self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
         self.drop_target_tissue_type = XRCCTRL(self, "drop_target_tissue_type")
-        if self.data:
-            rbe_list = self.data.get_rbe()
-            for rbe in rbe_list.get_rbe_list():
-                self.drop_res_tissue_type.Append(rbe.get_name())
-            self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
-            for rbe in rbe_list.get_rbe_list():
-                self.drop_target_tissue_type.Append(rbe.get_name())
-            self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
+        # TODO - to be implemented in trip98
+        # if self.data.active_plan:
+            # rbe_list = self.data.active_plan.get_rbe()
+            # for rbe in rbe_list.get_rbe_list():
+            #     self.drop_res_tissue_type.Append(rbe.get_name())
+            # self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
+            # for rbe in rbe_list.get_rbe_list():
+            #     self.drop_target_tissue_type.Append(rbe.get_name())
+            # self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
 
     def select_drop_by_value(self, drop, value):
         for i, item in enumerate(drop.GetItems()):
@@ -76,18 +77,17 @@ class PlanDialog(wx.Dialog):
                 drop.SetSelection(i)
 
     def init_calculation_panel(self):
-        pass
-        # self.check_phys_dose = XRCCTRL(self, "check_phys_dose")
-        # self.check_phys_dose.SetValue(self.plan.get_out_phys_dose())
-        #
-        # self.check_bio_dose = XRCCTRL(self, "check_bio_dose")
-        # self.check_bio_dose.SetValue(self.plan.get_out_bio_dose())
-        #
-        # self.check_dose_mean_let = XRCCTRL(self, "check_mean_let")
-        # self.check_dose_mean_let.SetValue(self.plan.get_out_dose_mean_let())
-        #
-        # self.check_field = XRCCTRL(self, "check_field")
-        # self.check_field.SetValue(self.plan.get_out_field())
+        self.check_phys_dose = XRCCTRL(self, "check_phys_dose")
+        self.check_phys_dose.SetValue(self.plan.want_phys_dose)
+
+        self.check_bio_dose = XRCCTRL(self, "check_bio_dose")
+        self.check_bio_dose.SetValue(self.plan.want_bio_dose)
+
+        self.check_dose_mean_let = XRCCTRL(self, "check_mean_let")
+        self.check_dose_mean_let.SetValue(self.plan.want_dlet)
+
+        self.check_field = XRCCTRL(self, "check_field")
+        self.check_field.SetValue(self.plan.want_rst)
 
     def init_opt_panel(self):
         self.txt_iterations = XRCCTRL(self, "txt_iterations")
@@ -140,17 +140,10 @@ class PlanDialog(wx.Dialog):
         # projectile string is in the form of 'Ne-20'
         # pytrip currently understands 'H' 'C' 'O' and 'Ne'
         # TODO: this needs to be handled in a much better way.
-        # https://github.com/pytrip/pytrip/issues/346
-        # He ions will break.
         projectile = self.drop_projectile.GetStringSelection().split("-")[0]
-        dose_percent = self.plan.get_dose_percent(projectile)
-        if dose_percent is None:
-            self.txt_dose_percent.SetValue("")
-        else:
-            self.txt_dose_percent.SetValue("%d" % dose_percent)
 
         # similar strategy as in on_rifi_changed():
-        # for now we will ignor multi-ion planning, and just try to get planning with
+        # for now we will ignore multi-ion planning, and just try to get planning with
         # single ions.
         # we will store the integer number, as it will be used as an index later in leftmenu.py:plan_run_trip()
         self.plan._projectile = self.drop_projectile.GetSelection()  # store integer
@@ -159,8 +152,7 @@ class PlanDialog(wx.Dialog):
     def set_dose_percent(self, evt):
         """ Set dose percent for a single projectile.
         """
-        if not self.drop_projectile.GetStringSelection() == "":
-            self.plan.set_dose_percent(self.drop_projectile.GetStringSelection(), self.txt_dose_percent.GetValue())
+        self.plan.target_dose_percent = self.txt_dose_percent.GetValue()
 
     def save_and_close(self, evt):
         self.plan.res_tissue_type = self.drop_res_tissue_type.GetStringSelection()
@@ -175,10 +167,10 @@ class PlanDialog(wx.Dialog):
         self.plan.bio_alg = self.drop_bio_alg.GetStringSelection()
         self.plan.opt_alg = self.drop_opt_alg.GetStringSelection()
 
-        # self.plan.set_out_phys_dose(self.check_phys_dose.GetValue())
-        # self.plan.set_out_bio_dose(self.check_bio_dose.GetValue())
-        # self.plan.set_out_dose_mean_let(self.check_dose_mean_let.GetValue())
-        # self.plan.set_out_field(self.check_field.GetValue())
+        self.plan.want_phys_dose = self.check_phys_dose.GetValue()
+        self.plan.want_bio_dose = self.check_bio_dose.GetValue()
+        self.plan.want_dlet = self.check_dose_mean_let.GetValue()
+        self.plan.want_rst = self.check_field.GetValue()
 
         self.Close()
 

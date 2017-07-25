@@ -37,6 +37,14 @@ else:
 logger = logging.getLogger(__name__)
 
 
+class FieldsCollection(list):
+    pass
+
+
+class ROIsCollection(list):
+    pass
+
+
 class LeftMenuTree(wx.TreeCtrl):
     def __init__(self, *args, **kwargs):
         super(LeftMenuTree, self).__init__(*args, **kwargs)
@@ -117,7 +125,7 @@ class LeftMenuTree(wx.TreeCtrl):
                                          {"text": "Add To Plan",
                                           "type": "submenu",
                                           "submenu": self.plan_submenu}],
-                             "FieldCollection": [{"text": "Add Field",
+                             "FieldsCollection": [{"text": "Add Field",
                                                   "callback": self.plan_add_field}],
                              "Field": [{"text": "Delete",
                                         "callback": self.plan_delete_field},
@@ -371,15 +379,15 @@ class LeftMenuTree(wx.TreeCtrl):
         This will set the last global parameters and then execute TRiP for the attached plan.
         """
         plan = self.GetItemData(self.selected_item).GetData()
-        te = pte.Execute(ctx, vdx)
+        te = pte.Execute(self.data.ctx, self.data.vdx)
 
         # Load global parameters from settings file and attach them to this plan.
         st = Settings()
-        te.remote(st.load('trip98.choice.remote') == '1')  # remote if set to '1'
-        te.remote_base_dir(st.load('trip98.s.wdir'))
-        te.servername(st.load('trip98.s.server'))
-        te.username(st.load('trip98.s.username'))
-        te.password(st.load('trip98.s.password'))
+        te.remote = (st.load('trip98.choice.remote') == '1')  # remote if set to '1'
+        te.remote_base_dir = st.load('trip98.s.wdir')
+        te.servername = st.load('trip98.s.server')
+        te.username = st.load('trip98.s.username')
+        te.password = st.load('trip98.s.password')
 
         # tell what configuration files to be used, depending on the
         # projectile / rifi configuration
@@ -395,16 +403,18 @@ class LeftMenuTree(wx.TreeCtrl):
 
         _suffix = '{:s}{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
 
-        plan.ddd_dir(st.load('trip98.ddd.{:s}'.format(_suffix)))
-        plan.spc_dir(st.load('trip98.spc.{:s}'.format(_suffix)))
-        plan.sis_path(st.load('trip98.sis.{:s}'.format(_suffix)))
+        plan.ddd_dir = st.load('trip98.ddd.{:s}'.format(_suffix))
+        plan.spc_dir = st.load('trip98.spc.{:s}'.format(_suffix))
+        plan.sis_path = st.load('trip98.sis.{:s}'.format(_suffix))
 
-        te.execute(plan, False)  # False = dry run
+#        te.execute(plan, False)  # False = dry run
+        te.execute(plan)  # False = dry run
 
     def plan_add_field(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
         field = pte.Field("")
         plan.fields.append(field)
+        pub.sendMessage("plan.active.changed", plan)
 
     def plan_set_active(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
@@ -613,8 +623,8 @@ class LeftMenuTree(wx.TreeCtrl):
                     self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
-            if len(plan.fields):
-                fields = self.get_or_create_child(p_id, "Fields", plan.fields)
+            if plan.fields:
+                fields = self.get_or_create_child(p_id, "Fields", FieldsCollection(plan.fields))
                 for field in plan.fields:
                     data = wx.TreeItemData()
                     data.SetData(field)
@@ -651,6 +661,7 @@ class LeftMenuTree(wx.TreeCtrl):
         field = pte.Field()
         field.basename = "Field {:d}".format(len(plan.fields) + 1)
         plan.fields.append(field)
+        print(str(field))
 
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.

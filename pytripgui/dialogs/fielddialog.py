@@ -35,47 +35,45 @@ class FieldDialog(wx.Dialog):
         self.label_fieldname.SetLabel(field.basename)
 
         self.check_isocenter = XRCCTRL(self, 'check_isocenter')
-        target = field.get_target()
-        if len(target) > 0:
+        if self.field.isocenter:
             self.check_isocenter.SetValue(True)
         self.check_isocenter.Bind(wx.EVT_CHECKBOX, self.on_check_isocenter_changed)
 
         self.txt_targetx = XRCCTRL(self, 'txt_targetx')
         self.txt_targety = XRCCTRL(self, 'txt_targety')
         self.txt_targetz = XRCCTRL(self, 'txt_targetz')
-        if len(target) > 0:
-            self.txt_targetx.SetValue("%.2f" % (target[0]))
-            self.txt_targety.SetValue("%.2f" % (target[1]))
-            self.txt_targetz.SetValue("%.2f" % (target[2]))
+        if self.field.isocenter:
+            self.txt_targetx.SetValue("%.2f" % (self.field.isocenter[0]))
+            self.txt_targety.SetValue("%.2f" % (self.field.isocenter[1]))
+            self.txt_targetz.SetValue("%.2f" % (self.field.isocenter[2]))
         else:
             self.txt_targetx.Enable(False)
             self.txt_targety.Enable(False)
             self.txt_targetz.Enable(False)
 
         self.txt_gantry = XRCCTRL(self, 'txt_gantry')
-        self.txt_gantry.SetValue("%.2f" % field.get_gantry())
+        self.txt_gantry.SetValue("%.2f" % field.gantry)
 
         self.txt_couch = XRCCTRL(self, 'txt_couch')
-        self.txt_couch.SetValue("%.2f" % field.get_couch())
+        self.txt_couch.SetValue("%.2f" % field.couch)
 
         self.txt_fwhm = XRCCTRL(self, 'txt_fwhm')
-        self.txt_fwhm.SetValue("%.2f" % field.get_fwhm())
+        self.txt_fwhm.SetValue("%.2f" % field.fwhm)
 
         self.txt_zsteps = XRCCTRL(self, 'txt_zsteps')
-        self.txt_zsteps.SetValue("%.2f" % field.get_zsteps())
+        self.txt_zsteps.SetValue("%.2f" % field.zsteps)
 
         self.txt_doseextension = XRCCTRL(self, 'txt_doseext')
-        self.txt_doseextension.SetValue("%.2f" % field.get_doseextension())
+        self.txt_doseextension.SetValue("%.2f" % field.dose_extension)
 
         self.txt_contourextension = XRCCTRL(self, 'txt_contourext')
-        self.txt_contourextension.SetValue("%.2f" % field.get_contourextension())
+        self.txt_contourextension.SetValue("%.2f" % field.contour_extension)
 
         self.txt_raster1 = XRCCTRL(self, 'txt_raster1')
         self.txt_raster2 = XRCCTRL(self, 'txt_raster2')
 
-        raster = field.get_rasterstep()
-        self.txt_raster1.SetValue("%.2f" % raster[0])
-        self.txt_raster2.SetValue("%.2f" % raster[1])
+        self.txt_raster1.SetValue("%.2f" % field.raster_step[0])
+        self.txt_raster2.SetValue("%.2f" % field.raster_step[1])
 
         self.drop_projectile = XRCCTRL(self, 'drop_projectile')
         self.drop_projectile.SetSelection(self.drop_projectile.GetItems().index(field.projectile))
