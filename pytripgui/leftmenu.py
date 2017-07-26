@@ -16,6 +16,8 @@
 """
 import sys
 import logging
+
+import copy
 import wx
 
 import pytrip.tripexecuter as pte
@@ -468,7 +470,21 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.spc_dir = st.load('trip98.spc.{:s}'.format(_suffix))
         plan.sis_path = st.load('trip98.sis.{:s}'.format(_suffix))
 
-        te.execute(plan, False)  # False = dry run
+        plan.make_sis(str(plan.projectile_a) + plan.projectile)
+
+        # TODO very stupid way of figuring out which VOI is the targer
+        selected_vois = [v for v in plan.vois if v.selected]
+        if selected_vois:
+            plan.voi_target = selected_vois[0]
+
+        logger.debug("Executing plan " + str(plan))
+        logger.debug("Running executer " + str(te))
+
+        # TODO - dirty hack to set properly basename, which is later used by pytrip to generate CTX filename
+        tmp_plan = copy.deepcopy(plan)
+        tmp_plan.basename = self.data.patient_name
+
+        te.execute(tmp_plan, False)  # False = dry run
 
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
