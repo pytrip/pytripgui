@@ -21,6 +21,7 @@ import gc
 import logging
 import argparse
 
+import pickle
 import wx
 import wx.lib.dialogs
 from wx.xrc import XRCCTRL, XRCID, XmlResource
@@ -265,8 +266,9 @@ class MainFrame(wx.Frame):
             self.savepath = path
 
     def load_pyt(self, path):
-        self.data = TRiPData()
-        self.data.load(path)
+        with open(path, 'rb') as f:
+            self.data = pickle.load(f)
+        pub.sendMessage("patient.load", self.data)
 
     def save(self, evt):
         """ Saves the .pyt project
@@ -284,7 +286,8 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.savepath = os.path.splitext(path)[0] + ".pyt"
-            self.data.save(self.savepath)
+            with open(self.savepath, 'wb') as f:
+                pickle.dump(self.data, f)
 
     def bind_toolbar(self):
         self.toolbar = self.CreateToolBar()

@@ -38,10 +38,10 @@ logger = logging.getLogger(__name__)
 
 
 class FieldsCollection(list):
-    pass
-
-
-class ROIsCollection(list):
+    """Dummy class needed in LeftMenuTree __init__.
+    Identification of the clicked object is based on the classname.
+    Both Fields and ROIs are kept as lists. In order to resolve
+    this ambiguity we create wrapper class for list of fields."""
     pass
 
 
@@ -154,6 +154,32 @@ class LeftMenuTree(wx.TreeCtrl):
         self.dicom_path = st.load("general.import.dicom_path")
         self.prepare_icons()
 
+    def print_tree(self, root=None):
+        """
+        Printing tree of associated data, just for debugging purposes
+        :param root: Node to start walking the tree
+        :return:
+        """
+        if not root:
+            root = self.GetRootItem()
+
+        data_item = self.GetItemData(root)
+        if data_item is None:
+            data = None
+        else:
+            data = data_item.GetData()
+        logger.debug("Visiting node " + str(self.GetItemText(root)) + " with data: " + str(data))
+
+        if self.GetChildrenCount(root) == 0:
+            logger.debug("No more children in node " + str(self.GetItemText(root)))
+        else:
+            child, cookie = self.GetFirstChild(root)
+            while child.IsOk():
+                self.print_tree(root=child)
+                child, cookie = self.GetNextChild(root, cookie)
+
+        return
+
     def prepare_icons(self):
         """
         TODO: documentation. Possibly these are the colour boxes inside the treelist, which is
@@ -225,11 +251,18 @@ class LeftMenuTree(wx.TreeCtrl):
     def get_child_from_data(self, parent, data):
         """
         """
+        if parent:
+            logger.debug("enter get_child_from_data(), parent = " + str(self.GetItemText(parent)))
+        else:
+            logger.debug("enter get_child_from_data(), parent is none")
+            return None
         child, cookie = self.GetFirstChild(parent)
+
         while child:
             if self.GetItemData(child).GetData() is data:
                 return child
             child, cookie = self.GetNextChild(parent, cookie)
+        logger.debug("exit get_child_from_data()")
         return None
 
     def search_by_data(self, root, data):
@@ -270,13 +303,26 @@ class LeftMenuTree(wx.TreeCtrl):
         pub.sendMessage("gui.tripvoi.open", voi)
 
     def plan_field_deleted(self, msg):
+        logger.debug("enter plan_field_deleted()")
+
         plan = msg.data["plan"]
         field = msg.data["field"]
+
         plan_node = self.get_child_from_data(self.plans_node, plan)
-        fields_node = self.get_child_from_data(plan_node, plan.get_fields())
+
+        node = self.get_child_from_data(self.plans_node, plan)
+        child, cookie = self.GetFirstChild(node)
+        fields_node = None
+        while child:
+            if str(self.GetItemText(child)) == "Fields":
+                fields_node = child
+            child, cookie = self.GetNextChild(node, cookie)
+
         self.Delete(self.get_child_from_data(fields_node, field))
         if self.GetChildrenCount(fields_node) is 0:
             self.Delete(fields_node)
+        logger.debug("exit plan_field_deleted()")
+
 
     def plan_load_dose_voxelplan(self, evt):
         plan = self.GetItemData(self.selected_item).GetData()
@@ -305,9 +351,11 @@ class LeftMenuTree(wx.TreeCtrl):
             plan.load_let(path)
 
     def plan_delete_field(self, evt):
-        fields = self.GetItemData(self.GetItemParent(self.selected_item)).GetData()
+        plan = self.get_parent_plan_data(self.selected_item)
+        fields = plan.fields
         field = self.get_field_from_node()
         fields.remove(field)
+        pub.sendMessage('plan.field.deleted', {"plan": plan, "field": field})
 
     def get_field_from_node(self, node=None):
         if node is None:
@@ -365,13 +413,26 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.set_active_dose(self.GetItemData(self.selected_item).GetData())
 
     def plan_field_added(self, msg):
+        logger.debug("enter plan_field_added()")
         plan = msg.data["plan"]
         field = msg.data["field"]
-        plan_node = self.get_child_from_data(self.plans_node, plan)
-        fields = self.get_or_create_child(plan_node, "Fields", plan.get_fields())
+
+        node = self.get_child_from_data(self.plans_node, plan)
+
+        # locate proper field node
+        child, cookie = self.GetFirstChild(node)
+        f_node = None
+        while child:
+            if str(self.GetItemText(child)) == "Fields":
+                f_node = child
+            child, cookie = self.GetNextChild(node, cookie)
+
+        # append new field item to the tree
         data = wx.TreeItemData()
         data.SetData(field)
-        self.AppendItem(fields, field.get_name(), data=data)
+        if f_node:
+            self.AppendItem(f_node, field.basename, data=data)
+        logger.debug("exit plan_field_added()")
 
     def plan_run_trip(self, evt):
         """
@@ -410,10 +471,18 @@ class LeftMenuTree(wx.TreeCtrl):
         te.execute(plan, False)  # False = dry run
 
     def plan_add_field(self, evt):
+        logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)
-        field = pte.Field("")
+
+        field = pte.Field()
+        field.number = max([f.number for f in plan.fields]) + 1
+        field.basename = "Field {:d}".format(field.number)
+
         plan.fields.append(field)
+
         pub.sendMessage("plan.active.changed", plan)
+        pub.sendMessage('plan.field.added', {"plan": plan, "field": field})
+        logger.debug("exit plan_add_field()")
 
     def plan_set_active(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
@@ -459,7 +528,7 @@ class LeftMenuTree(wx.TreeCtrl):
         plan = msg.data["plan"]
         voi = msg.data["voi"]
         node = self.get_child_from_data(self.plans_node, plan)
-        item = self.get_or_create_child(node, "ROIs", plan.get_vois())
+        item = self.get_or_create_child(node, "ROIs", plan.vois)
         data = wx.TreeItemData()
         data.SetData(voi)
         i2 = self.AppendItem(item, voi.get_name(), data=data)
@@ -596,7 +665,6 @@ class LeftMenuTree(wx.TreeCtrl):
         data.SetData("plans")
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
 
-        ### ctx = self.data.get_images().get_voxelplan()
         for voi in self.data.vdx.vois:
             data = wx.TreeItemData()
             data.SetData(voi)
@@ -608,26 +676,38 @@ class LeftMenuTree(wx.TreeCtrl):
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
 
         for plan in self.data.plans:
+            # append tree item with plan name
             data = wx.TreeItemData()
             data.SetData(plan)
             p_id = self.AppendItem(self.plans_node, plan.basename, data=data)
+
             if plan.vois:
-                item = self.get_or_create_child(p_id, "ROIs", plan.vois)
+                node = self.get_child_from_data(self.plans_node, plan)
+
+                # append if missing ROIs item
+                item = self.get_or_create_child(node, "ROIs", plan.vois)
                 for voi in plan.vois:
-                    node = self.get_child_from_data(self.plans_node, plan)
-                    item = self.get_or_create_child(node, "ROIs", plan.vois)
+
+                    # append each ROI item
                     data = wx.TreeItemData()
                     data.SetData(voi)
                     i2 = self.AppendItem(item, voi.name, data=data)
                     self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
+                else:
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
             if plan.fields:
-                fields = self.get_or_create_child(p_id, "Fields", FieldsCollection(plan.fields))
+                fc = FieldsCollection(plan.fields)
+                node = self.get_child_from_data(self.plans_node, plan)
+
+                # append if missing Fields item
+                item = self.get_or_create_child(node, "Fields", fc)
                 for field in plan.fields:
+
+                    # append each Field item
                     data = wx.TreeItemData()
                     data.SetData(field)
-                    self.AppendItem(fields, field.basename, data=data)
+                    self.AppendItem(item, field.basename, data=data)
         self.Expand(self.rootnode)
         self.Expand(self.plans_node)
 
@@ -660,7 +740,6 @@ class LeftMenuTree(wx.TreeCtrl):
         field = pte.Field()
         field.basename = "Field {:d}".format(len(plan.fields) + 1)
         plan.fields.append(field)
-        print(str(field))
 
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
@@ -691,7 +770,11 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def on_leftmenu_rightclick(self, evt):
         tree = evt.GetEventObject()
-        selected_data = tree.GetItemData(evt.GetItem()).GetData()
+        data = tree.GetItemData(evt.GetItem())
+        if data:
+            selected_data = data.GetData()
+        else:
+            selected_data = data
         if type(selected_data) is str:
             menu_name = selected_data.split(" ")[0]
         else:
