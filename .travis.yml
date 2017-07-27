@@ -16,7 +16,6 @@ dist: trusty
 before_install:
   - sudo ./install_deps.sh
   - python -V
-  - python -c "import wx;print wx.__version__"
 
 install:
   - ./.travis/install_linux.sh
@@ -24,4 +23,5 @@ install:
 script:
   - ./install_versioneer.sh
   - py.test
+  - python -c "import wx;print wx.__version__"
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
