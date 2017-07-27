@@ -10,7 +10,7 @@ env:
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
-sudo: required
+sudo: false
 dist: trusty
 
 addons:
@@ -23,9 +23,6 @@ addons:
     - python-wxversion
     - python-wheel
     - python-tk
-
-#  - sudo apt-get -q update
-#  - sudo apt-get install -y python-numpy python-scipy python-matplotlib python-tk python-wxgtk2.8
 
 
 before_install:
