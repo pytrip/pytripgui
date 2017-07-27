@@ -6,4 +6,3 @@ pytest-capturelog
 pytest-timeout
 pytest-xdist
 pytest-cov ; python_version != '3.2'
-tox
