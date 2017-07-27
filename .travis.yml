@@ -14,7 +14,8 @@ sudo: required
 dist: trusty
 
 before_install:
-  - sudo ./install_deps.sh
+  - sudo apt-get -q update
+  - sudo apt-get install -y python-numpy python-scipy python-matplotlib python-tk python-wxgtk2.8
   - python -V
 
 install:
@@ -23,5 +24,4 @@ install:
 script:
   - ./install_versioneer.sh
   - py.test
-  - python -c "import wx;print wx.__version__"
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
