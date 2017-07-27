@@ -16,6 +16,7 @@ dist: trusty
 before_install:
   - sudo ./install_deps.sh
   - python -V
+  - python -c "import wx;print wx.__version__"
 
 install:
   - ./.travis/install_linux.sh
