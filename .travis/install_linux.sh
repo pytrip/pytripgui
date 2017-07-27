@@ -9,6 +9,6 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
                 # pipeline exit successfully.
 
 
-pip install --upgrade pip setuptools wheel --user
-pip install -r requirements.txt --user
-pip install -r tests/requirements-test.txt --user
+sudo pip install --upgrade pip setuptools wheel --user
+sudo pip install -r requirements.txt --user
+sudo pip install -r tests/requirements-test.txt --user
