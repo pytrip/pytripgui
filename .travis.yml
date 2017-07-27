@@ -15,6 +15,7 @@ dist: trusty
 
 before_install:
   - sudo ./install_deps.sh
+  - python -V
 
 install:
   - ./.travis/install_linux.sh
