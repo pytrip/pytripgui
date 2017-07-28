@@ -42,19 +42,15 @@ set +x
 write_pypirc
 set -x
 
-# install necessary tools
-#sudo pip install -U wheel twine
-pip install twine --user
-
 # makes source
 python setup.py sdist
 
-pip install wheel --user
-
 # makes wheel
+pip install wheel --user
 python setup.py bdist_wheel
 
-
+# install necessary tools
+pip install twine --user
 ls -al dist
 
 # upload only if tag present

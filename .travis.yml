@@ -1,5 +1,11 @@
 # before committing check this file here: https://lint.travis-ci.org/
+
+# travis option "language: python" runs test in virtualenvs without access to system-level packages
+# including ones installed via apt. pytripgui requires python-wx package which is not shipped via pip
+# but only via apt-get. It means we cannot run tests in such restricted virtualenvs,
+# and consequently cannot use "language: python" options. This is why we use generic here
 language: generic
+
 
 env:
   global:
@@ -25,16 +31,10 @@ addons:
     - python-tk
     - python-pytest
 
-
-before_install:
-  - python -V
-
-#install:
-#  - ./.travis/install_linux.sh
-
 script:
   - pip install "versioneer<0.18" --user
   - ./install_versioneer.sh
   - pip install -r requirements.txt --user
+  - pip install -r tests/requirements-test.txt --user
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
