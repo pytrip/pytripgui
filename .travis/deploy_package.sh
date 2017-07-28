@@ -46,11 +46,14 @@ set -x
 #sudo pip install -U wheel twine
 pip install twine --user
 
+# makes source
+python setup.py sdist
+
+pip install wheel --user
+
 # makes wheel
 python setup.py bdist_wheel
 
-# makes source
-python setup.py sdist
 
 ls -al dist
 
