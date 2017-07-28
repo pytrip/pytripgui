@@ -61,6 +61,7 @@ install:
 
 test_script:
 # generate versioneer stuff
+  - pip install "versioneer<0.18"
   - python %MINICONDAPATH%/envs/python%PYTHON_VERSION%/Scripts/versioneer install
 # TODO fix running tests:
 #  - FOR %%I in (tests\test*.py) DO python -m pytest %%I TODO to be fixed
