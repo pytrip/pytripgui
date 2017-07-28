@@ -29,8 +29,8 @@ addons:
 before_install:
   - python -V
 
-install:
-  - ./.travis/install_linux.sh
+#install:
+#  - ./.travis/install_linux.sh
 
 script:
   - ./install_versioneer.sh
