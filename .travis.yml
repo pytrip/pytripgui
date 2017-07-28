@@ -16,7 +16,7 @@ env:
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
-sudo: required
+sudo: false
 dist: trusty
 
 addons:
@@ -35,6 +35,6 @@ script:
   - pip install "versioneer<0.18" --user
   - ./install_versioneer.sh
   - pip install -r requirements.txt --user
-  - pip install -r tests/requirements-test.txt --user
+#  - pip install -r tests/requirements-test.txt --user
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
