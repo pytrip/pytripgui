@@ -24,9 +24,6 @@ addons:
     - python-wheel
     - python-tk
     - python-pytest
-    - python-pytest-cov
-    - python-pytest-doc
-    - python-pytest-runner
 
 
 before_install:
