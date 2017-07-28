@@ -46,9 +46,8 @@ install:
   - conda create -q --name python%PYTHON_VERSION% python=%PYTHON_VERSION%
   - activate python%PYTHON_VERSION%
 # as scipy and classic wxpython doesn't yet have wheels for windows, install it using conda
-  - conda install -q --name python%PYTHON_VERSION% scipy wxpython
+  - conda install -q --name python%PYTHON_VERSION% scipy wxpython pytest
 # install usual requirements
-  - pip install --upgrade -r tests/requirements-test.txt
   - pip install --upgrade -r requirements.txt
 # check numpy & scipy versions
   - python -c "import numpy as np;print(np.version.version)"
