@@ -33,6 +33,7 @@ before_install:
 #  - ./.travis/install_linux.sh
 
 script:
+  - pip install "versioneer<0.18" --user
   - ./install_versioneer.sh
   - pip install -r requirements.txt --user
   - py.test
