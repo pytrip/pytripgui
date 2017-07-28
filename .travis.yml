@@ -35,6 +35,5 @@ script:
   - pip install "versioneer<0.18" --user
   - ./install_versioneer.sh
   - pip install -r requirements.txt --user
-#  - pip install -r tests/requirements-test.txt --user
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
