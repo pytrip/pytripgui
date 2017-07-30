@@ -1,5 +1,11 @@
 # before committing check this file here: https://lint.travis-ci.org/
+
+# travis option "language: python" runs test in virtualenvs without access to system-level packages
+# including ones installed via apt. pytripgui requires python-wx package which is not shipped via pip
+# but only via apt-get. It means we cannot run tests in such restricted virtualenvs,
+# and consequently cannot use "language: python" options. This is why we use generic here
 language: generic
+
 
 env:
   global:
@@ -10,16 +16,24 @@ env:
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
-sudo: required
+sudo: false
 dist: trusty
 
-before_install:
-  - sudo ./install_deps.sh
-
-install:
-  - ./.travis/install_linux.sh
+addons:
+  apt:
+    packages:
+    - python2.7
+    - python-pip-whl
+    - python-wxgtk2.8
+    - python-wxtools
+    - python-wxversion
+    - python-wheel
+    - python-tk
+    - python-pytest
 
 script:
+  - pip install "versioneer<0.18" --user
   - ./install_versioneer.sh
+  - pip install -r requirements.txt --user
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
