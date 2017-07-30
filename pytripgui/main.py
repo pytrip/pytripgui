@@ -21,6 +21,7 @@ import gc
 import logging
 import argparse
 
+import pickle
 import wx
 import wx.lib.dialogs
 from wx.xrc import XRCCTRL, XRCID, XmlResource
@@ -34,7 +35,7 @@ from pytripgui.plugin import PluginManager
 from pytripgui.panels.plotpanel import PlotPanel
 from pytripgui.panels.dvh import DVHPanel, LVHPanel
 
-from pytripgui.data import PytripData
+from pytripgui.tripdata import TRiPData
 from pytripgui.util import get_resource_path
 from pytripgui import util
 
@@ -81,7 +82,7 @@ class MainFrame(wx.Frame):
             self.leftmenu_panel, -1, size=(200, -1), style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
         sizer.Add(self.leftmenu, 1, wx.EXPAND, 0)
         self.leftmenu_panel.SetSizer(sizer)
-        self.data = PytripData()
+        self.data = TRiPData()
         self.res = res
         self.bind_menu()
         self.bind_toolbar()
@@ -104,8 +105,8 @@ class MainFrame(wx.Frame):
         self.welcome_intro = XRCCTRL(self, "m_staticText11")
         self.welcome_disclaimer = XRCCTRL(self, "m_staticText6")
 
-        self.welcome_title.SetLabel("Welcome to PyTRiPGUI")
-        self.welcome_intro.SetLabel("")
+        self.welcome_title.SetLabel("PyTRiPGUI")
+        self.welcome_intro.SetLabel("A graphical user interface for the TRiP98 treatment planning system.")
         disclaimer = "THIS PROGRAM AND INFORMATION ARE PROVIDED \"AS IS\" " + \
                      "WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT " + \
                      "LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A " + \
@@ -127,6 +128,8 @@ class MainFrame(wx.Frame):
     def load_dialog(self, msg):
         """
         """
+        logging.debug("enter load_dialog()")
+
         dialogs = {"field": "FieldDialog",
                    "tripplan": "PlanDialog",
                    "tripvoi": "TripVoiDialog",
@@ -142,7 +145,7 @@ class MainFrame(wx.Frame):
 
         if msg.topic[2] == "open":
             if msg.topic[1] in dialogs.keys():
-                logger.debug("load_dialog: Opening {:s} Dialog".format(msg.topic[1]))
+                logger.debug("load_dialog: Opening '{:s}' Dialog".format(msg.topic[1]))
                 pytripDialog = self.res.LoadDialog(self, dialogs[msg.topic[1]])
                 pytripDialog.Init(msg.data)
                 self.Enable(False)
@@ -155,6 +158,8 @@ class MainFrame(wx.Frame):
                 self.main_notebook.AddPage(panel, panel.get_title(), select=True)
         elif msg.topic[2] == "close":
             self.dialog.Close()
+
+        logging.debug("exit load_dialog()")
 
     def ini_plugins(self):
         self.plugins = PluginManager()
@@ -261,8 +266,9 @@ class MainFrame(wx.Frame):
             self.savepath = path
 
     def load_pyt(self, path):
-        self.data = PytripData()
-        self.data.load(path)
+        with open(path, 'rb') as f:
+            self.data = pickle.load(f)
+        pub.sendMessage("patient.load", self.data)
 
     def save(self, evt):
         """ Saves the .pyt project
@@ -280,7 +286,8 @@ class MainFrame(wx.Frame):
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.savepath = os.path.splitext(path)[0] + ".pyt"
-            self.data.save(self.savepath)
+            with open(self.savepath, 'wb') as f:
+                pickle.dump(self.data, f)
 
     def bind_toolbar(self):
         self.toolbar = self.CreateToolBar()
@@ -343,7 +350,7 @@ class MainFrame(wx.Frame):
             wildcard="TRiP Exec File (*.exec)|*.exec",
             message="Choose TRiP Exec File")
         if dlg.ShowModal() == wx.ID_OK:
-            data = PytripData()
+            data = TRiPData()
             path = dlg.GetPath()
 
             st = Settings()  # save last used DICOM path to settings file.
@@ -359,25 +366,25 @@ class MainFrame(wx.Frame):
             wildcard="Voxelplan headerfile (*.hed)|*.hed",
             message="Choose headerfile")
         if dlg.ShowModal() == wx.ID_OK:
-            data_obj = PytripData()
+            data = TRiPData()
             path = dlg.GetPath()
 
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.voxelplan_path", path)
-            data_obj.load_from_voxelplan(path)
+            data.open_ctx_vdx(path)
 
     def open_patient_load_dialog(self, evt):
-        """ Open a DICOM patient
+        """ Open a DICOM patient with images and possible also structures
         """
         dlg = wx.DirDialog(
             self, defaultPath=self.dicom_path, message="Choose the folder where the DICOM files are stored")
         if dlg.ShowModal() == wx.ID_OK:
-            data_obj = PytripData()
-            path = dlg.GetPath()
+            data = TRiPData()
+            path = dlg.GetPath()  # TODO: should be named "dir" instead
 
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.dicom_path", path)
-            data_obj.load_from_dicom(path)
+            data.open_dicom(path)
 
     def preferences_dialog(self, evt):
         """ Open the Preferences dialog.

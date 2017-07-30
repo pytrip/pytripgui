@@ -16,9 +16,12 @@
 """
 import sys
 import logging
+
+import copy
 import wx
 
-from pytripgui.data import TripPlan, Field
+import pytrip.tripexecuter as pte
+
 from pytripgui.util import get_class_name
 from pytripgui.settings import Settings
 import pytripgui.guihelper
@@ -36,6 +39,14 @@ else:
 logger = logging.getLogger(__name__)
 
 
+class FieldsCollection(list):
+    """Dummy class needed in LeftMenuTree __init__.
+    Identification of the clicked object is based on the classname.
+    Both Fields and ROIs are kept as lists. In order to resolve
+    this ambiguity we create wrapper class for list of fields."""
+    pass
+
+
 class LeftMenuTree(wx.TreeCtrl):
     def __init__(self, *args, **kwargs):
         super(LeftMenuTree, self).__init__(*args, **kwargs)
@@ -49,72 +60,82 @@ class LeftMenuTree(wx.TreeCtrl):
                              "plans": [{"text": "New plan with ROIs",
                                         "callback": self.new_plan},
                                        {"text": "New empty plan",
-                                        "callback": self.new_empty_plan}],
-                             "TripPlan": [{"text": "Set Active",
+                                        "callback": self.new_empty_plan},
+                                       {"text": "New plan from .exec",
+                                        "callback": self.new_plan_from_exec}],
+                             "Plan": [{"text": "Set Active",
                                            "callback": self.plan_set_active},
                                           {"text": "Add Field",
                                            "callback": self.plan_add_field},
                                           {"text": "Export",
                                            "type": "submenu",
-                                           "submenu": [
-                                               {"text": "Plan data",
-                                                "callback": self.plan_export_exec},
-                                               {"text": "ROI cube",
-                                                "callback": self.plan_export_cube}
-                                           ]}, {"text": "Import",
-                                                "type": "submenu",
-                                                "submenu": [
-                                                    {"text": "Dose (.dos)",
-                                                     "callback": self.plan_load_dose_voxelplan},
-                                                    {"text": "LET (.dosemlet.dos)",
-                                                     "callback": self.plan_load_let_voxelplan}
-                                                ]}, {"text": "Calculate",
-                                                     "type": "submenu",
-                                                     "submenu": [
-                                                         {"text": "Execute TRiP",
-                                                          "callback": self.plan_run_trip}
-                                                     ]}, {"text": "Edit",
-                                                          "callback": self.edit_label}, {"text": "Delete",
-                                                                                         "callback": self.delete_plan},
+                                           "submenu": [{"text": "Plan data",
+                                                        "callback": self.plan_export_exec},
+                                                       {"text": "ROI cube",
+                                                        "callback": self.plan_export_cube}]},
+                                          {"text": "Import",
+                                           "type": "submenu",
+                                           "submenu": [{"text": "Dose (.dos)",
+                                                        "callback": self.plan_load_dose_voxelplan},
+                                                       {"text": "LET (.dosemlet.dos)",
+                                                        "callback": self.plan_load_let_voxelplan}]},
+                                          {"text": "Calculate",
+                                           "type": "submenu",
+                                           "submenu": [{"text": "Execute TRiP",
+                                                        "callback": self.plan_run_trip}]},
+                                          {"text": "Edit",
+                                           "callback": self.edit_label},
+                                          {"text": "Delete",
+                                           "callback": self.delete_plan},
                                           {"text": "Properites",
-                                           "callback": self.tripplan_properties}],
+                                           "callback": self.plan_properties}],
                              "DoseCube": [{"text": "Delete",
-                                           "callback": self.plan_remove_dose}, {"text": "Set Active For Plan",
-                                                                                "callback": self.plan_set_active_dose},
+                                           "callback": self.plan_remove_dose},
+                                          {"text": "Set Active For Plan",
+                                           "callback": self.plan_set_active_dose},
                                           {"text": "Properties",
-                                           "callback": self.plan_dose_properties}],
+                                           "callback": self.dose_properties}],
                              "LETCube": [{"text": "Delete",
                                           "callback": self.plan_remove_let}],
                              "Voi": self.generate_voi_menu,
                              "TripVoi": [{"text": "Select",
                                           "type": "check",
-                                          "value": "is_selected",
-                                          "callback": self.toggle_selected_voi}, {"text": "Target",
-                                                                                  "type": "check",
-                                                                                  "value": "is_target",
-                                                                                  "callback": self.plan_toggle_target},
+                                          "value": "selected",
+                                          "callback": self.toggle_selected_voi},
+                                         {"text": "Target",
+                                          "type": "check",
+                                          "value": "is_target",
+                                          "callback": self.plan_toggle_target},
                                          {"text": "OAR",
                                           "type": "check",
                                           "value": "is_oar",
-                                          "callback": self.plan_toggle_oar}, {"text": "Move Up",
-                                                                              "callback":
-                                                                              self.plan_up_voi}, {"text": "Move Down",
-                                                                                                  "callback":
-                                                                                                  self.plan_down_voi},
+                                          "callback": self.plan_toggle_oar},
+                                         {"text": "Move Up",
+                                          "callback":
+                                          self.plan_up_voi},
+                                         {"text": "Move Down",
+                                          "callback":
+                                          self.plan_down_voi},
                                          {"text": "Delete",
-                                          "callback": self.plan_delete_voi}, {"text": "Properties",
-                                                                              "callback": self.tripvoi_properties}],
+                                          "callback": self.plan_delete_voi},
+                                         {"text": "Properties",
+                                          "callback": self.voi_properties}],
                              "MainVoi": [{"text": "Select",
                                           "type": "check",
-                                          "value": "is_selected",
-                                          "callback": self.toggle_selected_voi}, {"text": "Add To Plan",
-                                                                                  "type": "submenu",
-                                                                                  "submenu": self.plan_submenu}],
-                             "FieldCollection": [{"text": "Add Field",
+                                          "value": "selected",
+                                          "callback": self.toggle_selected_voi},
+                                         {"text": "Add To Plan",
+                                          "type": "submenu",
+                                          "submenu": self.plan_submenu}],
+                             "FieldsCollection": [{"text": "Add Field",
                                                   "callback": self.plan_add_field}],
                              "Field": [{"text": "Delete",
-                                        "callback": self.plan_delete_field}, {"text": "Properties",
-                                                                              "callback": self.plan_properties_field}]}
+                                        "callback": self.plan_delete_field},
+                                       {"text": "Properties",
+                                        "callback": self.field_properties}]}
+
+        # TODO: removed vs. deleted... unify it
+        # consider "dose" -> "dosecube"
         pub.subscribe(self.on_patient_load, "patient.load")
         pub.subscribe(self.voi_added, "patient.voi.added")
         pub.subscribe(self.plan_added, "plan.new")
@@ -135,43 +156,93 @@ class LeftMenuTree(wx.TreeCtrl):
         self.dicom_path = st.load("general.import.dicom_path")
         self.prepare_icons()
 
+    def print_tree(self, root=None):
+        """
+        Printing tree of associated data, just for debugging purposes
+        :param root: Node to start walking the tree
+        :return:
+        """
+        if not root:
+            root = self.GetRootItem()
+
+        data_item = self.GetItemData(root)
+        if data_item is None:
+            data = None
+        else:
+            data = data_item.GetData()
+        logger.debug("Visiting node " + str(self.GetItemText(root)) + " with data: " + str(data))
+
+        if self.GetChildrenCount(root) == 0:
+            logger.debug("No more children in node " + str(self.GetItemText(root)))
+        else:
+            child, cookie = self.GetFirstChild(root)
+            while child.IsOk():
+                self.print_tree(root=child)
+                child, cookie = self.GetNextChild(root, cookie)
+
+        return
+
     def prepare_icons(self):
+        """
+        TODO: documentation. Possibly these are the colour boxes inside the treelist, which is
+        simply an empty 16x16 px large blank box.
+        """
         self.icon_size = (16, 16)
         self.image_list = wx.ImageList(self.icon_size[0], self.icon_size[1])
         self.AssignImageList(self.image_list)
 
     def toggle_selected_voi(self, evt):
+        """ Toggles whether VOI is displayed or not. Only selected VOIs are displayed
+        """
+        logger.debug("toggle_selected_voi()")
         voi = self.GetItemData(self.selected_item).GetData()
-        voi.toggle_selected()
+        voi.selected = not voi.selected
+        # add proper callback here smth like:
+        pub.sendMessage("voi.selection_changed", voi)  # I am guessing here
 
     def show_image(self, evt):
+        """
+        """
+        logger.debug("show_image()")
         a = self.GetItemData(self.selected_item).GetData()
         id = int(a.split(" ")[1])
         pub.sendMessage("2dplot.image.active_id", id)
 
     def plan_view_dose(self, evt):
+        """
+        """
+        logger.debug("plan_view_dose()")
         dose = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("2dplot.dose.set", dose)
 
     def get_parent_plan_data(self, node):
+        """
+        TODO: possibly this can be omitted for some more elegant solution
+        to simply use data.active_plan instead ?
+        """
+        logger.debug("get_parent_plan_data()")
         item = node
         while True:
             data = self.GetItemData(item).GetData()
-            if get_class_name(data) == "TripPlan":
+            if get_class_name(data) == "Plan":
                 return data
             item = self.GetItemParent(item)
             if item is None:
                 return None
 
     def delete_node_from_data(self, parent, data):
+        """
+        """
+        logger.debug("delete_node_from_data()")
         child, cookie = self.GetFirstChild(parent)
         while child:
             if self.GetItemData(child).GetData() is data:
-
                 self.Delete(child)
             child, cookie = self.GetNextChild(parent, cookie)
 
     def set_label_from_data(self, parent, data, text):
+        """
+        """
         child, cookie = self.GetFirstChild(parent)
         while child:
             if self.GetItemData(child).GetData() is data:
@@ -180,14 +251,25 @@ class LeftMenuTree(wx.TreeCtrl):
             child, cookie = self.GetNextChild(parent, cookie)
 
     def get_child_from_data(self, parent, data):
+        """
+        """
+        if parent:
+            logger.debug("enter get_child_from_data(), parent = " + str(self.GetItemText(parent)))
+        else:
+            logger.debug("enter get_child_from_data(), parent is none")
+            return None
         child, cookie = self.GetFirstChild(parent)
+
         while child:
             if self.GetItemData(child).GetData() is data:
                 return child
             child, cookie = self.GetNextChild(parent, cookie)
+        logger.debug("exit get_child_from_data()")
         return None
 
     def search_by_data(self, root, data):
+        """
+        """
         data = None
         item, cookie = self.GetFirstChild(root)
         while item:
@@ -200,30 +282,49 @@ class LeftMenuTree(wx.TreeCtrl):
             item, cookie = self.GetNextChild(item, cookie)
         return data
 
-    def plan_properties_field(self, evt):
+    def field_properties(self, evt):
+        """
+        """
         field = self.get_field_from_node()
         pub.sendMessage("gui.field.open", field)
 
-    def plan_dose_properties(self, evt):
+    def dose_properties(self, evt):
+        """ Callback for opening the dose properties windows
+        """
         dosecube = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.dose.open", dosecube)
 
-    def tripplan_properties(self, evt):
+    def plan_properties(self, evt):
+        """ Callback for opening the dose properties windows
+        """
         plan = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripplan.open", plan)
 
-    def tripvoi_properties(self, evt):
+    def voi_properties(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripvoi.open", voi)
 
     def plan_field_deleted(self, msg):
+        logger.debug("enter plan_field_deleted()")
+
         plan = msg.data["plan"]
         field = msg.data["field"]
+
         plan_node = self.get_child_from_data(self.plans_node, plan)
-        fields_node = self.get_child_from_data(plan_node, plan.get_fields())
+
+        node = self.get_child_from_data(self.plans_node, plan)
+        child, cookie = self.GetFirstChild(node)
+        fields_node = None
+        while child:
+            if str(self.GetItemText(child)) == "Fields":
+                fields_node = child
+            child, cookie = self.GetNextChild(node, cookie)
+
         self.Delete(self.get_child_from_data(fields_node, field))
         if self.GetChildrenCount(fields_node) is 0:
             self.Delete(fields_node)
+        logger.debug("exit plan_field_deleted()")
+
 
     def plan_load_dose_voxelplan(self, evt):
         plan = self.GetItemData(self.selected_item).GetData()
@@ -252,9 +353,11 @@ class LeftMenuTree(wx.TreeCtrl):
             plan.load_let(path)
 
     def plan_delete_field(self, evt):
-        fields = self.GetItemData(self.GetItemParent(self.selected_item)).GetData()
+        plan = self.get_parent_plan_data(self.selected_item)
+        fields = plan.fields
         field = self.get_field_from_node()
-        fields.remove_field(field)
+        fields.remove(field)
+        pub.sendMessage('plan.field.deleted', {"plan": plan, "field": field})
 
     def get_field_from_node(self, node=None):
         if node is None:
@@ -312,13 +415,26 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.set_active_dose(self.GetItemData(self.selected_item).GetData())
 
     def plan_field_added(self, msg):
+        logger.debug("enter plan_field_added()")
         plan = msg.data["plan"]
         field = msg.data["field"]
-        plan_node = self.get_child_from_data(self.plans_node, plan)
-        fields = self.get_or_create_child(plan_node, "Fields", plan.get_fields())
+
+        node = self.get_child_from_data(self.plans_node, plan)
+
+        # locate proper field node
+        child, cookie = self.GetFirstChild(node)
+        f_node = None
+        while child:
+            if str(self.GetItemText(child)) == "Fields":
+                f_node = child
+            child, cookie = self.GetNextChild(node, cookie)
+
+        # append new field item to the tree
         data = wx.TreeItemData()
         data.SetData(field)
-        self.AppendItem(fields, field.get_name(), data=data)
+        if f_node:
+            self.AppendItem(f_node, field.basename, data=data)
+        logger.debug("exit plan_field_added()")
 
     def plan_run_trip(self, evt):
         """
@@ -326,14 +442,15 @@ class LeftMenuTree(wx.TreeCtrl):
         This will set the last global parameters and then execute TRiP for the attached plan.
         """
         plan = self.GetItemData(self.selected_item).GetData()
+        te = pte.Execute(self.data.ctx, self.data.vdx)
 
         # Load global parameters from settings file and attach them to this plan.
         st = Settings()
-        plan.set_remote_state(st.load('trip98.choice.remote') == '1')  # remote if set to '1'
-        plan.set_working_dir(st.load('trip98.s.wdir'))
-        plan.set_server(st.load('trip98.s.server'))
-        plan.set_username(st.load('trip98.s.username'))
-        plan.set_password(st.load('trip98.s.password'))
+        te.remote = (st.load('trip98.choice.remote') == '1')  # remote if set to '1'
+        te.remote_base_dir = st.load('trip98.s.wdir')
+        te.servername = st.load('trip98.s.server')
+        te.username = st.load('trip98.s.username')
+        te.password = st.load('trip98.s.password')
 
         # tell what configuration files to be used, depending on the
         # projectile / rifi configuration
@@ -347,21 +464,45 @@ class LeftMenuTree(wx.TreeCtrl):
         _dion = ('z1', 'z2', 'z6', 'z8', 'z10')
         _drifi = ("rifi0", "rifi3")
 
-        _suffix = '{:s}{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
+        _suffix = '{:s}.{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
 
-        plan.set_ddd_folder(st.load('trip98.ddd.{:s}'.format(_suffix)))
-        plan.set_spc_folder(st.load('trip98.spc.{:s}'.format(_suffix)))
-        plan.set_sis_file(st.load('trip98.sis.{:s}'.format(_suffix)))
+        plan.ddd_dir = st.load('trip98.ddd.{:s}'.format(_suffix))
+        plan.spc_dir = st.load('trip98.spc.{:s}'.format(_suffix))
+        plan.sis_path = st.load('trip98.sis.{:s}'.format(_suffix))
 
-        self.data.execute_trip(plan)
+        plan.make_sis(str(plan.projectile_a) + plan.projectile)
+
+        # TODO very stupid way of figuring out which VOI is the targer
+        selected_vois = [v for v in plan.vois if v.selected]
+        if selected_vois:
+            plan.voi_target = selected_vois[0]
+
+        logger.debug("Executing plan " + str(plan))
+        logger.debug("Running executer " + str(te))
+
+        # TODO - dirty hack to set properly basename, which is later used by pytrip to generate CTX filename
+        tmp_plan = copy.deepcopy(plan)
+        tmp_plan.basename = self.data.patient_name
+
+        te.execute(tmp_plan, False)  # False = dry run
 
     def plan_add_field(self, evt):
+        logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)
-        plan.add_field(Field(""))
+
+        field = pte.Field()
+        field.number = max([f.number for f in plan.fields]) + 1
+        field.basename = "Field {:d}".format(field.number)
+
+        plan.fields.append(field)
+
+        pub.sendMessage("plan.active.changed", plan)
+        pub.sendMessage('plan.field.added', {"plan": plan, "field": field})
+        logger.debug("exit plan_add_field()")
 
     def plan_set_active(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
-        self.data.plans.set_active_plan(plan)
+        self.data.active_plan = plan
 
     def plan_toggle_oar(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
@@ -403,7 +544,7 @@ class LeftMenuTree(wx.TreeCtrl):
         plan = msg.data["plan"]
         voi = msg.data["voi"]
         node = self.get_child_from_data(self.plans_node, plan)
-        item = self.get_or_create_child(node, "ROIs", plan.get_vois())
+        item = self.get_or_create_child(node, "ROIs", plan.vois)
         data = wx.TreeItemData()
         data.SetData(voi)
         i2 = self.AppendItem(item, voi.get_name(), data=data)
@@ -481,10 +622,18 @@ class LeftMenuTree(wx.TreeCtrl):
         return i
 
     def plan_added(self, msg):
-        data = wx.TreeItemData()
-        data.SetData(msg.data)
-        self.AppendItem(self.plans_node, msg.data.name, data=data)
+        """ updates wx.Tree with new plan
+        """
+        logger.debug("enter plan_added()")
+        plan = msg.data
+        treedata = wx.TreeItemData()  # <class 'wx._controls.TreeItemData'>
+        treedata.SetData(plan)  # store the entire plan into the tree item data slot
+
+        self.AppendItem(self.plans_node, plan.basename, data=treedata)
         self.Expand(self.plans_node)
+
+        self.populate_tree()  ### TODO: fix this somehow better, how to update the tree properly?
+        logger.debug("exit plan_added()")
 
     def plan_renamed(self, msg):
         self.set_label_from_data(self.plans_node, msg.data, msg.data.get_name())
@@ -493,8 +642,8 @@ class LeftMenuTree(wx.TreeCtrl):
         self.delete_node_from_data(self.plans_node, msg.data)
 
     def delete_plan(self, evt):
-        data = self.GetItemData(self.selected_item).GetData()
-        self.data.plans.delete_plan(data)
+        plan = self.GetItemData(self.selected_item).GetData()
+        self.data.plans.remove(plan)
 
     def edit_label(self, evt):
         self.EditLabel(self.selected_item)
@@ -520,6 +669,9 @@ class LeftMenuTree(wx.TreeCtrl):
         self.populate_tree()
 
     def populate_tree(self):
+        """ Setup the tree viewer in the left panel
+        """
+        logger.debug("enter populate_tree()")
         self.DeleteAllItems()
         self.rootnode = self.AddRoot(self.data.patient_name)
         data = wx.TreeItemData()
@@ -529,53 +681,102 @@ class LeftMenuTree(wx.TreeCtrl):
         data.SetData("plans")
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
 
-        # ctx = self.data.get_images().get_voxelplan()
-        for voi in self.data.get_vois():
+        for voi in self.data.vdx.vois:
             data = wx.TreeItemData()
             data.SetData(voi)
-            item = self.AppendItem(self.structure_node, voi.get_name(), data=data)
+            item = self.AppendItem(self.structure_node, voi.name, data=data)
             img = self.image_list.Add(pytripgui.guihelper.get_empty_bitmap(self.icon_size[0],
                                                                            self.icon_size[1],
-                                                                           voi.get_color()))
-            voi.set_icon(img)
+                                                                           voi.color))
+            voi.icon = img
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
-        for plan in self.data.get_plans():
+
+        for plan in self.data.plans:
+            # append tree item with plan name
             data = wx.TreeItemData()
             data.SetData(plan)
-            p_id = self.AppendItem(self.plans_node, plan.name, data=data)
-            if len(plan.get_vois()):
-                item = self.get_or_create_child(p_id, "ROIs", plan.get_vois())
-                for voi in plan.get_vois():
-                    node = self.get_child_from_data(self.plans_node, plan)
-                    item = self.get_or_create_child(node, "ROIs", plan.get_vois())
+            p_id = self.AppendItem(self.plans_node, plan.basename, data=data)
+
+            if plan.vois:
+                node = self.get_child_from_data(self.plans_node, plan)
+
+                # append if missing ROIs item
+                item = self.get_or_create_child(node, "ROIs", plan.vois)
+                for voi in plan.vois:
+
+                    # append each ROI item
                     data = wx.TreeItemData()
                     data.SetData(voi)
-                    i2 = self.AppendItem(item, voi.get_name(), data=data)
-                    self.SetItemImage(i2, voi.get_voi().get_icon(), wx.TreeItemIcon_Normal)
+                    i2 = self.AppendItem(item, voi.name, data=data)
+                    self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
+                else:
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
-            if len(plan.get_fields()):
-                fields = self.get_or_create_child(p_id, "Fields", plan.get_fields())
-                for field in plan.get_fields():
+            if plan.fields:
+                fc = FieldsCollection(plan.fields)
+                node = self.get_child_from_data(self.plans_node, plan)
+
+                # append if missing Fields item
+                item = self.get_or_create_child(node, "Fields", fc)
+                for field in plan.fields:
+
+                    # append each Field item
                     data = wx.TreeItemData()
                     data.SetData(field)
-                    self.AppendItem(fields, field.get_name(), data=data)
+                    self.AppendItem(item, field.basename, data=data)
         self.Expand(self.rootnode)
         self.Expand(self.plans_node)
 
-    def new_plan(self, evt):
-        """ Adds a new plan with all ROIs from the current patient.
-        """
-        plan = TripPlan()
-        self.data.plans.add_plan(plan)
-        for voi in self.data.get_vois():
-            plan.add_voi(voi)
-        plan.add_field(Field("Field 1"))
+        logger.debug("exit populate_tree()")
 
     def new_empty_plan(self, evt):
         """ Creates a new plan without any ROIs.
         """
-        self.data.plans.add_plan(TripPlan())
+        logger.debug("enter new_empty_plan()")
+        plan = pte.Plan()
+        plan.basename = "New Plan {:d}".format(len(self.data.plans) + 1)
+        # extend original Plan class with local attributes
+        # TODO: prefix them with _? They are however not private to the class.
+        plan.vois = []
+        plan.dos = None
+        plan.let = None
+
+        self.data.plans.append(plan)
+
+        pub.sendMessage("plan.new", plan)
+        pub.sendMessage("plan.active.changed", plan)
+        logger.debug("exit new_empty_plan()")
+
+    def new_plan(self, evt):
+        """ Adds a new plan with all ROIs from the current patient, and a single default Field
+        """
+        logger.debug("enter new_plan()")
+        plan = pte.Plan()
+        plan.basename = "New Plan {:d}".format(len(self.data.plans) + 1)
+        field = pte.Field()
+        field.basename = "Field {:d}".format(len(plan.fields) + 1)
+        plan.fields.append(field)
+
+        # extend original Plan class with local attributes
+        # TODO: prefix them with _? They are however not private to the class.
+        plan.vois = []
+        plan.dos = None
+        plan.let = None
+        for voi in self.data.vdx.vois:
+            voi.target = False  # add new attribute
+            plan.vois.append(voi)
+
+        self.data.plans.append(plan)
+
+        pub.sendMessage("plan.new", plan)
+        pub.sendMessage("plan.active.changed", plan)  # update the plot
+        logger.debug("exit new_plan()")
+
+    def new_plan_from_exec(self, evt):
+        """ Opens the import dialog and sets up a plan.
+        """
+        logger.debug("enter new_plan_from_exec()")
+        #TODO: implement me
 
     def generate_voi_menu(self, node):
         data = self.GetItemData(self.GetItemParent(self.GetItemParent(node)))
@@ -585,7 +786,11 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def on_leftmenu_rightclick(self, evt):
         tree = evt.GetEventObject()
-        selected_data = tree.GetItemData(evt.GetItem()).GetData()
+        data = tree.GetItemData(evt.GetItem())
+        if data:
+            selected_data = data.GetData()
+        else:
+            selected_data = data
         if type(selected_data) is str:
             menu_name = selected_data.split(" ")[0]
         else:
@@ -613,7 +818,7 @@ class LeftMenuTree(wx.TreeCtrl):
                 menu.AppendItem(item)
             elif menu_item["type"] == "check":
                 item = menu.AppendCheckItem(id, menu_item["text"])
-                if getattr(selected_data, menu_item["value"])() is True:
+                if getattr(selected_data, menu_item["value"]) is True:
                     item.Check()
             elif menu_item["type"] == "submenu":
                 if type(menu_item["submenu"]) is list:
@@ -627,13 +832,20 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_add_voi(self, evt):
         name = evt.GetEventObject().GetLabel(evt.GetId())
-        self.data.plans.get_plan(name).add_voi(self.GetItemData(self.selected_item).GetData())
+        list_of_matching_plans = [plan for plan in self.data.plans if plan.basename == name]
+        if not list_of_matching_plans:
+            raise Exception("No plan found for name " + name)
+        if len(list_of_matching_plans) > 1:
+            raise Exception("More than one plan found for name " + name)
+        plan = list_of_matching_plans[0]
+        voi = self.GetItemData(self.selected_item).GetData()
+        plan.vois.append(voi)
 
     def plan_submenu(self):
         submenu = wx.Menu()
         for plan in self.data.plans:
             id = wx.NewId()
-            item = wx.MenuItem(submenu, id, plan.get_name())
+            item = wx.MenuItem(submenu, id, plan.basename)
             submenu.AppendItem(item)
             wx.EVT_MENU(submenu, id, self.plan_add_voi)
         return submenu

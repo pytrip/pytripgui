@@ -15,7 +15,7 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import sys
-
+import logging
 import wx
 
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg
@@ -40,6 +40,8 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
+        
+logger = logging.getLogger(__name__)
 
 
 def cmap_discretize(cmap, N):
@@ -99,7 +101,7 @@ class PlotPanel(wx.Panel):
         self.canvas = FigureCanvasWxAgg(self, -1, self.figure)
         # ~ self.canvas.SetDoubleBuffered(True)
         self.clear()
-        self.plotutil.set_draw_in_gui(True)
+        self.plotutil.draw_in_gui = True
         self.figure.set_frameon(True)
         rect = self.figure.patch
         rect.set_facecolor('black')
@@ -128,22 +130,23 @@ class PlotPanel(wx.Panel):
             self.Draw()
 
     def plan_changed(self, msg):
+        """
+        """
+        logger.debug("enter plan_changed()")
         self.active_plan = msg.data
+        self.plotutil.plan = self.active_plan
+
         if self.active_plan is None:
-            self.plotutil.set_plan(None)
             self.plotutil.set_dose(None)
             self.plotutil.set_let(None)
         else:
-            self.plotutil.set_plan(self.active_plan)
-            doseobj = self.active_plan.get_dose()
+            # plot any DosCube in plan
+            self.plotutil.set_dose(self.active_plan.dos)
+            self.plotutil.set_let(self.active_plan.let)
 
-            if doseobj is not None:
-                self.plotutil.set_dose(doseobj.get_dosecube())
-            else:
-                self.plotutil.set_dose(None)
-            self.plotutil.set_let(self.active_plan.get_let())
         self.Draw()
-
+        logger.debug("exit plan_changed()")
+        
     def set_toolbar(self, toolbar):
         id = wx.NewId()
         selector = wx.Choice(toolbar, id)
@@ -165,7 +168,7 @@ class PlotPanel(wx.Panel):
         wx.EVT_MENU(toolbar, id, self.zoom_out)
 
     def zoom_buttons_visible(self):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         self.zoom_in_btn.Enable(True)
         self.zoom_out_btn.Enable(True)
 
@@ -175,7 +178,7 @@ class PlotPanel(wx.Panel):
             self.zoom_out_btn.Enable(False)
 
     def zoom_in(self, evt):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         zoom_idx += 1
         if len(self.zoom_levels) > zoom_idx:
             zoom = self.zoom_levels[zoom_idx]
@@ -184,7 +187,7 @@ class PlotPanel(wx.Panel):
             self.Draw()
 
     def zoom_out(self, evt):
-        zoom_idx = self.zoom_levels.index(self.plotutil.get_zoom())
+        zoom_idx = self.zoom_levels.index(self.plotutil.zoom)
         zoom_idx -= 1
         if zoom_idx >= 0:
             zoom = self.zoom_levels[zoom_idx]
@@ -202,14 +205,14 @@ class PlotPanel(wx.Panel):
     def clear(self):
         self.figure.clear()
         self.subplot = self.figure.add_subplot(111)
-        self.plotutil.set_figure(self.subplot)
+        self.plotutil.figure = self.subplot
 
     def voi_changed(self, msg):
         voi = msg.data
-        if voi.is_selected():
-            self.plotutil.add_voi(voi.voxelplan_voi)
+        if voi.selected:
+            self.plotutil.vois.append(voi)
         else:
-            self.plotutil.remove_voi(voi.voxelplan_voi)
+            self.plotutil.vois.remove(voi)
         self.Draw()
 
     def set_active_image(self, msg):
@@ -219,9 +222,10 @@ class PlotPanel(wx.Panel):
 
     def on_patient_loaded(self, msg):
         self.data = msg.data
-        ctx = self.data.get_images().get_voxelplan()
+        #ctx = self.data.get_images().get_voxelplan()
+        ctx = self.data.ctx
 
-        self.plotutil.set_ct(ctx)
+        self.plotutil.ctx = ctx
 
         self.image_idx = int(ctx.dimz / 2)
         self.setSize()
@@ -307,7 +311,7 @@ class PlotPanel(wx.Panel):
             # Adjust contrast of HU colour bar
             _stepsize = 10.0
             if self.plot_mouse_action == "contrast_top":
-                contrast = self.plotutil.get_contrast()
+                contrast = self.plotutil.contrast
                 if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
@@ -315,7 +319,7 @@ class PlotPanel(wx.Panel):
                 contrast[1] -= _stepsize * step[1]
                 self.plotutil.set_contrast(contrast)
             elif self.plot_mouse_action == "contrast_bottom":
-                contrast = self.plotutil.get_contrast()
+                contrast = self.plotutil.contrast
                 if contrast[1] > contrast[0]:
                     _stepsize = np.log(contrast[1] - contrast[0])
                 if _stepsize < 1:
@@ -353,9 +357,13 @@ class PlotPanel(wx.Panel):
         if hasattr(self.plotutil, "fig_ct") and evt.inaxes is self.plotutil.fig_ct.axes:
             point = self.plotutil.pixel_to_pos([round(evt.xdata), round(evt.ydata)])
 
-            text = "X: %.2f mm Y: %.2f mm / X: %d px Y: %d px" % (point[1][0], point[1][1], point[0][0], point[0][1])
+            text = "X: {:.2f} mm Y: {:.2f} mm / X: {:d} px Y: {:d} px".format(point[1][0],
+                                                                              point[1][1],
+                                                                              int(point[0][0]),
+                                                                              int(point[0][1]))
             pub.sendMessage("statusbar.update", {"number": 1, "text": text})
-            dim = self.data.get_image_dimensions()
+            c = self.data.ctx
+            dim = [c.dimx, c.dimy, c.dimz]
             if self.plotmode == "Transversal":
                 pos = [round(evt.xdata), round(evt.ydata), self.image_idx]
             elif self.plotmode == "Sagittal":
@@ -365,28 +373,27 @@ class PlotPanel(wx.Panel):
 
             try:
                 _ct_values = self.data.get_image_cube()
-                text = "CT Value: %.1f HU" % (_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
+                text = "CT Value: {:.1f} HU".format(_ct_values[int(pos[2]), int(pos[1]), int(pos[0])])
             except:
                 pass
 
             try:
                 plan = self.active_plan
                 if plan is not None:
-                    dose = plan.get_dose_cube()
-                    if dose is not None:
-                        dose_value = dose[int(pos[2]), int(pos[1]), int(pos[0])]
-                        target_dose = plan.get_dose().get_dose()
-                        if not target_dose == 0.0:
-                            dose_value *= target_dose / 1000
-                            text += " / Dose: %.1f Gy" % (float(dose_value))
+                    dos = plan.dos  # TODO: refactor me
+                    if dos is not None:
+                        dose_value = dos.cube[int(pos[2]), int(pos[1]), int(pos[0])]
+                        if plan.target_dose != 0.0:
+                            dose_value *= plan.target_dose / 1000
+                            text += " / Dose: {:.1f} Gy".format(float(dose_value))
                         else:
                             dose_value /= 10
-                            text += " / Dose: %.1f %%" % (float(dose_value))
+                            text += " / Dose: {:.1f} %%".format(float(dose_value))
 
-                    let = plan.get_let_cube()
+                    let = plan.let
                     if let is not None:
-                        let_value = let[int(pos[2]), int(pos[1]), int(pos[0])]
-                        text += " / LET: %.1f keV/um" % (let_value)
+                        let_value = let.cube[int(pos[2]), int(pos[1]), int(pos[0])]
+                        text += " / LET: {:.1f} keV/um".format(let_value)
             except IndexError as e:
                 pass
             pub.sendMessage("statusbar.update", {"number": 2, "text": text})
@@ -398,7 +405,7 @@ class PlotPanel(wx.Panel):
         for voi in self.data.get_vois():
             id = wx.NewId()
             item = voi_menu.AppendCheckItem(id, voi.get_name())
-            if voi.is_selected():
+            if voi.selected:
                 item.Check()
             wx.EVT_MENU(self, id, self.menu_voi_selected)
         if voi_menu.GetMenuItemCount() > 0:
@@ -425,12 +432,12 @@ class PlotPanel(wx.Panel):
                 wx.EVT_MENU(self, id, self.change_dose_to_contour)
 
                 menu.AppendSubMenu(dose_type_menu, "Dose Visalization")
-                if self.plotutil.get_dose_plot() == "contour":
+                if self.plotutil.dose_plot == "contour":
                     dose_contour_menu = wx.Menu()
                     for level in self.dose_contour_levels:
                         id = wx.NewId()
                         item = dose_contour_menu.AppendCheckItem(id, "%d %%" % level)
-                        for contour in self.plotutil.get_dose_contours():
+                        for contour in self.plotutil.dosecontour_levels:
                             if contour["doselevel"] == level:
                                 item.Check()
                         wx.EVT_MENU(self, id, self.toggle_dose_contour)
@@ -452,7 +459,7 @@ class PlotPanel(wx.Panel):
             for field in active_plan.get_fields():
                 id = wx.NewId()
                 item = field_menu.AppendCheckItem(id, field.get_name())
-                if field.is_selected():
+                if field.selected:
                     item.Check()
                 wx.EVT_MENU(self, id, self.menu_field_selected)
             if field_menu.GetMenuItemCount() > 0:
@@ -556,23 +563,23 @@ class PlotPanel(wx.Panel):
     def toggle_dose_contour(self, evt):
         value = float(evt.GetEventObject().GetLabel(evt.GetId()).split()[0])
         if evt.IsChecked():
-            self.plotutil.add_dose_contour({"doselevel": value, "color": "b"})
+            self.plotutil.dosecontour_levels.append({"doselevel": value, "color": "b"})
         else:
-            for contour in self.plotutil.get_dose_contours():
+            for contour in self.plotutil.dosecontour_levels:
                 if contour["doselevel"] == value:
-                    self.plotutil.remove_dose_contour(contour)
+                    self.plotutil.dosecontour_levels.remove(contour)
         self.Draw()
 
     def toggle_dose(self, evt):
         if self.plotutil.get_dose() is None:
-            self.plotutil.set_dose(self.active_plan.get_dose().get_dosecube())
+            self.plotutil.set_dose(self.active_plan.dos)
         else:
             self.plotutil.set_dose(None)
         self.Draw()
 
     def toggle_let(self, evt):
         if self.plotutil.get_let() is None:
-            self.plotutil.set_let(self.active_plan.get_let())
+            self.plotutil.set_let(self.active_plan.let)
         else:
             self.plotutil.set_let(None)
         self.Draw()
@@ -598,11 +605,13 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def on_size(self, evt):
-        """Refresh the view when the size of the panel changes."""
-
+        """ Refresh the view when the size of the panel changes.
+        """
         self.setSize()
 
     def on_mouse_wheel(self, evt):
+        """
+        """
         delta = evt.GetWheelDelta()
         rot = evt.GetWheelRotation()
         rot = rot / delta
@@ -613,7 +622,7 @@ class PlotPanel(wx.Panel):
             elif rot < 1:
                 self.zoom_out(None)
             return
-        n_images = self.data.get_images().get_voxelplan().dimz
+        n_images = self.data.ctx.dimz
         if n_images:
             if rot >= 1:
                 if self.image_idx > 0:
@@ -625,6 +634,8 @@ class PlotPanel(wx.Panel):
                     self.Draw()
 
     def on_key_down(self, evt):
+        """
+        """
         prevkey = [wx.WXK_UP, wx.WXK_PAGEUP]
         nextkey = [wx.WXK_DOWN, wx.WXK_PAGEDOWN]
         code = evt.GetKeyCode()
@@ -638,15 +649,18 @@ class PlotPanel(wx.Panel):
                 self.Draw()
 
     def on_mouse_enter(self, evt):
-        """Set a flag when the cursor enters the window."""
+        """ Set a flag when the cursor enters the window.
+        """
         self.mouse_in_window = True
 
     def on_mouse_leave(self, evt):
-        """Set a flag when the cursor leaves the window."""
-
+        """ Set a flag when the cursor leaves the window.
+        """
         self.mouse_in_window = False
 
     def setSize(self):
+        """
+        """
         size = self.parent.GetClientSize()
         size[1] = size[1] - 40
         size[0] = size[0] - 5
@@ -656,6 +670,8 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def Draw(self):
+        """
+        """
         self.plotutil.plot(self.image_idx)
 
         self.figure.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=None, hspace=None)

@@ -29,6 +29,8 @@ import pytrip.res.point
 
 class PlotUtil:
     def __init__(self):
+        """
+        """
         matplotlib.interactive(True)
         self.contrast = [-100, 400]
         self.vois = []
@@ -50,22 +52,9 @@ class PlotUtil:
         self.center = [50.0, 50.0]
         self.plan = None
 
-    def add_dose_contour(self, dose_contour):
-        self.dosecontour_levels.append(dose_contour)
-
-    def get_dose_contours(self):
-        return self.dosecontour_levels
-
-    def remove_dose_contour(self, dose_contour):
-        self.dosecontour_levels.remove(dose_contour)
-
-    def set_plan(self, plan):
-        self.plan = plan
-
-    def get_colorbar(self):
-        return self.dose_bar
-
     def set_zoom(self, zoom):
+        """
+        """
         if zoom < self.zoom:
             self.zoom = zoom
             offset = self.get_offset()
@@ -116,9 +105,6 @@ class PlotUtil:
             self.center[1] = center[1] / float(size[1]) * 100
         return True
 
-    def get_zoom(self):
-        return self.zoom
-
     def get_images_count(self):
         if self.plot_plan == "Transversal":
             return len(self.ctx.cube)
@@ -126,9 +112,6 @@ class PlotUtil:
             return len(self.ctx.cube[0, 0])
         elif self.plot_plan == "Coronal":
             return len(self.ctx.cube[0])
-
-    def set_draw_in_gui(self, yes):
-        self.draw_in_gui = yes
 
     def set_plot_plan(self, plot_plan):
         self.plot_plan = plot_plan
@@ -150,20 +133,13 @@ class PlotUtil:
         self.colormap_dose = colormap
         self.clear_dose_view()
 
-    def set_figure(self, figure):
-        self.figure = figure
-
     def set_dose_axis(self, dose_axis):
         self.dose_axis = dose_axis
         self.clear_dose_view()
 
-    def set_colormap_let(self, colormap):
-        self.colormap_let = colormap
-
-    def set_ct(self, ctx):
-        self.ctx = ctx
-
     def set_let(self, let):
+        """
+        """
         self.let = let
         if self.let is not None:
             self.max_let = np.amax(let.cube)
@@ -173,10 +149,9 @@ class PlotUtil:
         self.dose_plot = type
         self.clear_dose_view()
 
-    def get_dose_plot(self):
-        return self.dose_plot
-
     def set_dose(self, dos):
+        """
+        """
         self.dos = dos
         if self.dos is not None:
             self.max_dose = np.amax(dos.cube) / self.factor
@@ -203,12 +178,6 @@ class PlotUtil:
 
     def get_min_max_let(self):
         return [self.min_let, self.max_let]
-
-    def add_voi(self, voi):
-        self.vois.append(voi)
-
-    def remove_voi(self, voi):
-        self.vois.remove(voi)
 
     def set_contrast(self, contrast):
         """ Sets the contrast if the CT image.
@@ -246,9 +215,6 @@ class PlotUtil:
             pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
                    (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         return [pixel, pos]
-
-    def get_contrast(self):
-        return self.contrast
 
     def get_dose(self):
         if hasattr(self, "dos"):
@@ -424,6 +390,8 @@ class PlotUtil:
         self.figure.plot(x, y, 'o', color=color)  # plot the dot
 
     def clean_plot(self):
+        """
+        """
         while len(self.figure.lines) > 0:
             self.figure.lines.pop(0)
         while len(self.figure.texts) > 0:
@@ -433,6 +401,8 @@ class PlotUtil:
         self.figure.show()
 
     def points_to_plane(self, point):
+        """
+        """
         d = point
         for data in d:
             if self.plot_plan == "Transversal":
@@ -452,13 +422,14 @@ class PlotUtil:
         if self.plan is None:
             return
         targets = []
-        for v in self.plan.get_vois():
-            if v.is_target():
+        for v in self.plan.vois:
+            if v.target:
                 targets.append(v)
         if len(targets) is 0 or len(targets) > 1:
             return
 
-        target = targets[0].get_voi().get_voi_data()
+        # taget is of type Voi()
+        target = targets[0]
         # center = target.calculate_center() # TODO why not used ?
         data = None
         if self.plot_plan == "Transversal":
@@ -482,12 +453,12 @@ class PlotUtil:
 
         if data is None:
             return
-        for f in self.plan.get_fields():
-            if not f.is_selected():
+        for f in self.plan.fields:
+            if not f.selected:
                 continue
 
-            gantry = f.get_gantry()
-            couch = f.get_couch()
+            gantry = f.gantry
+            couch = f.couch
             field_vec = -pytrip.get_basis_from_angles(gantry, couch)[0]
 
             field_vec = field_vec - np.dot(field_vec, vec) * vec
