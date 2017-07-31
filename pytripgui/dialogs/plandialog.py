@@ -42,6 +42,11 @@ class PlanDialog(wx.Dialog):
         self.data = None
 
     def Init(self, plan):
+        """
+        Initialize the 'Plan properties' dialog.
+
+        :params plan: pytrip.tripexecuter.plan object.
+        """
         self.plan = plan
 
         self.btn_ok = XRCCTRL(self, 'btn_ok')
@@ -59,24 +64,75 @@ class PlanDialog(wx.Dialog):
         self.data = msg.data  # msg comes from on_patient_load (main.py), its a TripData object
 
     def init_general(self):
+        """
+        Prepare the 'General' tab in the plan properties dialog.
+        """
         self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
         self.drop_target_tissue_type = XRCCTRL(self, "drop_target_tissue_type")
         # TODO - to be implemented in trip98
         # if self.data.active_plan:
-            # rbe_list = self.data.active_plan.get_rbe()
-            # for rbe in rbe_list.get_rbe_list():
-            #     self.drop_res_tissue_type.Append(rbe.get_name())
-            # self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
-            # for rbe in rbe_list.get_rbe_list():
-            #     self.drop_target_tissue_type.Append(rbe.get_name())
-            # self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
+        # rbe_list = self.data.active_plan.get_rbe()
+        # for rbe in rbe_list.get_rbe_list():
+        #     self.drop_res_tissue_type.Append(rbe.get_name())
+        # self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
+        # for rbe in rbe_list.get_rbe_list():
+        #     self.drop_target_tissue_type.Append(rbe.get_name())
+        # self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
 
-    def select_drop_by_value(self, drop, value):
-        for i, item in enumerate(drop.GetItems()):
-            if item == value:
-                drop.SetSelection(i)
+    def _triptag_from_enum(self, _dict, _i):
+        """
+        Returns the trip-tag in the _dict for a given number _i.
+        """
+
+        for _key in _dict.keys():
+            if _i == _dict[_key][0]:
+                return _key
+        return None
+
+    def _select_drop_by_str(self, _chooser, _str):
+        """
+        Sets the wxChoice widget to the given string, if it matches the one of the possibilites.
+
+        :params _chooser: wxChoice widget
+        :params _str: the value stored in the plan class (which is a string, such as 'phys')
+        """
+        for i, item in enumerate(_chooser.GetItems()):
+            if item == _str:
+                _chooser.SetSelection(i)
+
+    def _init_wxchoice_from_dict(self, _chooser, _dict, _show_id=True, _show_alt1=True):
+        """
+        Populates a wxCooser will all options from _dict, in the order as given in the dict
+        Output can be adjusted with _show_id and _show_alt1 flags:
+
+        True True : "cg : Conjugate gradients"
+        True False: "cg"
+        False True: "conjugate gradients"
+        False False: ""
+
+        :params _chooser: wxChoice
+        :params _dict: dict as defined in the pytrip.tripexecuter.plan class
+        :params _show_id: option for showing the pytrip tag
+        :params _show_alt1: option for showing some description of the TRiP tag
+        """
+
+        for _key in _dict.keys():
+            _i = _dict[_key][0]
+
+            _str = ""
+            if _show_id:
+                _str += _key
+                if _show_alt1:  # add a colon as a seperator if both are to be shown
+                    _str += ": "
+            if _show_alt1:
+                _str += _dict[_key][1]
+
+            _chooser.SetString(_i, "{:s}".format(_str))
 
     def init_calculation_panel(self):
+        """
+        Prepare the 'Caluculation' tab in the plan properties dialog.
+        """
         self.check_phys_dose = XRCCTRL(self, "check_phys_dose")
         self.check_phys_dose.SetValue(self.plan.want_phys_dose)
 
@@ -90,6 +146,9 @@ class PlanDialog(wx.Dialog):
         self.check_field.SetValue(self.plan.want_rst)
 
     def init_opt_panel(self):
+        """
+        Prepare the 'Options' tab in the plan properties dialog.
+        """
         self.txt_iterations = XRCCTRL(self, "txt_iterations")
         self.txt_iterations.SetValue("%d" % self.plan.iterations)
 
@@ -100,21 +159,29 @@ class PlanDialog(wx.Dialog):
         self.txt_geps.SetValue("%f" % self.plan.geps)
 
         self.drop_opt_method = XRCCTRL(self, "drop_opt_method")
-        self.select_drop_by_value(self.drop_opt_method, self.plan.opt_method)
+        self._init_wxchoice_from_dict(self.drop_opt_method, self.plan.opt_methods, False, True)
+        self._select_drop_by_str(self.drop_opt_method, self.plan.opt_method)
 
         self.drop_opt_principle = XRCCTRL(self, "drop_opt_principle")
-        self.select_drop_by_value(self.drop_opt_principle, self.plan.opt_principle)
+        self._init_wxchoice_from_dict(self.drop_opt_principle, self.plan.opt_principles, True, False)
+        self._select_drop_by_str(self.drop_opt_principle, self.plan.opt_principle)
 
         self.drop_dose_alg = XRCCTRL(self, "drop_dose_alg")
-        self.select_drop_by_value(self.drop_dose_alg, self.plan.dose_alg)
+        self._init_wxchoice_from_dict(self.drop_dose_alg, self.plan.dose_algs)
+        self._select_drop_by_str(self.drop_dose_alg, self.plan.dose_alg)
 
         self.drop_bio_alg = XRCCTRL(self, "drop_bio_alg")
-        self.select_drop_by_value(self.drop_bio_alg, self.plan.bio_alg)
+        self._init_wxchoice_from_dict(self.drop_bio_alg, self.plan.bio_algs)
+        self._select_drop_by_str(self.drop_bio_alg, self.plan.bio_alg)
 
         self.drop_opt_alg = XRCCTRL(self, "drop_opt_alg")
-        self.select_drop_by_value(self.drop_opt_alg, self.plan.opt_alg)
+        self._init_wxchoice_from_dict(self.drop_opt_alg, self.plan.opt_algs)
+        self._select_drop_by_str(self.drop_opt_alg, self.plan.opt_alg)
 
     def init_dose_delivery(self):
+        """
+        Prepare the 'Dose delivery' tab in the plan properties dialog.
+        """
         self.drop_projectile = XRCCTRL(self, "drop_projectile")
         self.drop_rifi = XRCCTRL(self, "drop_rifi")
         self.txt_dose_percent = XRCCTRL(self, "txt_dose_percent")
@@ -140,7 +207,7 @@ class PlanDialog(wx.Dialog):
         # projectile string is in the form of 'Ne-20'
         # pytrip currently understands 'H' 'C' 'O' and 'Ne'
         # TODO: this needs to be handled in a much better way.
-        projectile = self.drop_projectile.GetStringSelection().split("-")[0]
+        self.plan.projectile = self.drop_projectile.GetStringSelection().split("-")[0]
 
         # similar strategy as in on_rifi_changed():
         # for now we will ignore multi-ion planning, and just try to get planning with
@@ -152,20 +219,35 @@ class PlanDialog(wx.Dialog):
     def set_dose_percent(self, evt):
         """ Set dose percent for a single projectile.
         """
-        self.plan.target_dose_percent = self.txt_dose_percent.GetValue()
+        self.plan.target_dose_percent = float(self.txt_dose_percent.GetValue())
 
     def save_and_close(self, evt):
         self.plan.res_tissue_type = self.drop_res_tissue_type.GetStringSelection()
         self.plan.target_tissue_type = self.drop_target_tissue_type.GetStringSelection()
 
-        self.plan.iterations = self.txt_iterations.GetValue()
-        self.plan.eps = self.txt_eps.GetValue()
-        self.plan.geps = self.txt_geps.GetValue()
-        self.plan.opt_method = self.drop_opt_method.GetStringSelection()
-        self.plan.opt_principle = self.drop_opt_principle.GetStringSelection()
-        self.plan.dose_alg = self.drop_dose_alg.GetStringSelection()
-        self.plan.bio_alg = self.drop_bio_alg.GetStringSelection()
-        self.plan.opt_alg = self.drop_opt_alg.GetStringSelection()
+        self.plan.iterations = int(self.txt_iterations.GetValue())
+        self.plan.eps = float(self.txt_eps.GetValue())
+        self.plan.geps = float(self.txt_geps.GetValue())
+
+        # "phys" or "bio"
+        self.plan.opt_method = self._triptag_from_enum(self.plan.opt_methods,
+                                                       self.drop_opt_method.GetSelection())
+
+        # "H2Obased" or "CTbased"
+        self.plan.opt_principle = self._triptag_from_enum(self.plan.opt_principles,
+                                                          self.drop_opt_principle.GetSelection())
+
+        # "cl", "ap", "ms"
+        self.plan.dose_alg = self._triptag_from_enum(self.plan.dose_algs,
+                                                     self.drop_dose_alg.GetSelection())
+
+        # "cl", "ld"
+        self.plan.bio_alg = self._triptag_from_enum(self.plan.bio_algs,
+                                                    self.drop_bio_alg.GetSelection())
+
+        # "cl", "cg", "gr", "bf", "fr"
+        self.plan.opt_alg = self._triptag_from_enum(self.plan.opt_algs,
+                                                    self.drop_opt_alg.GetSelection())
 
         self.plan.want_phys_dose = self.check_phys_dose.GetValue()
         self.plan.want_bio_dose = self.check_bio_dose.GetValue()

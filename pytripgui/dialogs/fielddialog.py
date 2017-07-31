@@ -15,7 +15,7 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import wx
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+from wx.xrc import XRCCTRL, XRCID
 
 
 class FieldDialog(wx.Dialog):
@@ -24,6 +24,10 @@ class FieldDialog(wx.Dialog):
         self.PostCreate(pre)
 
     def Init(self, field):
+        """
+        Prepares the field dialog panel.
+        :params field: a pytrip.tripexecuter.field object
+        """
         self.field = field
         self.btn_ok = XRCCTRL(self, 'btn_ok')
         wx.EVT_BUTTON(self, XRCID('btn_ok'), self.save_and_close)
@@ -79,6 +83,8 @@ class FieldDialog(wx.Dialog):
         self.drop_projectile.SetSelection(self.drop_projectile.GetItems().index(field.projectile))
 
     def on_check_isocenter_changed(self, evt):
+        """ Enable or grey-out the isocenter dialog.
+        """
         if self.check_isocenter.IsChecked():
             self.txt_targetx.Enable(True)
             self.txt_targety.Enable(True)
@@ -89,20 +95,24 @@ class FieldDialog(wx.Dialog):
             self.txt_targetz.Enable(False)
 
     def save_and_close(self, evt):
-        self.field.couch = self.txt_couch.GetValue()
-        self.field.gantry = self.txt_gantry.GetValue()
-        self.field.fwhm = self.txt_fwhm.GetValue()
+        """
+        Invoked when Field dialog is closed.
+        """
+        self.field.couch = float(self.txt_couch.GetValue())
+        self.field.gantry = float(self.txt_gantry.GetValue())
+        self.field.fwhm = float(self.txt_fwhm.GetValue())
         if self.check_isocenter.IsChecked():
-            self.field.set_isocenter_from_string(self.txt_targetx.GetValue() + "," + self.txt_targety.GetValue() + "," +
-                                  self.txt_targetz.GetValue())
+            self.field.set_isocenter_from_string(self.txt_targetx.GetValue() + ","
+                                                 + self.txt_targety.GetValue() + ","
+                                                 + self.txt_targetz.GetValue())
         else:
             self.field.isocenter = []
-        self.field.zsteps = self.txt_zsteps.GetValue()
+        self.field.zsteps = float(self.txt_zsteps.GetValue())
 
-        self.field.dose_extension = self.txt_doseextension.GetValue()
-        self.field.contour_extension = self.txt_contourextension.GetValue()
-        self.field.raster_step = [self.txt_raster1.GetValue(), self.txt_raster2.GetValue()]
-        self.field.projectile = self.drop_projectile.GetStringSelection()
+        self.field.dose_extension = float(self.txt_doseextension.GetValue())
+        self.field.contour_extension = float(self.txt_contourextension.GetValue())
+        self.field.raster_step = [float(self.txt_raster1.GetValue()), float(self.txt_raster2.GetValue())]
+        self.field.projectile = self.drop_projectile.GetStringSelection()  # field.projectile is a string
         self.Close()
 
     def close(self, evt):

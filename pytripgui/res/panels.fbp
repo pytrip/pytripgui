@@ -2561,11 +2561,11 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Calculation</property>
                             <property name="select">0</property>
-                            <object class="wxPanel" expanded="0">
+                            <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -2639,7 +2639,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer50</property>
                                     <property name="orient">wxVERTICAL</property>
@@ -2760,7 +2760,7 @@
                                             <property name="gripper">0</property>
                                             <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Physical Dose</property>
+                                            <property name="label">Physical Dose [Gy]</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -2848,7 +2848,7 @@
                                             <property name="gripper">0</property>
                                             <property name="hidden"></property>
                                             <property name="id">wxID_ANY</property>
-                                            <property name="label">Biological Dose</property>
+                                            <property name="label">Biological Dose [Gy(RBE)]</property>
                                             <property name="max_size"></property>
                                             <property name="maximize_button">0</property>
                                             <property name="maximum_size"></property>
@@ -3165,11 +3165,11 @@
                                 </object>
                             </object>
                         </object>
-                        <object class="notebookpage" expanded="0">
+                        <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Optimization</property>
-                            <property name="select">0</property>
-                            <object class="wxPanel" expanded="0">
+                            <property name="select">1</property>
+                            <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
                                 <property name="RightDockable">1</property>
@@ -3243,7 +3243,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnUpdateUI"></event>
-                                <object class="wxBoxSizer" expanded="0">
+                                <object class="wxBoxSizer" expanded="1">
                                     <property name="minimum_size"></property>
                                     <property name="name">bSizer51</property>
                                     <property name="orient">wxVERTICAL</property>
@@ -3331,11 +3331,11 @@
                                             <event name="OnUpdateUI"></event>
                                         </object>
                                     </object>
-                                    <object class="sizeritem" expanded="0">
+                                    <object class="sizeritem" expanded="1">
                                         <property name="border">5</property>
                                         <property name="flag"></property>
                                         <property name="proportion">0</property>
-                                        <object class="wxGridSizer" expanded="0">
+                                        <object class="wxGridSizer" expanded="1">
                                             <property name="cols">2</property>
                                             <property name="hgap">0</property>
                                             <property name="minimum_size"></property>
@@ -4728,7 +4728,7 @@
                         <object class="notebookpage" expanded="1">
                             <property name="bitmap"></property>
                             <property name="label">Dose Delivery</property>
-                            <property name="select">1</property>
+                            <property name="select">0</property>
                             <object class="wxPanel" expanded="1">
                                 <property name="BottomDockable">1</property>
                                 <property name="LeftDockable">1</property>
