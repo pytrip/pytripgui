@@ -313,6 +313,16 @@ class PlanDialog(wx.Dialog):
         self.plan.want_dlet = self.check_dose_mean_let.GetValue()
         self.plan.want_rst = self.check_field.GetValue()
 
+        _vname = self.drop_target_roi.GetStringSelection()
+        for voi in self.plan.vois:
+            if voi.name == _vname:
+                self.plan.target_voi = voi
+                logger.debug("Set plan.target_voi name to {:s}".format(self.plan.target_voi.name))
+
+        # TODO add selected OARs to self.plan
+        # _vnames = self.listbox_oars.GetStringSelections()
+        # logger.warning("OARs not implemented yet")
+
         self.Close()
 
     def close(self, evt):

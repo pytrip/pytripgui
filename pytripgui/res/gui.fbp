@@ -26,7 +26,7 @@
         <property name="ui_table">UI</property>
         <property name="use_enum">0</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="0">
+        <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
             <property name="aui_manager_style">wxAUI_MGR_DEFAULT</property>
             <property name="bg"></property>
@@ -1152,7 +1152,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="submenu" expanded="1">
+                <object class="submenu" expanded="0">
                     <property name="bitmap"></property>
                     <property name="label">Create</property>
                     <property name="name">m_menu3</property>
@@ -1208,7 +1208,250 @@
                     <event name="OnUpdateUI"></event>
                 </object>
             </object>
-            <object class="wxMenu" expanded="1">
+            <object class="wxMenu" expanded="0">
+                <property name="label">Plan</property>
+                <property name="name">m_menu_plan</property>
+                <property name="permission">protected</property>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">New plan</property>
+                    <property name="name">m_plan_new</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">New plan with ROIs</property>
+                    <property name="name">m_menuItem19</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Import plan from .exec</property>
+                    <property name="name">m_menuItem20</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="separator" expanded="0">
+                    <property name="name">m_separator41</property>
+                    <property name="permission">none</property>
+                </object>
+                <object class="submenu" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="label">Select current plan</property>
+                    <property name="name">m_menu4</property>
+                    <property name="permission">protected</property>
+                    <object class="separator" expanded="0">
+                        <property name="name">m_separator51</property>
+                        <property name="permission">none</property>
+                    </object>
+                </object>
+                <object class="separator" expanded="0">
+                    <property name="name">m_separator61</property>
+                    <property name="permission">none</property>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Properties</property>
+                    <property name="name">m_menuItem24</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Export .exec</property>
+                    <property name="name">m_menuItem21</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">View plan data</property>
+                    <property name="name">m_menuItem22</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Rename plan</property>
+                    <property name="name">m_menuItem26</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Delete plan</property>
+                    <property name="name">m_menuItem23</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+            </object>
+            <object class="wxMenu" expanded="0">
+                <property name="label">Field</property>
+                <property name="name">m_menu_field</property>
+                <property name="permission">protected</property>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">New field</property>
+                    <property name="name">m_menuItem27</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="submenu" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="label">Copy field</property>
+                    <property name="name">m_menu51</property>
+                    <property name="permission">protected</property>
+                </object>
+                <object class="separator" expanded="0">
+                    <property name="name">m_separator7</property>
+                    <property name="permission">none</property>
+                </object>
+                <object class="submenu" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="label">Select current field</property>
+                    <property name="name">m_menu6</property>
+                    <property name="permission">protected</property>
+                </object>
+                <object class="separator" expanded="0">
+                    <property name="name">m_separator8</property>
+                    <property name="permission">none</property>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Properties</property>
+                    <property name="name">m_menuItem28</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">View data</property>
+                    <property name="name">m_menuItem29</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Rename field</property>
+                    <property name="name">m_menuItem30</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+                <object class="wxMenuItem" expanded="0">
+                    <property name="bitmap"></property>
+                    <property name="checked">0</property>
+                    <property name="enabled">1</property>
+                    <property name="help"></property>
+                    <property name="id">wxID_ANY</property>
+                    <property name="kind">wxITEM_NORMAL</property>
+                    <property name="label">Delete field</property>
+                    <property name="name">m_menuItem31</property>
+                    <property name="permission">none</property>
+                    <property name="shortcut"></property>
+                    <property name="unchecked_bitmap"></property>
+                    <event name="OnMenuSelection"></event>
+                    <event name="OnUpdateUI"></event>
+                </object>
+            </object>
+            <object class="wxMenu" expanded="0">
                 <property name="label">View</property>
                 <property name="name">m_menu31</property>
                 <property name="permission">protected</property>
@@ -1243,7 +1486,7 @@
                     <event name="OnUpdateUI"></event>
                 </object>
             </object>
-            <object class="wxMenu" expanded="1">
+            <object class="wxMenu" expanded="0">
                 <property name="label">Settings</property>
                 <property name="name">m_menu5</property>
                 <property name="permission">protected</property>
@@ -1262,7 +1505,7 @@
                     <event name="OnMenuSelection"></event>
                     <event name="OnUpdateUI"></event>
                 </object>
-                <object class="wxMenuItem" expanded="1">
+                <object class="wxMenuItem" expanded="0">
                     <property name="bitmap"></property>
                     <property name="checked">0</property>
                     <property name="enabled">1</property>
