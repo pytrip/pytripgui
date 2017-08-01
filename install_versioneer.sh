@@ -19,3 +19,4 @@ git reset HEAD versioneer.py
 git reset HEAD pytripgui/_version.py
 git reset HEAD MANIFEST.in
 git reset HEAD pytripgui/__init__.py
+git reset HEAD .gitattributes
