@@ -45,7 +45,7 @@ class PlanDialog(wx.Dialog):
         """
         Initialize the 'Plan properties' dialog.
 
-        :params plan: pytrip.tripexecuter.plan object.
+        :params plan: pytrip.tripexecuter.plan object, the plan which is "active" should be sent in here.
         """
         self.plan = plan
 
@@ -67,17 +67,76 @@ class PlanDialog(wx.Dialog):
         """
         Prepare the 'General' tab in the plan properties dialog.
         """
-        self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
+        self.drop_target_roi = XRCCTRL(self, "drop_target_roi")
+        self.listbox_oars = XRCCTRL(self, "listbox_oars")
+        self.checkbox_incube = XRCCTRL(self, "checkbox_incube")
+        self.drop_incube = XRCCTRL(self, "drop_incube")
         self.drop_target_tissue_type = XRCCTRL(self, "drop_target_tissue_type")
-        # TODO - to be implemented in trip98
-        # if self.data.active_plan:
-        # rbe_list = self.data.active_plan.get_rbe()
-        # for rbe in rbe_list.get_rbe_list():
-        #     self.drop_res_tissue_type.Append(rbe.get_name())
-        # self.select_drop_by_value(self.drop_res_tissue_type, self.plan.get_res_tissue_type())
-        # for rbe in rbe_list.get_rbe_list():
-        #     self.drop_target_tissue_type.Append(rbe.get_name())
-        # self.select_drop_by_value(self.drop_target_tissue_type, self.plan.get_target_tissue_type())
+        self.drop_res_tissue_type = XRCCTRL(self, "drop_res_tissue_type")
+
+        _voi_names = []
+        if self.plan.vois:
+            _voi_names = [v.name for v in self.plan.vois]
+
+        # ----------- Target ROI ------------
+        # populate Target ROI wxChooser:
+        if self.plan.vois:
+            self.drop_target_roi.Enable(True)
+            self.drop_target_roi.SetItems(_voi_names)
+        else:
+            self.drop_target_roi.SetItems(["(no ROIs in plan)"])
+            self.drop_target_roi.Enable(False)
+
+        # setup Chooser to point to target ROI if it exists in plan
+        if self.plan.voi_target:
+            # lookup index for the target ROI
+            for _i, _v in enumerate(self.plan.vois):
+                if _v == self.plan.voi_target:
+                    self.drop_target_roi.SetSelection(_i)
+        else:
+            self.drop_target_roi.SetSelection(0)
+
+        # ----------- Organs at Risk ------------
+        if self.plan.vois:
+            self.listbox_oars.Enable(True)
+            self.listbox_oars.SetItems(_voi_names)
+        else:
+            self.listbox_oars.SetItems(["(no ROIs in plan)"])
+            self.listbox_oars.Enable(False)
+
+        # ----------- Incube  ------------
+        # TODO: regarding incube optimization, then the idea is to allow
+        # incube optimization to any dosecubes found in plan.dosecubes.
+        # This means, the user must create or load a dosecube into the plan himself.
+
+        # TODO: add incube option to Target ROI wxChooser
+        # self.drop_target_roi.SetString(_incube_index, "<incube>")
+
+        # disable incube  for now.
+        # [x] should disable Target ROI
+        # [ ] should enable Target ROI
+        self.checkbox_incube.Enable(False)
+
+        if self.plan.dosecubes:
+            self.drop_incube.Enable(True)
+            self.drop_incube.SetItems([d.basename for d in self.plan.dosecubes])
+        else:
+            self.drop_incube.SetItems(["(no dosecubes in plan)"])
+            self.drop_incube.Enable(False)
+
+        # if an incube_basename is found in the plan, then let wxChooser point to it
+        if self.plan.incube_basename and self.plan.dosecubes:
+            for _i, _d in enumerate(self.plan.dosecubes):
+                if _d.basename == self.plan.basename:  # TODO: match by UUID is better
+                    self.drop_incube.SetSelection(_i)
+
+        # ----------- Target Tissue Type ------------
+        # TODO: implement me
+        self.drop_target_tissue_type.Enable(False)
+
+        # ----------- Residual Tissue Type ------------
+        # TODO: implement me
+        self.drop_res_tissue_type.Enable(False)
 
     def _triptag_from_enum(self, _dict, _i):
         """
