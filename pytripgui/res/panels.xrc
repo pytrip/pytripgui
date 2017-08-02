@@ -241,6 +241,8 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText6">
+							<enabled>0</enabled>
+							<hidden>1</hidden>
 							<label>Projectile</label>
 							<wrap>-1</wrap>
 						</object>
@@ -249,9 +251,13 @@
 						<option>0</option>
 						<flag>wxALL</flag>
 						<border>5</border>
-						<object class="wxChoice" name="drop_projectile">
+						<object class="wxChoice" name="drop_field_projectile">
+							<enabled>0</enabled>
+							<hidden>1</hidden>
+							<tooltip>Set projectile in plan dialog.</tooltip>
 							<selection>0</selection>
 							<content>
+								<item>(none set)</item>
 								<item>C</item>
 								<item>H</item>
 								<item>O</item>

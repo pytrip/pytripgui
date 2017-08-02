@@ -79,8 +79,10 @@ class FieldDialog(wx.Dialog):
         self.txt_raster1.SetValue("%.2f" % field.raster_step[0])
         self.txt_raster2.SetValue("%.2f" % field.raster_step[1])
 
-        self.drop_projectile = XRCCTRL(self, 'drop_projectile')
-        self.drop_projectile.SetSelection(self.drop_projectile.GetItems().index(field.projectile))
+        # Projectiles cannot be specified at Field level currently, since all plans are single-projectile type only.
+        # Therefore projectiles are specified in the plan-dialog instead.
+        # self.drop_projectile = XRCCTRL(self, 'drop_projectile')  # this is set in the plan dialog.
+        # self.drop_projectile.SetSelection(self.drop_projectile.GetItems().index(field.projectile))
 
     def on_check_isocenter_changed(self, evt):
         """ Enable or grey-out the isocenter dialog.

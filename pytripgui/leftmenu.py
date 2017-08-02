@@ -299,6 +299,11 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         plan = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripplan.open", plan)
+
+        # multi-ion treatment is not supported currently by TRiP
+        # so all fields will be set to the ion species set in the Plan object.
+        for f in plan.fields:
+            f.projectile = plan.projectile
         logger.debug("plan UUID: {:s}".format(plan.__uuid__))
 
     def voi_properties(self, evt):
@@ -460,15 +465,16 @@ class LeftMenuTree(wx.TreeCtrl):
         # projectile / rifi configuration
 
         # if not specified, use protons without RiFi
-        if not hasattr(plan, "_projectile"):
-            plan._projectile = 0
+        if not hasattr(plan, "_projid"):
+            plan._projid = 0
         if not hasattr(plan, "_rifi"):
             plan._rifi = 0
 
+        # These two lines must be synchronized with self.drop_projectile in plandialog.py
         _dion = ('z1', 'z2', 'z6', 'z8', 'z10')
         _drifi = ("rifi0", "rifi3")
 
-        _suffix = '{:s}.{:s}'.format(_dion[plan._projectile], _drifi[plan._rifi])
+        _suffix = '{:s}.{:s}'.format(_dion[plan._projid], _drifi[plan._rifi])
 
         plan.ddd_dir = st.load('trip98.ddd.{:s}'.format(_suffix))
         plan.spc_dir = st.load('trip98.spc.{:s}'.format(_suffix))

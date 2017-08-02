@@ -249,6 +249,8 @@ class PlanDialog(wx.Dialog):
         wx.EVT_CHOICE(self, XRCID('drop_projectile'), self.on_projectile_changed)
         wx.EVT_CHOICE(self, XRCID('drop_rifi'), self.on_rifi_changed)
 
+        self.on_projectile_changed(None)  # bump, so the projectile is stored in the plan.
+
     def on_rifi_changed(self, evt):
         """ Callback function if ripple filter was changed."
         """
@@ -267,13 +269,14 @@ class PlanDialog(wx.Dialog):
         # pytrip currently understands 'H' 'C' 'O' and 'Ne'
         # TODO: this needs to be handled in a much better way.
         self.plan.projectile = self.drop_projectile.GetStringSelection().split("-")[0]
+        logger.debug("plan.projectile set to {:s}".format(self.plan.projectile))
 
         # similar strategy as in on_rifi_changed():
         # for now we will ignore multi-ion planning, and just try to get planning with
         # single ions.
         # we will store the integer number, as it will be used as an index later in leftmenu.py:plan_run_trip()
-        self.plan._projectile = self.drop_projectile.GetSelection()  # store integer
-        logger.debug("Projectile set to {:s}".format(self.plan._projectile))
+        self.plan._projid = self.drop_projectile.GetSelection()  # store integer (not z, but the ID number)
+        logger.debug("plan._projid set to {:d}".format(self.plan._projid))
 
     def set_dose_percent(self, evt):
         """ Set dose percent for a single projectile.
