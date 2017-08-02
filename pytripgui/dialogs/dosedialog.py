@@ -23,10 +23,13 @@ class DoseDialog(wx.Dialog):
         pre = wx.PreDialog()
         self.PostCreate(pre)
 
-    def Init(self, dosecube):
-        self.dosecube = dosecube
+    def Init(self, dos):
+        """
+        :params pytrip.DosCube() dos:
+        """
+        self.dos = dos
         self.txt_targetdose = XRCCTRL(self, "txt_targetdose")
-        self.txt_targetdose.SetValue("%.1f" % self.dosecube.get_dose())
+        self.txt_targetdose.SetValue("{:.1f}".format(self.dos.target_dose))
 
         self.btn_ok = XRCCTRL(self, 'btn_ok')
         wx.EVT_BUTTON(self, XRCID('btn_ok'), self.save_and_close)
@@ -35,7 +38,7 @@ class DoseDialog(wx.Dialog):
         wx.EVT_BUTTON(self, XRCID('btn_close'), self.close)
 
     def save_and_close(self, evt):
-        self.dosecube.set_dose(self.txt_targetdose.GetValue())
+        self.dos.target_dose = float(self.txt_targetdose.GetValue())
         self.Close()
 
     def close(self, evt):

@@ -40,7 +40,7 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
-        
+
 logger = logging.getLogger(__name__)
 
 
@@ -108,7 +108,8 @@ class PlotPanel(wx.Panel):
 
     def plan_dose_changed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_dose(msg.data["dose"].get_dosecube())
+            self.plotutil.dos = msg.data["dose"]  # .get_dosecube() ?
+            self.plotutil.update_dose_minmax()
             self.Draw()
 
     def plan_field_changed(self, msg):
@@ -116,17 +117,18 @@ class PlotPanel(wx.Panel):
 
     def plan_dose_removed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_dose(None)
+            self.plotutil.dos = None
             self.Draw()
 
     def plan_let_added(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_let(msg.data["let"])
+            self.plotutil.let = msg.data["let"]
+            self.plotutil.update_let_minmax()
             self.Draw()
 
     def plan_let_removed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_let(None)
+            self.plotutil.let = None
             self.Draw()
 
     def plan_changed(self, msg):
@@ -137,16 +139,19 @@ class PlotPanel(wx.Panel):
         self.plotutil.plan = self.active_plan
 
         if self.active_plan is None:
-            self.plotutil.set_dose(None)
-            self.plotutil.set_let(None)
+            self.plotutil.dos = None
+            self.plotutil.let = None
         else:
             # plot any DosCube in plan
-            self.plotutil.set_dose(self.active_plan.dos)
-            self.plotutil.set_let(self.active_plan.let)
+            self.plotutil.dos = self.active_plan.dos
+            self.plotutil.update_dose_minmax()
+
+            self.plotutil.let = self.active_plan.let
+            self.plotutil.update_dose_minmax()
 
         self.Draw()
         logger.debug("exit plan_changed()")
-        
+
     def set_toolbar(self, toolbar):
         id = wx.NewId()
         selector = wx.Choice(toolbar, id)
@@ -402,9 +407,9 @@ class PlotPanel(wx.Panel):
         menu = wx.Menu()
         voi_menu = wx.Menu()
 
-        for voi in self.data.get_vois():
+        for voi in self.data.vdx.vois:
             id = wx.NewId()
-            item = voi_menu.AppendCheckItem(id, voi.get_name())
+            item = voi_menu.AppendCheckItem(id, voi.name)
             if voi.selected:
                 item.Check()
             wx.EVT_MENU(self, id, self.menu_voi_selected)
@@ -414,12 +419,13 @@ class PlotPanel(wx.Panel):
 
         active_plan = self.active_plan
         if active_plan is not None:
-            dose = active_plan.get_dose()
+            ### TODO: not sure what is goig on here, which dose cube to display?
+            dos = active_plan.dosecubes[-1]
             dose_type_menu = wx.Menu()
-            if dose is not None:
+            if dos is not None:
                 id = wx.NewId()
                 item = view_menu.AppendCheckItem(id, "View Dose")
-                if self.plotutil.get_dose() is not None:
+                if self.plotutil.dos is not None:
                     item.Check()
                 wx.EVT_MENU(self, id, self.toggle_dose)
 
@@ -443,7 +449,7 @@ class PlotPanel(wx.Panel):
                         wx.EVT_MENU(self, id, self.toggle_dose_contour)
                     menu.AppendSubMenu(dose_contour_menu, "Dose Contour levels")
 
-            let = active_plan.get_let()
+            let = active_plan.let
 
             if let is not None:
                 id = wx.NewId()
@@ -571,25 +577,30 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def toggle_dose(self, evt):
-        if self.plotutil.get_dose() is None:
-            self.plotutil.set_dose(self.active_plan.dos)
+        if self.plotutil.dos is None:
+            self.plotutil.dos = self.active_plan.dos
+            self.plotutil.update_dose_minmax()
         else:
-            self.plotutil.set_dose(None)
+            self.plotutil.dos = None
         self.Draw()
 
     def toggle_let(self, evt):
-        if self.plotutil.get_let() is None:
-            self.plotutil.set_let(self.active_plan.let)
+        if self.plotutil.let is None:
+            self.plotutil.let = self.active_plan.let
+            self.plotutil.update_let_minmax()
         else:
-            self.plotutil.set_let(None)
+            self.plotutil.let = None
         self.Draw()
 
     def menu_voi_selected(self, evt):
+        """
+        Callback to select/deselect a VOI
+        """
         name = evt.GetEventObject().GetLabel(evt.GetId())
         name = name.replace("__", "_")
-        voi = self.data.get_vois().get_voi_by_name(name)
+        voi = self.data.vdx.get_voi_by_name(name)
         if voi is not None:
-            voi.toggle_selected()
+            voi.selected = not voi.selected
 
     def menu_field_selected(self, evt):
         name = evt.GetEventObject().GetLabel(evt.GetId())

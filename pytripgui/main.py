@@ -76,6 +76,8 @@ class MainFrame(wx.Frame):
         self.statusbar = XRCCTRL(self, "statusbar")
         wx.EVT_NOTEBOOK_PAGE_CHANGED(self, XRCID("main_notebook"), self.main_notebook_active_page_changed)
 
+        print(XRCCTRL(self,"top_menu"))
+
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.leftmenu = LeftMenuTree(
@@ -165,7 +167,10 @@ class MainFrame(wx.Frame):
         self.plugins = PluginManager()
         self.plugins.load_modules()
 
+        # TODO: this probably doesnt work
+        # should be self.top_menu = self.res.LoadMenuBar("top_menu") ?
         self.menuitem_import = XRCCTRL(self, "top_menu")
+
         import_plugins = self.plugins.get_plugins_by_type("import")
         for plugin in import_plugins:
             id = wx.NewId()
@@ -197,6 +202,11 @@ class MainFrame(wx.Frame):
         self.SetMenuBar(self.top_menu)
         self.import_menu = self.top_menu.FindItemById(XRCID("submenu_import")).GetSubMenu()
         self.export_menu = self.top_menu.FindItemById(XRCID("submenu_export"))
+
+        # disable Field and Plan menus, as they are not implemented yet
+        # TODO: implement this.
+        self.top_menu.EnableTop(self.top_menu.FindMenu("Plan"), False)
+        self.top_menu.EnableTop(self.top_menu.FindMenu("Field"), False)
 
         # ~ self.export_menu.Enable()
         wx.EVT_MENU(self, XRCID("menuitem_openpatient"), self.open_patient_load_dialog)
@@ -364,7 +374,7 @@ class MainFrame(wx.Frame):
             self,
             defaultFile=self.voxelplan_path,
             wildcard="Voxelplan headerfile (*.hed)|*.hed",
-            message="Choose headerfile")
+            message="Choose header file for matching .ctx (and .vdx)")
         if dlg.ShowModal() == wx.ID_OK:
             data = TRiPData()
             path = dlg.GetPath()

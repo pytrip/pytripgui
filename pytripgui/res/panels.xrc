@@ -241,6 +241,8 @@
 						<flag>wxALL</flag>
 						<border>5</border>
 						<object class="wxStaticText" name="m_staticText6">
+							<enabled>0</enabled>
+							<hidden>1</hidden>
 							<label>Projectile</label>
 							<wrap>-1</wrap>
 						</object>
@@ -249,9 +251,13 @@
 						<option>0</option>
 						<flag>wxALL</flag>
 						<border>5</border>
-						<object class="wxChoice" name="drop_projectile">
+						<object class="wxChoice" name="drop_field_projectile">
+							<enabled>0</enabled>
+							<hidden>1</hidden>
+							<tooltip>Set projectile in plan dialog.</tooltip>
 							<selection>0</selection>
 							<content>
+								<item>(none set)</item>
 								<item>C</item>
 								<item>H</item>
 								<item>O</item>
@@ -301,18 +307,182 @@
 				<border>5</border>
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
-						<label>Calculation</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel3">
+						<label>Target</label>
+						<selected>1</selected>
+						<object class="wxPanel" name="m_panel_tissue">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
+									<option>1</option>
+									<flag>wxEXPAND</flag>
 									<border>5</border>
-									<object class="wxStaticText" name="m_staticText64">
-										<label>Select what TRiP98 should calculate</label>
+									<object class="wxFlexGridSizer">
+										<rows>2</rows>
+										<cols>2</cols>
+										<vgap>0</vgap>
+										<hgap>0</hgap>
+										<growablecols></growablecols>
+										<growablerows></growablerows>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxGridBagSizer">
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<cellpos>0,0</cellpos>
+													<cellspan>1,2</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText84">
+														<label>Select planning targets and OARs</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>1,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText81">
+														<label>Target ROI</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>1,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_target_roi">
+														<tooltip>Select a single target ROI</tooltip>
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>2,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText82">
+														<label>Organs at Risk (OARs)</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>2,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxListBox" name="listbox_oars">
+														<style>wxLB_MULTIPLE</style>
+														<size>-1,100</size>
+														<tooltip>[ctrl]+click to select multiple OARs</tooltip>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>4,0</cellpos>
+													<cellspan>1,2</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText38">
+														<label>If biological optimization or calculation are choosen, tissue type must be specified</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>5,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText40">
+														<label>Target Tissue Type</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>5,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_target_tissue_type">
+														<tooltip>Select RBE base data for target tissue</tooltip>
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>6,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText39">
+														<label>Resdidual Tissue Type</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>6,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_res_tissue_type">
+														<tooltip>Select RBE data for the residual tissue types</tooltip>
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>3,0</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="checkbox_incube">
+														<label>Incube Optimization</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<cellpos>3,1</cellpos>
+													<cellspan>1,1</cellspan>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxChoice" name="drop_incube">
+														<selection>0</selection>
+														<content />
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Dose Delivery</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel14">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>4</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText711">
+										<label>Projectile</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -320,26 +490,23 @@
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxCheckBox" name="check_phys_dose">
-										<label>Physical Dose</label>
-										<checked>1</checked>
+									<object class="wxChoice" name="drop_projectile">
+										<selection>0</selection>
+										<content>
+											<item>H-1</item>
+											<item>He-4</item>
+											<item>C-12</item>
+											<item>O-16</item>
+											<item>Ne-20</item>
+										</content>
 									</object>
 								</object>
 								<object class="sizeritem">
 									<option>0</option>
-									<flag>wxALL</flag>
+									<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 									<border>5</border>
-									<object class="wxCheckBox" name="check_bio_dose">
-										<label>Biological Dose</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText65">
-										<label>(Biological Dose need target and residual tissue type to be specified)</label>
+									<object class="wxStaticText" name="m_staticText83">
+										<label>Ripple Filter</label>
 										<wrap>-1</wrap>
 									</object>
 								</object>
@@ -347,18 +514,39 @@
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxCheckBox" name="check_mean_let">
-										<label>Dose-averaged LET</label>
-										<checked>0</checked>
+									<object class="wxChoice" name="drop_rifi">
+										<selection>1</selection>
+										<content>
+											<item>RiFi 0 mm</item>
+											<item>RiFi 3 mm</item>
+										</content>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText721">
+										<label>Target dose in [%]</label>
+										<wrap>-1</wrap>
 									</object>
 								</object>
 								<object class="sizeritem">
 									<option>0</option>
 									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxCheckBox" name="check_field">
-										<label>Raster Scan File (.rst) / Field</label>
-										<checked>0</checked>
+									<object class="wxTextCtrl" name="txt_dose_percent">
+										<value>100.0</value>
+										<maxlength>0</maxlength>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxButton" name="btn_set_dosepercent">
+										<label>Set</label>
+										<default>0</default>
 									</object>
 								</object>
 							</object>
@@ -391,7 +579,7 @@
 										<hgap>0</hgap>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText3">
 												<label>Iterations</label>
@@ -409,7 +597,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText14">
 												<label>eps</label>
@@ -427,7 +615,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText15">
 												<label>geps</label>
@@ -445,7 +633,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText221">
 												<label>Optimization Method</label>
@@ -466,7 +654,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText23">
 												<label>Principle</label>
@@ -487,7 +675,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText24">
 												<label>Dose Algorithm</label>
@@ -509,7 +697,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText25">
 												<label>Biological Algorithm</label>
@@ -530,7 +718,7 @@
 										</object>
 										<object class="sizeritem">
 											<option>0</option>
-											<flag>wxALL</flag>
+											<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText171">
 												<label>Optimization Algorithm</label>
@@ -558,162 +746,84 @@
 						</object>
 					</object>
 					<object class="notebookpage">
-						<label>Dose Delivery</label>
-						<selected>1</selected>
-						<object class="wxPanel" name="m_panel14">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>3</rows>
-								<cols>3</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALIGN_CENTER|wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText711">
-										<label>Projectile and ripple filter</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxChoice" name="drop_projectile">
-										<selection>0</selection>
-										<content>
-											<item>H-1</item>
-											<item>He-4</item>
-											<item>C-12</item>
-											<item>O-16</item>
-											<item>Ne-20</item>
-										</content>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxChoice" name="drop_rifi">
-										<selection>1</selection>
-										<content>
-											<item>RiFi 0 mm</item>
-											<item>RiFi 3 mm</item>
-										</content>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText721">
-										<label>Target dose in [%]</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxTextCtrl" name="txt_dose_percent">
-										<value></value>
-										<maxlength>0</maxlength>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxButton" name="btn_set_dosepercent">
-										<label>Set</label>
-										<default>0</default>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Tissue Types</label>
+						<label>Calculation</label>
 						<selected>0</selected>
-						<object class="wxPanel" name="m_panel_tissue">
+						<object class="wxPanel" name="m_panel3">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
 								<orient>wxVERTICAL</orient>
 								<object class="sizeritem">
-									<option>1</option>
-									<flag>wxEXPAND</flag>
+									<option>0</option>
+									<flag>wxALL</flag>
 									<border>5</border>
-									<object class="wxFlexGridSizer">
-										<rows>2</rows>
-										<cols>2</cols>
-										<vgap>0</vgap>
-										<hgap>0</hgap>
-										<growablecols></growablecols>
-										<growablerows></growablerows>
-										<object class="sizeritem">
-											<option>1</option>
-											<flag>wxEXPAND</flag>
-											<border>5</border>
-											<object class="wxGridBagSizer">
-												<vgap>0</vgap>
-												<hgap>0</hgap>
-												<growablecols></growablecols>
-												<growablerows></growablerows>
-												<object class="sizeritem">
-													<cellpos>0,0</cellpos>
-													<cellspan>1,2</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText38">
-														<label>If biological optimization or calculation are choosen, tissue type must be specified</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>2,0</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText39">
-														<label>Resdidual Tissue Type</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>2,1</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxChoice" name="drop_res_tissue_type">
-														<selection>0</selection>
-														<content />
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>1,0</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxStaticText" name="m_staticText40">
-														<label>Target Tissue Type</label>
-														<wrap>-1</wrap>
-													</object>
-												</object>
-												<object class="sizeritem">
-													<cellpos>1,1</cellpos>
-													<cellspan>1,1</cellspan>
-													<flag>wxALL</flag>
-													<border>5</border>
-													<object class="wxChoice" name="drop_target_tissue_type">
-														<selection>0</selection>
-														<content />
-													</object>
-												</object>
-											</object>
-										</object>
+									<object class="wxStaticText" name="m_staticText64">
+										<label>Select what TRiP98 should calculate</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="check_phys_dose">
+										<label>Physical Dose Distribution [Gy]</label>
+										<checked>1</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="check_bio_dose">
+										<label>Biological Dose Distribution [Gy(RBE)] (requires .spc and .rbe files)</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText65">
+										<label>(Biological Dose need target and residual tissue type to be specified)</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="check_mean_let">
+										<label>Dose-averaged LET</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="check_field">
+										<label>Raster Scan File (.rst) / Field</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="m_checkBox9">
+										<enabled>0</enabled>
+										<label>Beams Eye View (.bev) Dose</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="m_checkBox10">
+										<enabled>0</enabled>
+										<label>Beams Eye View (.bev) LETd</label>
+										<checked>0</checked>
 									</object>
 								</object>
 							</object>
@@ -2044,7 +2154,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText20">
+													<object class="wxStaticText" name="m_static_server">
 														<tooltip>such as titan.phys.au.dk</tooltip>
 														<label>Server IP/Hostname</label>
 														<wrap>-1</wrap>
@@ -2073,7 +2183,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText21">
+													<object class="wxStaticText" name="m_static_username">
 														<label>Username</label>
 														<wrap>-1</wrap>
 													</object>
@@ -2101,7 +2211,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText22">
+													<object class="wxStaticText" name="m_static_password">
 														<tooltip>Setup ssh-keys for passwordless login.</tooltip>
 														<label>Password</label>
 														<wrap>-1</wrap>
@@ -2122,7 +2232,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText127">
+													<object class="wxStaticText" name="m_static_encrypt">
 														<label>(will be stored unencrypted!)</label>
 														<wrap>-1</wrap>
 													</object>
