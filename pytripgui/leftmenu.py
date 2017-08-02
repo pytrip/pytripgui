@@ -584,10 +584,12 @@ class LeftMenuTree(wx.TreeCtrl):
 
         # after TRiP98 has concluded, we need to display the calculated data.
         #logger.debug("post trip cubes: {:s}".format(dir())
-        print(plan.dosecubes)
-        for d in plan.dosecubes:
-            print(d.name)
 
+        # TODO: so far we assume only a single DosCube was calculated, so only a single new one is added
+        # set current DosCube to most recent calculated.
+        plan.dos = plan.dosecubes[-1]
+        pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dos})
+        
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)
@@ -612,7 +614,7 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def plan_toggle_target(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
-        voi.toggle_target()
+        plan.voi_target = voi
 
     def plan_delete_voi(self, evt):
         vois_item = self.GetItemParent(self.selected_item)

@@ -422,10 +422,10 @@ class PlotPanel(wx.Panel):
             ### TODO: not sure what is goig on here, which dose cube to display?
             dos = active_plan.dosecubes[-1]
             dose_type_menu = wx.Menu()
-            if dose is not None:
+            if dos is not None:
                 id = wx.NewId()
                 item = view_menu.AppendCheckItem(id, "View Dose")
-                if self.plotutil.get_dose() is not None:
+                if self.plotutil.dos is not None:
                     item.Check()
                 wx.EVT_MENU(self, id, self.toggle_dose)
 
@@ -449,7 +449,7 @@ class PlotPanel(wx.Panel):
                         wx.EVT_MENU(self, id, self.toggle_dose_contour)
                     menu.AppendSubMenu(dose_contour_menu, "Dose Contour levels")
 
-            let = active_plan.get_let()
+            let = active_plan.let
 
             if let is not None:
                 id = wx.NewId()

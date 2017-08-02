@@ -114,7 +114,8 @@ class FieldDialog(wx.Dialog):
         self.field.dose_extension = float(self.txt_doseextension.GetValue())
         self.field.contour_extension = float(self.txt_contourextension.GetValue())
         self.field.raster_step = [float(self.txt_raster1.GetValue()), float(self.txt_raster2.GetValue())]
-        self.field.projectile = self.drop_projectile.GetStringSelection()  # field.projectile is a string
+        # Projectile is currently globally set on Plan() level
+        # self.field.projectile = self.drop_projectile.GetStringSelection()  # field.projectile is a string
         self.Close()
 
     def close(self, evt):
