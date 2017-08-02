@@ -2148,7 +2148,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText20">
+													<object class="wxStaticText" name="m_static_server">
 														<tooltip>such as titan.phys.au.dk</tooltip>
 														<label>Server IP/Hostname</label>
 														<wrap>-1</wrap>
@@ -2177,7 +2177,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText21">
+													<object class="wxStaticText" name="m_static_username">
 														<label>Username</label>
 														<wrap>-1</wrap>
 													</object>
@@ -2205,7 +2205,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText22">
+													<object class="wxStaticText" name="m_static_password">
 														<tooltip>Setup ssh-keys for passwordless login.</tooltip>
 														<label>Password</label>
 														<wrap>-1</wrap>
@@ -2226,7 +2226,7 @@
 													<option>0</option>
 													<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
 													<border>5</border>
-													<object class="wxStaticText" name="m_staticText127">
+													<object class="wxStaticText" name="m_static_encrypt">
 														<label>(will be stored unencrypted!)</label>
 														<wrap>-1</wrap>
 													</object>

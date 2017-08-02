@@ -299,6 +299,7 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         plan = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripplan.open", plan)
+        logger.debug("plan UUID: {:s}".format(plan.__uuid__))
 
     def voi_properties(self, evt):
         voi = self.GetItemData(self.selected_item).GetData()
@@ -442,7 +443,10 @@ class LeftMenuTree(wx.TreeCtrl):
         This will set the last global parameters and then execute TRiP for the attached plan.
         """
         plan = self.GetItemData(self.selected_item).GetData()
-        te = pte.Execute(self.data.ctx, self.data.vdx)
+        # use vdx.path which is either "" or a real path. This will force to use the
+        # original .vdx file (and not a PyTRiP converted one)
+        logger.debug("plan_run_trip:self.data.vdx.path = '{:s}'".format(self.data.vdx.path))
+        te = pte.Execute(self.data.ctx, self.data.vdx, vdx_path = self.data.vdx.path)
 
         # Load global parameters from settings file and attach them to this plan.
         st = Settings()
@@ -472,10 +476,8 @@ class LeftMenuTree(wx.TreeCtrl):
 
         plan.make_sis(str(plan.projectile_a) + plan.projectile)
 
-        # TODO very stupid way of figuring out which VOI is the targer
-        selected_vois = [v for v in plan.vois if v.selected]
-        if selected_vois:
-            plan.voi_target = selected_vois[0]
+        plan.hlut_path = st.load('trip98.s.hlut')
+        plan.dedx_path = st.load('trip98.s.dedx')
 
         logger.debug("Executing plan " + str(plan))
         logger.debug("Running executer " + str(te))
@@ -484,7 +486,7 @@ class LeftMenuTree(wx.TreeCtrl):
         tmp_plan = copy.deepcopy(plan)
         tmp_plan.basename = self.data.patient_name
 
-        te.execute(tmp_plan, False)  # False = dry run
+        te.execute(tmp_plan, True)  # False = dry run
 
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
