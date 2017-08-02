@@ -311,6 +311,8 @@ class LeftMenuTree(wx.TreeCtrl):
         pub.sendMessage("gui.tripvoi.open", voi)
 
     def plan_field_deleted(self, msg):
+        """ Deletes a plan from the tree
+        """
         logger.debug("enter plan_field_deleted()")
 
         plan = msg.data["plan"]
@@ -333,25 +335,31 @@ class LeftMenuTree(wx.TreeCtrl):
 
 
     def plan_load_dose_voxelplan(self, evt):
+        """ Callback for loading a (.phys).dos cube
+        """
         plan = self.GetItemData(self.selected_item).GetData()
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
-            wildcard="Voxelplan headerfile (*.hed)|*.hed",
-            message="Choose headerfile")
+            wildcard="Voxelplan DoseCube (*.dos)|*.dos",
+            message="Choose dosecube")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             st = Settings()
             st.save("general.import.voxelplan_path", path)
-            plan.load_dose(path, "phys")
-
+            plan.load_dose(path, "phys")  # new dose cube is appended to plan.dosecubes list
+        logger.debug("exit plan_load_dose_voxelplan()")
+        pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dosecubes[-1]})
+        
     def plan_load_let_voxelplan(self, evt):
+        """ Callback for loading a dosemlet.dos cube
+        """
         plan = self.GetItemData(self.selected_item).GetData()
         dlg = wx.FileDialog(
             self,
             defaultFile=self.voxelplan_path,
-            wildcard="Voxelplan headerfile (*.hed)|*.hed",
-            message="Choose headerfile")
+            wildcard="Voxelplan LETCube (*.dosemlet.dos)|*.dosemlet.dos",
+            message="Choose LETCube")
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             st = Settings()
@@ -371,11 +379,13 @@ class LeftMenuTree(wx.TreeCtrl):
         return self.GetItemData(node).GetData()
 
     def plan_dose_add(self, msg):
+        """ Callback function for adding a dose to plan.
+        """
         plan = msg.data["plan"]
         dose = msg.data["dose"]
         plan_node = self.get_child_from_data(self.plans_node, plan)
         doselist = self.get_or_create_child(plan_node, "Dose", "dose")
-        self.get_or_create_child(doselist, dose.get_type(), dose)
+        self.get_or_create_child(doselist, dose.type, dose)
 
     def plan_dose_removed(self, msg):
         plan = msg.data["plan"]
@@ -485,15 +495,20 @@ class LeftMenuTree(wx.TreeCtrl):
         plan.hlut_path = st.load('trip98.s.hlut')
         plan.dedx_path = st.load('trip98.s.dedx')
 
+        # basename of plan must be in sync with CTX basename / patient_name, else TRiP wont handle it.
+        plan.basename = self.data.patient_name
+
         logger.debug("Executing plan " + str(plan))
         logger.debug("Running executer " + str(te))
 
-        # TODO - dirty hack to set properly basename, which is later used by pytrip to generate CTX filename
-        tmp_plan = copy.deepcopy(plan)
-        tmp_plan.basename = self.data.patient_name
+        te.execute(plan, True)  # False = dry run
 
-        te.execute(tmp_plan, True)  # False = dry run
-
+        # after TRiP98 has concluded, we need to display the calculated data.
+        #logger.debug("post trip cubes: {:s}".format(dir())
+        print(plan.dosecubes)
+        for d in plan.dosecubes:
+            print(d.name)
+        
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)

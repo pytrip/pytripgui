@@ -374,7 +374,7 @@ class MainFrame(wx.Frame):
             self,
             defaultFile=self.voxelplan_path,
             wildcard="Voxelplan headerfile (*.hed)|*.hed",
-            message="Choose headerfile")
+            message="Choose header file for matching .ctx (and .vdx)")
         if dlg.ShowModal() == wx.ID_OK:
             data = TRiPData()
             path = dlg.GetPath()

@@ -402,9 +402,9 @@ class PlotPanel(wx.Panel):
         menu = wx.Menu()
         voi_menu = wx.Menu()
 
-        for voi in self.data.get_vois():
+        for voi in self.data.vdx.vois:
             id = wx.NewId()
-            item = voi_menu.AppendCheckItem(id, voi.get_name())
+            item = voi_menu.AppendCheckItem(id, voi.name)
             if voi.selected:
                 item.Check()
             wx.EVT_MENU(self, id, self.menu_voi_selected)
@@ -585,11 +585,14 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def menu_voi_selected(self, evt):
+        """ 
+        Callback to select/deselect a VOI
+        """
         name = evt.GetEventObject().GetLabel(evt.GetId())
         name = name.replace("__", "_")
-        voi = self.data.get_vois().get_voi_by_name(name)
+        voi = self.data.vdx.get_voi_by_name(name)
         if voi is not None:
-            voi.toggle_selected()
+            voi.selected = not voi.selected
 
     def menu_field_selected(self, evt):
         name = evt.GetEventObject().GetLabel(evt.GetId())
