@@ -40,7 +40,7 @@ else:
     except:
         from wx.lib.pubsub import setuparg1
         from wx.lib.pubsub import pub
-        
+
 logger = logging.getLogger(__name__)
 
 
@@ -108,7 +108,8 @@ class PlotPanel(wx.Panel):
 
     def plan_dose_changed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_dose(msg.data["dose"].get_dosecube())
+            self.plotutil.dos = msg.data["dose"]  # .get_dosecube() ?
+            self.plotutil.update_dose_minmax()
             self.Draw()
 
     def plan_field_changed(self, msg):
@@ -116,17 +117,18 @@ class PlotPanel(wx.Panel):
 
     def plan_dose_removed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_dose(None)
+            self.plotutil.dos = None
             self.Draw()
 
     def plan_let_added(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_let(msg.data["let"])
+            self.plotutil.let = msg.data["let"]
+            self.plotutil.update_let_minmax()
             self.Draw()
 
     def plan_let_removed(self, msg):
         if msg.data["plan"] is self.active_plan:
-            self.plotutil.set_let(None)
+            self.plotutil.let = None
             self.Draw()
 
     def plan_changed(self, msg):
@@ -137,16 +139,19 @@ class PlotPanel(wx.Panel):
         self.plotutil.plan = self.active_plan
 
         if self.active_plan is None:
-            self.plotutil.set_dose(None)
-            self.plotutil.set_let(None)
+            self.plotutil.dos = None
+            self.plotutil.let = None
         else:
             # plot any DosCube in plan
-            self.plotutil.set_dose(self.active_plan.dos)
-            self.plotutil.set_let(self.active_plan.let)
+            self.plotutil.dos = self.active_plan.dos
+            self.plotutil.update_dose_minmax()
+
+            self.plotutil.let = self.active_plan.let
+            self.plotutil.update_dose_minmax()
 
         self.Draw()
         logger.debug("exit plan_changed()")
-        
+
     def set_toolbar(self, toolbar):
         id = wx.NewId()
         selector = wx.Choice(toolbar, id)
@@ -414,7 +419,8 @@ class PlotPanel(wx.Panel):
 
         active_plan = self.active_plan
         if active_plan is not None:
-            dose = active_plan.get_dose()
+            ### TODO: not sure what is goig on here, which dose cube to display?
+            dos = active_plan.dosecubes[-1]
             dose_type_menu = wx.Menu()
             if dose is not None:
                 id = wx.NewId()
@@ -571,21 +577,23 @@ class PlotPanel(wx.Panel):
         self.Draw()
 
     def toggle_dose(self, evt):
-        if self.plotutil.get_dose() is None:
-            self.plotutil.set_dose(self.active_plan.dos)
+        if self.plotutil.dos is None:
+            self.plotutil.dos = self.active_plan.dos
+            self.plotutil.update_dose_minmax()
         else:
-            self.plotutil.set_dose(None)
+            self.plotutil.dos = None
         self.Draw()
 
     def toggle_let(self, evt):
-        if self.plotutil.get_let() is None:
-            self.plotutil.set_let(self.active_plan.let)
+        if self.plotutil.let is None:
+            self.plotutil.let = self.active_plan.let
+            self.plotutil.update_let_minmax()
         else:
-            self.plotutil.set_let(None)
+            self.plotutil.let = None
         self.Draw()
 
     def menu_voi_selected(self, evt):
-        """ 
+        """
         Callback to select/deselect a VOI
         """
         name = evt.GetEventObject().GetLabel(evt.GetId())

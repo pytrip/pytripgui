@@ -19,6 +19,8 @@ import sys
 
 
 def get_class_name(item):
+    """ Returns the name of Class as a string. (e.g. "DosCube")
+    """
     return item.__class__.__name__
 
 

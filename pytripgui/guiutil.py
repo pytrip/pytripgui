@@ -51,6 +51,8 @@ class PlotUtil:
         self.zoom = 100.0
         self.center = [50.0, 50.0]
         self.plan = None
+        self.dos = None  # Placeholder for DosCube() object
+        self.let = None  # Placeholder for LETCube() object
 
     def set_zoom(self, zoom):
         """
@@ -137,10 +139,9 @@ class PlotUtil:
         self.dose_axis = dose_axis
         self.clear_dose_view()
 
-    def set_let(self, let):
+    def update_let_minmax(self):
         """
         """
-        self.let = let
         if self.let is not None:
             self.max_let = np.amax(let.cube)
             self.min_let = 0
@@ -149,12 +150,11 @@ class PlotUtil:
         self.dose_plot = type
         self.clear_dose_view()
 
-    def set_dose(self, dos):
+    def update_dose_minmax(self):
         """
         """
-        self.dos = dos
         if self.dos is not None:
-            self.max_dose = np.amax(dos.cube) / self.factor
+            self.max_dose = np.amax(self.dos.cube) / self.factor
             self.min_dose = 0
             if hasattr(self, "fig_dose"):
                 self.fig_dose.set_clim(vmin=self.min_dose, vmax=self.max_dose)
@@ -215,11 +215,6 @@ class PlotUtil:
             pos = [pixel[0] * self.ctx.pixel_size + self.ctx.xoffset,
                    (self.ctx.dimz - pixel[1]) * self.ctx.slice_distance + self.ctx.zoffset]
         return [pixel, pos]
-
-    def get_dose(self):
-        if hasattr(self, "dos"):
-            return self.dos
-        return None
 
     def get_size(self):
         if self.plot_plan == "Transversal":

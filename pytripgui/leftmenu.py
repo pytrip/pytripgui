@@ -39,25 +39,47 @@ else:
 logger = logging.getLogger(__name__)
 
 
-class FieldsCollection(list):
-    """Dummy class needed in LeftMenuTree __init__.
-    Identification of the clicked object is based on the classname.
-    Both Fields and ROIs are kept as lists. In order to resolve
-    this ambiguity we create wrapper class for list of fields."""
-    pass
-
-
 class LeftMenuTree(wx.TreeCtrl):
+    """ Class for the Menu tree on the left side in GUI.
+    TODO: Highly confusing stuff. Please refactor me.
+
+    Hints for the structure:
+    Several pytrip.Plan() objects can be loaded. As normally from PyTRiP:
+    Each pytrip.Plan() may hold
+    - a list of fields in plan.fields
+    - a list of pytrip.DosCube() in plan.dosecubes
+    - a list of pytrip.LETCube() in plan.letcubes
+
+    However, only on Dose/LET cube can be displayed at a time. Therefore the Plan() object is expanded
+    with the attributes:
+    - plan.dos    # holding one DosCube() object
+    - plan.let    # holding one LETCube() object
+    - plan.field  # TODO: is this really needed? No fields are shown anyway in GUI currently.
+    - plan.vois   #  this will conflict to the vois already in the plan, possibly
+                  # some active attibute will be needed here.
+
+    self.selected_item : currently selected item in TreeList
+    self.plans_node : master wxTreeItemId holding all plans, there is only one of this.
+    """
+
     def __init__(self, *args, **kwargs):
+        """
+        Initialize LeftMenuTree.
+        Here callback functions are attached to the menu items and events emitted by the tree.
+        """
         super(LeftMenuTree, self).__init__(*args, **kwargs)
+        self.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_leftmenu_changed)
         self.Bind(wx.EVT_TREE_ITEM_RIGHT_CLICK, self.on_leftmenu_rightclick)
+        self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.on_leftmenu_doubleclick)
         self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.end_edit)
         self.Bind(wx.EVT_TREE_BEGIN_DRAG, self.begin_drag)
         self.Bind(wx.EVT_TREE_END_DRAG, self.end_drag)
+
+        # build context_menu which holds the various item types.
         self.context_menu = {"images": [{"text": "View"}],
-                             "image": [{"text": "View",
-                                        "callback": self.show_image}],
-                             "plans": [{"text": "New plan with ROIs",
+                             "CtxCube": [{"text": "View",
+                                          "callback": self.show_image}],
+                             "Plans": [{"text": "New plan with ROIs",
                                         "callback": self.new_plan},
                                        {"text": "New empty plan",
                                         "callback": self.new_empty_plan},
@@ -89,7 +111,7 @@ class LeftMenuTree(wx.TreeCtrl):
                                            "callback": self.delete_plan},
                                           {"text": "Properites",
                                            "callback": self.plan_properties}],
-                             "DoseCube": [{"text": "Delete",
+                             "DosCube": [{"text": "Delete",
                                            "callback": self.plan_remove_dose},
                                           {"text": "Set Active For Plan",
                                            "callback": self.plan_set_active_dose},
@@ -159,6 +181,7 @@ class LeftMenuTree(wx.TreeCtrl):
     def print_tree(self, root=None):
         """
         Printing tree of associated data, just for debugging purposes
+
         :param root: Node to start walking the tree
         :return:
         """
@@ -192,13 +215,13 @@ class LeftMenuTree(wx.TreeCtrl):
         self.AssignImageList(self.image_list)
 
     def toggle_selected_voi(self, evt):
-        """ Toggles whether VOI is displayed or not. Only selected VOIs are displayed
+        """
+        Toggles whether VOI is displayed or not. Only selected VOIs are displayed
         """
         logger.debug("toggle_selected_voi()")
         voi = self.GetItemData(self.selected_item).GetData()
         voi.selected = not voi.selected
-        # add proper callback here smth like:
-        pub.sendMessage("voi.selection_changed", voi)  # I am guessing here
+        pub.sendMessage("voi.selection_changed", voi)
 
     def show_image(self, evt):
         """
@@ -215,13 +238,14 @@ class LeftMenuTree(wx.TreeCtrl):
         dose = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("2dplot.dose.set", dose)
 
-    def get_parent_plan_data(self, node):
+    def get_parent_plan_data(self, item):
         """
-        TODO: possibly this can be omitted for some more elegant solution
-        to simply use data.active_plan instead ?
+        For a given wxTreeItemId, return the Plan() object, or None if it doent exist.
+
+        :params wxTreeItemId item: item of the tree to get.
+        :returns pytrip.Plan(): for the associated item
         """
         logger.debug("get_parent_plan_data()")
-        item = node
         while True:
             data = self.GetItemData(item).GetData()
             if get_class_name(data) == "Plan":
@@ -232,6 +256,11 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def delete_node_from_data(self, parent, data):
         """
+        For a given data object, find the corresponding wxTreeItem and delete it from the Tree,
+        and move all subsequent childs up to fill out the gap.
+
+        :params wxTreeItemId parent: parent of the child to be deleted
+        :params object data: data payhold which is assosicated to child to be deleted
         """
         logger.debug("delete_node_from_data()")
         child, cookie = self.GetFirstChild(parent)
@@ -242,6 +271,12 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def set_label_from_data(self, parent, data, text):
         """
+        Sets the TreeItem label to text, for a given parent and data object.
+
+        :params wxTreeItemId parent: parent item, holding the children with possible data
+        :params object data: data payload associated with child TreeItem
+        :params str text: string to be written to TreeItem label
+
         """
         child, cookie = self.GetFirstChild(parent)
         while child:
@@ -252,6 +287,12 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def get_child_from_data(self, parent, data):
         """
+        Find child from a wxTreeItemId parent and a known data payload.
+
+        :params wxTreeItemId parent: parent item, holding the children with possible data
+        :params data: data payload associated with child TreeItem
+
+        :returns: wxTreeItemId of child matching data, else None.
         """
         if parent:
             logger.debug("enter get_child_from_data(), parent = " + str(self.GetItemText(parent)))
@@ -267,37 +308,25 @@ class LeftMenuTree(wx.TreeCtrl):
         logger.debug("exit get_child_from_data()")
         return None
 
-    def search_by_data(self, root, data):
-        """
-        """
-        data = None
-        item, cookie = self.GetFirstChild(root)
-        while item:
-            if self.GetItemData(item).GetData() is data:
-                return self.GetItemData(item).GetData()
-            if self.GetChildrenCount(item) > 0:
-                data = self.search_by_data(item, data)
-            if data is not None:
-                return data
-            item, cookie = self.GetNextChild(item, cookie)
-        return data
-
     def field_properties(self, evt):
         """
+        Callback for opening the Field -> Properties menu
         """
-        field = self.get_field_from_node()
+        field = self.get_field_from_node()  # Field() object
         pub.sendMessage("gui.field.open", field)
 
     def dose_properties(self, evt):
-        """ Callback for opening the dose properties windows
         """
-        dosecube = self.GetItemData(self.selected_item).GetData()
-        pub.sendMessage("gui.dose.open", dosecube)
+        Callback for opening the Dose -> Properties menu
+        """
+        dos = self.GetItemData(self.selected_item).GetData()  # DosCube() object
+        pub.sendMessage("gui.dose.open", dos)
 
     def plan_properties(self, evt):
-        """ Callback for opening the dose properties windows
         """
-        plan = self.GetItemData(self.selected_item).GetData()
+        Callback for opening the Plan -> Properties menu
+        """
+        plan = self.GetItemData(self.selected_item).GetData()  # Plan() object
         pub.sendMessage("gui.tripplan.open", plan)
 
         # multi-ion treatment is not supported currently by TRiP
@@ -307,17 +336,22 @@ class LeftMenuTree(wx.TreeCtrl):
         logger.debug("plan UUID: {:s}".format(plan.__uuid__))
 
     def voi_properties(self, evt):
+        """
+        Callback function for the Voi -> Properties menu.
+        """
         voi = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripvoi.open", voi)
 
     def plan_field_deleted(self, msg):
-        """ Deletes a plan from the tree
+        """
+        Deletes a Field from the Plan tree
         """
         logger.debug("enter plan_field_deleted()")
 
-        plan = msg.data["plan"]
-        field = msg.data["field"]
+        plan = msg.data["plan"]  # Plan() object
+        field = msg.data["field"]  # Filed() object
 
+        # Figure out the parent wxTreeItemId holding the Plan() object
         plan_node = self.get_child_from_data(self.plans_node, plan)
 
         node = self.get_child_from_data(self.plans_node, plan)
@@ -350,7 +384,7 @@ class LeftMenuTree(wx.TreeCtrl):
             plan.load_dose(path, "phys")  # new dose cube is appended to plan.dosecubes list
         logger.debug("exit plan_load_dose_voxelplan()")
         pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dosecubes[-1]})
-        
+
     def plan_load_let_voxelplan(self, evt):
         """ Callback for loading a dosemlet.dos cube
         """
@@ -373,45 +407,81 @@ class LeftMenuTree(wx.TreeCtrl):
         fields.remove(field)
         pub.sendMessage('plan.field.deleted', {"plan": plan, "field": field})
 
-    def get_field_from_node(self, node=None):
-        if node is None:
-            node = self.selected_item
-        return self.GetItemData(node).GetData()
+    def get_field_from_node(self, item=None):
+        """
+        Return the Field() object stored in the given item.
+        If item is not given or None, then look into self.selected_item.
+
+        :params wxTreeItemId item:
+        :returns: Field() object stored in item.
+
+        TODO: Throw error if object is not of Field type.
+        """
+        if item is None:
+            item = self.selected_item
+        return self.GetItemData(item).GetData()
 
     def plan_dose_add(self, msg):
-        """ Callback function for adding a dose to plan.
         """
+        Callback function for adding an existing DosCube() stored in the msg payload to the wxTreeCtrl.
+        """
+        logger.debug("enter plan_dose_add()")
         plan = msg.data["plan"]
-        dose = msg.data["dose"]
+        dos = msg.data["dose"]
+
+        # find what wxTreeItemId belongs to the given plan
         plan_node = self.get_child_from_data(self.plans_node, plan)
-        doselist = self.get_or_create_child(plan_node, "Dose", "dose")
-        self.get_or_create_child(doselist, dose.type, dose)
+
+        doselist = self.get_or_create_child(plan_node, "DoseList", "dose")  # "DoseList" is label, "dose" is payload
+        self.get_or_create_child(doselist, dos.basename, dos)
+        plan.dos = dos
+
+        # plot the loaded dose distribution it in the plot window immediately.
+        self.plan_set_active_dose(None)
+
+        logger.debug("exit plan_dose_add()")
 
     def plan_dose_removed(self, msg):
+        """
+        Callback function for removing an existing DosCube stored in msg and wxTreeCtrl
+        """
+        logger.debug("enter plan_dose_removed()")
         plan = msg.data["plan"]
-        dose = msg.data["dose"]
+        dos = msg.data["dose"]
+
+        # find what wxTreeItemId belongs to the given plan
         plan_node = self.get_child_from_data(self.plans_node, plan)
-        doselist = self.get_or_create_child(plan_node, "Dose", "dose")
-        dose = self.get_child_from_data(doselist, dose)
-        self.Delete(dose)
-        if self.GetChildrenCount(doselist) is 0:
+
+        doselist_item = self.get_or_create_child(plan_node, "DoseList", "dose")
+        dos_item = self.get_child_from_data(doselist_item, dos)
+        self.Delete(dos_item)
+        # if all DosCube() were deleted, then remove the DoseList node as well.
+        if self.GetChildrenCount(doselist_item) is 0:
             self.Delete(doselist)
 
     def plan_export_exec(self, evt):
+        """
+        """
         plan = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripexport.open", plan)
 
     def plan_export_cube(self, evt):
+        """
+        """
         plan = self.GetItemData(self.selected_item).GetData()
         pub.sendMessage("gui.tripcubeexport.open", plan)
 
     def plan_let_add(self, msg):
+        """
+        """
         plan = msg.data["plan"]
         let = msg.data["let"]
         plan_node = self.get_child_from_data(self.plans_node, plan)
         let = self.get_or_create_child(plan_node, "LET", let)
 
     def plan_let_removed(self, msg):
+        """
+        """
         plan = msg.data["plan"]
         let = msg.data["let"]
         plan_node = self.get_child_from_data(self.plans_node, plan)
@@ -419,22 +489,31 @@ class LeftMenuTree(wx.TreeCtrl):
         self.Delete(let)
 
     def plan_remove_let(self, evt):
+        """
+        """
         plan = self.get_parent_plan_data(self.selected_item)
         plan.remove_let(self.GetItemData(self.selected_item).GetData())
 
     def plan_remove_dose(self, evt):
+        """
+        """
         plan = self.get_parent_plan_data(self.selected_item)
         plan.remove_dose(self.GetItemData(self.selected_item).GetData())
 
     def plan_set_active_dose(self, evt):
+        """
+        """
         plan = self.get_parent_plan_data(self.selected_item)
-        plan.set_active_dose(self.GetItemData(self.selected_item).GetData())
+        wx.CallAfter(pub.sendMessage, "plan.dose.active_changed", {"plan": plan, "dose": plan.dos})
 
     def plan_field_added(self, msg):
+        """
+        """
         logger.debug("enter plan_field_added()")
         plan = msg.data["plan"]
         field = msg.data["field"]
 
+        # lookup parent plan item, which holds the plan with the fields from the given plan object.
         node = self.get_child_from_data(self.plans_node, plan)
 
         # locate proper field node
@@ -508,7 +587,7 @@ class LeftMenuTree(wx.TreeCtrl):
         print(plan.dosecubes)
         for d in plan.dosecubes:
             print(d.name)
-        
+
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)
@@ -596,6 +675,11 @@ class LeftMenuTree(wx.TreeCtrl):
         self.Delete(child)
 
     def get_or_create_child(self, parent, text, data):
+        """
+        :params parent: <class 'wx._controls.TreeItemId'>
+        :params str text: Name of this TreeItem
+        :params data: payload to be associated with this TreeItem
+        """
         item = self.get_child_from_data(parent, data)
         if item:
             return item
@@ -614,11 +698,11 @@ class LeftMenuTree(wx.TreeCtrl):
         data = self.GetItemData(evt.GetItem()).GetData()
         class_name = get_class_name(data)
         if get_class_name(self.drag_data) == "Voi":
-            if class_name in ["TripPlan", "VoiCollection"]:
+            if class_name in ["Plan", "VoiCollection"]:
                 data.add_voi(self.drag_data)
             if class_name == "TripVoi":
                 item = self.GetItemData(self.GetItemParent(self.GetItemParent(evt.GetItem()))).GetData()
-                if get_class_name(item) == "TripPlan":
+                if get_class_name(item) == "Plan":
                     item.add_voi(self.drag_data)
         elif get_class_name(self.drag_data) == "TripVoi":
             if class_name == "TripVoi":
@@ -692,18 +776,27 @@ class LeftMenuTree(wx.TreeCtrl):
         self.populate_tree()
 
     def populate_tree(self):
-        """ Setup the tree viewer in the left panel
+        """ Clear and setup the wxTreeCtrl widget, shown in the left panel of the GUI.
         """
         logger.debug("enter populate_tree()")
+
+        # Clear all items in the wxTreeCtrl
         self.DeleteAllItems()
+
+        # Add the root node: this tiem only holds the Pateint
         self.rootnode = self.AddRoot(self.data.patient_name)
+
+        # The "ROIs" TreeItem, may hold multiple "ROI" TreeItems
         data = wx.TreeItemData()
         data.SetData("structures")
         self.structure_node = self.AppendItem(self.rootnode, "ROIs", data=data)
-        data = wx.TreeItemData()
-        data.SetData("plans")
+
+        # The "Plans" TreeItem, may hold multiple "Plan" TreeItems
+        data = wx.TreeItemData()  # TODO: Is this redundant?
+        data.SetData("Plans")  # master node holds only the "Plans" string for identification for context_menu
         self.plans_node = self.AppendItem(self.rootnode, "Plans", data=data)
 
+        # Add the VOIs loaded from .vdx or RTSTRUCT.
         for voi in self.data.vdx.vois:
             data = wx.TreeItemData()
             data.SetData(voi)
@@ -714,50 +807,63 @@ class LeftMenuTree(wx.TreeCtrl):
             voi.icon = img
             self.SetItemImage(item, img, wx.TreeItemIcon_Normal)
 
+        # add all plans into the wxTreeCtrl
         for plan in self.data.plans:
             # append tree item with plan name
             data = wx.TreeItemData()
             data.SetData(plan)
             p_id = self.AppendItem(self.plans_node, plan.basename, data=data)
 
+            # check if this plan has VOIs, if so, add them to the Tree.
             if plan.vois:
+                # figure out the parent node for the children for this plan
                 node = self.get_child_from_data(self.plans_node, plan)
 
-                # append if missing ROIs item
+                # append ROIs node, holding all VOIs in the plan.
                 item = self.get_or_create_child(node, "ROIs", plan.vois)
-                for voi in plan.vois:
 
-                    # append each ROI item
-                    data = wx.TreeItemData()
+                # append each VOI item
+                for voi in plan.vois:
+                    data = wx.TreeItemData()  # constructor
                     data.SetData(voi)
                     i2 = self.AppendItem(item, voi.name, data=data)
                     self.SetItemImage(i2, voi.icon, wx.TreeItemIcon_Normal)
                 else:
                     self.Expand(item)
                     self.Expand(self.GetItemParent(item))
+
+            # check if plan has any Fields()
             if plan.fields:
-                fc = FieldsCollection(plan.fields)
                 node = self.get_child_from_data(self.plans_node, plan)
 
                 # append if missing Fields item
-                item = self.get_or_create_child(node, "Fields", fc)
-                for field in plan.fields:
+                item = self.get_or_create_child(node, "Fields", plan.fields)
 
-                    # append each Field item
-                    data = wx.TreeItemData()
+                # append each Field item
+                for field in plan.fields:
+                    data = wx.TreeItemData()  # constructor
                     data.SetData(field)
                     self.AppendItem(item, field.basename, data=data)
+
         self.Expand(self.rootnode)
         self.Expand(self.plans_node)
 
         logger.debug("exit populate_tree()")
 
     def new_empty_plan(self, evt):
-        """ Creates a new plan without any ROIs.
+        """
+        Creates a new plan without any ROIs.
         """
         logger.debug("enter new_empty_plan()")
         plan = pte.Plan()
+
+        # TODO: The name of the plan should better not be the same as basename.
+        # PyTRiP requires that basenames are more or less in sync,
+        # however that would mean that it will be a messy tree, if the same filename is found everywhere
+        # one solution could be to add a real name to each plan, which however is not used
+        # as a filename or for writing the output?
         plan.basename = "New Plan {:d}".format(len(self.data.plans) + 1)
+
         # extend original Plan class with local attributes
         # TODO: prefix them with _? They are however not private to the class.
         plan.vois = []
@@ -803,13 +909,30 @@ class LeftMenuTree(wx.TreeCtrl):
 
     def generate_voi_menu(self, node):
         data = self.GetItemData(self.GetItemParent(self.GetItemParent(node)))
-        if data is not None and get_class_name(data.GetData()) == "TripPlan":
+        if data is not None and get_class_name(data.GetData()) == "Plan":
             return self.context_menu["TripVoi"]
         return self.context_menu["MainVoi"]
 
+    def on_leftmenu_changed(self, evt):
+        """
+        Callback function if item is selected in wxTreeCtrl.
+        """
+        logger.debug("Left-click in tree")
+
+    def on_leftmenu_doubleclick(self, evt):
+        """
+        Callback function if item is double clicked upon - could be used for renaming
+        """
+        logger.debug("doubleclick in tree")
+
     def on_leftmenu_rightclick(self, evt):
+        """
+        Callback function if item is rightclicked upon in wxTreeCtrl.
+        """
         tree = evt.GetEventObject()
         data = tree.GetItemData(evt.GetItem())
+
+        # TODO: this is messy, should be improved.
         if data:
             selected_data = data.GetData()
         else:
