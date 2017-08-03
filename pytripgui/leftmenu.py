@@ -113,7 +113,7 @@ class LeftMenuTree(wx.TreeCtrl):
                                            "callback": self.plan_properties}],
                              "DosCube": [{"text": "Delete",
                                            "callback": self.plan_remove_dose},
-                                          {"text": "Set Active For Plan",
+                                          {"text": "Show",
                                            "callback": self.plan_set_active_dose},
                                           {"text": "Properties",
                                            "callback": self.dose_properties}],
@@ -369,7 +369,8 @@ class LeftMenuTree(wx.TreeCtrl):
 
 
     def plan_load_dose_voxelplan(self, evt):
-        """ Callback for loading a (.phys).dos cube
+        """
+        Callback for loading a (.phys).dos cube
         """
         plan = self.GetItemData(self.selected_item).GetData()
         dlg = wx.FileDialog(
@@ -382,11 +383,12 @@ class LeftMenuTree(wx.TreeCtrl):
             st = Settings()
             st.save("general.import.voxelplan_path", path)
             plan.load_dose(path, "phys")  # new dose cube is appended to plan.dosecubes list
-        logger.debug("exit plan_load_dose_voxelplan()")
         pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dosecubes[-1]})
+        logger.debug("exit plan_load_dose_voxelplan()")
 
     def plan_load_let_voxelplan(self, evt):
-        """ Callback for loading a dosemlet.dos cube
+        """
+        Callback for loading a dosemlet.dos cube
         """
         plan = self.GetItemData(self.selected_item).GetData()
         dlg = wx.FileDialog(
@@ -399,6 +401,8 @@ class LeftMenuTree(wx.TreeCtrl):
             st = Settings()
             st.save("general.import.voxelplan_path", path)
             plan.load_let(path)
+        pub.sendMessage('plan.let.added', {"plan": plan, "let": plan.letcubes[-1]})
+        logger.debug("exit plan_load_let_voxelplan()")
 
     def plan_delete_field(self, evt):
         plan = self.get_parent_plan_data(self.selected_item)
@@ -492,13 +496,13 @@ class LeftMenuTree(wx.TreeCtrl):
         """
         """
         plan = self.get_parent_plan_data(self.selected_item)
-        plan.remove_let(self.GetItemData(self.selected_item).GetData())
+        plan.letcubes.remove(self.GetItemData(self.selected_item).GetData())
 
     def plan_remove_dose(self, evt):
         """
         """
         plan = self.get_parent_plan_data(self.selected_item)
-        plan.remove_dose(self.GetItemData(self.selected_item).GetData())
+        plan.dosecubes.remove(self.GetItemData(self.selected_item).GetData())
 
     def plan_set_active_dose(self, evt):
         """
@@ -588,9 +592,15 @@ class LeftMenuTree(wx.TreeCtrl):
 
         # TODO: so far we assume only a single DosCube was calculated, so only a single new one is added
         # set current DosCube to most recent calculated.
-        plan.dos = plan.dosecubes[-1]
-        pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dos})
-        
+
+        if plan.dosecubes:
+            plan.dos = plan.dosecubes[-1]
+            pub.sendMessage('plan.dose.added', {"plan": plan, "dose": plan.dos})
+
+        if plan.letcubes:
+            plan.let = plan.letcubes[-1]
+            pub.sendMessage('plan.let.added', {"plan": plan, "let": plan.let})
+
     def plan_add_field(self, evt):
         logger.debug("enter plan_add_field()")
         plan = self.get_parent_plan_data(self.selected_item)

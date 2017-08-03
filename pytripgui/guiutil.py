@@ -143,7 +143,7 @@ class PlotUtil:
         """
         """
         if self.let is not None:
-            self.max_let = np.amax(let.cube)
+            self.max_let = np.amax(self.let.cube)
             self.min_let = 0
 
     def set_dose_plot(self, type):
@@ -537,9 +537,12 @@ class PlotUtil:
 
             plot_data = dos_data / float(self.factor)
             plot_data[plot_data <= self.min_dose] = self.min_dose
+
+            # This part is particularly messy and needs to be refactored
             if not hasattr(self, "fig_dose") or not self.scale == scale:
                 self.fig_dose = self.figure.imshow(plot_data, cmap=cmap, vmax=(self.max_dose), aspect=self.aspect)
                 if not self.draw_in_gui:
+                    # There is no GUI to draw anything in.
                     pass
                     # TODO why bar is not used ?
                     # bar = self.figure.colorbar()
@@ -547,10 +550,12 @@ class PlotUtil:
                     if not hasattr(self, "dose_bar") and not hasattr(self, "let_bar"):
                         cax = self.figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
                         self.dose_bar = self.figure.figure.colorbar(self.fig_dose, cax=cax)
-                if scale == "abs":
-                    self.dose_bar.set_label("Dose (Gy)")
-                else:
-                    self.dose_bar.set_label("Dose (%)")
+
+                if hasattr(self, "dose_bar"):
+                    if scale == "abs":
+                        self.dose_bar.set_label("Dose (Gy)")
+                    else:
+                        self.dose_bar.set_label("Dose (%)")
             else:
                 self.fig_dose.set_data(plot_data)
             self.scale = scale
