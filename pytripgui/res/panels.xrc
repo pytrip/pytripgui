@@ -2053,7 +2053,7 @@
 				<object class="wxNotebook" name="m_notebook1">
 					<object class="notebookpage">
 						<label>Access</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel1">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2130,6 +2130,24 @@
 												</content>
 											</object>
 										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALIGN_CENTER|wxALL</flag>
+											<border>5</border>
+											<object class="wxStaticText" name="m_staticText86">
+												<label>Path:</label>
+												<wrap>-1</wrap>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxTextCtrl" name="txt_bin_path">
+												<size>300,-1</size>
+												<value>/usr/local/bin/TRiP98</value>
+											</object>
+										</object>
 									</object>
 								</object>
 								<object class="sizeritem">
@@ -2144,7 +2162,7 @@
 											<flag>wxEXPAND</flag>
 											<border>5</border>
 											<object class="wxFlexGridSizer">
-												<rows>3</rows>
+												<rows>4</rows>
 												<cols>3</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
@@ -2166,7 +2184,7 @@
 													<border>5</border>
 													<object class="wxTextCtrl" name="txt_server">
 														<size>400,-1</size>
-														<value></value>
+														<value>trip.ks.se</value>
 														<maxlength>0</maxlength>
 													</object>
 												</object>
@@ -2246,7 +2264,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>Kernel files</label>
-						<selected>1</selected>
+						<selected>0</selected>
 						<object class="wxPanel" name="m_panel7">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxBoxSizer">
@@ -2310,6 +2328,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText44">
+												<tooltip>Path to depth-dose kernel files</tooltip>
 												<label>DDD directory</label>
 												<wrap>-1</wrap>
 											</object>
@@ -2321,6 +2340,7 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_ddd">
 												<size>400,-1</size>
+												<tooltip>Include wildcard: /foo/bar/*</tooltip>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2341,6 +2361,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText46">
+												<tooltip>Path to spectrum files, needed for LET and RBE calculations</tooltip>
 												<label>SPC directory</label>
 												<wrap>-1</wrap>
 											</object>
@@ -2352,6 +2373,7 @@
 											<border>5</border>
 											<object class="wxTextCtrl" name="txt_spc">
 												<size>400,-1</size>
+												<tooltip>Include wildcard: /foo/bar/*</tooltip>
 												<value></value>
 												<maxlength>0</maxlength>
 											</object>
@@ -2372,6 +2394,7 @@
 											<flag>wxALL</flag>
 											<border>5</border>
 											<object class="wxStaticText" name="m_staticText75">
+												<tooltip>Accelerator capabilities</tooltip>
 												<label>SIS file (optional)</label>
 												<wrap>-1</wrap>
 											</object>
