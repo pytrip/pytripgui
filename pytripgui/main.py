@@ -220,6 +220,9 @@ class MainFrame(wx.Frame):
         wx.EVT_MENU(self, XRCID("menuitem_saveas"), self.saveas)
         wx.EVT_MENU(self, XRCID("menuitem_load"), self.load)
 
+        # -> Tools ->
+        wx.EVT_MENU(self, XRCID("menuitem_console"), self.crust_console)
+
         # -> Settings ->
         wx.EVT_MENU(self, XRCID("menuitem_preferences"), self.preferences_dialog)
         wx.EVT_MENU(self, XRCID("menuitem_tripconfig"), self.tripconfig_dialog)
@@ -395,6 +398,15 @@ class MainFrame(wx.Frame):
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.dicom_path", path)
             data.open_dicom(path)
+
+    def crust_console(self, evt):
+        """
+        Opens a Python console window, where objects can be accessed.
+        """
+        import wx.py.crust
+
+        crustFrame = wx.py.crust.CrustFrame(parent = self)
+        crustFrame.Show()
 
     def preferences_dialog(self, evt):
         """ Open the Preferences dialog.

@@ -302,6 +302,13 @@
 				<help></help>
 			</object>
 		</object>
+		<object class="wxMenu" name="m_menu_tools">
+			<label>Tools</label>
+			<object class="wxMenuItem" name="menuitem_console">
+				<label>Python Console\tF8</label>
+				<help></help>
+			</object>
+		</object>
 		<object class="wxMenu" name="m_menu5">
 			<label>Settings</label>
 			<object class="wxMenuItem" name="menuitem_preferences">
