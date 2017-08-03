@@ -49,6 +49,7 @@ class TripConfigDialog(wx.Dialog):
                        "trip98.s.username": "txt_username",
                        "trip98.s.password": "txt_password",
                        "trip98.s.server": "txt_server",
+                       "trip98.s.bin_path": "txt_bin_path",
                        "trip98.choice.remote": "m_choice_location",
                        "trip98.s.hlut": "txt_hlut",
                        "trip98.s.dedx": "txt_dedx",

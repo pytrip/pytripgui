@@ -549,6 +549,7 @@ class LeftMenuTree(wx.TreeCtrl):
         te.servername = st.load('trip98.s.server')
         te.username = st.load('trip98.s.username')
         te.password = st.load('trip98.s.password')
+        te.trip_bin_path = st.load('trip98.s.bin_path')
 
         # tell what configuration files to be used, depending on the
         # projectile / rifi configuration
