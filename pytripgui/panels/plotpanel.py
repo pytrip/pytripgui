@@ -32,13 +32,13 @@ from pytripgui.util import get_resource_path
 matplotlib.interactive(True)
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1
+    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
         from wx.lib.pubsub import Publisher as pub
     except:
-        from wx.lib.pubsub import setuparg1
+        from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
 logger = logging.getLogger(__name__)
@@ -227,7 +227,6 @@ class PlotPanel(wx.Panel):
 
     def on_patient_loaded(self, msg):
         self.data = msg.data
-        #ctx = self.data.get_images().get_voxelplan()
         ctx = self.data.ctx
 
         self.plotutil.ctx = ctx
@@ -419,8 +418,12 @@ class PlotPanel(wx.Panel):
 
         active_plan = self.active_plan
         if active_plan is not None:
-            ### TODO: not sure what is goig on here, which dose cube to display?
-            dos = active_plan.dosecubes[-1]
+            # TODO: not sure what is goig on here, which dose cube to display?
+
+            dos = None
+            if active_plan.dosecubes:
+                dos = active_plan.dosecubes[-1]
+
             dose_type_menu = wx.Menu()
             if dos is not None:
                 id = wx.NewId()
