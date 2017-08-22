@@ -22,9 +22,11 @@ import traceback
 import wx
 import wx.lib.dialogs
 from pytrip.error import InputError
-from wx.xrc import XmlResource
+from wx.xrc import XRCCTRL, XRCID, XmlResource
 
 from pytripgui.model import util
+from pytripgui.model.settings import Settings
+from pytripgui.model.tripdata import TRiPData
 from pytripgui.view.mainframe import FileDropTarget, MainFrame
 
 if getattr(sys, 'frozen', False):
@@ -42,15 +44,11 @@ logger = logging.getLogger(__name__)
 class Controller(object):
     def __init__(self, app):
         # controller holds refs to models, app and views
-        # self.model = Model('Goku', 9001) # TODO
+        self.model = TRiPData()
 
         from pytripgui import __version__ as pytripgui_version
 
         self.app = app  # <- wxApp
-        self.app.SetAppName("pytrip")
-
-        logger.info("RP {:s}".format(util.get_resource_path('main.xrc')))
-
         self.app.res = XmlResource(util.get_resource_path('main.xrc'))
 
         self.view = self.app.res.LoadFrame(None, 'MainFrame')  # <- wxFrame
@@ -61,31 +59,22 @@ class Controller(object):
         self.view.SetDropTarget(FileDropTarget(self.view))
 
         self.app.SetTopWindow(self.view)
+
         self.view.Centre()
+
+        self.menu_open_voxelplan_bin()
 
         # finally,show the view
         self.view.Show()
 
+    def menu_open_voxelplan_bin(self):
+        wx.EVT_MENU(self.view, XRCID("menuitem_voxelplan"), self.view.open_load_voxelplan_dialog)
+        pub.subscribe(self.on_voxelplan_file_selected, "voxelplan.load.dialog.new")
 
-class pytripgui(wx.App):
-    def OnInit(self):
-        from pytripgui import __version__ as pytripgui_version
-
-        wx.GetApp().SetAppName("pytrip")
-        # Load the XRC file for our gui resources
-        self.res = XmlResource(util.get_resource_path('main.xrc'))
-        pytripFrame = self.res.LoadFrame(None, 'MainFrame')
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        pytripFrame.SetFont(font)
-        pytripFrame.Init(self.res)
-        pytripFrame.SetTitle("PyTRiPGUI v.{:s}".format(pytripgui_version))
-        dt1 = FileDropTarget(pytripFrame)
-        pytripFrame.SetDropTarget(dt1)
-        self.SetTopWindow(pytripFrame)
-        pytripFrame.Centre()
-        pytripFrame.Show()
-        return 1
-
+    def on_voxelplan_file_selected(self, msg):
+        st = Settings()  # save last used DICOM path to settings file.
+        st.save("general.import.voxelplan_path", msg.data)
+        self.model.open_ctx_vdx(msg.data)
 
 def handleInputException(exc_type, exc_value, exc_traceback):
     if exc_type is InputError:
@@ -97,6 +86,7 @@ def handleInputException(exc_type, exc_value, exc_traceback):
     dlg.Destroy()
 
 sys.excepthook = handleInputException
+
 
 def start(args=sys.argv[1:]):
     from pytripgui import __version__ as _ptgv
@@ -115,7 +105,6 @@ def start(args=sys.argv[1:]):
     else:
         logging.basicConfig()
 
-    # app = pytripgui(0)
     app = wx.App(False)
 
     # pass the app to the controller

@@ -53,7 +53,7 @@ class LeftMenuTree(wx.TreeCtrl):
     - plan.let    # holding one LETCube() object
     - plan.field  # TODO: is this really needed? No fields are shown anyway in GUI currently.
     - plan.vois   #  this will conflict to the vois already in the plan, possibly
-                  # some active attibute will be needed here.
+                  # some active attribute will be needed here.
 
     self.selected_item : currently selected item in TreeList
     self.plans_node : master wxTreeItemId holding all plans, there is only one of this.

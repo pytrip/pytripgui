@@ -30,6 +30,7 @@ from pytripgui.model.util import get_resource_path
 
 logger = logging.getLogger(__name__)
 
+
 class FileDropTarget(wx.FileDropTarget):
     def __init__(self, obj):
         wx.FileDropTarget.__init__(self)
@@ -49,17 +50,20 @@ class MainFrame(wx.Frame):
     def Init(self, res):
         from pytripgui import __version__ as pytripgui_version
 
+        self.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+
         self.leftmenu_panel = XRCCTRL(self, "leftmenu_panel")
         self.main_notebook = XRCCTRL(self, "main_notebook")
         self.statusbar = XRCCTRL(self, "statusbar")
         wx.EVT_NOTEBOOK_PAGE_CHANGED(self, XRCID("main_notebook"), self.main_notebook_active_page_changed)
 
-        print(XRCCTRL(self,"top_menu"))
-
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         self.leftmenu = LeftMenuTree(
-            self.leftmenu_panel, -1, size=(200, -1), style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
+            self.leftmenu_panel,
+            -1,
+            size=(200, -1),
+            style=wx.ALL | wx.EXPAND | wx.TR_DEFAULT_STYLE | wx.TR_EDIT_LABELS)
         sizer.Add(self.leftmenu, 1, wx.EXPAND, 0)
         self.leftmenu_panel.SetSizer(sizer)
         self.data = TRiPData()
@@ -188,7 +192,7 @@ class MainFrame(wx.Frame):
 
         # ~ self.export_menu.Enable()
         wx.EVT_MENU(self, XRCID("menuitem_openpatient"), self.open_patient_load_dialog)
-        wx.EVT_MENU(self, XRCID("menuitem_voxelplan"), self.voxelplan_load_dialog)
+        # wx.EVT_MENU(self, XRCID("menuitem_voxelplan"), self.voxelplan_load_dialog)
         wx.EVT_MENU(self, XRCID("menuitem_importexec"), self.tripexec_load_dialog)
         wx.EVT_MENU(self, XRCID("menuitem_createcube"), self.createcube_load_dialog)
         wx.EVT_MENU(self, XRCID("menuitem_createstructure"), self.createstructure_load_dialog)
@@ -347,6 +351,18 @@ class MainFrame(wx.Frame):
             st = Settings()  # save last used DICOM path to settings file.
             st.save("general.import.tripexec_path", path)
             data.load_trip_exec(path)
+
+    def open_load_voxelplan_dialog(self, evt):
+        """ Callback for opening a voxelplan patient.
+        """
+        dlg = wx.FileDialog(
+            self,
+            defaultFile=self.voxelplan_path,
+            wildcard="Voxelplan headerfile (*.hed)|*.hed",
+            message="Choose header file for matching .ctx (and .vdx)")
+
+        if dlg.ShowModal() == wx.ID_OK:
+            pub.sendMessage("voxelplan.load.dialog.new", dlg.GetPath())
 
     def voxelplan_load_dialog(self, evt):
         """ Callback for opening a voxelplan patient.
