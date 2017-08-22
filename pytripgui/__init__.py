@@ -15,7 +15,8 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 __all__ = ['util']
-from pytripgui.main import start, MainFrame
-import pytripgui.dialogs
-import pytripgui.panels
 import pytripgui.util
+import pytripgui.view.dialogs
+import pytripgui.view.panels
+from pytripgui.main import start
+from pytripgui.view.mainframe import MainFrame
