@@ -16,19 +16,16 @@
 """
 import argparse
 import logging
-import os
 import sys
 import traceback
 
 import wx
 import wx.lib.dialogs
 from pytrip.error import InputError
-from wx.xrc import XRCID, XmlResource
+from wx.xrc import XmlResource
 
-from pytripgui import util
-from pytripgui.plugin import PluginManager
-from pytripgui.util import get_resource_path
-from pytripgui.view.mainframe import FileDropTarget
+from pytripgui.model import util
+from pytripgui.view.mainframe import FileDropTarget, MainFrame
 
 if getattr(sys, 'frozen', False):
     pass
@@ -44,31 +41,30 @@ logger = logging.getLogger(__name__)
 
 class Controller(object):
     def __init__(self, app):
-        pass
         # controller holds refs to models, app and views
-        # self.model = Model('Goku', 9001)
-
-        self.app = app  # <- wxApp
-
-        # self.view = View(None)  # <- wxFrame
-
-        # finally,show the view
-        # self.view.Show()
+        # self.model = Model('Goku', 9001) # TODO
 
         from pytripgui import __version__ as pytripgui_version
-        app.SetAppName("pytrip")
-        # Load the XRC file for our gui resources
+
+        self.app = app  # <- wxApp
+        self.app.SetAppName("pytrip")
+
+        logger.info("RP {:s}".format(util.get_resource_path('main.xrc')))
+
         self.app.res = XmlResource(util.get_resource_path('main.xrc'))
-        pytripFrame = self.app.res.LoadFrame(None, 'MainFrame')
-        font = wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT)
-        pytripFrame.SetFont(font)
-        pytripFrame.Init(self.app.res)
-        pytripFrame.SetTitle("PyTRiPGUI v.{:s}".format(pytripgui_version))
-        dt1 = FileDropTarget(pytripFrame)
-        pytripFrame.SetDropTarget(dt1)
-        self.app.SetTopWindow(pytripFrame)
-        pytripFrame.Centre()
-        pytripFrame.Show()
+
+        self.view = self.app.res.LoadFrame(None, 'MainFrame')  # <- wxFrame
+
+        self.view.SetFont(wx.SystemSettings_GetFont(wx.SYS_DEFAULT_GUI_FONT))
+        self.view.Init(self.app.res)
+        self.view.SetTitle("PyTRiPGUI v.{:s}".format(pytripgui_version))
+        self.view.SetDropTarget(FileDropTarget(self.view))
+
+        self.app.SetTopWindow(self.view)
+        self.view.Centre()
+
+        # finally,show the view
+        self.view.Show()
 
 
 class pytripgui(wx.App):

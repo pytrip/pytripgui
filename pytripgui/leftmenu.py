@@ -21,7 +21,7 @@ import pytrip.tripexecuter as pte
 
 import pytripgui.guihelper
 from pytripgui.model.settings import Settings
-from pytripgui.util import get_class_name
+from pytripgui.model.util import get_class_name
 
 import wx
 if getattr(sys, 'frozen', False):

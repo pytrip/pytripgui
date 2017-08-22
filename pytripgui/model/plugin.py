@@ -17,7 +17,7 @@
 import sys
 import os
 import imp
-from pytripgui import util
+from pytripgui.model import util
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import setuparg1  # noqa

@@ -20,14 +20,12 @@ else:
         from wx.lib.pubsub import setuparg1  # noqa
         from wx.lib.pubsub import pub
 
-from pytrip.error import InputError
-
-from pytripgui import util
 from pytripgui.leftmenu import LeftMenuTree
+from pytripgui.model import util
 from pytripgui.model.settings import Settings
 from pytripgui.model.tripdata import TRiPData
-from pytripgui.plugin import PluginManager
-from pytripgui.util import get_resource_path
+from pytripgui.model.plugin import PluginManager
+from pytripgui.model.util import get_resource_path
 
 
 logger = logging.getLogger(__name__)
