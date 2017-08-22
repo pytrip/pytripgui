@@ -18,7 +18,7 @@ import sys
 import logging
 import ConfigParser as configparser  # this is python2 specific
 
-from pytripgui.util import get_user_directory
+from pytripgui.model.util import get_user_directory
 
 if getattr(sys, 'frozen', False):
     from wx.lib.pubsub import setuparg1  # noqa

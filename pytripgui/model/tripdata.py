@@ -17,18 +17,14 @@
 """
 All plan data are stored here.
 """
+import logging
 import os
 import sys
-import threading
-import logging
-import wx
 
 import pytrip as pt
-
-from pytripgui.closeobj import CloseObj
+import wx
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:

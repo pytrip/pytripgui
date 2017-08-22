@@ -14,20 +14,17 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import sys
 import logging
-
-import copy
-import wx
+import sys
 
 import pytrip.tripexecuter as pte
 
-from pytripgui.util import get_class_name
-from pytripgui.settings import Settings
 import pytripgui.guihelper
+from pytripgui.model.settings import Settings
+from pytripgui.model.util import get_class_name
 
+import wx
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:
@@ -56,7 +53,7 @@ class LeftMenuTree(wx.TreeCtrl):
     - plan.let    # holding one LETCube() object
     - plan.field  # TODO: is this really needed? No fields are shown anyway in GUI currently.
     - plan.vois   #  this will conflict to the vois already in the plan, possibly
-                  # some active attibute will be needed here.
+                  # some active attribute will be needed here.
 
     self.selected_item : currently selected item in TreeList
     self.plans_node : master wxTreeItemId holding all plans, there is only one of this.

@@ -30,11 +30,14 @@ def get_resource_path(res):
 
 def get_main_dir():
     if getattr(sys, 'frozen', False):
+        print("md a", os.environ.get("_MEIPASS2"), os.path.abspath("."))
+
         return os.environ.get("_MEIPASS2", os.path.abspath("."))
         # when using single directory installer, this one should be probably used:
         # return os.path.dirname(sys.executable)
     else:
-        return os.path.dirname(__file__)
+        # __file__ points to the location of util.py, which is one level deeper that main dir
+        return os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 
 
 def get_default_plugin_path():
