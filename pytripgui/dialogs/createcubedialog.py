@@ -15,9 +15,10 @@
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
 import wx
-from wx.xrc import XmlResource, XRCCTRL, XRCID
+from wx.xrc import XRCCTRL, XRCID
+
 import pytrip as pt
-from pytripgui.tripdata import TRiPData
+from pytripgui.model.tripdata import TRiPData
 
 
 class CreateCubeDialog(wx.Dialog):

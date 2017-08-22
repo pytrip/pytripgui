@@ -14,33 +14,30 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import sys
-import traceback
-import os
+import argparse
 import gc
 import logging
-import argparse
-
+import os
 import pickle
+import sys
+import traceback
+
 import wx
 import wx.lib.dialogs
 from wx.xrc import XRCCTRL, XRCID, XmlResource
 
 from pytrip.error import InputError
 
-from pytripgui.leftmenu import LeftMenuTree
-from pytripgui.settings import Settings
-from pytripgui.plugin import PluginManager
-
-from pytripgui.panels.plotpanel import PlotPanel
-from pytripgui.panels.dvh import DVHPanel, LVHPanel
-
-from pytripgui.tripdata import TRiPData
-from pytripgui.util import get_resource_path
 from pytripgui import util
+from pytripgui.leftmenu import LeftMenuTree
+from pytripgui.model.settings import Settings
+from pytripgui.model.tripdata import TRiPData
+from pytripgui.panels.dvh import DVHPanel, LVHPanel
+from pytripgui.panels.plotpanel import PlotPanel
+from pytripgui.plugin import PluginManager
+from pytripgui.util import get_resource_path
 
 if getattr(sys, 'frozen', False):
-    from wx.lib.pubsub import setuparg1  # noqa
     from wx.lib.pubsub import pub
 else:
     try:

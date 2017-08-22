@@ -14,12 +14,12 @@
     You should have received a copy of the GNU General Public License
     along with pytripgui.  If not, see <http://www.gnu.org/licenses/>
 """
-import wx
 import logging
 
-from pytripgui.settings import Settings
-
+import wx
 from wx.xrc import XRCCTRL, XRCID
+
+from pytripgui.model.settings import Settings
 
 logger = logging.getLogger(__name__)
 
