@@ -75,3 +75,4 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.actionOpen_FooBar.setText(_translate("MainWindow", "Open FooBar"))
         self.actionPreferences.setText(_translate("MainWindow", "Preferences"))
+

@@ -104,4 +104,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <slot>open_ctx()</slot>
+ </slots>
 </ui>
