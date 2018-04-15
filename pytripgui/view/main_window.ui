@@ -56,6 +56,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionOpen_DICOM"/>
     <addaction name="actionOpen_FooBar"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -93,7 +94,7 @@
   </widget>
   <action name="actionOpen_FooBar">
    <property name="text">
-    <string>Open FooBar</string>
+    <string>Open VOXELPLAN</string>
    </property>
   </action>
   <action name="actionPreferences">
@@ -101,10 +102,12 @@
     <string>Preferences</string>
    </property>
   </action>
+  <action name="actionOpen_DICOM">
+   <property name="text">
+    <string>Open DICOM</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
- <slots>
-  <slot>open_ctx()</slot>
- </slots>
 </ui>

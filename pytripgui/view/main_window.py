@@ -52,6 +52,9 @@ class Ui_MainWindow(object):
         self.actionOpen_FooBar.setObjectName("actionOpen_FooBar")
         self.actionPreferences = QtWidgets.QAction(MainWindow)
         self.actionPreferences.setObjectName("actionPreferences")
+        self.actionOpen_DICOM = QtWidgets.QAction(MainWindow)
+        self.actionOpen_DICOM.setObjectName("actionOpen_DICOM")
+        self.menuFile.addAction(self.actionOpen_DICOM)
         self.menuFile.addAction(self.actionOpen_FooBar)
         self.menuSettings.addAction(self.actionPreferences)
         self.menubar.addAction(self.menuFile.menuAction())
@@ -73,6 +76,7 @@ class Ui_MainWindow(object):
         self.menuSettings.setTitle(_translate("MainWindow", "Settings"))
         self.menuAbout.setTitle(_translate("MainWindow", "About"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
-        self.actionOpen_FooBar.setText(_translate("MainWindow", "Open FooBar"))
+        self.actionOpen_FooBar.setText(_translate("MainWindow", "Open VOXELPLAN"))
         self.actionPreferences.setText(_translate("MainWindow", "Preferences"))
+        self.actionOpen_DICOM.setText(_translate("MainWindow", "Open DICOM"))
 
