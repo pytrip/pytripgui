@@ -1,8 +1,14 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class MyModel(object):
 
     def __init__(self):
         self._update_funce = []
         self.foobar = 10
+        self.ctx = None
 
     def subscribe_update_func(self, func):
         """
