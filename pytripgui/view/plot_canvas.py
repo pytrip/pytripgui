@@ -9,8 +9,15 @@ logger = logging.getLogger(__name__)
 
 
 class PlotCanvas(FigureCanvas):
+    """
+    Viewer class for matplotlib 2D plotting widget
+    """
 
     def __init__(self, parent=None, width=5, height=4, dpi=100):
+        """
+        Init canvas.
+        """
+
         fig = Figure(figsize=(width, height), dpi=dpi)
         self.axes = fig.add_subplot(111)
 
@@ -22,9 +29,7 @@ class PlotCanvas(FigureCanvas):
                                    QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-        self.plot()   # this to be moved to controller
-
-    def plot(self):  # this to be moved to controller
+    def test_plot(self):  # this to be moved to controller
         """
         Some random data to be filled into the plot.
         """

@@ -11,6 +11,7 @@ class MyModel(object):
         self.ctx = None
         self.vdx = None
         self.plans = None
+        self.plot = None  # placeholder for plot model
 
     def subscribe_update_func(self, func):
         """

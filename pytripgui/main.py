@@ -5,8 +5,10 @@ import logging
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from model.mymodel import MyModel
+from model.plot_model import PlotModel
 from controller.main_cont import MainController
 from controller.tree_cont import TreeController
+from controller.plot_cont import PlotController
 from view.main_window import Ui_MainWindow
 from view.plot_canvas import PlotCanvas
 
@@ -18,20 +20,20 @@ class AppWindow(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        logger.debug("Setup views")
+        # attach canvas for 2D plots
+        pc = PlotCanvas(parent=self.ui.tab)
+
         logger.debug("Setup model")
         self.model = MyModel()
+        self.model.plot = PlotModel()
+
+        logger.debug("Setup controllers")
         self.ctrl = MainController(self.model, self)
-        self.connect_ui()
-
-        # setup the TreeWidget
         self.tctrl = TreeController(self.model, self.ui.treeWidget)
-
-        # attach canvas for 2D plots
-        m = PlotCanvas(parent=self.ui.tab)
-        m = PlotCanvas(parent=self.ui.tab_2)
-        m.move(0, 0)
-
-        self.show()
+        self.pctrl = PlotController(self.model, pc)
+        self.connect_ui()
 
     def connect_ui(self):
         """
