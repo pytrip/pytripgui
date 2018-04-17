@@ -32,8 +32,9 @@ class AppWindow(QMainWindow):
         logger.debug("Setup controllers")
         self.ctrl = MainController(self.model, self)
         self.tctrl = TreeController(self.model, self.ui.treeWidget)
-        self.pctrl = PlotController(self.model, pc)
+        self.pctrl = PlotController(self.model, pc, self.ui)
         self.connect_ui()
+        self.connect_ui_plot(pc)
 
     def connect_ui(self):
         """
@@ -48,6 +49,14 @@ class AppWindow(QMainWindow):
         #
         self.ui.actionOpen_FooBar.triggered.connect(self.ctrl.open_voxelplan)
         # ...
+
+    def connect_ui_plot(self, pc):
+        """
+        Note sure this is the correct place to do this.
+        """
+        pc.fig.canvas.mpl_connect('button_press_event', PlotController.on_click)
+        pc.fig.canvas.mpl_connect('motion_notify_event', PlotController.on_mouse_move)
+        pc.fig.canvas.mpl_connect('scroll_event', PlotController.on_mouse_wheel)
 
 
 def main(args=sys.argv[1:]):

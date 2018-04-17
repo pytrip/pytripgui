@@ -5,6 +5,8 @@ from PyQt5.QtWidgets import QSizePolicy
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
+# from controller.plot_cont import PlotController
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,10 +20,10 @@ class PlotCanvas(FigureCanvas):
         Init canvas.
         """
 
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
+        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = self.fig.add_subplot(111)
 
-        FigureCanvas.__init__(self, fig)
+        FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)
 
         FigureCanvas.setSizePolicy(self,
@@ -29,13 +31,8 @@ class PlotCanvas(FigureCanvas):
                                    QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
-    def test_plot(self):  # this to be moved to controller
+    def foobar(self):
         """
-        Some random data to be filled into the plot.
+        alternatively setup callbacks here?
         """
-        import random
-        data = [random.random() for i in range(25)]
-        ax = self.figure.add_subplot(111)
-        ax.plot(data, 'r-')
-        ax.set_title('PyQt Matplotlib Example')
-        self.draw()
+        pass

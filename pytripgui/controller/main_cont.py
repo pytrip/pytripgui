@@ -39,6 +39,11 @@ class MainController(object):
         self.model.ctx = pt.CtxCube()
         self.model.ctx.read(ctx_path)
 
+        # Point to center of slices for default plotting
+        self.model.plot.current_xslice = int(self.model.ctx.dimx * 0.5)
+        self.model.plot.current_yslice = int(self.model.ctx.dimy * 0.5)
+        self.model.plot.current_zslice = int(self.model.ctx.dimz * 0.5)
+
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
         from pytrip.util import TRiP98FilePath
