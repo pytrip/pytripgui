@@ -64,8 +64,8 @@
      <addaction name="actionROI"/>
     </widget>
     <addaction name="menuNew"/>
-    <addaction name="actionOpen_DICOM"/>
-    <addaction name="actionOpen_FooBar"/>
+    <addaction name="actionOpen_Dicom"/>
+    <addaction name="actionOpen_Voxelplan"/>
     <addaction name="separator"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
@@ -97,7 +97,7 @@
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen_FooBar">
+  <action name="actionOpen_Voxelplan">
    <property name="text">
     <string>Open VOXELPLAN</string>
    </property>
@@ -107,7 +107,7 @@
     <string>Preferences</string>
    </property>
   </action>
-  <action name="actionOpen_DICOM">
+  <action name="actionOpen_Dicom">
    <property name="text">
     <string>Open DICOM</string>
    </property>

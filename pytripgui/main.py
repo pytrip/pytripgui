@@ -47,7 +47,12 @@ class AppWindow(QMainWindow):
         # The only solution I foresee then is simply to manually make all the signal list here.
         # Any better idea?
         #
-        self.ui.actionOpen_FooBar.triggered.connect(self.ctrl.open_voxelplan)
+        self.ui.actionOpen_Dicom.triggered.connect(self.ctrl.open_dicom)
+        self.ui.actionOpen_Voxelplan.triggered.connect(self.ctrl.open_voxelplan)
+        self.ui.actionOpen_Project.triggered.connect(self.ctrl.open_project)
+        self.ui.actionSave_Project.triggered.connect(self.ctrl.save_project)
+        self.ui.actionExit.triggered.connect(MainController.on_exit)
+
         # ...
 
     def connect_ui_plot(self, pc):

@@ -17,15 +17,19 @@ class MainController(object):
         self.model = model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.current_slice = 0  # current slice to be viewed
-
     # called from view class
     def change_foobar(self, value):
         # put control logic here
         self.model.foobar = value
         self.model.announce_update()
 
-    def open_voxelplan(self, model):
+    def open_dicom(self, event):
+        """
+        Opens a DICOM set and sets it to the model.
+        """
+        logger.debug("Open DICOM triggered")
+
+    def open_voxelplan(self, event):
         """
         Opens a CTX + associated VDX file, and sets it to the model.
         """
@@ -40,9 +44,9 @@ class MainController(object):
         self.model.ctx.read(ctx_path)
 
         # Point to center of slices for default plotting
-        self.model.plot.current_xslice = int(self.model.ctx.dimx * 0.5)
-        self.model.plot.current_yslice = int(self.model.ctx.dimy * 0.5)
-        self.model.plot.current_zslice = int(self.model.ctx.dimz * 0.5)
+        self.model.plot.xslice = int(self.model.ctx.dimx * 0.5)
+        self.model.plot.yslice = int(self.model.ctx.dimy * 0.5)
+        self.model.plot.zslice = int(self.model.ctx.dimz * 0.5)
 
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
@@ -53,6 +57,7 @@ class MainController(object):
 
         logger.debug("Check if '{:s}' exists...".format(vdx_path))
 
+        # If VDX is there, load it.
         import os.path
         if os.path.isfile(vdx_path):
             logger.debug("   Open '{:s}'".format(vdx_path))
@@ -68,3 +73,21 @@ class MainController(object):
         # from controller.plot_cont import PlotController
         # self.plotupdate.connect(PlotController.update_plot)
         # self.plotupdate.emit()
+
+    def open_project(self, event):
+        """
+        Opens a project
+        """
+        logger.debug("Open Project triggered")
+
+    def save_project(self, event):
+        """
+        Opens a project
+        """
+        logger.debug("Save Project triggered")
+
+    @staticmethod
+    def on_exit(event):
+        logger.debug("on_exit() triggered")
+        import sys
+        sys.exit()

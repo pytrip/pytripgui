@@ -10,16 +10,18 @@ class PlotModel(object):
     """
 
     def __init__(self):
-        self.current_xslice = 0
-        self.current_yslice = 0
-        self.current_zslice = 0
+        self.xslice = 0
+        self.yslice = 0
+        self.zslice = 0
 
         self.contrast_ct = [-100, 400]
         self.vois = []  # list of vois to be plotted
         self.plot_vois = True   # whether all vois are plotted at all
 
         self.dose_plot = "colorwash"
-        self.dosecontour_levels = []
+        self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0,
+                                    60.0, 70.0, 80.0, 90.0, 95.0, 98.0,
+                                    100.0, 102.0]
 
         self.let_plot = "colorwash"
         self.dose_axis = "auto"
@@ -27,6 +29,8 @@ class PlotModel(object):
         self.colormap_let = plt.get_cmap(None)
 
         self.zoom = 100.0
+        self.zoom_levels = [100.0, 110.0, 125.0, 150.0, 200.0,
+                            250.0, 300.0, 400.0]
         self.center = [50.0, 50.0]
 
         self.plan = None  # Placeholder for plan to be plotted

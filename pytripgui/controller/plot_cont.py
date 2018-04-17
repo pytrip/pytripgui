@@ -40,7 +40,7 @@ class PlotController(object):
         _m = self._model
         _pm = self._model.plot
 
-        ct_data = _m.ctx.cube[_pm.current_zslice]
+        ct_data = _m.ctx.cube[_pm.zslice]
         self._pc.axes.imshow(
             ct_data,
             cmap=plt.get_cmap("gray"),
