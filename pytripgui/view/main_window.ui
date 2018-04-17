@@ -19,7 +19,7 @@
      <widget class="QTreeWidget" name="treeWidget">
       <column>
        <property name="text">
-        <string notr="true">1</string>
+        <string notr="true">(no patient loaded)</string>
        </property>
       </column>
      </widget>

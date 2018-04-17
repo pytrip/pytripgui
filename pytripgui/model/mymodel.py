@@ -9,6 +9,8 @@ class MyModel(object):
         self._update_funce = []
         self.foobar = 10
         self.ctx = None
+        self.vdx = None
+        self.plans = None
 
     def subscribe_update_func(self, func):
         """

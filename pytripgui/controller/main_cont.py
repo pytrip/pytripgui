@@ -23,15 +23,33 @@ class MainController(object):
         self.model.foobar = value
         self.model.announce_update()
 
-    def open_ctx(self, model):
+    def open_voxelplan(self, model):
         """
-        Opens a CTX file, and sets it to the model.
+        Opens a CTX + associated VDX file, and sets it to the model.
         """
-        logger.debug("Open CTX")
         from view.dialogs import MyDialogs
         ctx_path = MyDialogs.openFileNameDialog(self.app)
+
+        logger.debug("Open CTX")
+
         self.model.ctx = pt.CtxCube()
         self.model.ctx.read(ctx_path)
+
+        logger.debug("Check for VDX")
+        from pytrip.util import TRiP98FilePath
+        _b = TRiP98FilePath(ctx_path, self.model.ctx).basename
+        _n = TRiP98FilePath(ctx_path, self.model.ctx).name
+        vdx_path = ctx_path.replace(_n, _b) + '.vdx'
+        # TODO: check for '.VDX', but this should be on PyTRiP level
+        logger.debug("Check for VDX : '{:s}'".format(vdx_path))
+
+        import os.path
+        if os.path.isfile(vdx_path):
+            logger.debug("Open '{:s}'".format(vdx_path))
+            self.model.vdx = pt.VdxCube(self.model.ctx)
+            self.model.vdx.read(vdx_path)
+
+        self.app.tctrl.update_tree()
 
         # testing, not sure if this is proper
         # emit signal to update the plot

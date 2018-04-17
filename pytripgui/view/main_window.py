@@ -18,7 +18,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.treeWidget = QtWidgets.QTreeWidget(self.centralwidget)
         self.treeWidget.setObjectName("treeWidget")
-        self.treeWidget.headerItem().setText(0, "1")
+        self.treeWidget.headerItem().setText(0, "(no patient loaded)")
         self.horizontalLayout_2.addWidget(self.treeWidget, 0, QtCore.Qt.AlignLeft)
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName("tabWidget")

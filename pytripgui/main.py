@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from model.mymodel import MyModel
 from controller.main_cont import MainController
+from controller.tree_cont import TreeController
 from view.main_window import Ui_MainWindow
 from view.plot_canvas import PlotCanvas
 
@@ -21,6 +22,9 @@ class AppWindow(QMainWindow):
         self.model = MyModel()
         self.ctrl = MainController(self.model, self)
         self.connect_ui()
+
+        # setup the TreeWidget
+        self.tctrl = TreeController(self.model, self.ui.treeWidget)
 
         # attach canvas for 2D plots
         m = PlotCanvas(parent=self.ui.tab)
@@ -40,7 +44,7 @@ class AppWindow(QMainWindow):
         # The only solution I foresee then is simply to manually make all the signal list here.
         # Any better idea?
         #
-        self.ui.actionOpen_FooBar.triggered.connect(self.ctrl.open_ctx)
+        self.ui.actionOpen_FooBar.triggered.connect(self.ctrl.open_voxelplan)
         # ...
 
 
