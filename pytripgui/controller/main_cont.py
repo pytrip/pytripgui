@@ -3,6 +3,7 @@ import pytrip as pt
 
 from controller.tree_cont import TreeController
 from controller.plot_cont import PlotController
+from controller.settings import Settings
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 # from controller.plot_cont import PlotController
@@ -23,6 +24,9 @@ class MainController(object):
         self.plot = PlotController(self.model, app.view.ui)
 
         self._connect_ui(app.view.ui)
+
+        # prepare settings
+        self.settings = Settings()
 
     def _connect_ui(self, ui):
         """

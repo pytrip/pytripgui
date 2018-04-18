@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class AppWindow(QMainWindow):
     def __init__(self):
-        super().__init__()
+        super(AppWindow, self).__init__()
 
         logger.debug("Setup view")
         self.view = MainView(self)
