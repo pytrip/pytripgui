@@ -1,4 +1,5 @@
 import logging
+import matplotlib.colors
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,7 +20,7 @@ class PlotController(object):
         """
         self._model = model
         self._ui = ui
-        self._ims = None
+        self._ims = None  # placeholder for AxesImage object returned by imshow()
 
         # Connect events to callbacks
         self._connect_ui_plot(self._ui.pc)
@@ -54,7 +55,7 @@ class PlotController(object):
 
     def _plot_ctx(self):
         """
-        Plot CTX cube
+        Plot CTX cube.
         """
         _m = self._model
         _pm = self._model.plot
@@ -68,8 +69,8 @@ class PlotController(object):
             self._ims = self._ui.pc.axes.imshow(
                         ct_data,
                         cmap=plt.get_cmap("gray"),
-                        vmin=-500,
-                        vmax=2000)
+                        vmin=_pm.contrast_ct[0],
+                        vmax=_pm.contrast_ct[1])
             self._figure = self._ui.pc.axes
         else:
             self._ims.set_data(ct_data)
@@ -106,8 +107,7 @@ class PlotController(object):
                 # if n is 1, it means it is a point
                 # if n > 1, it means it is a contour
                 if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
-                    pass  # do nothing for now
-                    #    self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+                    self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
                 else:  # This is a contour
                     # Now check whether contour is open or closed.
                     if dc:  # it is closed, we need to repeat the first point at the end
@@ -116,6 +116,56 @@ class PlotController(object):
                         xy = d
 
                     self._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
+
+    def _plot_poi(self, x, y, color='#00ff00', legend=''):
+        """ Plot a point of interest at x,y
+        :params x,y: position in real world CT units
+        :params color: colour of the point of interest
+        :params legend: name of POI
+        """
+
+        size = self.get_size()  # width and height in pixels
+        width = float(size[0]) / self.zoom * 100.0
+        height = float(size[1]) / self.zoom * 100.0
+
+        # we draw two line segments : one which will underline legend text
+        # and other one which will connect the first one with point of interest
+        # point coordinates as on the plot below
+        #
+        #
+        #           LEGEND TEXT
+        #       ___________________
+        #      / (x1,y1)          (x2,y2)
+        #     /
+        #    /
+        #   o (x,y)
+        x1 = x + 0.02*width
+        y1 = y - 0.02*height
+
+        x2 = x1 + 2.0 * len(legend)
+        y2 = y1
+
+        # prepare a brighter version of input color, for text and line to point
+        if isinstance(color, str):
+            _rgb = matplotlib.colors.hex2color(color)
+        else:
+            _rgb = color
+        _hsv = matplotlib.colors.rgb_to_hsv(_rgb)
+        _hsv[1] *= 0.5
+        bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
+
+        # plot a line (two segments) pointing to dot and underlining legend text
+        self.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
+
+        # add the legend text
+        self.figure.text(x1, y1 - 0.025*height,
+                         legend,
+                         color=bright_color,
+                         va="top",
+                         fontsize=7,
+                         weight='semibold',
+                         backgroundcolor=(0.0, 0.0, 0.0, 0.8))
+        self.figure.plot(x, y, 'o', color=color)  # plot the dot
 
     def clean_plot(self):
         """

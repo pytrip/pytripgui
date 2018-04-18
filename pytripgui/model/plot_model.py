@@ -20,7 +20,7 @@ class PlotModel(object):
         # "Coronal"  (xz)
         self.plane = "Transversal"
 
-        self.contrast_ct = [-100, 400]
+        self.contrast_ct = [-500, 2000]
         self.vois = []  # list of vois to be plotted
         self.plot_vois = True   # whether all vois are plotted at all
 
