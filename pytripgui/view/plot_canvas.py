@@ -1,6 +1,7 @@
 import logging
 
 from PyQt5.QtWidgets import QSizePolicy
+from PyQt5 import QtCore
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -30,3 +31,7 @@ class PlotCanvas(FigureCanvas):
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
+
+        # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
+        FigureCanvas.setFocusPolicy(self, QtCore.Qt.ClickFocus)
+        FigureCanvas.setFocus(self)

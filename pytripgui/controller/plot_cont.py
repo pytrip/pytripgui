@@ -30,6 +30,7 @@ class PlotController(object):
         pc.fig.canvas.mpl_connect('button_press_event', self.on_click)
         pc.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
         pc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
+        pc.fig.canvas.mpl_connect('key_press_event', self.on_key_press)
 
     def update_plot(self):
         """
@@ -108,6 +109,9 @@ class PlotController(object):
                 event.button, event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
 
+        if not self._model.ctx:
+            return
+
         n_images = self._model.ctx.dimz
         if event.button == "up":
             if self._model.plot.zslice > 0:
@@ -121,3 +125,10 @@ class PlotController(object):
                 self._model.plot.zslice = 0
 
         self.update_plot()
+
+    def on_key_press(self, event):
+        """
+        Callback for key pressed while over canvas.
+        """
+        _str = 'keypress: {} '.format(event)
+        print(_str)
