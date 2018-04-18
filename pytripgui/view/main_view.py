@@ -1,6 +1,5 @@
 import logging
 
-from PyQt5.QtWidgets import QMainWindow
 from view.main_window import Ui_MainWindow
 from view.plot_canvas import PlotCanvas
 

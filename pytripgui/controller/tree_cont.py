@@ -13,7 +13,7 @@ class TreeController(object):
         :param MyModel model:
         :param TreeWidget tree:
         """
-        self.model = model
+        self.model = model  # Q: maybe mark these private? _model, _tree
         self.tree = tree
 
     def update_tree(self):

@@ -16,13 +16,13 @@ class AppWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        logger.debug("Setup views")
+        logger.debug("Setup view")
         self.view = MainView(self)
 
         logger.debug("Setup model")
         self.model = MainModel(self)
 
-        logger.debug("Setup controllers")
+        logger.debug("Setup controller")
         self.ctrl = MainController(self)
 
 

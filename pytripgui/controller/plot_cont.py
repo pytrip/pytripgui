@@ -12,12 +12,15 @@ class PlotController(object):
     This class holds all logic for plotting the canvas.
     """
     def __init__(self, model, ui):
-        self._model = model  # hope this is by referece...
-        self._pc = ui.pc  # refactor me
+        """
+        :param MainModel model:
+        :param MainWindow ui:
+        """
+        self._model = model
         self._ui = ui
 
         # Connect events to callbacks
-        self._connect_ui_plot(self._pc)
+        self._connect_ui_plot(self._ui.pc)
 
     def _connect_ui_plot(self, pc):
         """
@@ -39,9 +42,9 @@ class PlotController(object):
         if self._model.ctx:
             self._plot_ctx()
 
-        self._pc.draw()
-        self._pc.move(0, 0)
-        self._pc.show()
+        self._ui.pc.draw()
+        self._ui.pc.move(0, 0)
+        self._ui.pc.show()
 
     def _plot_ctx(self):
         """
@@ -51,7 +54,7 @@ class PlotController(object):
         _pm = self._model.plot
 
         ct_data = _m.ctx.cube[_pm.zslice]
-        self._pc.axes.imshow(
+        self._ui.pc.axes.imshow(
             ct_data,
             cmap=plt.get_cmap("gray"),
             vmin=-500,

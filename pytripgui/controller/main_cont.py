@@ -16,7 +16,7 @@ class MainController(object):
     # plotupdate = pyqtSignal(int, name='plotupdate')
 
     def __init__(self, app):
-        self.model = app.model
+        self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
         self.tree = TreeController(self.model, app.view.ui.treeWidget)
