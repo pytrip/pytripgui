@@ -14,6 +14,12 @@ class PlotModel(object):
         self.yslice = 0
         self.zslice = 0
 
+        # current plane to be plotted.
+        # May be "Transversal" (xy)
+        # "Sagittal" (yz)
+        # "Coronal"  (xz)
+        self.plane = "Transversal"
+
         self.contrast_ct = [-100, 400]
         self.vois = []  # list of vois to be plotted
         self.plot_vois = True   # whether all vois are plotted at all

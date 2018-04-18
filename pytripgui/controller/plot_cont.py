@@ -1,5 +1,6 @@
 import logging
 
+import numpy as np
 import matplotlib.pyplot as plt
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 # import pytrip as pt
@@ -44,6 +45,9 @@ class PlotController(object):
         if self._model.ctx:
             self._plot_ctx()
 
+        if self._model.vdx:
+            self._plot_vdx()
+
         self._ui.pc.draw()
         self._ui.pc.move(0, 0)
         self._ui.pc.show()
@@ -66,13 +70,86 @@ class PlotController(object):
                         cmap=plt.get_cmap("gray"),
                         vmin=-500,
                         vmax=2000)
+            self._figure = self._ui.pc.axes
         else:
             self._ims.set_data(ct_data)
 
     def _plot_vdx(self):
         """
         """
-        pass
+        data = []
+        data_closed = []
+        vdx = self._model.vdx
+        ctx = self._model.ctx
+        idx = self._model.plot.zslice
+
+        self.clean_plot()
+
+        for voi in vdx.vois:
+            _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
+            if _slice is None:
+                continue
+            for contour in _slice.contour:
+                data.append(np.array(contour.contour) -
+                            np.array([ctx.xoffset, ctx.yoffset, 0.0]))
+            data_closed.append(contour.contour_closed)
+
+        plot = True
+
+        # get current plane of interest from contours
+        data = self.plane_points_idx(data, ctx, self._model.plot.plane)
+
+        if plot:
+            contour_color = np.array(voi.color) / 255.0
+            for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
+                # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
+                # if n is 1, it means it is a point
+                # if n > 1, it means it is a contour
+                if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
+                    pass  # do nothing for now
+                    #    self._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+                else:  # This is a contour
+                    # Now check whether contour is open or closed.
+                    if dc:  # it is closed, we need to repeat the first point at the end
+                        xy = np.concatenate((d, [d[0, :]]), axis=0)
+                    else:
+                        xy = d
+
+                    self._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
+
+    def clean_plot(self):
+        """
+        Scrub the plot for any lines and text.
+        """
+        while len(self._figure.lines) > 0:
+            self._figure.lines.pop(0)
+        while len(self._figure.texts) > 0:
+            self._figure.texts.pop(0)
+
+    @staticmethod
+    def plane_points_idx(points, ctx, plane="Transversal"):
+        """
+        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx]
+
+        :param points:
+        :param ctx:
+        :param plane:
+
+        TODO: code would be easier to read, if this is split up into two steps. 1) conv. to index, 2) extraction.
+        """
+
+        d = points  # why needed? Makes a copy?
+        for point in d:
+            if plane == "Transversal":
+                point[:, 0] /= ctx.pixel_size
+                point[:, 1] /= ctx.pixel_size
+            elif plane == "Sagittal":
+                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) / ctx.pixel_size
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) / ctx.slice_distance
+            elif plane == "Coronal":
+                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) / ctx.pixel_size
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) / ctx.slice_distance
+        return d
 
     def _plot_dos(self):
         """
