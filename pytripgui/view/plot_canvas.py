@@ -30,9 +30,3 @@ class PlotCanvas(FigureCanvas):
                                    QSizePolicy.Expanding,
                                    QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
-
-    def foobar(self):
-        """
-        alternatively setup callbacks here?
-        """
-        pass

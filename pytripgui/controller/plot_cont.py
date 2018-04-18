@@ -11,12 +11,22 @@ class PlotController(object):
     """
     This class holds all logic for plotting the canvas.
     """
-    def __init__(self, model, plot_canvas, ui):
+    def __init__(self, model, ui):
         self._model = model  # hope this is by referece...
-        self._pc = plot_canvas
+        self._pc = ui.pc  # refactor me
         self._ui = ui
 
-    # @pyqtSlot()
+        # Connect events to callbacks
+        self._connect_ui_plot(self._pc)
+
+    def _connect_ui_plot(self, pc):
+        """
+        Note sure this is the correct place to do this.
+        """
+        pc.fig.canvas.mpl_connect('button_press_event', self.on_click)
+        pc.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
+        pc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
+
     def update_plot(self):
         """
         Updating plot.
@@ -62,26 +72,27 @@ class PlotController(object):
         """
         pass
 
-    @staticmethod
-    def on_click(event):
-        print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
-              ('double' if event.dblclick else 'single', event.button,
-               event.x, event.y, event.xdata, event.ydata))
+    def on_click(self, event):
+        """
+        Callback for click on canvas.
+        """
+        _str = '{:s} click: button={:.0f}, x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
+                'double' if event.dblclick else 'single',
+                event.button, event.x, event.y, event.xdata, event.ydata)
+        self._ui.statusbar.showMessage(_str)
 
-    @staticmethod
-    def on_mouse_move(event):
-        _str = 'move: x=%d, y=%d, xdata=%f, ydata=%f' % (event.x, event.y,
-                                                         event.xdata,
-                                                         event.ydata)
-        print(_str)
+    def on_mouse_move(self, event):
+        """
+        Callback for mouse moved over canvas.
+        """
+        _str = 'move: x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
+                event.x, event.y, event.xdata, event.ydata)
+        self._ui.statusbar.showMessage(_str)
 
-        # TODO: how to properly retain reference to ui class?
-        # self.ui.statusBar().showMessage(_str)
-
-    @staticmethod
-    def on_mouse_wheel(event):
-        _str = 'wheel %s: x=%d, y=%d, xdata=%f, ydata=%f' % (event.button,
-                                                             event.x, event.y,
-                                                             event.xdata,
-                                                             event.ydata)
-        print(_str)
+    def on_mouse_wheel(self, event):
+        """
+        Callback for mouse wheel over canvas.
+        """
+        _str = 'wheel: {:s} x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
+                event.button, event.x, event.y, event.xdata, event.ydata)
+        self._ui.statusbar.showMessage(_str)
