@@ -18,6 +18,7 @@ class PlotController(object):
         """
         self._model = model
         self._ui = ui
+        self._ims = None
 
         # Connect events to callbacks
         self._connect_ui_plot(self._ui.pc)
@@ -54,11 +55,18 @@ class PlotController(object):
         _pm = self._model.plot
 
         ct_data = _m.ctx.cube[_pm.zslice]
-        self._ui.pc.axes.imshow(
-            ct_data,
-            cmap=plt.get_cmap("gray"),
-            vmin=-500,
-            vmax=2000)
+
+        # First time the this function is called, the plot is created with the image_show.
+        # Once it has been created, retain a reference to the plot for future updates with set_data()
+        # which is much faster.
+        if self._ims is None:
+            self._ims = self._ui.pc.axes.imshow(
+                        ct_data,
+                        cmap=plt.get_cmap("gray"),
+                        vmin=-500,
+                        vmax=2000)
+        else:
+            self._ims.set_data(ct_data)
 
     def _plot_vdx(self):
         """
@@ -99,3 +107,17 @@ class PlotController(object):
         _str = 'wheel: {:s} x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
                 event.button, event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
+
+        n_images = self._model.ctx.dimz
+        if event.button == "up":
+            if self._model.plot.zslice > 0:
+                self._model.plot.zslice -= 1
+            else:
+                self._model.plot.zslice = n_images - 1
+        else:
+            if self._model.plot.zslice < n_images - 1:
+                self._model.plot.zslice += 1
+            else:
+                self._model.plot.zslice = 0
+
+        self.update_plot()
