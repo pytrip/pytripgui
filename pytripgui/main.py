@@ -5,7 +5,6 @@ import logging
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from model.mymodel import MyModel
-from model.plot_model import PlotModel
 from controller.main_cont import MainController
 from controller.tree_cont import TreeController
 from controller.plot_cont import PlotController
@@ -27,7 +26,6 @@ class AppWindow(QMainWindow):
 
         logger.debug("Setup model")
         self.model = MyModel()
-        self.model.plot = PlotModel()
 
         logger.debug("Setup controllers")
         self.ctrl = MainController(self.model, self)
