@@ -5,7 +5,7 @@ from model.plot_model import PlotModel
 logger = logging.getLogger(__name__)
 
 
-class MyModel(object):
+class MainModel(object):
 
     def __init__(self):
         self._update_funce = []
