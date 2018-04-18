@@ -58,9 +58,18 @@ class PlotController(object):
         Plot CTX cube.
         """
         _m = self._model
+        ctx = self._model.ctx
         _pm = self._model.plot
 
-        ct_data = _m.ctx.cube[_pm.zslice]
+        if _pm.plane == "Transversal":
+            ct_data = ctx.cube[_pm.zslice]
+            _pm.aspect = 1.0
+        elif _pm.plane == "Sagittal":
+            ct_data = ctx.cube[-1:0:-1, -1:0:-1, _pm.xslice]
+            _pm.aspect = ctx.slice_distance / ctx.pixel_size
+        elif _pm.plane == "Coronal":
+            ct_data = ctx.cube[-1:0:-1, _pm.yslice, -1:0:-1]
+            _pm.aspect = ctx.slice_distance / ctx.pixel_size
 
         # First time the this function is called, the plot is created with the image_show.
         # Once it has been created, retain a reference to the plot for future updates with set_data()
@@ -75,8 +84,22 @@ class PlotController(object):
         else:
             self._ims.set_data(ct_data)
 
+        if _pm.plane == "Transversal":
+            self._figure.axis([0, ctx.dimx, ctx.dimy, 0])
+        elif _pm.plane == "Sagittal":
+            self._figure.axis([0, ctx.dimy, ctx.dimz, 0])
+        elif _pm.plane == "Coronal":
+            self._figure.axis([0, ctx.dimx, ctx.dimz, 0])
+
+        self._figure.axes.get_xaxis().set_visible(False)
+        self._figure.axes.get_yaxis().set_visible(False)
+        if not hasattr(self, "contrast_bar"):
+            cax = self._figure.figure.add_axes([0.1, 0.1, 0.03, 0.8])
+            self.contrast_bar = self._figure.figure.colorbar(self._ims, cax=cax)
+
     def _plot_vdx(self):
         """
+        Plots the VOIs.
         """
         data = []
         data_closed = []

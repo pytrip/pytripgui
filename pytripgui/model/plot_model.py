@@ -20,6 +20,8 @@ class PlotModel(object):
         # "Coronal"  (xz)
         self.plane = "Transversal"
 
+        self.aspect = 1.0  # aspect ratio of plot
+
         self.contrast_ct = [-500, 2000]
         self.vois = []  # list of vois to be plotted
         self.plot_vois = True   # whether all vois are plotted at all
