@@ -36,6 +36,7 @@ install:
   - pip -V
 # install usual requirements
   - pip install --upgrade -r requirements.txt
+  - pip install --upgrade -r tests\\requirements-test.txt
 # check numpy version
   - python -c "import numpy as np;print(np.version.version)"
 # check python and pip versions

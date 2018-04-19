@@ -2,4 +2,4 @@ numpy
 scipy
 matplotlib
 pytrip98
-PyQt5
+PyQt5<5.10

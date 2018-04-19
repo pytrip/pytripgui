@@ -58,6 +58,7 @@ script:
   - pip install "versioneer<0.18"
   - ./install_versioneer.sh
   - pip install --upgrade -r requirements.txt
+  - pip install --upgrade -r tests/requirements-test.txt
   - python -c "import numpy as np;print(np.version.version)"
   - ./makeui.sh
   - PYTHONPATH=. python3 tests/test_pytripgui.py
