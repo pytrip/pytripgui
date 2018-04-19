@@ -20,7 +20,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.tree = TreeController(self.model, app.view.ui.treeWidget)
+        self.tree = TreeController(self.model, app.view.ui.treeView)
         self.plot = PlotController(self.model, app.view.ui)
 
         self._connect_ui(app.view.ui)
@@ -69,21 +69,25 @@ class MainController(object):
 
         # Get the CTX cubes first
         logger.debug("Open CTX {:s}".format(ctx_path))
-        self.model.ctx = pt.CtxCube()
-        self.model.ctx.read(ctx_path)
+        ctx = pt.CtxCube()
+        self.model.ctx = ctx
+        ctx.read(ctx_path)
 
         # Point to center of slices for default plotting
-        self.model.plot.xslice = int(self.model.ctx.dimx * 0.5)
-        self.model.plot.yslice = int(self.model.ctx.dimy * 0.5)
-        self.model.plot.zslice = int(self.model.ctx.dimz * 0.5)
+        self.model.plot.xslice = int(ctx.dimx * 0.5)
+        self.model.plot.yslice = int(ctx.dimy * 0.5)
+        self.model.plot.zslice = int(ctx.dimz * 0.5)
 
-        self.app.setWindowTitle("PyTRiPGUI - {}".format(self.model.ctx.basename))
+        self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
+
+        # add cube to the treeview
+        self.tree.add_ctx(ctx)
 
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
         from pytrip.util import TRiP98FilePath
-        _b = TRiP98FilePath(ctx_path, self.model.ctx).basename
-        _n = TRiP98FilePath(ctx_path, self.model.ctx).name
+        _b = TRiP98FilePath(ctx_path, ctx).basename
+        _n = TRiP98FilePath(ctx_path, ctx).name
         vdx_path = ctx_path.replace(_n, _b) + '.vdx'
 
         logger.debug("Check if '{:s}' exists...".format(vdx_path))
@@ -94,10 +98,13 @@ class MainController(object):
             logger.debug("   Open '{:s}'".format(vdx_path))
             self.model.vdx = pt.VdxCube(self.model.ctx)
             self.model.vdx.read(vdx_path)
+            vdx = self.model.vdx
 
-        self.app.ctrl.tree.update_tree()
-        self.app.ctrl.plot.update_plot()
+        # add cube to the treeview
+        self.tree.add_vdx(vdx)
 
+        # update the canvas
+        self.plot.update_plot()
         # testing, not sure if this is proper
         # emit signal to update the plot
         # update_plot()
