@@ -1,19 +1,22 @@
 import logging
 
-from PyQt5 import QtCore  # QtGui, QtWidgets
+from PyQt5 import QtCore
+# from PyQt5 import QtGui
+from PyQt5 import QtWidgets
 
 logger = logging.getLogger(__name__)
 
 
 class TreeController(object):
 
-    def __init__(self, model, treeview):
+    def __init__(self, model, treeview, app):
         """
         :param MyModel model:
         :param TreeView tree:
         """
         self.model = model
         self.tv = treeview
+        self.app = app
 
         self.items = []   # test items
 
@@ -26,8 +29,45 @@ class TreeController(object):
 
         self.tv.setModel(self.tmodel)
 
-    def openTreeMenu(self):
+    def openTreeMenu(self, position):
+        """ In case of right click on TreeView
+        """
         logger.debug("openTreeMenu")
+
+        indexes = self.tv.selectedIndexes()
+        level = 0
+
+        if len(indexes) > 0:
+            level = 0
+            index = indexes[0]
+
+            # demonstrate how to retrieve data from index:
+            _dat = self.tmodel.data(index, QtCore.Qt.DisplayRole)
+            logger.debug("index data: {}".format(_dat))
+
+            while index.parent().isValid():
+                index = index.parent()
+                level += 1
+
+        menu = QtWidgets.QMenu(self.app)
+        editMenu = None
+
+        if level == 0:
+            editMenu = QtWidgets.QAction("Add CT Data", self.app)
+            menu.addAction(editMenu)
+        elif level == 1:
+            editMenu = QtWidgets.QAction("Edit something else", self.app)
+            menu.addAction(editMenu)
+        elif level == 2:
+            editMenu = QtWidgets.QAction("Edit ROI", self.app)
+            menu.addAction(editMenu)
+
+        menu.exec_(self.tv.viewport().mapToGlobal(position))
+
+        if editMenu:
+            pass  # disable callbacks for now as they are not implemented
+            logger.debug("action triggered TreeView level {}".format(level))
+            # editMenu.triggered.connect(partial(self.editObjFunc, index))
 
     def update_tree(self):
         """
