@@ -57,8 +57,9 @@ dist: trusty
 script:
   - pip install "versioneer<0.18"
   - ./install_versioneer.sh
-  - pip install -r requirements.txt
+  - pip install --upgrade -r requirements.txt
   - python -c "import numpy as np;print(np.version.version)"
   - ./makeui.sh
+  - PYTHONPATH=. python3 tests/test_pytripgui.py
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi

@@ -44,7 +44,7 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # generate qt5 files
-  - makeui.batch
+  - makeui.bat
 
 before_test:
   - python %PYTHON%\\scripts\\versioneer install
