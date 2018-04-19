@@ -20,7 +20,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.tree = TreeController(self.model, app.view.ui.treeView)
+        self.tree = TreeController(self.model, app.view.ui.treeView, self.app)
         self.plot = PlotController(self.model, app.view.ui)
 
         self._connect_ui(app.view.ui)
