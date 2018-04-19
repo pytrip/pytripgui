@@ -43,12 +43,14 @@ class MainController(object):
         ui.actionOpen_Project.triggered.connect(self.open_project)
         ui.actionSave_Project.triggered.connect(self.save_project)
         ui.actionExit.triggered.connect(self.on_exit)
+        # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
     # called from view class
-    def change_foobar(self, value):
+    def change_foobar(self, event):
         # put control logic here
-        self.model.foobar = value
-        self.model.announce_update()
+        logger.debug("Change foobar {}".format(event))
+        # self.model.foobar = value
+        # self.model.announce_update()
 
     def open_dicom(self, event):
         """
@@ -74,6 +76,8 @@ class MainController(object):
         self.model.plot.xslice = int(self.model.ctx.dimx * 0.5)
         self.model.plot.yslice = int(self.model.ctx.dimy * 0.5)
         self.model.plot.zslice = int(self.model.ctx.dimz * 0.5)
+
+        self.app.setWindowTitle("PyTRiPGUI - {}".format(self.model.ctx.basename))
 
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")

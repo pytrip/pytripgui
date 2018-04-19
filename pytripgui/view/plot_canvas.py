@@ -1,5 +1,6 @@
 import logging
 
+from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
 
@@ -16,16 +17,22 @@ class PlotCanvas(FigureCanvas):
     Viewer class for matplotlib 2D plotting widget
     """
 
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
+    def __init__(self, parent=None, width=6, height=4, dpi=110):
         """
         Init canvas.
         """
 
         self.fig = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.fig.add_subplot(111)
+
+        # Here one can adjust the position of the CTX plot area.
+        self.axes = self.fig.add_axes([0.1, 0, 1, 1])
+        # self.axes = self.fig.add_subplot(111)
 
         FigureCanvas.__init__(self, self.fig)
-        self.setParent(parent)
+
+        layout = QVBoxLayout(parent)
+        layout.addWidget(self)
+        parent.setLayout(layout)
 
         FigureCanvas.setSizePolicy(self,
                                    QSizePolicy.Expanding,

@@ -20,3 +20,5 @@ class MainView(object):
 
         # attach canvas for 2D plots
         self.ui.pc = PlotCanvas(parent=self.ui.tab)
+
+        app.setWindowTitle("PyTRiPGUI")

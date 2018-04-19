@@ -20,7 +20,10 @@ class PlotController(object):
         """
         self._model = model
         self._ui = ui
+
+        # TODO: these maybe do not belong here and could be moved to a viewer?
         self._ims = None  # placeholder for AxesImage object returned by imshow()
+        self._cb = None  # placeholder for Colorbar object returned by matplotlib.colorbar
 
         # Connect events to callbacks
         self._connect_ui_plot(self._ui.pc)
@@ -56,20 +59,23 @@ class PlotController(object):
     def _plot_ctx(self):
         """
         Plot CTX cube.
-        """
-        _m = self._model
-        ctx = self._model.ctx
-        _pm = self._model.plot
 
-        if _pm.plane == "Transversal":
-            ct_data = ctx.cube[_pm.zslice]
-            _pm.aspect = 1.0
-        elif _pm.plane == "Sagittal":
-            ct_data = ctx.cube[-1:0:-1, -1:0:-1, _pm.xslice]
-            _pm.aspect = ctx.slice_distance / ctx.pixel_size
-        elif _pm.plane == "Coronal":
-            ct_data = ctx.cube[-1:0:-1, _pm.yslice, -1:0:-1]
-            _pm.aspect = ctx.slice_distance / ctx.pixel_size
+        This method adds _ims and _cb to self.
+
+        """
+
+        ctx = self._model.ctx
+        pm = self._model.plot
+
+        if pm.plane == "Transversal":
+            ct_data = ctx.cube[pm.zslice]
+            pm.aspect = 1.0
+        elif pm.plane == "Sagittal":
+            ct_data = ctx.cube[-1:0:-1, -1:0:-1, pm.xslice]
+            pm.aspect = ctx.slice_distance / ctx.pixel_size
+        elif pm.plane == "Coronal":
+            ct_data = ctx.cube[-1:0:-1, pm.yslice, -1:0:-1]
+            pm.aspect = ctx.slice_distance / ctx.pixel_size
 
         # First time the this function is called, the plot is created with the image_show.
         # Once it has been created, retain a reference to the plot for future updates with set_data()
@@ -78,24 +84,27 @@ class PlotController(object):
             self._ims = self._ui.pc.axes.imshow(
                         ct_data,
                         cmap=plt.get_cmap("gray"),
-                        vmin=_pm.contrast_ct[0],
-                        vmax=_pm.contrast_ct[1])
+                        vmin=pm.contrast_ct[0],
+                        vmax=pm.contrast_ct[1],
+                        aspect=pm.aspect)
             self._figure = self._ui.pc.axes
         else:
             self._ims.set_data(ct_data)
 
-        if _pm.plane == "Transversal":
+        if pm.plane == "Transversal":
             self._figure.axis([0, ctx.dimx, ctx.dimy, 0])
-        elif _pm.plane == "Sagittal":
+        elif pm.plane == "Sagittal":
             self._figure.axis([0, ctx.dimy, ctx.dimz, 0])
-        elif _pm.plane == "Coronal":
+        elif pm.plane == "Coronal":
             self._figure.axis([0, ctx.dimx, ctx.dimz, 0])
 
-        self._figure.axes.get_xaxis().set_visible(False)
-        self._figure.axes.get_yaxis().set_visible(False)
-        if not hasattr(self, "contrast_bar"):
+        self._figure.get_xaxis().set_visible(False)
+        self._figure.get_yaxis().set_visible(False)
+
+        # strictly the contrast bas should be set in the viewer?
+        if not self._cb:
             cax = self._figure.figure.add_axes([0.1, 0.1, 0.03, 0.8])
-            self.contrast_bar = self._figure.figure.colorbar(self._ims, cax=cax)
+            self._cb = self._figure.figure.colorbar(self._ims, cax=cax)
 
     def _plot_vdx(self):
         """
