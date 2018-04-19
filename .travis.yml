@@ -61,6 +61,5 @@ script:
   - pip install --upgrade -r tests/requirements-test.txt
   - python -c "import numpy as np;print(np.version.version)"
   - ./makeui.sh
-  - PYTHONPATH=. python3 tests/test_pytripgui.py
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
