@@ -1,7 +1,7 @@
 import logging
 
-from controller.ctx import Ctx
-from controller.vdx import Vdx
+from pytripgui.controller.ctx import Ctx
+from pytripgui.controller.vdx import Vdx
 # import matplotlib.pyplot as plt
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 # import pytrip as pt

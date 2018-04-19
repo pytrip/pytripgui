@@ -1,9 +1,9 @@
 import logging
 import pytrip as pt
 
-from controller.tree_cont import TreeController
-from controller.plot_cont import PlotController
-from controller.settings import Settings
+from pytripgui.controller.tree_cont import TreeController
+from pytripgui.controller.plot_cont import PlotController
+from pytripgui.controller.settings import Settings
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 # from controller.plot_cont import PlotController
@@ -64,7 +64,7 @@ class MainController(object):
         """
 
         # Start a file dialog for selecting input files
-        from view.dialogs import MyDialogs
+        from pytripgui.view.dialogs import MyDialogs
         ctx_path = MyDialogs.openFileNameDialog(self.app)
 
         # Get the CTX cubes first
