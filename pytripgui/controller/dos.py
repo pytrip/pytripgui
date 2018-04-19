@@ -53,11 +53,13 @@ class Dos(object):
             if scale == "rel":
                 factor = 10
 
-            if not pm.dos_scale and pm.scale != scale:
+            if not pm.dos_scale and pm.dos_scale != scale:
                 pm.max_dose = np.amax(dos.cube) / factor
                 # self.clear_dose_view()
             elif not pm.dos_scale:
                 pm.max_dose = np.amax(dos.cube) / factor
+
+            pm.dos_scale = scale
 
             cmap = pm.colormap_dose
             cmap._init()
@@ -85,9 +87,7 @@ class Dos(object):
                     else:
                         pm.dose_bar.set_label("Dose (%)")
             else:
-                plc._dims.fig_dose.set_data(plot_data)
-
-            pm.dos_scale = scale
+                plc._dims.set_data(plot_data)
 
         elif pm.dose_plot == "contour":
             x, y = np.meshgrid(np.arange(len(dos_data[0])), np.arange(len(dos_data)))

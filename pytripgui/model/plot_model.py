@@ -43,6 +43,8 @@ class PlotModel(object):
         self.dose_axis = "auto"
         self.colormap_dose = plt.get_cmap(None)
         self.dos_scale = None
+        self.min_dose = 0
+        self.max_dose = None
 
         # LETCube specific
         self.let = None   # Placeholder for LETCube() object to be plotted
