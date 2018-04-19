@@ -243,6 +243,33 @@ class PlotController(object):
         """
         pass
 
+    def change_contrast(self, contrast):
+        """ Sets the contrast if the CT image.
+        Bounds are hardcoded to -1000 to 4000, and cannot be exceeded.
+
+        TODO: this could be changed into a @property thing?
+
+        """
+        # Cap the HUs to [-1000:4000]
+        _hmin = -1000
+        _hmax = 4000
+
+        if contrast[0] > _hmax:
+            contrast[0] = _hmax
+        if contrast[0] < _hmin:
+            contrast[0] = _hmin
+        if contrast[1] > _hmax:
+            contrast[1] = _hmax
+        if contrast[1] < _hmin:
+            contrast[1] = _hmin
+
+        # Lower bound may not overtake upper bound
+        if contrast[0] >= contrast[1]:
+            contrast[0] = contrast[1] - 1  # allow -1001 HU for lower bound for plotting reasons
+
+        self._model.plot.contrast_ct = contrast
+        self._ims.set_clim(vmin=contrast[0], vmax=contrast[1])
+
     def on_click(self, event):
         """
         Callback for click on canvas.
@@ -251,6 +278,14 @@ class PlotController(object):
                 'double' if event.dblclick else 'single',
                 event.button, event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
+
+        # put up a pop up menu if right clicked on canvas
+        if event.button == 3:
+            from PyQt5.QtGui import QCursor
+            cursor = QCursor()
+            pos = cursor.pos()
+            self._ui.popMenu.move(pos)
+            self._ui.popMenu.show()
 
     def on_mouse_move(self, event):
         """

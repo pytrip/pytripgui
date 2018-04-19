@@ -1,5 +1,7 @@
 import logging
 
+from PyQt5 import QtGui, QtWidgets
+
 from view.main_window import Ui_MainWindow
 from view.plot_canvas import PlotCanvas
 
@@ -22,3 +24,11 @@ class MainView(object):
         self.ui.pc = PlotCanvas(parent=self.ui.tab)
 
         app.setWindowTitle("PyTRiPGUI")
+
+        # TODO_move this to proper place
+        # create context menu
+        self.ui.popMenu = QtWidgets.QMenu(app)
+        self.ui.popMenu.addAction(QtWidgets.QAction('test0', app))
+        self.ui.popMenu.addAction(QtWidgets.QAction('test1', app))
+        self.ui.popMenu.addSeparator()
+        self.ui.popMenu.addAction(QtWidgets.QAction('test2', app))
