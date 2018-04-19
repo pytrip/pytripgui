@@ -16,13 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item alignment="Qt::AlignLeft">
-     <widget class="QTreeWidget" name="treeWidget">
-      <column>
-       <property name="text">
-        <string notr="true">(no patient loaded)</string>
-       </property>
-      </column>
-     </widget>
+     <widget class="QTreeView" name="treeView"/>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
