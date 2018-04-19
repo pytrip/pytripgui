@@ -6,14 +6,14 @@ build: off
 
 environment:
   matrix:
-    - platform: x86
-      PYTHON: "C:\\Python35"
+#    - platform: x86
+#      PYTHON: "C:\\Python35"
 
     - platform: x64
       PYTHON: "C:\\Python35-x64"
 
-    - platform: x86
-      PYTHON: "C:\\Python36"
+#    - platform: x86
+#      PYTHON: "C:\\Python36"
 
     - platform: x64
       PYTHON: "C:\\Python36-x64"
@@ -44,7 +44,7 @@ install:
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # generate qt5 files
-  - makeui.batchmo
+  - makeui.batch
 
 before_test:
   - python %PYTHON%\\scripts\\versioneer install
