@@ -103,7 +103,20 @@ class TreeController(object):
             # icon = QtGui.QPixmap(pixmap)
 
         self.tmodel = CustomModel(self.items)
+        self.update_tree()
 
+    def add_dos(self, dos):
+        """ Adds a DosCube item to the treeView
+        """
+        self.items.append(CustomNode("Dose: {}".format(dos.basename)))
+        self.tmodel = CustomModel(self.items)
+        self.update_tree()
+
+    def add_let(self, let):
+        """ Adds a LETCube item to the treeView
+        """
+        self.items.append(CustomNode("LET: {}".format(let.basename)))
+        self.tmodel = CustomModel(self.items)
         self.update_tree()
 
 

@@ -40,6 +40,9 @@ class MainController(object):
 
         ui.actionOpen_Dicom.triggered.connect(self.open_dicom)
         ui.actionOpen_Voxelplan.triggered.connect(self.open_voxelplan)
+        ui.actionDoseCube.triggered.connect(self.import_dos)
+        ui.actionLETCube.triggered.connect(self.import_let)
+        ui.action_exec.triggered.connect(self.import_exec)
         ui.actionOpen_Project.triggered.connect(self.open_project)
         ui.actionSave_Project.triggered.connect(self.save_project)
         ui.actionExit.triggered.connect(self.on_exit)
@@ -111,6 +114,47 @@ class MainController(object):
         # from controller.plot_cont import PlotController
         # self.plotupdate.connect(PlotController.update_plot)
         # self.plotupdate.emit()
+
+    def import_dos(self, event):
+        """
+        Import dose cube.
+        """
+        # Start a file dialog for selecting input files
+        from view.dialogs import MyDialogs
+        dos_path = MyDialogs.openFileNameDialog(self.app)
+
+        # Get the CTX cubes first
+        logger.debug("Open DosCube {:s}".format(dos_path))
+        dos = pt.DosCube()
+        self.model.dos.append(dos)
+        dos.read(dos_path)
+        # add cube to the treeview
+        self.tree.add_dos(dos)
+
+    def import_let(self, event):
+        """
+        Import LET cube.
+        """
+        # Start a file dialog for selecting input files
+        from view.dialogs import MyDialogs
+        let_path = MyDialogs.openFileNameDialog(self.app)
+
+        # Get the CTX cubes first
+        logger.debug("Open LETCube {:s}".format(let_path))
+        let = pt.LETCube()
+        self.model.dos.append(let)
+        let.read(let_path)
+        # add cube to the treeview
+        self.tree.add_let(let)
+
+    def import_exec(self, event):
+        """
+        """
+        logger.debug("Import .exec")
+        # Start a file dialog for selecting input files
+        from view.dialogs import MyDialogs
+        exec_path = MyDialogs.openFileNameDialog(self.app)
+        logger.debug("Open .exec {:s}".format(exec_path))
 
     def open_project(self, event):
         """
