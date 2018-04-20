@@ -4,7 +4,7 @@ language: python
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
-sudo: false
+sudo: true
 dist: trusty
 
 env:
@@ -41,6 +41,7 @@ matrix:
 
 
 script:
+  - if [[ "$DIST" == "trusty" ]]; then sudo apt-get update -qq ; sudo apt-get purge -qq fglrx ; sudo apt-get install xvfb xfonts-100dpi xfonts-75dpi xfonts-cyrillic xorg dbus-x11 ; fi
   - ./install_versioneer.sh
   - ./makeui.sh
   - pip install -r requirements.txt --upgrade
