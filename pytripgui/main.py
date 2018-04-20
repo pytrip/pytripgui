@@ -8,7 +8,6 @@ from pytripgui.view.main_view import MainView
 from pytripgui.model.main_model import MainModel
 from pytripgui.controller.main_cont import MainController
 
-
 logger = logging.getLogger(__name__)
 
 

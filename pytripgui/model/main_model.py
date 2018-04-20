@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class MainModel(object):
-
     def __init__(self, app):
         self._update_funce = []
         self.foobar = 10

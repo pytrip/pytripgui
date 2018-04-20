@@ -15,6 +15,7 @@ class PlotController(object):
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
+
     def __init__(self, model, ui):
         """
         :param MainModel model:
@@ -80,8 +81,7 @@ class PlotController(object):
         Callback for click on canvas.
         """
         _str = '{:s} click: button={:.0f}, x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
-                'double' if event.dblclick else 'single',
-                event.button, event.x, event.y, event.xdata, event.ydata)
+            'double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
 
         # put up a pop up menu if right clicked on canvas
@@ -96,16 +96,15 @@ class PlotController(object):
         """
         Callback for mouse moved over canvas.
         """
-        _str = 'move: x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
-                event.x, event.y, event.xdata, event.ydata)
+        _str = 'move: x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
 
     def on_mouse_wheel(self, event):
         """
         Callback for mouse wheel over canvas.
         """
-        _str = 'wheel: {:s} x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
-                event.button, event.x, event.y, event.xdata, event.ydata)
+        _str = 'wheel: {:s} x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(event.button, event.x, event.y, event.xdata,
+                                                                           event.ydata)
         self._ui.statusbar.showMessage(_str)
 
         if not self._model.ctx:

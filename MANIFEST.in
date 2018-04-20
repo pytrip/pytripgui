@@ -1,26 +1,23 @@
-  include *.rst
-  include *.txt
-  include *.py
-  include LICENSE
-  include requirements.txt
-  include tests/requirements-test.txt
-  recursive-include docs *.py
-  recursive-include docs *.rst
-  recursive-include pytripgui *.py
-  recursive-include tests *.py
-  include versioneer.py
-  include pytripgui/_version.py
-  recursive-include pytripgui *.fbp
-  recursive-include pytripgui *.png
-  recursive-include pytripgui *.py
-  recursive-include pytripgui *.xrc
   include *.bat
   include *.iss
   include *.sh
   include *.spec
+  include *.rst
+  include *.txt
+  include *.py
+  include LICENSE
+  include tests/requirements-test.txt
   recursive-include appveyor *.sh
+  recursive-include docs *.py
+  recursive-include docs *.rst
+  recursive-include pytripgui *.py
+  recursive-include pytripgui *.fbp
+  recursive-include pytripgui *.png
+  recursive-include pytripgui *.py
+  recursive-include pytripgui *.xrc
   recursive-include pytripgui *.txt
   recursive-include pytripgui *.ui
+  recursive-include tests *.py
   exclude .gitkeep
   exclude .gitconfig
   exclude tox.ini

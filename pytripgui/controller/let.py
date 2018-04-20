@@ -7,6 +7,7 @@ class Let(object):
     """
     This class holds logic for plotting LET stuff.
     """
+
     def __init__(self):
         pass
 
