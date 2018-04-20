@@ -51,8 +51,8 @@ matrix:
 
 
 script:
-  - apt-get update
-  - apt-get install xfonts-cyrillic -y # TODO should be move to apt addons
+  - sudo apt-get update
+  - sudo apt-get install xfonts-cyrillic -y # TODO should be move to apt addons
   - pip install -r requirements.txt --upgrade
   - pip install -r tests/requirements-test.txt --upgrade
   - ./makeui.sh
