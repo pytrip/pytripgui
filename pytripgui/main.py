@@ -25,6 +25,17 @@ class AppWindow(QMainWindow):
         logger.debug("Setup controller")
         self.ctrl = MainController(self)
 
+    def open_files(self, args):
+        """
+        """
+        if args.ctx:
+            self.ctrl.open_voxelplan(args.ctx)
+        if args.dos:
+            self.ctrl.import_dos(args.dos)
+        if args.let:
+            self.ctrl.import_let(args.let)
+
+
 
 def main(args=sys.argv[1:]):
     app = QApplication(sys.argv)
@@ -32,6 +43,10 @@ def main(args=sys.argv[1:]):
     # setup parser
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbosity', action='count', help="increase output verbosity", default=0)
+    parser.add_argument("--ctx", help="CtxCube", type=str, nargs='?')
+    # parser.add_argument("--vdx", help="VdxCube", type=str, nargs='?')
+    parser.add_argument("--dos", help="DosCube", type=str, nargs='?')
+    parser.add_argument("--let", help="LETCube", type=str, nargs='?')
     args = parser.parse_args(sys.argv[1:])
 
     # set logging level
@@ -43,7 +58,9 @@ def main(args=sys.argv[1:]):
         logging.basicConfig()
 
     w = AppWindow()
+    w.open_files(args)
     w.show()
+
     return app.exec_()
 
 
