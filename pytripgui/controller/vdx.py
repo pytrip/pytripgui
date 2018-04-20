@@ -107,6 +107,7 @@ class Vdx(object):
                         backgroundcolor=(0.0, 0.0, 0.0, 0.8))
         plc.figure.plot(x, y, 'o', color=color)  # plot the dot
 
+    @staticmethod
     def clean_plot(plc):
         """
         Scrub the plot for any lines and text.

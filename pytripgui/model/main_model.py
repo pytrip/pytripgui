@@ -14,6 +14,8 @@ class MainModel(object):
         self.ctx = None
         self.vdx = None
         self.plans = None
+        self.dos = []
+        self.let = []
 
         # attach submodels
         self.plot = PlotModel()

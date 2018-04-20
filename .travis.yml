@@ -1,11 +1,11 @@
 # before committing check this file here: https://lint.travis-ci.org/
 
-# travis option "language: python" runs test in virtualenvs without access to system-level packages
-# including ones installed via apt. pytripgui requires python-wx package which is not shipped via pip
-# but only via apt-get. It means we cannot run tests in such restricted virtualenvs,
-# and consequently cannot use "language: python" options. This is why we use generic here
 language: python
 
+# travis-ci runs by default on ancient Ubuntu 12.04 (precise)
+# following options will give us Ubuntu 14.04 (trusty)
+sudo: false
+dist: trusty
 
 env:
   global:
@@ -16,13 +16,10 @@ env:
 matrix:
     include:
         - os: linux
-          python: 3.5
-          env: TOXENV=coverage
+          python: 3.6
+          env: TOXENV=packaging
         - os: linux
           python: 3.5
-          env: TOXENV=py35
-        - os: linux
-          python: 3.5-dev
           env: TOXENV=py35
         - os: linux
           python: 3.6
@@ -34,14 +31,8 @@ matrix:
           python: nightly
           env: TOXENV=py37
         - os: linux
-          python: 3.5
+          python: 3.6
           env: TOXENV=docs
-        - os: linux
-          python: 3.6
-          env: TOXENV=pep8
-        - os: linux
-          python: 3.6
-          env: TOXENV=packaging
 #    uncomment and adjust if you want to allow some failures
     allow_failures:
         - os: linux
@@ -49,17 +40,11 @@ matrix:
           env: TOXENV=py37
 
 
-# travis-ci runs by default on ancient Ubuntu 12.04 (precise)
-# following options will give us Ubuntu 14.04 (trusty)
-sudo: false
-dist: trusty
-
 script:
-  - pip install "versioneer<0.18"
   - ./install_versioneer.sh
-  - pip install --upgrade -r requirements.txt
-  - pip install --upgrade -r tests/requirements-test.txt
-  - python -c "import numpy as np;print(np.version.version)"
   - ./makeui.sh
-  - py.test
-  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi
+  - pip install -r requirements.txt --upgrade
+  - pip install -r tests/requirements-test.txt --upgrade
+  - tox --recreate --notest && tox
+  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
+

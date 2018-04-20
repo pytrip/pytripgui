@@ -4,3 +4,4 @@ pytest
 pytest-timeout
 pytest-cov
 pytest-qt
+tox

@@ -16,13 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item alignment="Qt::AlignLeft">
-     <widget class="QTreeWidget" name="treeWidget">
-      <column>
-       <property name="text">
-        <string notr="true">(no patient loaded)</string>
-       </property>
-      </column>
-     </widget>
+     <widget class="QTreeView" name="treeView"/>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
@@ -63,9 +57,18 @@
      <addaction name="actionCT_Cube"/>
      <addaction name="actionROI"/>
     </widget>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import</string>
+     </property>
+     <addaction name="actionDoseCube"/>
+     <addaction name="actionLETCube"/>
+     <addaction name="action_exec"/>
+    </widget>
     <addaction name="menuNew"/>
     <addaction name="actionOpen_Dicom"/>
     <addaction name="actionOpen_Voxelplan"/>
+    <addaction name="menuImport"/>
     <addaction name="separator"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
@@ -150,6 +153,21 @@
   <action name="actionTRiP98_Config">
    <property name="text">
     <string>TRiP98 Config</string>
+   </property>
+  </action>
+  <action name="actionDoseCube">
+   <property name="text">
+    <string>DoseCube</string>
+   </property>
+  </action>
+  <action name="actionLETCube">
+   <property name="text">
+    <string>LETCube</string>
+   </property>
+  </action>
+  <action name="action_exec">
+   <property name="text">
+    <string>Plan (.exec)</string>
    </property>
   </action>
  </widget>
