@@ -9,6 +9,7 @@ class Dos(object):
     """
     This class holds logic for plotting DOS stuff.
     """
+
     def __init__(self):
         pass
 
@@ -22,7 +23,7 @@ class Dos(object):
         logger.debug("plot Dos cube")
 
         if not plc._model.dos:
-                return
+            return
 
         dos = plc._model.dos[-1]  # use the last imported cube for now, selector will be implemented later
         pm = plc._model.plot
@@ -69,16 +70,12 @@ class Dos(object):
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
             if plc._dims is None:
-                plc._dims = plc._ui.pc.axes.imshow(
-                            plot_data,
-                            cmap=cmap,
-                            vmax=(pm.max_dose),
-                            aspect=pm.aspect)
+                plc._dims = plc._ui.pc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
                 plc._figure = plc._ui.pc.axes
 
                 if not pm.dose_bar and not pm.let_bar:
-                        cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
-                        pm.dose_bar = plc._figure.figure.colorbar(plc._dims, cax=cax)
+                    cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
+                    pm.dose_bar = plc._figure.figure.colorbar(plc._dims, cax=cax)
 
                 if pm.dose_bar:
                     if scale == "abs":

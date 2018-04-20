@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 
 
 class TreeController(object):
-
     def __init__(self, model, treeview, app):
         """
         :param MyModel model:
@@ -18,7 +17,7 @@ class TreeController(object):
         self.tv = treeview
         self.app = app
 
-        self.items = []   # test items
+        self.items = []  # test items
 
         self.tmodel = CustomModel(self.items)
         # self.tmodel.setHeaderData("(no CT data loaded)")
@@ -126,6 +125,7 @@ class CustomNode(object):
     Class dealing with nodes in a tree _model
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
+
     def __init__(self, in_data):
         """
         create new instance of node, with the input data "in_data"
@@ -180,6 +180,7 @@ class CustomModel(QtCore.QAbstractItemModel):
     Custom data model derived from QAbstractItemModel
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
+
     def __init__(self, in_nodes):
         """
         """

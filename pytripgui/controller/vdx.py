@@ -10,6 +10,7 @@ class Vdx(object):
     """
     This class holds logic for plotting Vdx stuff.
     """
+
     def __init__(self):
         pass
 
@@ -31,8 +32,7 @@ class Vdx(object):
             if _slice is None:
                 continue
             for contour in _slice.contour:
-                data.append(np.array(contour.contour) -
-                            np.array([ctx.xoffset, ctx.yoffset, 0.0]))
+                data.append(np.array(contour.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0]))
             data_closed.append(contour.contour_closed)
 
         plot = True
@@ -79,8 +79,8 @@ class Vdx(object):
         #     /
         #    /
         #   o (x,y)
-        x1 = x + 0.02*width
-        y1 = y - 0.02*height
+        x1 = x + 0.02 * width
+        y1 = y - 0.02 * height
 
         x2 = x1 + 2.0 * len(legend)
         y2 = y1
@@ -98,13 +98,15 @@ class Vdx(object):
         plc.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
 
         # add the legend text
-        plc.figure.text(x1, y1 - 0.025*height,
-                        legend,
-                        color=bright_color,
-                        va="top",
-                        fontsize=7,
-                        weight='semibold',
-                        backgroundcolor=(0.0, 0.0, 0.0, 0.8))
+        plc.figure.text(
+            x1,
+            y1 - 0.025 * height,
+            legend,
+            color=bright_color,
+            va="top",
+            fontsize=7,
+            weight='semibold',
+            backgroundcolor=(0.0, 0.0, 0.0, 0.8))
         plc.figure.plot(x, y, 'o', color=color)  # plot the dot
 
     @staticmethod

@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 class Settings:
     """ Class for interacting with saved configurations
     """
+
     def __init__(self):
         """
         Prepare config parser.

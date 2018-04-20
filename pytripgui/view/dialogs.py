@@ -17,10 +17,8 @@ class MyDialogs(object):
     def openFileNameDialog(app):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(app,
-                                                  "QFileDialog.getOpenFileName()",
-                                                  "", "All Files (*);;Python Files (*.py)",
-                                                  options=options)
+        fileName, _ = QFileDialog.getOpenFileName(
+            app, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
         if fileName:
             logger.debug(fileName)
             return fileName  # TODO: alternatively pass the filename as a signal to some slot?
@@ -29,10 +27,8 @@ class MyDialogs(object):
     def openFileNamesDialog(app):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(app,
-                                                "QFileDialog.getOpenFileNames()",
-                                                "", "All Files (*);;Python Files (*.py)",
-                                                options=options)
+        files, _ = QFileDialog.getOpenFileNames(
+            app, "QFileDialog.getOpenFileNames()", "", "All Files (*);;Python Files (*.py)", options=options)
         if files:
             logger.debug(files)
             return files
@@ -41,10 +37,8 @@ class MyDialogs(object):
     def saveFileDialog(app):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(app,
-                                                  "QFileDialog.getSaveFileName()",
-                                                  "", "All Files (*);;Text Files (*.txt)",
-                                                  options=options)
+        fileName, _ = QFileDialog.getSaveFileName(
+            app, "QFileDialog.getSaveFileName()", "", "All Files (*);;Text Files (*.txt)", options=options)
         if fileName:
             logger.debug(fileName)
             return fileName

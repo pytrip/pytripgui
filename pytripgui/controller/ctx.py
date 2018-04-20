@@ -11,6 +11,7 @@ class Ctx(object):
     """
     This class holds logic for plotting CTX stuff.
     """
+
     def __init__(self):
         pass
 
@@ -43,11 +44,7 @@ class Ctx(object):
         # which is much faster.
         if plc._ims is None:
             plc._ims = plc._ui.pc.axes.imshow(
-                        ct_data,
-                        cmap=plt.get_cmap("gray"),
-                        vmin=pm.contrast_ct[0],
-                        vmax=pm.contrast_ct[1],
-                        aspect=pm.aspect)
+                ct_data, cmap=plt.get_cmap("gray"), vmin=pm.contrast_ct[0], vmax=pm.contrast_ct[1], aspect=pm.aspect)
             plc._figure = plc._ui.pc.axes
         else:
             plc._ims.set_data(ct_data)
