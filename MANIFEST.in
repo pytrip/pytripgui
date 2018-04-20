@@ -14,7 +14,13 @@
   recursive-include pytripgui *.png
   recursive-include pytripgui *.py
   recursive-include pytripgui *.xrc
-
+  include *.bat
+  include *.iss
+  include *.sh
+  include *.spec
+  recursive-include appveyor *.sh
+  recursive-include pytripgui *.txt
+  recursive-include pytripgui *.ui
   exclude .gitkeep
   exclude .gitconfig
   exclude tox.ini
