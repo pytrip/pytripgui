@@ -6,7 +6,7 @@ from pytripgui.controller.plot_cont import PlotController
 from pytripgui.controller.settings import Settings
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
-# from controller.plot_cont import PlotController
+# from pytripgui.controller.plot_cont import PlotController
 
 logger = logging.getLogger(__name__)
 
@@ -122,7 +122,7 @@ class MainController(object):
         Import dose cube.
         """
         # Start a file dialog for selecting input files
-        from view.dialogs import MyDialogs
+        from pytripgui.view.dialogs import MyDialogs
         dos_path = MyDialogs.openFileNameDialog(self.app)
         self.import_dos(dos_path)
 
@@ -141,7 +141,7 @@ class MainController(object):
         Import LET cube.
         """
         # Start a file dialog for selecting input files
-        from view.dialogs import MyDialogs
+        from pytripgui.view.dialogs import MyDialogs
         let_path = MyDialogs.openFileNameDialog(self.app)
         self.import_let(let_path)
 
@@ -160,7 +160,7 @@ class MainController(object):
         """
         logger.debug("Import .exec")
         # Start a file dialog for selecting input files
-        from view.dialogs import MyDialogs
+        from pytripgui.view.dialogs import MyDialogs
         exec_path = MyDialogs.openFileNameDialog(self.app)
         self.import_exec(exec_path)
 
