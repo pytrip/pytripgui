@@ -4,8 +4,18 @@ language: python
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
-sudo: true
+sudo: false
 dist: trusty
+
+# testing pyqt5 apps require X server
+addons:
+  apt:
+    packages:
+    - xvfb
+    - xfonts-100dpi
+    - xfonts-75dpi
+    - xorg
+    - dbus-x11
 
 env:
   global:
@@ -41,13 +51,10 @@ matrix:
 
 
 script:
-  - sudo apt-get update
-  - sudo apt-get purge fglrx -y
-  - sudo apt-get install xvfb xfonts-100dpi xfonts-75dpi xfonts-cyrillic xorg dbus-x11 -y
-  - ./install_versioneer.sh
-  - ./makeui.sh
   - pip install -r requirements.txt --upgrade
   - pip install -r tests/requirements-test.txt --upgrade
+  - ./makeui.sh
+  - ./install_versioneer.sh
   - tox --recreate --notest && tox
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
 
