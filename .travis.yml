@@ -43,6 +43,8 @@ matrix:
 script:
   - ./install_versioneer.sh
   - ./makeui.sh
+  - pip install -r requirements.txt --upgrade
+  - pip install -r tests/requirements-test.txt --upgrade
   - tox --recreate --notest && tox
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
 
