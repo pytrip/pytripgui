@@ -41,7 +41,9 @@ matrix:
 
 
 script:
-  - if [[ "$DIST" == "trusty" ]]; then sudo apt-get update -qq ; sudo apt-get purge -qq fglrx ; sudo apt-get install xvfb xfonts-100dpi xfonts-75dpi xfonts-cyrillic xorg dbus-x11 ; fi
+  - sudo apt-get update
+  - sudo apt-get purge fglrx -y
+  - sudo apt-get install xvfb xfonts-100dpi xfonts-75dpi xfonts-cyrillic xorg dbus-x11 -y
   - ./install_versioneer.sh
   - ./makeui.sh
   - pip install -r requirements.txt --upgrade
