@@ -4,7 +4,7 @@
 # including ones installed via apt. pytripgui requires python-wx package which is not shipped via pip
 # but only via apt-get. It means we cannot run tests in such restricted virtualenvs,
 # and consequently cannot use "language: python" options. This is why we use generic here
-language: generic
+language: python
 
 
 env:
@@ -13,27 +13,53 @@ env:
     #  pypi secured password (PYPIPASS variable), you need to update it to your own if you want to use it
     - secure: "SMZG9NowpZXGR0uNh5FvTRNO/rafNlj5smen8GK77tgYP8AiCjoXxzl5EXhO8WRd/6Zf1vMtSan8p0fif/8LCr7hncZ8SZ/rKNnf1EOKa0Wam7TVxwVaeMnThDyZNOuV5/3/NDEg/ro194Z7kKHGPAaE8GycaGxAmXG8EbCIVw8uYu3DHDstpewWveGusKqPFOUORUHtfEdpINMizY/Ady34BDRRC7UHU67eWGx3wa1g5WXBr34LKQTHY8nzWI6W04z55gQhHWytrJbp947/JvMItSEOd3s09KPv36K4nezbMrpnWmhSxtP9JDhZI2eLO3bjQHWRnoYNBG2DN/6VC0C+eUsZ81Pi17JEUBlyyjfx0iFCbi5ssvjXwDaqbaCFIeoMh+TEiQFjIYBX8GgIg/+b9lWUaxGxTdx/mdE8MJOufX3G3df8eXklil2D89R0SfkHqxunbheBp4POXP2w3b7LbKv4NV5pgPSWx1h8Hv60ODQyEcF658EA23sV7W2SAKc/Pt+WQ9fVuP/1ZWFHZN3ACd03pqHI0HLzrIufLE3aww1dKpiZKL1v7Irvai9RbCugEYYX5BzoBF/DTwYDJuH8OFf1H+nNT8oO+LbnYgkZ7POrKQ+8SAuZRIYg708bh5EmDaiS04D2CaBpRV9rfiQwhvHnWY35c6G2BXbGsgU="
 
+matrix:
+    include:
+        - os: linux
+          python: 3.5
+          env: TOXENV=coverage
+        - os: linux
+          python: 3.5
+          env: TOXENV=py35
+        - os: linux
+          python: 3.5-dev
+          env: TOXENV=py35
+        - os: linux
+          python: 3.6
+          env: TOXENV=py36
+        - os: linux
+          python: 3.6-dev
+          env: TOXENV=py36
+        - os: linux
+          python: nightly
+          env: TOXENV=py37
+        - os: linux
+          python: 3.5
+          env: TOXENV=docs
+        - os: linux
+          python: 3.6
+          env: TOXENV=pep8
+        - os: linux
+          python: 3.6
+          env: TOXENV=packaging
+#    uncomment and adjust if you want to allow some failures
+    allow_failures:
+        - os: linux
+          python: nightly
+          env: TOXENV=py37
+
 
 # travis-ci runs by default on ancient Ubuntu 12.04 (precise)
 # following options will give us Ubuntu 14.04 (trusty)
 sudo: false
 dist: trusty
 
-addons:
-  apt:
-    packages:
-    - python2.7
-    - python-pip-whl
-    - python-wxgtk2.8
-    - python-wxtools
-    - python-wxversion
-    - python-wheel
-    - python-tk
-    - python-pytest
-
 script:
-  - pip install "versioneer<0.18" --user
+  - pip install "versioneer<0.18"
   - ./install_versioneer.sh
-  - pip install -r requirements.txt --user
+  - pip install --upgrade -r requirements.txt
+  - pip install --upgrade -r tests/requirements-test.txt
+  - python -c "import numpy as np;print(np.version.version)"
+  - ./makeui.sh
   - py.test
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]]; then .travis/deploy_package.sh pypi; fi

@@ -4,9 +4,9 @@ import logging
 
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
-from view.main_view import MainView
-from model.main_model import MainModel
-from controller.main_cont import MainController
+from pytripgui.view.main_view import MainView
+from pytripgui.model.main_model import MainModel
+from pytripgui.controller.main_cont import MainController
 
 
 logger = logging.getLogger(__name__)

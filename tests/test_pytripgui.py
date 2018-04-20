@@ -1,15 +1,13 @@
-import unittest
+import pytest
+from pytestqt.qt_compat import qt_api
 
-import pytripgui
+from pytripgui.main import AppWindow
 
+def test_basics(qtbot):
+    assert qt_api.QApplication.instance() is not None
+    widget = AppWindow()
+    qtbot.addWidget(widget)
+    widget.show()
 
-class TestStart(unittest.TestCase):
-    def test_check(self):
-        try:
-            pytripgui.start()
-        except SystemExit as e:
-            self.assertEqual(e.code, 'Unable to access the X Display, is $DISPLAY set properly?')
-
-
-if __name__ == '__main__':
-    unittest.main()
+    assert widget.isVisible()
+    assert widget.windowTitle() == 'PyTRiPGUI'

@@ -1,7 +1,7 @@
 import logging
 
-from model.plot_model import PlotModel
-from model.tree_model import TreeModel
+from pytripgui.model.plot_model import PlotModel
+from pytripgui.model.tree_model import TreeModel
 
 logger = logging.getLogger(__name__)
 
