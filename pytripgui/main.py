@@ -36,13 +36,17 @@ class AppWindow(QMainWindow):
             self.ctrl.import_let(args.let)
 
 
-
 def main(args=sys.argv[1:]):
+    from pytripgui import __version__ as _ptgv
+    from pytrip import __version__ as _ptv
+    _vers = "PyTRiP98GUI {} using PyTRiP98 {}".format(_ptgv, _ptv)
+
     app = QApplication(sys.argv)
 
     # setup parser
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbosity', action='count', help="increase output verbosity", default=0)
+    parser.add_argument('-V', '--version', action='version', version=(_vers))
     parser.add_argument("--ctx", help="CtxCube", type=str, nargs='?')
     # parser.add_argument("--vdx", help="VdxCube", type=str, nargs='?')
     parser.add_argument("--dos", help="DosCube", type=str, nargs='?')
