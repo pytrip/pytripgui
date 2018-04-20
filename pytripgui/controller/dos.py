@@ -1,7 +1,6 @@
 import logging
 
 import numpy as np
-import matplotlib._cntr as cntr
 
 logger = logging.getLogger(__name__)
 
@@ -88,11 +87,3 @@ class Dos(object):
                         pm.dose_bar.set_label("Dose (%)")
             else:
                 plc._dims.set_data(plot_data)
-
-        elif pm.dose_plot == "contour":
-            x, y = np.meshgrid(np.arange(len(dos_data[0])), np.arange(len(dos_data)))
-            isodose_obj = cntr.Cntr(x, y, dos_data)
-            for con in pm.dosecontour_levels:
-                contour = isodose_obj.trace(con["doselevel"] * 10)
-                if len(contour) > 0:
-                    plc._figure.plot(contour[0][:, 0], contour[0][:, 1], con["color"])
