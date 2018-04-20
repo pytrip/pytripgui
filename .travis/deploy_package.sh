@@ -46,11 +46,11 @@ set -x
 python setup.py sdist
 
 # makes wheel
-pip install wheel --user
+pip install wheel
 python setup.py bdist_wheel
 
 # install necessary tools
-pip install twine --user
+pip install twine
 ls -al dist
 
 # upload only if tag present
