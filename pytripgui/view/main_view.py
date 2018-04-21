@@ -2,7 +2,7 @@ import logging
 
 from PyQt5 import QtWidgets
 
-from pytripgui.view.main_window import Ui_MainWindow
+from pytripgui.view.gen.main_window import Ui_MainWindow
 from pytripgui.view.plot_canvas import PlotCanvas
 
 logger = logging.getLogger(__name__)
