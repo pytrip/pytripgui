@@ -60,12 +60,16 @@ class TreeController(object):
         elif level == 2:
             editMenu = QtWidgets.QAction("Edit ROI", self.app)
             menu.addAction(editMenu)
+            editMenu = QtWidgets.QAction("Calc DVH", self.app)
+            menu.addAction(editMenu)
 
         menu.exec_(self.tv.viewport().mapToGlobal(position))
 
         if editMenu:
             pass  # disable callbacks for now as they are not implemented
             logger.debug("action triggered TreeView level {}".format(level))
+            # TODO: this is just a test, must be made much nicer.
+            self.app.ctrl.dvh.add_dvh(self.app.model.dos[-1], self.app.model.vdx.get_voi_by_name(_dat))
             # editMenu.triggered.connect(partial(self.editObjFunc, index))
 
     def update_tree(self):

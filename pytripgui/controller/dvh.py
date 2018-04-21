@@ -8,11 +8,14 @@ class Dvh(object):
     This class holds logic for plotting CTX stuff.
     """
 
-    def __init__(self, model, dvh):
+    def __init__(self, model, view):
         """
         """
         self.model = model
-        self.dvh = dvh  # plot widget, need better name, to avoid confusion
+        self.view = view
+        self.fig = self.view.ui.dvh
+        self.fig.xlabel = "Dose [%]"
+        self.fig.ylabel = "Volume [%]"
 
     def add_dvh(self, dos, voi):
         """
@@ -29,8 +32,9 @@ class Dvh(object):
 
         from pytrip.util import volume_histogram
         logger.debug("Processing VOI '{:s}'...".format(voi.name))
-        x, y = volume_histogram(dos, voi)
+        x, y = volume_histogram(dos.cube, voi)
         x = x * 0.1  # convert %% to %
+        print(x, y)
         return [x, y]
 
     def update_plot(self):
@@ -39,5 +43,5 @@ class Dvh(object):
         # TODO: clear plot
 
         for dvh in self.model.plot.dvhs:
-            self.dvh.plot(dvh)
-        self.dvh.show()
+            self.fig.axes.plot(dvh[0], dvh[1])
+        self.fig.show()

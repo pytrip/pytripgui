@@ -23,7 +23,7 @@ class MainController(object):
 
         self.tree = TreeController(self.model, app.view.ui.treeView, self.app)
         self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
-        self.plot_dvh = Dvh(self.model, app.view.ui.dvh)   # DVH plot
+        self.dvh = Dvh(self.model, self.app.view)   # DVH plot
 
         self._connect_ui(app.view.ui)
 
