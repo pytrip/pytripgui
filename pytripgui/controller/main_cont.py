@@ -4,6 +4,7 @@ import pytrip as pt
 from pytripgui.controller.tree_cont import TreeController
 from pytripgui.controller.plot_cont import PlotController
 from pytripgui.controller.settings import Settings
+from pytripgui.controller.dvh import Dvh
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 # from pytripgui.controller.plot_cont import PlotController
@@ -21,7 +22,8 @@ class MainController(object):
         self.app = app  # not sure if this is correct. May controller use App?
 
         self.tree = TreeController(self.model, app.view.ui.treeView, self.app)
-        self.plot = PlotController(self.model, app.view.ui)
+        self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
+        self.plot_dvh = Dvh(self.model, app.view.ui.dvh)   # DVH plot
 
         self._connect_ui(app.view.ui)
 

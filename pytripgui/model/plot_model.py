@@ -29,6 +29,12 @@ class PlotModel(object):
         self.fg_color = 'white'
         self.bg_color = 'black'
 
+        # DVHPlot specific
+        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
+
+        # LVHPlot specific
+        self.lvhs = []  # let volume historgrams, list of [x,y] ready for plotting
+
         # CTX specific
         self.contrast_ct = [-500, 2000]
 
