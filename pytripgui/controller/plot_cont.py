@@ -29,17 +29,21 @@ class PlotController(object):
         self._dims = None  # placeholder for AxesImage object returned by imshow() for DoseCube
         self._cb = None  # placeholder for Colorbar object returned by matplotlib.colorbar
 
-        # Connect events to callbacks
-        self._connect_ui_plot(self._ui.pc)
+        # initial setup of the ViewCanvas
+        rect = ui.vc.fig.patch
+        rect.set_facecolor(model.plot.bg_color)
 
-    def _connect_ui_plot(self, pc):
+        # Connect events to callbacks
+        self._connect_ui_plot(ui.vc)
+
+    def _connect_ui_plot(self, vc):
         """
         Note sure this is the correct place to do this.
         """
-        pc.fig.canvas.mpl_connect('button_press_event', self.on_click)
-        pc.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
-        pc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
-        pc.fig.canvas.mpl_connect('key_press_event', self.on_key_press)
+        vc.fig.canvas.mpl_connect('button_press_event', self.on_click)
+        vc.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
+        vc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
+        vc.fig.canvas.mpl_connect('key_press_event', self.on_key_press)
 
     def update_plot(self):
         """
@@ -62,9 +66,9 @@ class PlotController(object):
         if self._model.let:
             Let.plot(self)
 
-        self._ui.pc.draw()
-        self._ui.pc.move(0, 0)
-        self._ui.pc.show()
+        self._ui.vc.draw()
+        self._ui.vc.move(0, 0)
+        self._ui.vc.show()
 
     def _plot_dos(self):
         """

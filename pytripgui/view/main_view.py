@@ -22,7 +22,7 @@ class MainView(object):
         self.ui.setupUi(app)
 
         # attach canvas for 2D plots
-        self.ui.pc = ViewCanvas(parent=self.ui.tab_view)
+        self.ui.vc = ViewCanvas(parent=self.ui.tab_view)
         self.ui.dvh = VolHist(parent=self.ui.tab_dvh)
         self.ui.lvh = VolHist(parent=self.ui.tab_lvh)
 

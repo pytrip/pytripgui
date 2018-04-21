@@ -25,6 +25,10 @@ class PlotModel(object):
         self.zoom_levels = [100.0, 110.0, 125.0, 150.0, 200.0, 250.0, 300.0, 400.0]
         self.center = [50.0, 50.0]
 
+        # ViewCanvas specific:
+        self.fg_color = 'white'
+        self.bg_color = 'black'
+
         # CTX specific
         self.contrast_ct = [-500, 2000]
 
