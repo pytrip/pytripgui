@@ -43,9 +43,9 @@ class Ctx(object):
         # Once it has been created, retain a reference to the plot for future updates with set_data()
         # which is much faster.
         if plc._ims is None:
-            plc._ims = plc._ui.pc.axes.imshow(
+            plc._ims = plc._ui.vc.axes.imshow(
                 ct_data, cmap=plt.get_cmap("gray"), vmin=pm.contrast_ct[0], vmax=pm.contrast_ct[1], aspect=pm.aspect)
-            plc._figure = plc._ui.pc.axes
+            plc._figure = plc._ui.vc.axes
         else:
             plc._ims.set_data(ct_data)
 

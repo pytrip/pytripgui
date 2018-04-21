@@ -70,8 +70,8 @@ class Dos(object):
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
             if plc._dims is None:
-                plc._dims = plc._ui.pc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
-                plc._figure = plc._ui.pc.axes
+                plc._dims = plc._ui.vc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
+                plc._figure = plc._ui.vc.axes
 
                 if not pm.dose_bar and not pm.let_bar:
                     cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
