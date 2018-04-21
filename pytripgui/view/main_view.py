@@ -3,7 +3,8 @@ import logging
 from PyQt5 import QtWidgets
 
 from pytripgui.view.gen.main_window import Ui_MainWindow
-from pytripgui.view.plot_canvas import PlotCanvas
+from pytripgui.view.plot_viewcanvas import ViewCanvas
+from pytripgui.view.plot_volhist import VolHist
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,9 @@ class MainView(object):
         self.ui.setupUi(app)
 
         # attach canvas for 2D plots
-        self.ui.pc = PlotCanvas(parent=self.ui.tab)
+        self.ui.pc = ViewCanvas(parent=self.ui.tab_view)
+        self.ui.dvh = VolHist(parent=self.ui.tab_dvh)
+        self.ui.lvh = VolHist(parent=self.ui.tab_lvh)
 
         app.setWindowTitle("PyTRiPGUI")
 
