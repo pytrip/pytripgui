@@ -25,8 +25,9 @@ class VolHist(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
 
         # Here one can adjust the position of the CTX plot area.
-        self.axes = self.fig.add_axes([0.1, 0.1, 0.85, 0.85])
         # self.axes = self.fig.add_subplot(111)
+        self.axes = self.fig.add_axes([0.1, 0.1, 0.85, 0.85])
+        self.axes.grid(True)
 
         FigureCanvas.__init__(self, self.fig)
 
