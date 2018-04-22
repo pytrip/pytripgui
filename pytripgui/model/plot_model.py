@@ -47,6 +47,10 @@ class PlotModel(object):
         # Here we shall only keep a list of those dvh's we want to plot.
         self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
+        # ViewCanvas specific:
+        self.fg_color = 'white'
+        self.bg_color = 'black'
+
         # CTX specific
         self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.contrast_ct = [-500, 2000]
