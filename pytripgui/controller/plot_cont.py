@@ -5,7 +5,7 @@ from pytripgui.controller.vdx import Vdx
 from pytripgui.controller.dos import Dos
 from pytripgui.controller.let import Let
 # import matplotlib.pyplot as plt
-# from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
+# from PyQt5.QtCore import pyqtSlot
 # import pytrip as pt
 
 logger = logging.getLogger(__name__)
@@ -45,14 +45,12 @@ class PlotController(object):
         vc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
         vc.fig.canvas.mpl_connect('key_press_event', self.on_key_press)
 
-    def update_plot(self):
+    def update_viewcanvas(self):
         """
-        Updating plot.
-        What has to be plotted could be defined in model/. ?
-        And in a seperate file?
+        Updating ViewCanvas which holds CTX, VDX, DOS and LET.
         """
 
-        logger.info("Received update_plot signal")
+        logger.info("Enter update_viewcanvas()")
 
         if self._model.ctx:
             Ctx.plot(self)
@@ -126,7 +124,7 @@ class PlotController(object):
             else:
                 self._model.plot.zslice = 0
 
-        self.update_plot()
+        self.update_viewcanvas()
 
     def on_key_press(self, event):
         """

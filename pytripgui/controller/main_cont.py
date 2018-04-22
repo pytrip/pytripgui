@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class MainController(object):
 
     # this is probably not correct solution
-    # plotupdate = pyqtSignal(int, name='plotupdate')
+    # plotupdate = pyqtSignal()
 
     def __init__(self, app):
         self.model = app.model  # Q: mark private? _model
@@ -26,6 +26,8 @@ class MainController(object):
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
 
         self._connect_ui(app.view.ui)
+
+        # self.plotupdate.connect(self.plot.update_viewcanvas)
 
         # prepare settings
         self.settings = Settings()
@@ -111,12 +113,13 @@ class MainController(object):
         self.tree.add_vdx(vdx)
 
         # update the canvas
-        self.plot.update_plot()
+        self.plot.update_viewcanvas()
+        # self.updateplot.emit()
         # testing, not sure if this is proper
         # emit signal to update the plot
-        # update_plot()
+        # update_viewcanvas()
         # from controller.plot_cont import PlotController
-        # self.plotupdate.connect(PlotController.update_plot)
+        # self.plotupdate.connect(PlotController.update_viewcanvas)
         # self.plotupdate.emit()
 
     def import_dos_dialog(self, event):

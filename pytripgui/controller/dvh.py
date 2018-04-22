@@ -23,7 +23,7 @@ class Dvh(object):
         """
         dvh = self._calc_dvh(dos, voi)
         self.model.plot.dvhs.append(dvh)
-        self.update_plot()
+        self.update_plotdvh()
 
     @staticmethod
     def _calc_dvh(dos, voi):
@@ -37,7 +37,7 @@ class Dvh(object):
         print(x, y)
         return [x, y]
 
-    def update_plot(self):
+    def update_plotdvh(self):
         """
         """
         # TODO: clear plot
