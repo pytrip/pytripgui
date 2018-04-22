@@ -23,14 +23,19 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="tab_view">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>View</string>
        </attribute>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_dvh">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>DVH</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="tab_lvh">
+       <attribute name="title">
+        <string>LVH</string>
        </attribute>
       </widget>
      </widget>

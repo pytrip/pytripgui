@@ -12,9 +12,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvas(FigureCanvas):
+class VolHist(FigureCanvas):
     """
-    Viewer class for matplotlib 2D plotting widget
+    Viewer class for matplotlib figure for Volume Historgrams
     """
 
     def __init__(self, parent=None, width=6, height=4, dpi=110):
@@ -25,7 +25,7 @@ class ViewCanvas(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
 
         # Here one can adjust the position of the CTX plot area.
-        self.axes = self.fig.add_axes([1, 0, 1, 1])
+        self.axes = self.fig.add_axes([0.1, 0.1, 0.85, 0.85])
         # self.axes = self.fig.add_subplot(111)
 
         FigureCanvas.__init__(self, self.fig)

@@ -25,7 +25,7 @@ class ViewCanvas(FigureCanvas):
         self.fig = Figure(figsize=(width, height), dpi=dpi)
 
         # Here one can adjust the position of the CTX plot area.
-        self.axes = self.fig.add_axes([1, 0, 1, 1])
+        self.axes = self.fig.add_axes([0.1, 0, 1, 1])
         # self.axes = self.fig.add_subplot(111)
 
         FigureCanvas.__init__(self, self.fig)
@@ -34,9 +34,7 @@ class ViewCanvas(FigureCanvas):
         layout.addWidget(self)
         parent.setLayout(layout)
 
-        FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
