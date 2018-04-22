@@ -48,6 +48,7 @@ class TreeController(object):
                 index = index.parent()
                 level += 1
 
+        # TODO: question, any better way of handling this? Passing self.app all the way here seems strange.
         menu = QtWidgets.QMenu(self.app)
         editMenu = None
 

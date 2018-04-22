@@ -30,10 +30,18 @@ class PlotModel(object):
         self.bg_color = 'black'
 
         # DVHPlot specific
+        # TODO: these will be future pt.VolHist objects.
+        # Here we shall only keep a list of those dvh's we want to plot.
         self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
 
+        # Idea is to attach the VolHist classes to the DosCube objects themselves.
+        # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
+        # Here in the plotmodel, we will then keep a list of links to those cubes which the user wants to have plotted.
+
         # LVHPlot specific
-        self.lvhs = []  # let volume historgrams, list of [x,y] ready for plotting
+        # TODO: these will be future pt.VolHist objects.
+        # Here we shall only keep a list of those dvh's we want to plot.
+        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
         # CTX specific
         self.contrast_ct = [-500, 2000]
@@ -43,18 +51,20 @@ class PlotModel(object):
         self.plot_vois = True  # whether all vois are plotted at all
 
         # DosCube specific
-        self.dos = None  # Placeholder for DosCube() object to be plotted
+        self.dos = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
+        self.dose_show = True  # decides whether DosCube is shown or not.
         self.dose_plot = "colorwash"
         self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
         self.dose_bar = None
         self.dose_axis = "auto"
         self.colormap_dose = plt.get_cmap(None)
-        self.dos_scale = None
+        self.dos_scale = None  # TODO: check what this is, change possibly to dose_scale (with 'e')
         self.min_dose = 0
         self.max_dose = None
 
         # LETCube specific
-        self.let = None  # Placeholder for LETCube() object to be plotted
+        self.let = None  # Placeholder for LETCube() object to be plotted. Only one (!) LETCube can be plotted.
+        self.let_show = True  # decides whether LETCube is shown or not.
         self.let_plot = "colorwash"
         self.let_bar = None
         self.colormap_let = plt.get_cmap(None)
