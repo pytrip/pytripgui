@@ -62,7 +62,12 @@ class Ctx(object):
         # strictly the contrast bas should be set in the viewer?
         if not plc._cb:
             cax = plc._figure.figure.add_axes([0.1, 0.1, 0.03, 0.8])
-            plc._cb = plc._figure.figure.colorbar(plc._ims, cax=cax)
+            cb = plc._figure.figure.colorbar(plc._ims, cax=cax)
+            cb.set_label("HU", color=pm.fg_color)
+            cb.outline.set_edgecolor(pm.bg_color)
+            cb.ax.yaxis.set_tick_params(color=pm.fg_color)
+            plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
+            plc._cb = cb
 
     @staticmethod
     def change_contrast(plc, contrast):
