@@ -28,6 +28,8 @@ class VolHist(FigureCanvas):
         # self.axes = self.fig.add_subplot(111)
         self.axes = self.fig.add_axes([0.1, 0.1, 0.85, 0.85])
         self.axes.grid(True)
+        self.axes.set_xlabel("(no data)")
+        self.axes.set_ylabel("(no data)")
 
         FigureCanvas.__init__(self, self.fig)
 

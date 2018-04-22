@@ -1,5 +1,7 @@
 import logging
 
+from pytrip.volhist import VolHist
+
 logger = logging.getLogger(__name__)
 
 
@@ -29,19 +31,20 @@ class Dvh(object):
     def _calc_dvh(dos, voi):
         """ Calculates a Dvh
         """
+        # TODO, this could be run threaded when loading a DOS and VDX is present.
 
-        from pytrip.util import volume_histogram
         logger.debug("Processing VOI '{:s}'...".format(voi.name))
-        x, y = volume_histogram(dos.cube, voi)
-        x = x * 0.1  # convert %% to %
-        print(x, y)
-        return [x, y]
+        return VolHist(dos, voi)
 
     def update_plotdvh(self):
         """
         """
         # TODO: clear plot
+        axes = self.fig.axes
 
         for dvh in self.model.plot.dvhs:
-            self.fig.axes.plot(dvh[0], dvh[1])
+            axes.plot(dvh.x, dvh.y, label=dvh.name)
+        axes.set_xlabel(dvh.xlabel)
+        axes.set_ylabel(dvh.ylabel)
+
         self.fig.show()
