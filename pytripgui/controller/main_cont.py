@@ -72,6 +72,59 @@ class MainController(object):
         Opens a DICOM set and sets it to the model.
         """
         logger.debug("Open DICOM triggered")
+        model = self.model
+        st = self.settings
+
+        import os
+        dir = os.path.dirname(model.dicom_path)
+
+        # Start a file dialog for selecting input files
+        from pytripgui.view.dialogs import MyDialogs
+        dir = MyDialogs.openDirectoryDialog(self.app,
+                                            "Open Directory with DICOM Files",
+                                            dir)
+        if not dir:
+            return
+        self.open_dicom(dir)
+        model.dicom_path = dir
+        st.save("general.import.dicom_path", dir)
+
+    def open_dicom(self, dir):
+        """
+        """
+        model = self.model    # local object of plot_model
+        pm = self.model.plot  # local object of plot_model
+
+        logger.debug("open dicom '{}'".format(dir))
+        dcm = pt.dicomhelper.read_dicom_dir(dir)
+
+        ctx = None
+        vdx = None
+
+        if 'images' in dcm:
+            logger.debug("Found images in DICOM")
+            ctx = pt.CtxCube()
+            ctx.read_dicom(dcm)
+            model.ctx = ctx
+            pm.ctx = ctx
+
+        if 'rtss' in dcm:
+            logger.debug("Found rtss in DICOM")
+            vdx = pt.VdxCube(cube=ctx)
+            vdx.read_dicom(dcm)
+            for voi in vdx.vois:
+                pm.vois.append(voi)
+
+            model.vdx = vdx
+            pm.vdx = vdx
+
+        # TODO: plan data
+
+        # add cube to the treeview
+        self.tree.add_vdx(vdx)
+
+        # update the canvas
+        self.plot.update_viewcanvas()
 
     def open_voxelplan_dialog(self, event):
         """
