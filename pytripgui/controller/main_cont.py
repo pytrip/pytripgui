@@ -82,13 +82,13 @@ class MainController(object):
         st = self.settings
 
         import os
-        dir = os.path.dirname(model.voxelplan_path)
+        model.wdir = os.path.dirname(model.voxelplan_path)
 
         # Start a file dialog for selecting input files
         from pytripgui.view.dialogs import MyDialogs
         path = MyDialogs.openFileNameDialog(self.app,
                                             "Open Voxelplan file",
-                                            dir,
+                                            model.wdir,
                                             'hed')
         if not path:
             return
@@ -167,10 +167,21 @@ class MainController(object):
         """
         Open the import dose cube dialog.
         """
-        # Start a file dialog for selecting input files
+        model = self.model
+
+        # offer to look for .dos in the same path as where CTX/VDX was found.
+        # however, contrary to CTX/VDX this is not saved to settings.
+        import os
+        model.wdir = os.path.dirname(model.voxelplan_path)
+
         from pytripgui.view.dialogs import MyDialogs
-        dos_path = MyDialogs.openFileNameDialog(self.app)
-        self.import_dos(dos_path)
+        path = MyDialogs.openFileNameDialog(self.app,
+                                            "Import DoseCube",
+                                            model.wdir,
+                                            'dos')
+        if not path:
+            return
+        self.import_dos(path)
 
     def import_dos(self, dos_path):
         """
@@ -191,15 +202,27 @@ class MainController(object):
 
         # add cube to the treeview
         self.tree.add_dos(dos)
+        self.plot.update_viewcanvas()
 
     def import_let_dialog(self, event):
         """
         Open the import LET cube dialog.
         """
-        # Start a file dialog for selecting input files
+        model = self.model
+
+        # offer to look for .dos in the same path as where CTX/VDX was found.
+        # however, contrary to CTX/VDX this is not saved to settings.
+        import os
+        model.wdir = os.path.dirname(model.voxelplan_path)
+
         from pytripgui.view.dialogs import MyDialogs
-        let_path = MyDialogs.openFileNameDialog(self.app)
-        self.import_let(let_path)
+        path = MyDialogs.openFileNameDialog(self.app,
+                                            "Import LETCube",
+                                            model.wdir,
+                                            'let')
+        if not path:
+            return
+        self.import_let(path)
 
     def import_let(self, let_path):
         """
@@ -219,6 +242,7 @@ class MainController(object):
 
         # add cube to the treeview
         self.tree.add_let(let)
+        self.plot.update_viewcanvas()
 
     def import_exec_dialog(self, event):
         """
