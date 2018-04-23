@@ -4,6 +4,7 @@ import pytrip as pt
 from pytripgui.controller.tree_cont import TreeController
 from pytripgui.controller.plot_cont import PlotController
 from pytripgui.controller.settings import Settings
+from pytripgui.controller.dvh import Dvh
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 # from pytripgui.controller.plot_cont import PlotController
@@ -14,16 +15,19 @@ logger = logging.getLogger(__name__)
 class MainController(object):
 
     # this is probably not correct solution
-    # plotupdate = pyqtSignal(int, name='plotupdate')
+    # plotupdate = pyqtSignal()
 
     def __init__(self, app):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
         self.tree = TreeController(self.model, app.view.ui.treeView, self.app)
-        self.plot = PlotController(self.model, app.view.ui)
+        self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
+        self.dvh = Dvh(self.model, self.app.view)   # DVH plot
 
         self._connect_ui(app.view.ui)
+
+        # self.plotupdate.connect(self.plot.update_viewcanvas)
 
         # prepare settings
         self.settings = Settings()
@@ -72,17 +76,30 @@ class MainController(object):
         self.open_voxelplan(ctx_path)
 
     def open_voxelplan(self, ctx_path):
+        """
+        Open a Voxelplan type CTX and possibly a VDX if one exists with the same basename.
+        """
+
+        model = self.model    # local object of plot_model
+        pm = self.model.plot  # local object of plot_model
+
         # Get the CTX cubes first
         logger.debug("Open CTX {:s}".format(ctx_path))
         ctx = pt.CtxCube()
-        self.model.ctx = ctx
         ctx.read(ctx_path)
 
-        # Point to center of slices for default plotting
-        self.model.plot.xslice = int(ctx.dimx * 0.5)
-        self.model.plot.yslice = int(ctx.dimy * 0.5)
-        self.model.plot.zslice = int(ctx.dimz * 0.5)
+        # update model
+        model.ctx = ctx
+        pm.ctx = ctx
 
+        # Point to center of slices for default plotting
+        pm.xslice = int(ctx.dimx * 0.5)
+        pm.yslice = int(ctx.dimy * 0.5)
+        pm.zslice = int(ctx.dimz * 0.5)
+        # TODO: we assume transversal view as start. fixme.
+        pm.slice_pos_idx = int(ctx.dimz * 0.5)
+
+        # show file basename in window title
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
 
         # add cube to the treeview
@@ -101,20 +118,24 @@ class MainController(object):
         import os.path
         if os.path.isfile(vdx_path):
             logger.debug("   Open '{:s}'".format(vdx_path))
-            self.model.vdx = pt.VdxCube(self.model.ctx)
-            self.model.vdx.read(vdx_path)
-            vdx = self.model.vdx
+            vdx = pt.VdxCube(self.model.ctx)
+            vdx.read(vdx_path)
+
+            # update model
+            model.vdx = vdx
+            pm.vdx = vdx
 
         # add cube to the treeview
         self.tree.add_vdx(vdx)
 
         # update the canvas
-        self.plot.update_plot()
+        self.plot.update_viewcanvas()
+        # self.updateplot.emit()
         # testing, not sure if this is proper
         # emit signal to update the plot
-        # update_plot()
+        # update_viewcanvas()
         # from controller.plot_cont import PlotController
-        # self.plotupdate.connect(PlotController.update_plot)
+        # self.plotupdate.connect(PlotController.update_viewcanvas)
         # self.plotupdate.emit()
 
     def import_dos_dialog(self, event):

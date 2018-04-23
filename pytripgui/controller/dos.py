@@ -1,6 +1,7 @@
 import logging
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 
@@ -73,14 +74,24 @@ class Dos(object):
                 plc._dims = plc._ui.vc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
                 plc._figure = plc._ui.vc.axes
 
+                # setup colourbar, here called "dose_bar"
                 if not pm.dose_bar and not pm.let_bar:
                     cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
-                    pm.dose_bar = plc._figure.figure.colorbar(plc._dims, cax=cax)
+                    cb = plc._figure.figure.colorbar(plc._dims, cax=cax)
+
+                    # setup some colours
+                    cb.set_label("Dose", color=pm.fg_color)
+                    cb.outline.set_edgecolor(pm.bg_color)
+                    cb.ax.yaxis.set_tick_params(color=pm.fg_color)
+                    plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
+                    cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
+
+                    pm.dose_bar = cb
 
                 if pm.dose_bar:
                     if scale == "abs":
-                        pm.dose_bar.set_label("Dose (Gy)")
+                        pm.dose_bar.set_label("Dose [Gy]")
                     else:
-                        pm.dose_bar.set_label("Dose (%)")
+                        pm.dose_bar.set_label("Dose [%]")
             else:
                 plc._dims.set_data(plot_data)

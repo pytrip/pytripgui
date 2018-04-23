@@ -10,11 +10,11 @@ class MainModel(object):
     def __init__(self, app):
         self._update_funce = []
         self.foobar = 10
-        self.ctx = None
-        self.vdx = None
+        self.ctx = None  # Only one CTX is allowed
+        self.vdx = None  # Only one VDX is allowed
         self.plans = None
-        self.dos = []
-        self.let = []
+        self.dos = []   # TODO: change to self.doss (plural s)
+        self.let = []   # TODO: change to self.lets (plural s)
 
         # attach submodels
         self.plot = PlotModel()
