@@ -76,19 +76,30 @@ class MainController(object):
         self.open_voxelplan(ctx_path)
 
     def open_voxelplan(self, ctx_path):
+        """
+        Open a Voxelplan type CTX and possibly a VDX if one exists with the same basename.
+        """
+
+        model = self.model    # local object of plot_model
+        pm = self.model.plot  # local object of plot_model
+
         # Get the CTX cubes first
         logger.debug("Open CTX {:s}".format(ctx_path))
         ctx = pt.CtxCube()
-        self.model.ctx = ctx
-        self.model.plot.ctx = ctx
         ctx.read(ctx_path)
 
-        # Point to center of slices for default plotting
-        self.model.plot.xslice = int(ctx.dimx * 0.5)
-        self.model.plot.yslice = int(ctx.dimy * 0.5)
-        self.model.plot.zslice = int(ctx.dimz * 0.5)
-        self.model.plot.slice_pos_idx = int(ctx.dimz * 0.5)  # TODO: we assume transversal view as start. fixme.
+        # update model
+        model.ctx = ctx
+        pm.ctx = ctx
 
+        # Point to center of slices for default plotting
+        pm.xslice = int(ctx.dimx * 0.5)
+        pm.yslice = int(ctx.dimy * 0.5)
+        pm.zslice = int(ctx.dimz * 0.5)
+        # TODO: we assume transversal view as start. fixme.
+        pm.slice_pos_idx = int(ctx.dimz * 0.5)
+
+        # show file basename in window title
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
 
         # add cube to the treeview
@@ -109,8 +120,10 @@ class MainController(object):
             logger.debug("   Open '{:s}'".format(vdx_path))
             vdx = pt.VdxCube(self.model.ctx)
             vdx.read(vdx_path)
-            self.model.vdx = vdx
-            self.model.plot.vdx = vdx
+
+            # update model
+            model.vdx = vdx
+            pm.vdx = vdx
 
         # add cube to the treeview
         self.tree.add_vdx(vdx)

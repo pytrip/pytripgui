@@ -23,8 +23,10 @@ class Dvh(object):
         """
         Calculates and plots a DVH based on dos and voi.
         """
+        pm = self.model.plot
+
         dvh = self._calc_dvh(dos, voi)
-        self.model.plot.dvhs.append(dvh)
+        pm.dvhs.append(dvh)
         self.update_plotdvh()
 
     @staticmethod
