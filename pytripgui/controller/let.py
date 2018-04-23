@@ -53,20 +53,18 @@ class Let(object):
 
             if not plc._lims:
                 plc._lims = plc._ui.vc.axes.imshow(let_data, cmap=cmap, vmax=(pm.max_let), aspect=pm.aspect)
-                plc._figure = plc._ui.vc.axes
+                plc._lfigure = plc._ui.vc.axes
 
-                if not pm.dose_bar and not pm.let_bar:
-                    cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
-                    cb = plc._figure.figure.colorbar(plc._lims, cax=cax)
-
+                if not plc.let_bar:
+                    # if not pm.let_bar:
+                    cax = plc._lfigure.figure.add_axes([0.92, 0.1, 0.02, 0.8])
+                    cb = plc._lfigure.figure.colorbar(plc._lims, cax=cax)
                     # setup some colours
-                    cb.set_label("Dose", color=pm.fg_color)
+                    cb.set_label("LET (keV/um)", color=pm.fg_color, fontsize=pm.cb_fontsize)
                     cb.outline.set_edgecolor(pm.bg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color)
                     plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
-
-                    pm.let_bar = cb
-                    pm.let_bar.set_label("LET (keV/um)")
+                    plc.let_bar = cb
             else:
                 plc._lims.set_data(let_data)
