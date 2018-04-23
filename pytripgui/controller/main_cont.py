@@ -125,6 +125,10 @@ class MainController(object):
             model.vdx = vdx
             pm.vdx = vdx
 
+            # enable all VOIs to be plotted
+            for voi in vdx.vois:
+                pm.vois.append(voi)
+
         # add cube to the treeview
         self.tree.add_vdx(vdx)
 
@@ -140,7 +144,7 @@ class MainController(object):
 
     def import_dos_dialog(self, event):
         """
-        Import dose cube.
+        Open the import dose cube dialog.
         """
         # Start a file dialog for selecting input files
         from pytripgui.view.dialogs import MyDialogs
@@ -149,17 +153,27 @@ class MainController(object):
 
     def import_dos(self, dos_path):
         """
+        Import a dos cube, add it to the list of loaded dos cubes.
         """
+
+        model = self.model    # local object of plot_model
+        pm = self.model.plot  # local object of plot_model
+
         logger.debug("Open DosCube {:s}".format(dos_path))
         dos = pt.DosCube()
-        self.model.dos.append(dos)
+
         dos.read(dos_path)
+
+        # update model
+        model.dos.append(dos)
+        pm.dos = dos  # display new loaded cube immediately.
+
         # add cube to the treeview
         self.tree.add_dos(dos)
 
     def import_let_dialog(self, event):
         """
-        Import LET cube.
+        Open the import LET cube dialog.
         """
         # Start a file dialog for selecting input files
         from pytripgui.view.dialogs import MyDialogs
@@ -168,11 +182,20 @@ class MainController(object):
 
     def import_let(self, let_path):
         """
+        Import a let cube, add it to the list of loaded dos cubes.
         """
+
+        model = self.model    # local object of plot_model
+        pm = self.model.plot  # local object of plot_model
+
         logger.debug("Open LETCube {:s}".format(let_path))
         let = pt.LETCube()
-        self.model.dos.append(let)
         let.read(let_path)
+
+        # update model
+        model.let.append(let)
+        pm.let = let  # display new loaded cube immediately.
+
         # add cube to the treeview
         self.tree.add_let(let)
 

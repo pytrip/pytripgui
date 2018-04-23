@@ -20,7 +20,7 @@ class TreeController(object):
 
         self.items = []  # test items
 
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         # self.tmodel.setHeaderData("(no CT data loaded)")
 
         # needed for right click to work
@@ -86,7 +86,7 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
         self.items.append(CustomNode(ctx))
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def rm_ctx(self, ctx):
@@ -110,7 +110,7 @@ class TreeController(object):
             # pixmap.fill(value)
             # icon = QtGui.QPixmap(pixmap)
 
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def add_dos(self, dos):
@@ -118,7 +118,7 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("Dose: {}".format(dos.basename)))
         self.items.append(CustomNode(dos))
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def add_let(self, let):
@@ -126,7 +126,7 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("LET: {}".format(let.basename)))
         self.items.append(CustomNode(let))
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
 
@@ -213,7 +213,7 @@ class CustomModel(QtCore.QAbstractItemModel):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, nodes):
+    def __init__(self, nodes, model):
         """
         Initializes model and sets the root node in self._root.
         :params list nodes: list of data. One child will be added for each item 'nodes'.
@@ -222,6 +222,8 @@ class CustomModel(QtCore.QAbstractItemModel):
         self._root = CustomNode(None)
         for node in nodes:
             self._root.addChild(node)
+
+        self.model = model
 
     def rowCount(self, idx):
         """
@@ -282,7 +284,7 @@ class CustomModel(QtCore.QAbstractItemModel):
         """
         """
 
-        row = idx.row()
+        # row = idx.row()
         column = idx.column()
         # value = self._data[row][column]
 
@@ -298,18 +300,46 @@ class CustomModel(QtCore.QAbstractItemModel):
             if isinstance(obj, pt.VdxCube):
                 return "ROIs"
             if isinstance(obj, pt.Voi):
-                return "CTX: {}".format(obj.name)
+                return "{}".format(obj.name)
             if isinstance(obj, pt.DosCube):
                 return "DOS: {}".format(obj.basename)
             if isinstance(obj, pt.LETCube):
                 return "LET: {}".format(obj.basename)
 
-        # in case a checkbox is to be displayed
+        # in case a checkbox is to be displayed, based on which objects are in self.model.plot
+        pm = self.model.plot
+
         if role == QtCore.Qt.CheckStateRole and column == 0:
-            if row == 0:
-                return QtCore.QVariant(QtCore.Qt.Unchecked)
-            else:
-                return QtCore.QVariant(QtCore.Qt.Checked)
+            obj = node.data(idx.column())
+            checked = QtCore.QVariant(QtCore.Qt.Checked)
+            unchecked = QtCore.QVariant(QtCore.Qt.Unchecked)
+
+            if isinstance(obj, pt.CtxCube):
+                if obj == pm.ctx:
+                    return checked
+                else:
+                    return unchecked
+
+            # Not sure about this one: could be used to check all or uncheck all VOIs.
+            # if isinstance(obj, pt.VdxCube):
+
+            if isinstance(obj, pt.Voi):
+                if obj in pm.vois:
+                    return checked
+                else:
+                    return unchecked
+
+            if isinstance(obj, pt.DosCube):
+                if obj == pm.dos:
+                    return checked
+                else:
+                    return unchecked
+
+            if isinstance(obj, pt.LETCube):
+                if obj == pm.let:
+                    return checked
+                else:
+                    return unchecked
 
         if role == QtCore.Qt.EditRole:
             return node.data(idx.column())
