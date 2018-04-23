@@ -131,51 +131,72 @@ class CustomNode(object):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, in_data):
+    def __init__(self, data):
         """
-        create new instance of node, with the input data "in_data"
+        Create a new node instance, with the input data "data"
         """
 
-        self._data = in_data
-        if type(in_data) == tuple:
-            self._data = list(in_data)
-        if type(in_data) == str or not hasattr(in_data, '__getitem__'):
-            self._data = [in_data]
+        self._data = data  # set the data, this is of type str or a tuple of str.
+        if type(data) == tuple:
+            self._data = list(data)
+        if type(data) == str or not hasattr(data, '__getitem__'):
+            self._data = [data]
 
         self._children = []
         self._parent = None
         self._row = 0
-        if in_data:
+        if data:
             # self._columncount = len(in_data)
             self._columncount = 1  # hardcoded for now
         else:
             self._columncount = 0
 
-    def data(self, in_column):
-        if in_column >= 0 and in_column < len(self._data):
-            return self._data[in_column]
+    def data(self, column):
+        """
+        Return data in column number 'column'
+        :params int column: column number
+        """
+        if column >= 0 and column < len(self._data):
+            return self._data[column]
 
     def columnCount(self):
+        """
+        Returns number of columns in this node.
+        """
         return self._columncount
 
     def childCount(self):
+        """
+        Returns number of children in this node.
+        """
         return len(self._children)
 
-    def child(self, in_row):
-        if in_row >= 0 and in_row < self.childCount():
-            return self._children[in_row]
+    def child(self, row):
+        """
+        Returns child in row number 'row'.
+        :params int row: row number which child should be returned.
+        """
+        if row >= 0 and row < self.childCount():
+            return self._children[row]
 
     def parent(self):
+        """
+        Returns parent node of current row.
+        """
         return self._parent
 
     def row(self):
+        "returns current row"
         return self._row
 
-    def addChild(self, in_child):
-        logger.debug("add child '{}' to CustomModel".format(in_child._data))
-        in_child._parent = self
-        in_child._row = len(self._children)
-        self._children.append(in_child)
+    def addChild(self, child):
+        """
+        Adds a new child to current row (making it a parent).
+        """
+        logger.debug("add child '{}' to CustomModel".format(child._data))
+        child._parent = self
+        child._row = len(self._children)  # last row number + 1 where new child will be inserted.
+        self._children.append(child)
         # self._columncount = max(in_child.columnCount(), self._columncount)
         self._columncount = 1  # hardcoded for now
 
@@ -186,59 +207,79 @@ class CustomModel(QtCore.QAbstractItemModel):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, in_nodes):
+    def __init__(self, nodes):
         """
+        Initializes model and sets the root node in self._root.
+        :params list nodes: list of data. One child will be added for each item 'nodes'.
         """
         QtCore.QAbstractItemModel.__init__(self)
         self._root = CustomNode(None)
-        for node in in_nodes:
+        for node in nodes:
             self._root.addChild(node)
 
-    def rowCount(self, in_index):
-        if in_index.isValid():
-            return in_index.internalPointer().childCount()
+    def rowCount(self, idx):
+        """
+        Returns number of rows at index 'idx'.
+        """
+        if idx.isValid():
+            return idx.internalPointer().childCount()
         return self._root.childCount()
 
-    def addChild(self, in_node, in_parent):
-        if not in_parent or not in_parent.isValid():
-            parent = self._root
+    def addChild(self, node, parent):
+        """
+        Adds a new 'node' to 'parent'.
+        If parent is not given, then it will be added to the root node.
+        """
+        if not parent or not parent.isValid():
+            _parent = self._root
         else:
-            parent = in_parent.internalPointer()
-        parent.addChild(in_node)
+            _parent = parent.internalPointer()
+        _parent.addChild(node)
 
-    def index(self, in_row, in_column, in_parent=None):
-        if not in_parent or not in_parent.isValid():
-            parent = self._root
+    def index(self, row, column, parent=None):
+        """
+        Returns model index of item at 'row' and 'column' of 'parent'. If None parent, root node is assumed.
+        """
+        if not parent or not parent.isValid():
+            _parent = self._root
         else:
-            parent = in_parent.internalPointer()
+            _parent = parent.internalPointer()
 
-        if not QtCore.QAbstractItemModel.hasIndex(self, in_row, in_column, in_parent):
+        if not QtCore.QAbstractItemModel.hasIndex(self, row, column, parent):
             return QtCore.QModelIndex()
 
-        child = parent.child(in_row)
+        child = _parent.child(row)  # get the child at current row.
         if child:
-            return QtCore.QAbstractItemModel.createIndex(self, in_row, in_column, child)
+            return QtCore.QAbstractItemModel.createIndex(self, row, column, child)
         else:
             return QtCore.QModelIndex()
 
-    def parent(self, in_index):
-        if in_index.isValid():
-            p = in_index.internalPointer().parent()
+    def parent(self, idx):
+        """
+        Get current parent form index 'idx'.
+        """
+        if idx.isValid():
+            p = idx.internalPointer().parent()
             if p:
                 return QtCore.QAbstractItemModel.createIndex(self, p.row(), 0, p)
         return QtCore.QModelIndex()
 
-    def columnCount(self, in_index):
-        if in_index.isValid():
-            return in_index.internalPointer().columnCount()
+    def columnCount(self, idx):
+        """
+        Returns number of columns at current index.
+        """
+        if idx.isValid():
+            return idx.internalPointer().columnCount()
         return self._root.childCount()
 
-    def data(self, in_index, role):
-        if not in_index.isValid():
+    def data(self, idx, role):
+        """
+        """
+        if not idx.isValid():
             return None
-        node = in_index.internalPointer()
+        node = idx.internalPointer()
         if role == QtCore.Qt.DisplayRole:
-            return node.data(in_index.column())
+            return node.data(idx.column())
         return None
 
     def emitDataChanged(self):
