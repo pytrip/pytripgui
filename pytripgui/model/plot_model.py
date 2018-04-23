@@ -48,8 +48,24 @@ class PlotModel(object):
         self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
         # ViewCanvas specific:
-        self.fg_color = 'white'
-        self.bg_color = 'black'
+        self.text_color = "#33DD33"  # text decorator colour
+        self.fg_color = 'white'  # colour for colourbar ticks and labels
+        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
+        self.cb_fontsize = 8     # fontsize of colourbar labels
+
+        # DVHPlot specific
+        # TODO: these will be future pt.VolHist objects.
+        # Here we shall only keep a list of those dvh's we want to plot.
+        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
+
+        # Idea is to attach the VolHist classes to the DosCube objects themselves.
+        # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
+        # Here in the plotmodel, we will then keep a list of links to those cubes which the user wants to have plotted.
+
+        # LVHPlot specific
+        # TODO: these will be future pt.VolHist objects.
+        # Here we shall only keep a list of those dvh's we want to plot.
+        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
         # CTX specific
         self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
