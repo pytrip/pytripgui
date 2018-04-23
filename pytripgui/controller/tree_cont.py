@@ -3,6 +3,7 @@ import logging
 from PyQt5 import QtCore
 # from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+import pytrip as pt
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +84,8 @@ class TreeController(object):
     def add_ctx(self, ctx):
         """ Adds a CTX item to the treeView
         """
-        self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
+        # self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
+        self.items.append(CustomNode(ctx))
         self.tmodel = CustomModel(self.items)
         self.update_tree()
 
@@ -95,11 +97,13 @@ class TreeController(object):
     def add_vdx(self, vdx):
         """ Adds a VDX item to the treeView
         """
-        self.items.append(CustomNode("ROIs"))
+        # self.items.append(CustomNode("ROIs"))
+        self.items.append(CustomNode(vdx))
         # TODO: add something to expand the node
 
         for voi in vdx.vois:
-            self.items[-1].addChild(CustomNode(voi.name))
+            # self.items[-1].addChild(CustomNode(voi.name))
+            self.items[-1].addChild(CustomNode(voi))
 
             # TODO: add colored icon or checkbox
             # pixmap = QtGui.QPixmap(12,12)
@@ -112,14 +116,16 @@ class TreeController(object):
     def add_dos(self, dos):
         """ Adds a DosCube item to the treeView
         """
-        self.items.append(CustomNode("Dose: {}".format(dos.basename)))
+        # self.items.append(CustomNode("Dose: {}".format(dos.basename)))
+        self.items.append(CustomNode(dos))
         self.tmodel = CustomModel(self.items)
         self.update_tree()
 
     def add_let(self, let):
         """ Adds a LETCube item to the treeView
         """
-        self.items.append(CustomNode("LET: {}".format(let.basename)))
+        # self.items.append(CustomNode("LET: {}".format(let.basename)))
+        self.items.append(CustomNode(let))
         self.tmodel = CustomModel(self.items)
         self.update_tree()
 
@@ -283,9 +289,22 @@ class CustomModel(QtCore.QAbstractItemModel):
         if not idx.isValid():
             return None
         node = idx.internalPointer()
-        if role == QtCore.Qt.DisplayRole and column == 0:
-            return node.data(idx.column())
 
+        # in case a text string is to be displayed
+        if role == QtCore.Qt.DisplayRole and column == 0:
+            obj = node.data(idx.column())
+            if isinstance(obj, pt.CtxCube):
+                return "CTX: {}".format(obj.basename)
+            if isinstance(obj, pt.VdxCube):
+                return "ROIs"
+            if isinstance(obj, pt.Voi):
+                return "CTX: {}".format(obj.name)
+            if isinstance(obj, pt.DosCube):
+                return "DOS: {}".format(obj.basename)
+            if isinstance(obj, pt.LETCube):
+                return "LET: {}".format(obj.basename)
+
+        # in case a checkbox is to be displayed
         if role == QtCore.Qt.CheckStateRole and column == 0:
             if row == 0:
                 return QtCore.QVariant(QtCore.Qt.Unchecked)
