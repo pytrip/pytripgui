@@ -73,6 +73,8 @@ class PlotModel(object):
         self.let_plot = "colorwash"
         self.let_bar = None
         self.colormap_let = plt.get_cmap(None)
+        self.min_let = 0
+        self.max_let = None
 
         # Plan specific
         self.plan = None  # Placeholder for plan to be plotted
