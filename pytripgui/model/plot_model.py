@@ -60,7 +60,6 @@ class PlotModel(object):
         self.dose_show = True  # decides whether DosCube is shown or not.
         self.dose_plot = "colorwash"
         self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
-        self.dose_bar = None
         self.dose_axis = "auto"
         self.colormap_dose = plt.get_cmap(None)
         self.dos_scale = None  # TODO: check what this is, change possibly to dose_scale (with 'e')
@@ -71,7 +70,6 @@ class PlotModel(object):
         self.let = None  # Placeholder for LETCube() object to be plotted. Only one (!) LETCube can be plotted.
         self.let_show = True  # decides whether LETCube is shown or not.
         self.let_plot = "colorwash"
-        self.let_bar = None
         self.colormap_let = plt.get_cmap(None)
         self.min_let = 0
         self.max_let = None
