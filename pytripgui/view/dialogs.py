@@ -20,6 +20,8 @@ class MyDialogs(object):
         """
         if ftype == "*":
             return "AllFiles (*)"
+        if ftype == "dicom":
+            return "Dicom Files (*.dcm, *.ima)"  # TODO check if needed, and correct, probably only dirs are loaded.
         if ftype == "ctx":
             return "CtxCube Files (*.ctx)"
         if ftype == "hed":
@@ -28,6 +30,29 @@ class MyDialogs(object):
             return "DosCube Files (*.dos)"
         if ftype == "let":
             return "LETCube Files (*.dosemlet.dos)"  # TODO use suffix from pytrip.something module.
+        return "AllFiles (*)"
+
+    @staticmethod
+    def openDirectoryDialog(app, title="", dir=""):
+        """
+        :params dir str: default where to look for file
+        """
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.ShowDirsOnly
+        options |= QFileDialog.DontResolveSymlinks
+        options |= QFileDialog.DontUseNativeDialog
+
+        filename = QFileDialog.getExistingDirectory(app,
+                                                    title,
+                                                    dir,
+                                                    options=options)
+
+        if filename:
+            logger.debug(filename)
+            return filename  # TODO: alternatively pass the filename as a signal to some slot?
+
+        options = QFileDialog.Options()
 
     @staticmethod
     def openFileNameDialog(app, title="", dir="", ftype=""):
