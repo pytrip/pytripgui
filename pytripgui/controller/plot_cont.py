@@ -4,6 +4,7 @@ from pytripgui.controller.ctx import Ctx
 from pytripgui.controller.vdx import Vdx
 from pytripgui.controller.dos import Dos
 from pytripgui.controller.let import Let
+from pytripgui.controller.vc_text import ViewCanvasText
 # import matplotlib.pyplot as plt
 # from PyQt5.QtCore import pyqtSlot
 # import pytrip as pt
@@ -63,6 +64,9 @@ class PlotController(object):
 
         if self._model.let:
             Let.plot(self)
+
+        if self._model.plot.cube:
+            ViewCanvasText.plot(self)
 
         self._ui.vc.draw()
         self._ui.vc.move(0, 0)

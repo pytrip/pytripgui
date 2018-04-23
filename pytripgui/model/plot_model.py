@@ -10,6 +10,7 @@ class PlotModel(object):
     """
 
     def __init__(self):
+        # total number of slices along either axis
         self.xslice = 0
         self.yslice = 0
         self.zslice = 0
@@ -26,8 +27,9 @@ class PlotModel(object):
         self.center = [50.0, 50.0]
 
         # ViewCanvas specific:
-        self.fg_color = 'white'
-        self.bg_color = 'black'
+        self.text_color = "#33DD33"  # text decorator colour
+        self.fg_color = 'white'  # colour for colourbar ticks and labels
+        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
 
         # DVHPlot specific
         # TODO: these will be future pt.VolHist objects.
@@ -44,10 +46,12 @@ class PlotModel(object):
         self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
         # CTX specific
+        self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.contrast_ct = [-500, 2000]
 
         # VDX specific
-        self.vois = []  # list of vois to be plotted
+        self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
+        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
         self.plot_vois = True  # whether all vois are plotted at all
 
         # DosCube specific
@@ -71,3 +75,142 @@ class PlotModel(object):
 
         # Plan specific
         self.plan = None  # Placeholder for plan to be plotted
+
+        # These are used by getters and setters, must come after the other values are initialized.
+        self.cube = None
+        self.slice_pos_idx = 0
+        self.slice_pos_nr = 1
+        self.slice_pos_mm = 0.0
+
+    @property
+    def x(self):
+        """
+        TEST TEST TEST TEST remove me if it works.
+        """
+        return self._x
+
+    @property
+    def cube(self):
+        """
+        Returns current cube based for plotting. Note that either CTX, DOS or LET or all of them can be loaded.
+        This function returns either of these, but in the aforementioned order. Returns None if no cube is loaded.
+        """
+        if self.ctx:
+            self._cube = self.ctx
+        elif self.dos:
+            self._cube = self.dos
+        elif self.let:
+            self._cube = self.let
+        else:
+            self._cube = None
+        return self._cube
+
+    @cube.setter
+    def cube(self, val):
+        self._cube = val
+
+    @property
+    def slice_pos_idx(self):
+        """
+        Current slice position as index, starting at 0.
+        Plane of view is taken into account.
+        """
+        print("called slice_pos_idx getter")
+        return self._slice_pos_idx  # why this fails?
+
+    @slice_pos_idx.setter
+    def slice_pos_idx(self, value):
+        """
+        Set current slice position, but let it wrap around last slice, if overshot.
+        Index starts at 0.
+        Plane of view is taken into account.
+        Returns 0 if no data are loaded.
+        """
+        if not self.slice_size:
+            self._slice_pos_idx = 0
+            return
+
+        if value > self.slice_size[2] - 1:
+                value = 0
+        if value < 0:
+                value = self.slice._size[2] - 1
+
+        self._slice_pos_idx = value
+
+    @property
+    def slice_pos_nr(self):
+        """
+        Current slice position as integer number, starting at 1.
+        Plane of view is taken into account.
+        """
+        return self._slice_pos_idx + 1
+
+    @slice_pos_nr.setter
+    def slice_pos_nr(self, value):
+        """
+        Set current slice position, but let it wrap around last slice, if overshot.
+        Slice number starts at 1.
+        Plane of view is taken into account.
+        """
+        self.slice_pos_idx = value - 1
+        self._slice_pos_nr = value
+
+    @property
+    def slice_pos_mm(self):
+        """
+        Current slice position in mm.
+        Returns 0.0 mm if no data is loaded.
+        """
+        cube = self.cube
+        idx = self.slice_pos_idx
+
+        if not cube:
+            return 0.0
+
+        if self.plane == "Transversal":
+            _pos = cube.slice_pos[self.slice_pos_idx]
+        elif self.plane == "Sagittal":
+            _pos = idx * cube.pixel_size + cube.xoffset
+        elif self.plane == "Coronal":
+            _pos = idx * cube.pixel_size + cube.yoffset
+
+        self._slice_pos_mm = _pos
+        return self._slice_pos_mm
+
+    @slice_pos_mm.setter
+    def slice_pos_mm(self, val):
+        self._slice_pos_mm = val
+
+    @property
+    def slice_size(self):
+        """
+        Returns the size of current slice in number of data pixels, and number of slices, as viewed on screen.
+        [width, height, depth] in terms of data pixels (not screen pixels)
+
+        Returns empty list [] if neither DOSCube or CTXCube is loaded
+        """
+        # use either CTX or DOS cube, in that order as a baseself.
+        _c = self.cube
+
+        if not _c:
+            return []
+
+        if self.plane == "Transversal":
+            width = _c.dimx
+            height = _c.dimy
+            depth = _c.dimz
+        elif self.plane == "Sagittal":
+            width = _c.dimx
+            height = _c.dimz
+            depth = _c.dimy
+        elif self.plane == "Coronal":
+            width = _c.dimy
+            height = _c.dimz
+            depth = _c.dimx
+
+        self._slice_size = [width, height, depth]
+        return self._slice_size
+
+    @slice_size.setter
+    def slice_size(self, val):
+        self._slice_size = val

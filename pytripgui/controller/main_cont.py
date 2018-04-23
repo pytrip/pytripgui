@@ -80,6 +80,7 @@ class MainController(object):
         logger.debug("Open CTX {:s}".format(ctx_path))
         ctx = pt.CtxCube()
         self.model.ctx = ctx
+        self.model.plot.ctx = ctx
         ctx.read(ctx_path)
 
         # Point to center of slices for default plotting
@@ -105,9 +106,10 @@ class MainController(object):
         import os.path
         if os.path.isfile(vdx_path):
             logger.debug("   Open '{:s}'".format(vdx_path))
-            self.model.vdx = pt.VdxCube(self.model.ctx)
-            self.model.vdx.read(vdx_path)
-            vdx = self.model.vdx
+            vdx = pt.VdxCube(self.model.ctx)
+            vdx.read(vdx_path)
+            self.model.vdx = vdx
+            self.model.plot.vdx = vdx
 
         # add cube to the treeview
         self.tree.add_vdx(vdx)
