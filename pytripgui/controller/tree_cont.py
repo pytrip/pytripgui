@@ -169,10 +169,15 @@ class CustomNode(object):
             return self._data[column]
 
     def isChecked(self):
+        """
+        Returns True if checkbox is checked for this node.
+        """
         return self._isChecked
 
     def setChecked(self, value):
         """
+        Toggle whether checkbox shall be shown checked or uncheckedself.
+        :value bool: True or False.
         """
         # TODO: copy/remove data into plotmodel
         self._isChecked
@@ -204,7 +209,9 @@ class CustomNode(object):
         return self._parent
 
     def row(self):
-        "returns current row"
+        """
+        Returns current row.
+        """
         return self._row
 
     def addChild(self, child):
@@ -296,17 +303,19 @@ class CustomModel(QtCore.QAbstractItemModel):
 
     def data(self, idx, role):
         """
+        Overloading data. Some logic for what of model.plot is supposed to be shown where in the TreeView widget.
         """
 
         if not idx.isValid():
             return None
 
-        pm = self.model.plot
+        # pm = self.model.plot
         # row = idx.row()
         column = idx.column()
         node = idx.internalPointer()  # returns CustomNode type
 
-        # in case a text string is to be displayed
+        # in case a text string is to be displayed:
+        # depending on what object is in the node, show various text strings.
         if role == QtCore.Qt.DisplayRole and column == 0:
             obj = node.data(idx.column())
             if isinstance(obj, pt.CtxCube):
@@ -320,14 +329,13 @@ class CustomModel(QtCore.QAbstractItemModel):
             if isinstance(obj, pt.LETCube):
                 return "LET: {}".format(obj.basename)
 
-        # in case a checkbox is to be displayed, based on which objects are in self.model.plot
-
+        # in case a checkbox is to be displayed, set state based on which objects are in self.model.plot
         if role == QtCore.Qt.CheckStateRole and column == 0:
             obj = node.data(idx.column())
             checked = QtCore.QVariant(QtCore.Qt.Checked)
             unchecked = QtCore.QVariant(QtCore.Qt.Unchecked)
 
-            # "ROIs" node should not have a checkbox for now.
+            # "ROIs" node should not have a checkbox at all for now.
             if isinstance(obj, pt.VdxCube):
                 return None
             else:
@@ -335,24 +343,33 @@ class CustomModel(QtCore.QAbstractItemModel):
                     return checked
                 return unchecked
 
+        # for future use, possibly editing names.
         if role == QtCore.Qt.EditRole:
             return node.data(idx.column())
 
         return None
 
     def flags(self, idx):
+        """
+        Flags for adjusting Qt.Item* behaviour.
+        """
         if not idx.isValid():
             return None
-
         return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable
 
     def updateModel(self, idx):
+        """
+        This should update the TreeView widget, to reflect the current state of all.
+        """
         logger.debug("updateModel() called")
         self.dataChanged.emit(idx, idx)
         self.layoutChanged.emit()
 
     def setData(self, idx, value, role):
         """
+        If the user is chaning the state of the TreeView widget, i.e. by unchecking boxes, then
+        the model.plot will be updated accordingly.
+        After model.plot is updated, then the TreeView should be updated accordingly.
         """
         logger.debug("setData() called")
         if not idx.isValid():
@@ -395,5 +412,8 @@ class CustomModel(QtCore.QAbstractItemModel):
         return True
 
     def emitDataChanged(self):
+        """
+        TODO: not sure if this one is needed at all.
+        """
         print("emit data changed")
         self.dataChanged.emit(QtCore.QModelIndex(), QtCore.QModelIndex())
