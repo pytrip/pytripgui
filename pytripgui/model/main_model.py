@@ -17,9 +17,10 @@ class MainModel(object):
         self.let = []   # TODO: change to self.lets (plural s)
 
         # paths
-        self.dicom_path = None
-        self.voxelplan_path = None
-        self.tripexec_path = None
+        self.dicom_path = "."
+        self.voxelplan_path = "."
+        self.tripexec_path = "."
+        self.wdir = "."
 
         # attach submodels
         self.plot = PlotModel()
