@@ -26,7 +26,7 @@ class Dos(object):
         if not plc._model.dos:
             return
 
-        dos = plc._model.dos[-1]  # use the last imported cube for now, selector will be implemented later
+        dos = plc._model.plot.dos
         pm = plc._model.plot
 
         if dos is None:
@@ -70,7 +70,7 @@ class Dos(object):
             plot_data = dos_data / float(factor)
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
-            if plc._dims is None:
+            if not plc._dims:
                 plc._dims = plc._ui.vc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
                 plc._figure = plc._ui.vc.axes
 
