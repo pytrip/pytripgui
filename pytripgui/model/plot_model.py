@@ -30,6 +30,7 @@ class PlotModel(object):
         self.text_color = "#33DD33"  # text decorator colour
         self.fg_color = 'white'  # colour for colourbar ticks and labels
         self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
+        self.cb_fontsize = 8     # fontsize of colourbar labels
 
         # DVHPlot specific
         # TODO: these will be future pt.VolHist objects.
@@ -130,10 +131,21 @@ class PlotModel(object):
             self._slice_pos_idx = 0
             return
 
+        logger.debug("setter: slice_pos_idx: {}".format(value))
+        logger.debug("setter: slice_size: {}".format(self.slice_size[2]))
+
         if value > self.slice_size[2] - 1:
                 value = 0
         if value < 0:
-                value = self.slice._size[2] - 1
+                value = self.slice_size[2] - 1
+
+        # remember last X,Y,Z slice (needed if view is switched back and forth)
+        if self.plane == "Transversal":
+            self.zslice = value
+        elif self.plane == "Sagittal":
+            self.yslice = value
+        elif self.plane == "Coronal":
+            self.xslice = value
 
         self._slice_pos_idx = value
 

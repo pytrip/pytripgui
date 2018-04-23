@@ -87,6 +87,7 @@ class MainController(object):
         self.model.plot.xslice = int(ctx.dimx * 0.5)
         self.model.plot.yslice = int(ctx.dimy * 0.5)
         self.model.plot.zslice = int(ctx.dimz * 0.5)
+        self.model.plot.slice_pos_idx = int(ctx.dimz * 0.5)  # TODO: we assume transversal view as start. fixme.
 
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
 

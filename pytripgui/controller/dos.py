@@ -84,13 +84,14 @@ class Dos(object):
                     cb.outline.set_edgecolor(pm.bg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color)
                     plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
+                    cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
 
                     pm.dose_bar = cb
 
                 if pm.dose_bar:
                     if scale == "abs":
-                        pm.dose_bar.set_label("Dose (Gy)")
+                        pm.dose_bar.set_label("Dose [Gy]")
                     else:
-                        pm.dose_bar.set_label("Dose (%)")
+                        pm.dose_bar.set_label("Dose [%]")
             else:
                 plc._dims.set_data(plot_data)

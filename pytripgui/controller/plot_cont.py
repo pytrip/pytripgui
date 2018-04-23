@@ -113,20 +113,15 @@ class PlotController(object):
                                                                            event.ydata)
         self._ui.statusbar.showMessage(_str)
 
-        if not self._model.ctx:
+        pm = self._model.plot  # plot model
+
+        if not pm.cube:
             return
 
-        n_images = self._model.ctx.dimz
         if event.button == "up":
-            if self._model.plot.zslice > 0:
-                self._model.plot.zslice -= 1
-            else:
-                self._model.plot.zslice = n_images - 1
+            pm.slice_pos_idx += 1
         else:
-            if self._model.plot.zslice < n_images - 1:
-                self._model.plot.zslice += 1
-            else:
-                self._model.plot.zslice = 0
+            pm.slice_pos_idx -= 1
 
         self.update_viewcanvas()
 
