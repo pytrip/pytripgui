@@ -22,7 +22,6 @@ class Vdx(object):
         data = []
         data_closed = []
         pm = plc._model.plot
-        vdx = plc._model.vdx
         ctx = plc._model.ctx
         idx = plc._model.plot.zslice
 

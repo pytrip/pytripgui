@@ -101,6 +101,8 @@ class TreeController(object):
         self.items.append(CustomNode(vdx))
         # TODO: add something to expand the node
 
+        # add all the VOIs to the tree, but use those from the model.class. We want to show all available
+        # VOIs, also those which are not plotted in the canvas.
         for voi in vdx.vois:
             # self.items[-1].addChild(CustomNode(voi.name))
             self.items[-1].addChild(CustomNode(voi))
@@ -143,6 +145,7 @@ class CustomNode(object):
         """
 
         self._data = data  # set the data, this is of type str or a tuple of str.
+        self._isChecked = False
         if type(data) == tuple:
             self._data = list(data)
         if type(data) == str or not hasattr(data, '__getitem__'):
@@ -164,6 +167,15 @@ class CustomNode(object):
         """
         if column >= 0 and column < len(self._data):
             return self._data[column]
+
+    def isChecked(self):
+        return self._isChecked
+
+    def setChecked(self, value):
+        """
+        """
+        # TODO: copy/remove data into plotmodel
+        self._isChecked
 
     def columnCount(self):
         """
@@ -201,6 +213,7 @@ class CustomNode(object):
         """
         logger.debug("add child '{}' to CustomModel".format(child._data))
         child._parent = self
+        child._isChecked = True  # new kids always added as checked by default
         child._row = len(self._children)  # last row number + 1 where new child will be inserted.
         self._children.append(child)
         # self._columncount = max(in_child.columnCount(), self._columncount)
@@ -217,6 +230,7 @@ class CustomModel(QtCore.QAbstractItemModel):
         """
         Initializes model and sets the root node in self._root.
         :params list nodes: list of data. One child will be added for each item 'nodes'.
+        :model MainModel: MainModel for GUI.
         """
         QtCore.QAbstractItemModel.__init__(self)
         self._root = CustomNode(None)
@@ -284,13 +298,13 @@ class CustomModel(QtCore.QAbstractItemModel):
         """
         """
 
-        # row = idx.row()
-        column = idx.column()
-        # value = self._data[row][column]
-
         if not idx.isValid():
             return None
-        node = idx.internalPointer()
+
+        pm = self.model.plot
+        # row = idx.row()
+        column = idx.column()
+        node = idx.internalPointer()  # returns CustomNode type
 
         # in case a text string is to be displayed
         if role == QtCore.Qt.DisplayRole and column == 0:
@@ -307,44 +321,78 @@ class CustomModel(QtCore.QAbstractItemModel):
                 return "LET: {}".format(obj.basename)
 
         # in case a checkbox is to be displayed, based on which objects are in self.model.plot
-        pm = self.model.plot
 
         if role == QtCore.Qt.CheckStateRole and column == 0:
             obj = node.data(idx.column())
             checked = QtCore.QVariant(QtCore.Qt.Checked)
             unchecked = QtCore.QVariant(QtCore.Qt.Unchecked)
 
-            if isinstance(obj, pt.CtxCube):
-                if obj == pm.ctx:
+            # "ROIs" node should not have a checkbox for now.
+            if isinstance(obj, pt.VdxCube):
+                return None
+            else:
+                if node.isChecked():
                     return checked
-                else:
-                    return unchecked
-
-            # Not sure about this one: could be used to check all or uncheck all VOIs.
-            # if isinstance(obj, pt.VdxCube):
-
-            if isinstance(obj, pt.Voi):
-                if obj in pm.vois:
-                    return checked
-                else:
-                    return unchecked
-
-            if isinstance(obj, pt.DosCube):
-                if obj == pm.dos:
-                    return checked
-                else:
-                    return unchecked
-
-            if isinstance(obj, pt.LETCube):
-                if obj == pm.let:
-                    return checked
-                else:
-                    return unchecked
+                return unchecked
 
         if role == QtCore.Qt.EditRole:
             return node.data(idx.column())
 
         return None
+
+    def flags(self, idx):
+        if not idx.isValid():
+            return None
+
+        return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable
+
+    def updateModel(self, idx):
+        logger.debug("updateModel() called")
+        self.dataChanged.emit(idx, idx)
+        self.layoutChanged.emit()
+
+    def setData(self, idx, value, role):
+        """
+        """
+        logger.debug("setData() called")
+        if not idx.isValid():
+            return None
+
+        pm = self.model.plot
+        row = idx.row()
+        # column = idx.column()
+        node = idx.internalPointer()  # returns CustomNode type
+        obj = node.data(idx.column())  # data object of this node which (e.g. CtxCube, VdxCube etc..)
+
+        if role == QtCore.Qt.CheckStateRole and idx.column() == 0:
+
+            if node.isChecked():  # unselect something and remove it from model.plot
+                node.setChecked(False)
+                logger.debug("row {} isChecked(False)".format(row))
+                if isinstance(obj, pt.CtxCube):
+                    pm.ctx = None
+                if isinstance(obj, pt.Voi):
+                    pm.vois.remove(obj)
+                if isinstance(obj, pt.DosCube):
+                    pm.dos = None
+                if isinstance(obj, pt.LETCube):
+                    pm.let = None
+
+            else:  # select something and add it to model.plot
+                node.setChecked(True)
+                logger.debug("row{} isChecked(True)".format(row))
+                if isinstance(obj, pt.CtxCube):
+                    pm.ctx = obj
+                if isinstance(obj, pt.Voi):
+                    pm.vois.append(obj)
+                if isinstance(obj, pt.DosCube):
+                    pm.dos = obj
+                if isinstance(obj, pt.LETCube):
+                    pm.let = obj
+
+        self.updateModel(idx)  # TODO: this does not work? How to update the TreeView?
+
+        return True
 
     def emitDataChanged(self):
         print("emit data changed")
