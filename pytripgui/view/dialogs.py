@@ -14,11 +14,34 @@ class MyDialogs(object):
         pass
 
     @staticmethod
-    def openFileNameDialog(app):
+    def _filter(ftype):
+        """
+        Internal function to generate text string for setting up default files.
+        """
+        if ftype == "*":
+            return "AllFiles (*)"
+        if ftype == "ctx":
+            return "CtxCube Files (*.ctx)"
+        if ftype == "hed":
+            return "Header Files (*.hed)"
+        if ftype == "dos":
+            return "DosCube Files (*.dos)"
+        if ftype == "let":
+            return "LETCube Files (*.dosemlet.dos)"  # TODO use suffix from pytrip.something module.
+
+    @staticmethod
+    def openFileNameDialog(app, title="", dir="", ftype=""):
+        """
+        :params path str: default where to look for file
+        :params type str: default suffix to look for
+        """
+
+        filters = MyDialogs._filter(ftype)
+
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
-            app, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
+            app, title, dir, filters, options=options)
         if fileName:
             logger.debug(fileName)
             return fileName  # TODO: alternatively pass the filename as a signal to some slot?

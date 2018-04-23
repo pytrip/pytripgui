@@ -16,6 +16,11 @@ class MainModel(object):
         self.dos = []   # TODO: change to self.doss (plural s)
         self.let = []   # TODO: change to self.lets (plural s)
 
+        # paths
+        self.dicom_path = None
+        self.voxelplan_path = None
+        self.tripexec_path = None
+
         # attach submodels
         self.plot = PlotModel()
         self.tree = TreeModel()
