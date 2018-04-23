@@ -275,11 +275,26 @@ class CustomModel(QtCore.QAbstractItemModel):
     def data(self, idx, role):
         """
         """
+
+        row = idx.row()
+        column = idx.column()
+        # value = self._data[row][column]
+
         if not idx.isValid():
             return None
         node = idx.internalPointer()
-        if role == QtCore.Qt.DisplayRole:
+        if role == QtCore.Qt.DisplayRole and column == 0:
             return node.data(idx.column())
+
+        if role == QtCore.Qt.CheckStateRole and column == 0:
+            if row == 0:
+                return QtCore.QVariant(QtCore.Qt.Unchecked)
+            else:
+                return QtCore.QVariant(QtCore.Qt.Checked)
+
+        if role == QtCore.Qt.EditRole:
+            return node.data(idx.column())
+
         return None
 
     def emitDataChanged(self):
