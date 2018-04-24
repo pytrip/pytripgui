@@ -83,10 +83,9 @@ class Dos(object):
                                                       aspect=pm.aspect,
                                                       zorder=5)
 
-                # update the extent actual size in data pixels
+                # update the extent actual size in data pixels # TODO, must also be called if plane of view is changed.
                 pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
                 plc.plot_bg()
-
                 # setup colourbar, here called "dose_bar"
                 if not plc.dose_bar:
                     cax = plc.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
