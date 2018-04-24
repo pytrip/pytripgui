@@ -58,6 +58,8 @@ class MainController(object):
         ui.actionOpen_Project.triggered.connect(self.open_project)
         ui.actionSave_Project.triggered.connect(self.save_project)
         ui.actionExit.triggered.connect(self.on_exit)
+        ui.actionAbout.triggered.connect(self.on_about)
+
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
     # called from view class
@@ -322,6 +324,36 @@ class MainController(object):
         Opens a project
         """
         logger.debug("Save Project triggered")
+
+    def on_about(self, event):
+        """
+        """
+        import os
+        from PyQt5.QtWidgets import QMessageBox
+        from pytripgui import __version__ as pytripgui_version
+        from pytrip import __version__ as pytrip_version
+        # from pytripgui.util import main_dir
+
+        # with open(os.path.join(main_dir(), "res", "LICENSE.rst"), "rU") as fp:
+        #     licence = fp.read()
+
+        title = "PyTRiPGUI"
+        text = ""
+        # text += "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
+        text += "PyTRipGUI Version: " + pytripgui_version + "\n"
+        text += "PyTRiP Version:" + pytrip_version + "\n"
+        text += "\n"
+        text += "(c) 2012 - 2018 PyTRiP98 Developers\n"
+        # text += "<a href=\"https://github.com/pytrip/pytripgui\">'https://github.com/pytrip/pytripgui'</a>\n"
+        # text += licence
+
+        text += "    Niels Bassler\n"
+        text += "    Leszek Grzanka\n"
+        text += "\n"
+        text += "Previous contributors:\n"
+        text += "    Jakob Toftegaard\n"
+
+        QMessageBox.about(self.app, title, text)
 
     @staticmethod
     def on_exit(event):
