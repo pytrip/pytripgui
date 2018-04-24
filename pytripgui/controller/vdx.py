@@ -27,6 +27,10 @@ class Vdx(object):
 
         Vdx.clean_plot(plc)
 
+        if not pm.vois:
+            # there is nothing to plot.
+            return
+
         for voi in pm.vois:
             _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
             if _slice is None:

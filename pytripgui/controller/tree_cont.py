@@ -81,7 +81,7 @@ class TreeController(object):
         logger.debug("update_tree()")
         self.tv.setModel(self.tmodel)  # TODO: something with emitDataChanged, to avoid collapsing tree each update
         self.tmodel.updateModel(None)
-        #self.tmodel.emitDataChanged()
+        # self.tmodel.emitDataChanged()
 
     def add_ctx(self, ctx):
         """ Adds a CTX item to the treeView
