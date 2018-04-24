@@ -25,7 +25,7 @@ class PlotModel(object):
         self.zoom = 100.0
         self.zoom_levels = [100.0, 110.0, 125.0, 150.0, 200.0, 250.0, 300.0, 400.0]
         self.center = [50.0, 50.0]
-        self.extent = [0,256,0,256] # extention of the axesimage
+        self.extent = [0, 255, 0, 255]  # extention of the axesimage, used for plotting the background image.
 
         # ViewCanvas specific:
         self.text_color = "#33DD33"  # text decorator colour

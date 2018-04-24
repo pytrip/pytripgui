@@ -39,16 +39,7 @@ class PlotController(object):
         self.dose_bar = None
         self.let_bar = None
 
-        import matplotlib.pyplot as plt
-        import numpy as np
-
-        # add some default background image
-        self.chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
-                                        vmin=-5, vmax=5,
-                                        interpolation='nearest',
-                                        extent=model.plot.extent,
-                                        zorder=0)
+        self.plot_bg()
 
         # initial setup of the ViewCanvas
         rect = self.figure.patch
@@ -91,6 +82,23 @@ class PlotController(object):
         self._ui.vc.draw()
         self._ui.vc.move(0, 0)
         self._ui.vc.show()
+
+    def plot_bg(self):
+        """
+        (Re)plots the background chessboard image
+        """
+        # add some default background image
+        import numpy as np
+        self.chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
+        if self.axim_bg:
+            self.axim_bg.remove()
+
+        import matplotlib.pyplot as plt
+        self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
+                                        vmin=-5, vmax=5,
+                                        interpolation='nearest',
+                                        extent=self._model.plot.extent,
+                                        zorder=0)
 
     def _plot_dos(self):
         """

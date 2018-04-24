@@ -54,8 +54,6 @@ class Ctx(object):
             ct_data = ctx.cube[-1:0:-1, pm.yslice, -1:0:-1]
             pm.aspect = ctx.slice_distance / ctx.pixel_size
 
-        # update the extent actual size in data pixels
-        pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
         # First time the this function is called, the plot is created with the image_show.
         # Once it has been created, retain a reference to the plot for future updates with set_data()
         # which is much faster.
@@ -66,15 +64,9 @@ class Ctx(object):
                                        vmax=pm.contrast_ct[1],
                                        aspect=pm.aspect,
                                        zorder=1)
-
-            # new background based on CT dimensions.
-            plc.axim_bg.remove()
-            plc.axim_bg = plc.axes.imshow(plc.chessboard_data, cmap=plt.cm.gray,
-                                          vmin=-5, vmax=5,
-                                          interpolation='nearest',
-                                          extent=pm.extent,
-                                          zorder=0)
-            # plc.axes = plc._ui.vc.axes
+            # update the extent actual size in data pixels # TODO, must also be called if plane of view is changed.
+            pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
+            plc.plot_bg()
         else:
             plc.axim_ctx.set_data(ct_data)
 
