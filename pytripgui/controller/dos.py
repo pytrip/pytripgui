@@ -80,7 +80,8 @@ class Dos(object):
                 plc.axim_dos = plc._ui.vc.axes.imshow(plot_data,
                                                       cmap=cmap,
                                                       vmax=(pm.max_dose),
-                                                      aspect=pm.aspect)
+                                                      aspect=pm.aspect,
+                                                      zorder=5)
                 plc.axes = plc._ui.vc.axes
 
                 # setup colourbar, here called "dose_bar"

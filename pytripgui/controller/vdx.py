@@ -56,7 +56,7 @@ class Vdx(object):
                 else:
                     xy = d
 
-                plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color)
+                plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
 
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
@@ -96,7 +96,7 @@ class Vdx(object):
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
         # plot a line (two segments) pointing to dot and underlining legend text
-        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color)
+        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, zorder=15)
 
         # add the legend text
         plc.axes.text(x1,
@@ -106,8 +106,9 @@ class Vdx(object):
                       va="top",
                       fontsize=7,
                       weight='semibold',
-                      backgroundcolor=(0.0, 0.0, 0.0, 0.8))
-        plc.axes.plot(x, y, 'o', color=color)  # plot the dot
+                      backgroundcolor=(0.0, 0.0, 0.0, 0.8),
+                      zorder=20)  # zorder higher, so text is always above the lines
+        plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
 
     @staticmethod
     def clean_plot(plc):
