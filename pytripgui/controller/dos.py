@@ -30,7 +30,13 @@ class Dos(object):
         pm = plc._model.plot
 
         if dos is None:
-            # self.clear_dose_view()
+            logger.debug("DosCube clear")
+            if plc.axim_dos:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
+                plc.axim_dos.remove()
+                plc.axim_dos = None
+            if plc.dose_bar:
+                plc.dose_bar.ax.cla()
+                plc.dose_bar = None
             return
 
         if pm.plane == "Transversal":
@@ -70,17 +76,17 @@ class Dos(object):
             plot_data = dos_data / float(factor)
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
-            if not plc._dims:
-                plc._dims = plc._ui.vc.axes.imshow(plot_data,
-                                                   cmap=cmap,
-                                                   vmax=(pm.max_dose),
-                                                   aspect=pm.aspect)
-                plc._dfigure = plc._ui.vc.axes
+            if not plc.axim_dos:
+                plc.axim_dos = plc._ui.vc.axes.imshow(plot_data,
+                                                      cmap=cmap,
+                                                      vmax=(pm.max_dose),
+                                                      aspect=pm.aspect)
+                plc.axes = plc._ui.vc.axes
 
                 # setup colourbar, here called "dose_bar"
                 if not plc.dose_bar:
-                    cax = plc._dfigure.figure.add_axes([0.85, 0.1, 0.02, 0.8])
-                    cb = plc._dfigure.figure.colorbar(plc._dims, cax=cax)
+                    cax = plc.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
+                    cb = plc.axes.figure.colorbar(plc.axim_dos, cax=cax)
                     cb.set_label("Dose", color=pm.fg_color, fontsize=pm.cb_fontsize)
                     cb.outline.set_edgecolor(pm.bg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color)
@@ -93,4 +99,4 @@ class Dos(object):
                     else:
                         plc.dose_bar.set_label("Dose [%]")
             else:
-                plc._dims.set_data(plot_data)
+                plc.axim_dos.set_data(plot_data)

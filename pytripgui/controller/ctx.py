@@ -20,14 +20,27 @@ class Ctx(object):
         """
         Plot CTX cube.
 
-        This method adds _ims and _cb to plc.
+        This method adds axim_ctx and _cb to plc.
 
         :params plc: PlotController
 
         """
 
-        ctx = plc._model.ctx
+        ctx = plc._model.plot.ctx
         pm = plc._model.plot
+
+        figure = plc.figure
+        axes = plc.axes
+
+        if ctx is None:
+            logger.debug("DosCube clear")
+            if plc.axim_ctx:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
+                plc.axim_ctx.remove()
+                plc.axim_ctx = None
+            if plc.hu_bar:
+                plc.hu_bar.ax.cla()
+                plc.hu_bar = None
+            return
 
         logger.debug("CTXCube plot now pm.zslice {}".format(pm.zslice))
 
@@ -44,31 +57,32 @@ class Ctx(object):
         # First time the this function is called, the plot is created with the image_show.
         # Once it has been created, retain a reference to the plot for future updates with set_data()
         # which is much faster.
-        if not plc._ims:
-            plc._ims = plc._ui.vc.axes.imshow(ct_data,
-                                              cmap=plt.get_cmap("gray"),
-                                              vmin=pm.contrast_ct[0],
-                                              vmax=pm.contrast_ct[1],
-                                              aspect=pm.aspect)
-            plc._figure = plc._ui.vc.axes
+        if not plc.axim_ctx:
+            # TODO: shift this layer to the back, so it does not cover DOS and LET.
+            plc.axim_ctx = axes.imshow(ct_data,
+                                       cmap=plt.get_cmap("gray"),
+                                       vmin=pm.contrast_ct[0],
+                                       vmax=pm.contrast_ct[1],
+                                       aspect=pm.aspect)
+            # plc.axes = plc._ui.vc.axes
         else:
-            plc._ims.set_data(ct_data)
+            plc.axim_ctx.set_data(ct_data)
 
         if pm.plane == "Transversal":
-            plc._figure.axis([0, ctx.dimx, ctx.dimy, 0])
+            axes.axis([0, ctx.dimx, ctx.dimy, 0])
         elif pm.plane == "Sagittal":
-            plc._figure.axis([0, ctx.dimy, ctx.dimz, 0])
+            axes.axis([0, ctx.dimy, ctx.dimz, 0])
         elif pm.plane == "Coronal":
-            plc._figure.axis([0, ctx.dimx, ctx.dimz, 0])
+            axes.axis([0, ctx.dimx, ctx.dimz, 0])
 
-        plc._figure.get_xaxis().set_visible(False)
-        plc._figure.get_yaxis().set_visible(False)
+        axes.get_xaxis().set_visible(False)
+        axes.get_yaxis().set_visible(False)
 
         # strictly the contrast bar should be set in the viewer?
         # setup the HU bar:
         if not plc.hu_bar:
-            cax = plc._figure.figure.add_axes([0.1, 0.1, 0.03, 0.8])
-            cb = plc._figure.figure.colorbar(plc._ims, cax=cax)
+            cax = figure.add_axes([0.1, 0.1, 0.03, 0.8])
+            cb = figure.colorbar(plc.axim_ctx, cax=cax)
             cb.set_label("HU", color=pm.fg_color, fontsize=pm.cb_fontsize)
             cb.outline.set_edgecolor(pm.bg_color)
             cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
@@ -101,4 +115,4 @@ class Ctx(object):
             contrast[0] = contrast[1] - 1  # allow -1001 HU for lower bound for plotting reasons
 
         plc._model.plot.contrast_ct = contrast
-        plc._ims.set_clim(vmin=contrast[0], vmax=contrast[1])
+        plc.axim_ctx.set_clim(vmin=contrast[0], vmax=contrast[1])

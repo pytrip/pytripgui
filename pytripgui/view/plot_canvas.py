@@ -22,13 +22,13 @@ class ViewCanvas(FigureCanvas):
         Init canvas.
         """
 
-        self.fig = Figure(figsize=(width, height), dpi=dpi)
+        self.figure = Figure(figsize=(width, height), dpi=dpi)
 
         # Here one can adjust the position of the CTX plot area.
-        self.axes = self.fig.add_axes([1, 0, 1, 1])
+        self.axes = self.figure.add_axes([1, 0, 1, 1])
         # self.axes = self.fig.add_subplot(111)
 
-        FigureCanvas.__init__(self, self.fig)
+        FigureCanvas.__init__(self, self.figure)
 
         layout = QVBoxLayout(parent)
         layout.addWidget(self)
