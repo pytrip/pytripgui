@@ -19,7 +19,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.tree = TreeController(self.model, app.view.ui.treeView, self.app)
+        self.tree = TreeController(self.model, app.view.ui.treeView, self.app, self)  # TODO: refactor me!
         self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
 
@@ -328,7 +328,7 @@ class MainController(object):
     def on_about(self, event):
         """
         """
-        import os
+        # import os
         from PyQt5.QtWidgets import QMessageBox
         from pytripgui import __version__ as pytripgui_version
         from pytrip import __version__ as pytrip_version
