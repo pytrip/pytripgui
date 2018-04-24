@@ -31,12 +31,24 @@ class PlotController(object):
         # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
         self.figure = ui.vc.figure  # placeholder for figure class
         self.axes = ui.vc.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
+        self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
         self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
         self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
         self.hu_bar = None    # placeholder for Colorbar object returned by matplotlib.colorbar
         self.dose_bar = None
         self.let_bar = None
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        # add some default background image
+        self.chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
+        self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
+                                        vmin=-5, vmax=5,
+                                        interpolation='nearest',
+                                        extent=model.plot.extent,
+                                        zorder=0)
 
         # initial setup of the ViewCanvas
         rect = self.figure.patch
