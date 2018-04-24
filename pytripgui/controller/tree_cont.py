@@ -65,7 +65,7 @@ class TreeController(object):
             if model.vdx:
                 treeMenu = QtWidgets.QAction("New Plan", self.app)  # TODO: always have (empty) VDX with CTX
                 menu.addAction(treeMenu)
-        else:  # we are _not_ at the root node in the TreeView
+        else:  # we are in some node in the TreeView
             level = 0
             index = indexes[0]
             node = index.internalPointer()  # returns CustomNode type
