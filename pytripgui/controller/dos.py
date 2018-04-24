@@ -82,7 +82,10 @@ class Dos(object):
                                                       vmax=(pm.max_dose),
                                                       aspect=pm.aspect,
                                                       zorder=5)
-                plc.axes = plc._ui.vc.axes
+
+                # update the extent actual size in data pixels
+                pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
+                plc.plot_bg()
 
                 # setup colourbar, here called "dose_bar"
                 if not plc.dose_bar:
