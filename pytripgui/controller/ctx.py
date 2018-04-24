@@ -63,7 +63,8 @@ class Ctx(object):
                                        cmap=plt.get_cmap("gray"),
                                        vmin=pm.contrast_ct[0],
                                        vmax=pm.contrast_ct[1],
-                                       aspect=pm.aspect)
+                                       aspect=pm.aspect,
+                                       zorder=0)
             # plc.axes = plc._ui.vc.axes
         else:
             plc.axim_ctx.set_data(ct_data)

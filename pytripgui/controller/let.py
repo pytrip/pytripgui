@@ -33,7 +33,6 @@ class Let(object):
             if plc.axim_let:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
                 plc.axim_let.remove()
                 plc.axim_let = None
-            print(str(plc.axim_let))
             if plc.let_bar:
                 plc.let_bar.ax.cla()
                 plc.let_bar = None
@@ -59,7 +58,11 @@ class Let(object):
             let_data[let_data <= pm.min_let] = pm.min_let
 
             if not plc.axim_let:
-                plc.axim_let = plc._ui.vc.axes.imshow(let_data, cmap=cmap, vmax=(pm.max_let), aspect=pm.aspect)
+                plc.axim_let = plc._ui.vc.axes.imshow(let_data,
+                                                      cmap=cmap,
+                                                      vmax=(pm.max_let),
+                                                      aspect=pm.aspect,
+                                                      zorder=10)
                 plc.axes = plc._ui.vc.axes
 
                 if not plc.let_bar:
