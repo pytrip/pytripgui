@@ -29,6 +29,7 @@ class PlotController(object):
         # Outline:
         # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
         # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
+        self.figcanvas = ui.vc      # widget for Qt
         self.figure = ui.vc.figure  # placeholder for figure class
         self.axes = ui.vc.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
         self.axim_bg = None   # placehodler for AxisImage for background image
@@ -76,12 +77,12 @@ class PlotController(object):
         if self._model.let:
             Let.plot(self)
 
-        if self._model.plot.cube:
+        if self._model.plot.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
             ViewCanvasText.plot(self)
 
-        self._ui.vc.draw()
-        self._ui.vc.move(0, 0)
-        self._ui.vc.show()
+        self.figcanvas.draw()
+        self.figcanvas.move(0, 0)
+        self.figcanvas.show()
 
     def plot_bg(self):
         """
@@ -99,16 +100,6 @@ class PlotController(object):
                                         interpolation='nearest',
                                         extent=self._model.plot.extent,
                                         zorder=0)
-
-    def _plot_dos(self):
-        """
-        """
-        pass
-
-    def _plot_let(self):
-        """
-        """
-        pass
 
     def on_click(self, event):
         """
