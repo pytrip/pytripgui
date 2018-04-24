@@ -26,15 +26,20 @@ class PlotController(object):
         self._ui = ui
 
         # TODO: these maybe do not belong here and could be moved to a viewer?
-        self._ims = None  # placeholder for AxesImage object returned by imshow() for CTX cube
-        self._dims = None  # placeholder for AxesImage object returned by imshow() for DoseCube
-        self._lims = None  # placeholder for AxesImage object returned by imshow() for LETCube
-        self.hu_bar = None  # placeholder for Colorbar object returned by matplotlib.colorbar
+        # Outline:
+        # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
+        # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
+        self.figure = ui.vc.figure  # placeholder for figure class
+        self.axes = ui.vc.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
+        self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
+        self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
+        self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
+        self.hu_bar = None    # placeholder for Colorbar object returned by matplotlib.colorbar
         self.dose_bar = None
         self.let_bar = None
 
         # initial setup of the ViewCanvas
-        rect = ui.vc.fig.patch
+        rect = self.figure.patch
         rect.set_facecolor(model.plot.bg_color)
 
         # Connect events to callbacks
