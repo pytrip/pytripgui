@@ -41,11 +41,10 @@ class TreeController(object):
         model = self.model
         pm = self.model.plot
         indexes = self.tv.selectedIndexes()
-        level = 0
 
         menu = QtWidgets.QMenu(self.app)
         treeMenu = None
-        obj = None
+        obj = None  # object stored at current node
 
         if len(indexes) < 1:  # we are at the root node.
             # Root node menu:
@@ -67,16 +66,15 @@ class TreeController(object):
                 menu.addAction(treeMenu_newPlan)
                 treeMenu_newPlan.triggered.connect(self._new_plan)
         else:  # we are in some node in the TreeView
-            level = 0
+
             index = indexes[0]
+            disp = self.tmodel.data(index, QtCore.Qt.DisplayRole)
+
             node = index.internalPointer()  # returns CustomNode type
-            while index.parent().isValid():
-                index = index.parent()
-                level += 1
 
             disp = self.tmodel.data(index, QtCore.Qt.DisplayRole)  # display string in this node
             obj = node.data(index.column())  # data object stored in this node.
-            logger.debug("index data: {}".format(disp))
+            logger.debug("FOOBAR: index data: {}".format(disp))
 
             # CTX node:
             if isinstance(obj, pt.CtxCube):
@@ -99,8 +97,7 @@ class TreeController(object):
                 menu.addAction(treeMenu)
                 treeMenu = QtWidgets.QAction("Set Color", self.app)
                 menu.addAction(treeMenu)
-
-                if len(model.dos) > 0:
+                if len(model.let) > 0:
                     treeMenu_dvh = QtWidgets.QAction("Calculate DVH", self.app)
                     menu.addAction(treeMenu_dvh)
                     treeMenu_dvh.triggered.connect(partial(self._calc_dvh, obj.name))
