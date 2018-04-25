@@ -63,8 +63,9 @@ class TreeController(object):
                 treeMenu = QtWidgets.QAction("New ROI List", self.app)  # TODO: always have (empty) VDX with CTX
                 menu.addAction(treeMenu)
             if model.vdx:
-                treeMenu = QtWidgets.QAction("New Plan", self.app)  # TODO: always have (empty) VDX with CTX
-                menu.addAction(treeMenu)
+                treeMenu_newPlan = QtWidgets.QAction("New Plan", self.app)
+                menu.addAction(treeMenu_newPlan)
+                treeMenu_newPlan.triggered.connect(self._new_plan)
         else:  # we are in some node in the TreeView
             level = 0
             index = indexes[0]
@@ -96,7 +97,7 @@ class TreeController(object):
             if isinstance(obj, pt.Voi):
                 treeMenu = QtWidgets.QAction("Edit name", self.app)
                 menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Color", self.app)
+                treeMenu = QtWidgets.QAction("Set Color", self.app)
                 menu.addAction(treeMenu)
 
                 if len(model.dos) > 0:
@@ -143,8 +144,6 @@ class TreeController(object):
 
             # Plan node:
             if isinstance(obj, pte.Plan):  # we have no "Plans" object, but can only check if list is made of plans.
-                treeMenu = QtWidgets.QAction("New", self.app)
-                menu.addAction(treeMenu)
                 treeMenu = QtWidgets.QAction("Edit", self.app)
                 menu.addAction(treeMenu)
                 treeMenu = QtWidgets.QAction("Optimize", self.app)
@@ -156,8 +155,6 @@ class TreeController(object):
 
             # Field
             if isinstance(obj, pte.Field):  # we have no "Plans" object, but can only check if list is made of plans.
-                treeMenu = QtWidgets.QAction("New", self.app)
-                menu.addAction(treeMenu)
                 treeMenu = QtWidgets.QAction("Edit", self.app)
                 menu.addAction(treeMenu)
                 treeMenu = QtWidgets.QAction("Delete", self.app)
@@ -171,6 +168,14 @@ class TreeController(object):
         logger.warning("Unimplemented feature: action triggered TreeView '{}''".format(event))
         print(event)
         print(dir(event))
+
+    def _new_plan(self, event):
+        """
+        """
+        logger.debug("_new_plan({})".format(event))
+        from pytripgui.controller.plan_cont import PlanController
+        print("FOOBAR", self.model)
+        PlanController.new_plan(self.model)
 
     def _open_dicom(self, event):
         self.app.ctrl.open_dicom_dialog(event)
@@ -244,6 +249,14 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("LET: {}".format(let.basename)))
         self.items.append(CustomNode(let))
+        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
+        self.update_tree()
+
+    def add_plan(self, plan):
+        """ Adds a Plan item to the treeView
+        """
+        # self.items.append(CustomNode("LET: {}".format(let.basename)))
+        self.items.append(CustomNode(plan))
         self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
         self.update_tree()
 
