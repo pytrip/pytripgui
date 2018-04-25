@@ -5,6 +5,8 @@ from PyQt5 import QtWidgets
 from pytripgui.view.gen.main_window import Ui_MainWindow
 from pytripgui.view.plot_viewcanvas import ViewCanvas
 from pytripgui.view.plot_volhist import VolHist
+from pytripgui.view.gen.plan import Ui_PlanDialog
+from pytripgui.view.gen.field import Ui_FieldDialog
 
 logger = logging.getLogger(__name__)
 

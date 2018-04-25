@@ -12,7 +12,7 @@ class MainModel(object):
         self.foobar = 10
         self.ctx = None  # Only one CTX is allowed
         self.vdx = None  # Only one VDX is allowed
-        self.plans = None
+        self.plans = []
         self.dos = []   # TODO: change to self.doss (plural s)
         self.let = []   # TODO: change to self.lets (plural s)
 
