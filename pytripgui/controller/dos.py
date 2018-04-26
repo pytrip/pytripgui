@@ -26,11 +26,17 @@ class Dos(object):
         if not plc._model.dos:
             return
 
-        dos = plc._model.dos[-1]  # use the last imported cube for now, selector will be implemented later
+        dos = plc._model.plot.dos
         pm = plc._model.plot
 
         if dos is None:
-            # self.clear_dose_view()
+            logger.debug("DosCube clear")
+            if plc.axim_dos:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
+                plc.axim_dos.remove()
+                plc.axim_dos = None
+            if plc.dose_bar:
+                plc.dose_bar.ax.cla()
+                plc.dose_bar = None
             return
 
         if pm.plane == "Transversal":
@@ -70,28 +76,30 @@ class Dos(object):
             plot_data = dos_data / float(factor)
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
-            if plc._dims is None:
-                plc._dims = plc._ui.vc.axes.imshow(plot_data, cmap=cmap, vmax=(pm.max_dose), aspect=pm.aspect)
-                plc._figure = plc._ui.vc.axes
+            if not plc.axim_dos:
+                plc.axim_dos = plc._ui.vc.axes.imshow(plot_data,
+                                                      cmap=cmap,
+                                                      vmax=(pm.max_dose),
+                                                      aspect=pm.aspect,
+                                                      zorder=5)
 
+                # update the extent actual size in data pixels # TODO, must also be called if plane of view is changed.
+                pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
+                plc.plot_bg()
                 # setup colourbar, here called "dose_bar"
-                if not pm.dose_bar and not pm.let_bar:
-                    cax = plc._figure.figure.add_axes([0.9, 0.1, 0.03, 0.8])
-                    cb = plc._figure.figure.colorbar(plc._dims, cax=cax)
-
-                    # setup some colours
-                    cb.set_label("Dose", color=pm.fg_color)
+                if not plc.dose_bar:
+                    cax = plc.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
+                    cb = plc.axes.figure.colorbar(plc.axim_dos, cax=cax)
+                    cb.set_label("Dose", color=pm.fg_color, fontsize=pm.cb_fontsize)
                     cb.outline.set_edgecolor(pm.bg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color)
                     plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
+                    plc.dose_bar = cb
 
-                    pm.dose_bar = cb
-
-                if pm.dose_bar:
                     if scale == "abs":
-                        pm.dose_bar.set_label("Dose [Gy]")
+                        plc.dose_bar.set_label("Dose [Gy]")
                     else:
-                        pm.dose_bar.set_label("Dose [%]")
+                        plc.dose_bar.set_label("Dose [%]")
             else:
-                plc._dims.set_data(plot_data)
+                plc.axim_dos.set_data(plot_data)

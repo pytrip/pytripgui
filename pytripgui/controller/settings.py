@@ -58,7 +58,7 @@ class Settings:
 
         self.config.set(_sec, _opt, value)  # this is python2 specific
 
-        with open(self.path, 'wb') as configfile:
+        with open(self.path, 'w') as configfile:
             self.config.write(configfile)
 
         text = "Updated {:s}".format(self.path)

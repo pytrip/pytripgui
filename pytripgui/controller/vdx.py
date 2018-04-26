@@ -21,13 +21,17 @@ class Vdx(object):
         """
         data = []
         data_closed = []
-        vdx = plc._model.vdx
+        pm = plc._model.plot
         ctx = plc._model.ctx
         idx = plc._model.plot.zslice
 
         Vdx.clean_plot(plc)
 
-        for voi in vdx.vois:
+        if not pm.vois:
+            # there is nothing to plot.
+            return
+
+        for voi in pm.vois:
             _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
             if _slice is None:
                 continue
@@ -35,27 +39,24 @@ class Vdx(object):
                 data.append(np.array(contour.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0]))
             data_closed.append(contour.contour_closed)
 
-        plot = True
-
         # get current plane of interest from contours
         data = Vdx.plane_points_idx(data, ctx, plc._model.plot.plane)
 
-        if plot:
-            contour_color = np.array(voi.color) / 255.0
-            for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
-                # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
-                # if n is 1, it means it is a point
-                # if n > 1, it means it is a contour
-                if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
-                    plc._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
-                else:  # This is a contour
-                    # Now check whether contour is open or closed.
-                    if dc:  # it is closed, we need to repeat the first point at the end
-                        xy = np.concatenate((d, [d[0, :]]), axis=0)
-                    else:
-                        xy = d
+        contour_color = np.array(voi.color) / 255.0
+        for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
+            # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
+            # if n is 1, it means it is a point
+            # if n > 1, it means it is a contour
+            if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
+                plc._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+            else:  # This is a contour
+                # Now check whether contour is open or closed.
+                if dc:  # it is closed, we need to repeat the first point at the end
+                    xy = np.concatenate((d, [d[0, :]]), axis=0)
+                else:
+                    xy = d
 
-                    plc._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
+                plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
 
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
@@ -95,29 +96,29 @@ class Vdx(object):
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
         # plot a line (two segments) pointing to dot and underlining legend text
-        plc.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
+        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, zorder=15)
 
         # add the legend text
-        plc.figure.text(
-            x1,
-            y1 - 0.025 * height,
-            legend,
-            color=bright_color,
-            va="top",
-            fontsize=7,
-            weight='semibold',
-            backgroundcolor=(0.0, 0.0, 0.0, 0.8))
-        plc.figure.plot(x, y, 'o', color=color)  # plot the dot
+        plc.axes.text(x1,
+                      y1 - 0.025 * height,
+                      legend,
+                      color=bright_color,
+                      va="top",
+                      fontsize=7,
+                      weight='semibold',
+                      backgroundcolor=(0.0, 0.0, 0.0, 0.8),
+                      zorder=20)  # zorder higher, so text is always above the lines
+        plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
 
     @staticmethod
     def clean_plot(plc):
         """
         Scrub the plot for any lines and text.
         """
-        while len(plc._figure.lines) > 0:
-            plc._figure.lines.pop(0)
-        while len(plc._figure.texts) > 0:
-            plc._figure.texts.pop(0)
+        while len(plc.axes.lines) > 0:
+            plc.axes.lines.pop(0)
+        while len(plc.axes.texts) > 0:
+            plc.axes.texts.pop(0)
 
     @staticmethod
     def plane_points_idx(points, ctx, plane="Transversal"):

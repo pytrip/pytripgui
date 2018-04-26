@@ -12,9 +12,15 @@ class MainModel(object):
         self.foobar = 10
         self.ctx = None  # Only one CTX is allowed
         self.vdx = None  # Only one VDX is allowed
-        self.plans = None
+        self.plans = []
         self.dos = []   # TODO: change to self.doss (plural s)
         self.let = []   # TODO: change to self.lets (plural s)
+
+        # paths
+        self.dicom_path = "."
+        self.voxelplan_path = "."
+        self.tripexec_path = "."
+        self.wdir = "."
 
         # attach submodels
         self.plot = PlotModel()
