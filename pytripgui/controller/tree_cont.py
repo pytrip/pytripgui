@@ -3,6 +3,7 @@ import logging
 from PyQt5 import QtCore
 # from PyQt5 import QtGui
 from PyQt5 import QtWidgets
+import pytrip as pt
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ class TreeController(object):
 
         self.items = []  # test items
 
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         # self.tmodel.setHeaderData("(no CT data loaded)")
 
         # needed for right click to work
@@ -83,8 +84,9 @@ class TreeController(object):
     def add_ctx(self, ctx):
         """ Adds a CTX item to the treeView
         """
-        self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
-        self.tmodel = CustomModel(self.items)
+        # self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
+        self.items.append(CustomNode(ctx))
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def rm_ctx(self, ctx):
@@ -95,32 +97,38 @@ class TreeController(object):
     def add_vdx(self, vdx):
         """ Adds a VDX item to the treeView
         """
-        self.items.append(CustomNode("ROIs"))
+        # self.items.append(CustomNode("ROIs"))
+        self.items.append(CustomNode(vdx))
         # TODO: add something to expand the node
 
+        # add all the VOIs to the tree, but use those from the model.class. We want to show all available
+        # VOIs, also those which are not plotted in the canvas.
         for voi in vdx.vois:
-            self.items[-1].addChild(CustomNode(voi.name))
+            # self.items[-1].addChild(CustomNode(voi.name))
+            self.items[-1].addChild(CustomNode(voi))
 
             # TODO: add colored icon or checkbox
             # pixmap = QtGui.QPixmap(12,12)
             # pixmap.fill(value)
             # icon = QtGui.QPixmap(pixmap)
 
-        self.tmodel = CustomModel(self.items)
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def add_dos(self, dos):
         """ Adds a DosCube item to the treeView
         """
-        self.items.append(CustomNode("Dose: {}".format(dos.basename)))
-        self.tmodel = CustomModel(self.items)
+        # self.items.append(CustomNode("Dose: {}".format(dos.basename)))
+        self.items.append(CustomNode(dos))
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def add_let(self, let):
         """ Adds a LETCube item to the treeView
         """
-        self.items.append(CustomNode("LET: {}".format(let.basename)))
-        self.tmodel = CustomModel(self.items)
+        # self.items.append(CustomNode("LET: {}".format(let.basename)))
+        self.items.append(CustomNode(let))
+        self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
 
@@ -131,51 +139,90 @@ class CustomNode(object):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, in_data):
+    def __init__(self, data):
         """
-        create new instance of node, with the input data "in_data"
+        Create a new node instance, with the input data "data"
         """
 
-        self._data = in_data
-        if type(in_data) == tuple:
-            self._data = list(in_data)
-        if type(in_data) == str or not hasattr(in_data, '__getitem__'):
-            self._data = [in_data]
+        self._data = data  # set the data, this is of type str or a tuple of str.
+        self._isChecked = False
+        if type(data) == tuple:
+            self._data = list(data)
+        if type(data) == str or not hasattr(data, '__getitem__'):
+            self._data = [data]
 
         self._children = []
         self._parent = None
         self._row = 0
-        if in_data:
+        if data:
             # self._columncount = len(in_data)
             self._columncount = 1  # hardcoded for now
         else:
             self._columncount = 0
 
-    def data(self, in_column):
-        if in_column >= 0 and in_column < len(self._data):
-            return self._data[in_column]
+    def data(self, column):
+        """
+        Return data in column number 'column'
+        :params int column: column number
+        """
+        if column >= 0 and column < len(self._data):
+            return self._data[column]
+
+    def isChecked(self):
+        """
+        Returns True if checkbox is checked for this node.
+        """
+        return self._isChecked
+
+    def setChecked(self, value):
+        """
+        Toggle whether checkbox shall be shown checked or uncheckedself.
+        :value bool: True or False.
+        """
+        # TODO: copy/remove data into plotmodel
+        self._isChecked
 
     def columnCount(self):
+        """
+        Returns number of columns in this node.
+        """
         return self._columncount
 
     def childCount(self):
+        """
+        Returns number of children in this node.
+        """
         return len(self._children)
 
-    def child(self, in_row):
-        if in_row >= 0 and in_row < self.childCount():
-            return self._children[in_row]
+    def child(self, row):
+        """
+        Returns child in row number 'row'.
+        :params int row: row number which child should be returned.
+        """
+        if row >= 0 and row < self.childCount():
+            return self._children[row]
 
     def parent(self):
+        """
+        Returns parent node of current row.
+        """
         return self._parent
 
     def row(self):
+        """
+        Returns current row.
+        """
         return self._row
 
-    def addChild(self, in_child):
-        logger.debug("add child '{}' to CustomModel".format(in_child._data))
-        in_child._parent = self
-        in_child._row = len(self._children)
-        self._children.append(in_child)
+    def addChild(self, child):
+        """
+        Adds a new child to current row (making it a parent).
+        """
+        logger.debug("add child '{}' to CustomModel".format(child._data))
+        child._parent = self
+        child._isChecked = True  # new kids always added as checked by default
+        child._row = len(self._children)  # last row number + 1 where new child will be inserted.
+        self._children.append(child)
         # self._columncount = max(in_child.columnCount(), self._columncount)
         self._columncount = 1  # hardcoded for now
 
@@ -186,61 +233,187 @@ class CustomModel(QtCore.QAbstractItemModel):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, in_nodes):
+    def __init__(self, nodes, model):
         """
+        Initializes model and sets the root node in self._root.
+        :params list nodes: list of data. One child will be added for each item 'nodes'.
+        :model MainModel: MainModel for GUI.
         """
         QtCore.QAbstractItemModel.__init__(self)
         self._root = CustomNode(None)
-        for node in in_nodes:
+        for node in nodes:
             self._root.addChild(node)
 
-    def rowCount(self, in_index):
-        if in_index.isValid():
-            return in_index.internalPointer().childCount()
+        self.model = model
+
+    def rowCount(self, idx):
+        """
+        Returns number of rows at index 'idx'.
+        """
+        if idx.isValid():
+            return idx.internalPointer().childCount()
         return self._root.childCount()
 
-    def addChild(self, in_node, in_parent):
-        if not in_parent or not in_parent.isValid():
-            parent = self._root
+    def addChild(self, node, parent):
+        """
+        Adds a new 'node' to 'parent'.
+        If parent is not given, then it will be added to the root node.
+        """
+        if not parent or not parent.isValid():
+            _parent = self._root
         else:
-            parent = in_parent.internalPointer()
-        parent.addChild(in_node)
+            _parent = parent.internalPointer()
+        _parent.addChild(node)
 
-    def index(self, in_row, in_column, in_parent=None):
-        if not in_parent or not in_parent.isValid():
-            parent = self._root
+    def index(self, row, column, parent=None):
+        """
+        Returns model index of item at 'row' and 'column' of 'parent'. If None parent, root node is assumed.
+        """
+        if not parent or not parent.isValid():
+            _parent = self._root
         else:
-            parent = in_parent.internalPointer()
+            _parent = parent.internalPointer()
 
-        if not QtCore.QAbstractItemModel.hasIndex(self, in_row, in_column, in_parent):
+        if not QtCore.QAbstractItemModel.hasIndex(self, row, column, parent):
             return QtCore.QModelIndex()
 
-        child = parent.child(in_row)
+        child = _parent.child(row)  # get the child at current row.
         if child:
-            return QtCore.QAbstractItemModel.createIndex(self, in_row, in_column, child)
+            return QtCore.QAbstractItemModel.createIndex(self, row, column, child)
         else:
             return QtCore.QModelIndex()
 
-    def parent(self, in_index):
-        if in_index.isValid():
-            p = in_index.internalPointer().parent()
+    def parent(self, idx):
+        """
+        Get current parent form index 'idx'.
+        """
+        if idx.isValid():
+            p = idx.internalPointer().parent()
             if p:
                 return QtCore.QAbstractItemModel.createIndex(self, p.row(), 0, p)
         return QtCore.QModelIndex()
 
-    def columnCount(self, in_index):
-        if in_index.isValid():
-            return in_index.internalPointer().columnCount()
+    def columnCount(self, idx):
+        """
+        Returns number of columns at current index.
+        """
+        if idx.isValid():
+            return idx.internalPointer().columnCount()
         return self._root.childCount()
 
-    def data(self, in_index, role):
-        if not in_index.isValid():
+    def data(self, idx, role):
+        """
+        Overloading data. Some logic for what of model.plot is supposed to be shown where in the TreeView widget.
+        """
+
+        if not idx.isValid():
             return None
-        node = in_index.internalPointer()
-        if role == QtCore.Qt.DisplayRole:
-            return node.data(in_index.column())
+
+        # pm = self.model.plot
+        # row = idx.row()
+        column = idx.column()
+        node = idx.internalPointer()  # returns CustomNode type
+
+        # in case a text string is to be displayed:
+        # depending on what object is in the node, show various text strings.
+        if role == QtCore.Qt.DisplayRole and column == 0:
+            obj = node.data(idx.column())
+            if isinstance(obj, pt.CtxCube):
+                return "CTX: {}".format(obj.basename)
+            if isinstance(obj, pt.VdxCube):
+                return "ROIs"
+            if isinstance(obj, pt.Voi):
+                return "{}".format(obj.name)
+            if isinstance(obj, pt.DosCube):
+                return "DOS: {}".format(obj.basename)
+            if isinstance(obj, pt.LETCube):
+                return "LET: {}".format(obj.basename)
+
+        # in case a checkbox is to be displayed, set state based on which objects are in self.model.plot
+        if role == QtCore.Qt.CheckStateRole and column == 0:
+            obj = node.data(idx.column())
+            checked = QtCore.QVariant(QtCore.Qt.Checked)
+            unchecked = QtCore.QVariant(QtCore.Qt.Unchecked)
+
+            # "ROIs" node should not have a checkbox at all for now.
+            if isinstance(obj, pt.VdxCube):
+                return None
+            else:
+                if node.isChecked():
+                    return checked
+                return unchecked
+
+        # for future use, possibly editing names.
+        if role == QtCore.Qt.EditRole:
+            return node.data(idx.column())
+
         return None
 
+    def flags(self, idx):
+        """
+        Flags for adjusting Qt.Item* behaviour.
+        """
+        if not idx.isValid():
+            return None
+        return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable
+
+    def updateModel(self, idx):
+        """
+        This should update the TreeView widget, to reflect the current state of all.
+        """
+        logger.debug("updateModel() called")
+        self.dataChanged.emit(idx, idx)
+        self.layoutChanged.emit()
+
+    def setData(self, idx, value, role):
+        """
+        If the user is chaning the state of the TreeView widget, i.e. by unchecking boxes, then
+        the model.plot will be updated accordingly.
+        After model.plot is updated, then the TreeView should be updated accordingly.
+        """
+        logger.debug("setData() called")
+        if not idx.isValid():
+            return None
+
+        pm = self.model.plot
+        row = idx.row()
+        # column = idx.column()
+        node = idx.internalPointer()  # returns CustomNode type
+        obj = node.data(idx.column())  # data object of this node which (e.g. CtxCube, VdxCube etc..)
+
+        if role == QtCore.Qt.CheckStateRole and idx.column() == 0:
+
+            if node.isChecked():  # unselect something and remove it from model.plot
+                node.setChecked(False)
+                logger.debug("row {} isChecked(False)".format(row))
+                if isinstance(obj, pt.CtxCube):
+                    pm.ctx = None
+                if isinstance(obj, pt.Voi):
+                    pm.vois.remove(obj)
+                if isinstance(obj, pt.DosCube):
+                    pm.dos = None
+                if isinstance(obj, pt.LETCube):
+                    pm.let = None
+
+            else:  # select something and add it to model.plot
+                node.setChecked(True)
+                logger.debug("row{} isChecked(True)".format(row))
+                if isinstance(obj, pt.CtxCube):
+                    pm.ctx = obj
+                if isinstance(obj, pt.Voi):
+                    pm.vois.append(obj)
+                if isinstance(obj, pt.DosCube):
+                    pm.dos = obj
+                if isinstance(obj, pt.LETCube):
+                    pm.let = obj
+
+        self.updateModel(idx)  # TODO: this does not work? How to update the TreeView?
+
+        return True
+
     def emitDataChanged(self):
+        """
+        TODO: not sure if this one is needed at all.
+        """
         print("emit data changed")
         self.dataChanged.emit(QtCore.QModelIndex(), QtCore.QModelIndex())

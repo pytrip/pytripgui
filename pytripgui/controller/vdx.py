@@ -21,13 +21,13 @@ class Vdx(object):
         """
         data = []
         data_closed = []
-        vdx = plc._model.vdx
+        pm = plc._model.plot
         ctx = plc._model.ctx
         idx = plc._model.plot.zslice
 
         Vdx.clean_plot(plc)
 
-        for voi in vdx.vois:
+        for voi in pm.vois:
             _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
             if _slice is None:
                 continue
@@ -35,27 +35,24 @@ class Vdx(object):
                 data.append(np.array(contour.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0]))
             data_closed.append(contour.contour_closed)
 
-        plot = True
-
         # get current plane of interest from contours
         data = Vdx.plane_points_idx(data, ctx, plc._model.plot.plane)
 
-        if plot:
-            contour_color = np.array(voi.color) / 255.0
-            for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
-                # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
-                # if n is 1, it means it is a point
-                # if n > 1, it means it is a contour
-                if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
-                    plc._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
-                else:  # This is a contour
-                    # Now check whether contour is open or closed.
-                    if dc:  # it is closed, we need to repeat the first point at the end
-                        xy = np.concatenate((d, [d[0, :]]), axis=0)
-                    else:
-                        xy = d
+        contour_color = np.array(voi.color) / 255.0
+        for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
+            # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
+            # if n is 1, it means it is a point
+            # if n > 1, it means it is a contour
+            if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
+                plc._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
+            else:  # This is a contour
+                # Now check whether contour is open or closed.
+                if dc:  # it is closed, we need to repeat the first point at the end
+                    xy = np.concatenate((d, [d[0, :]]), axis=0)
+                else:
+                    xy = d
 
-                    plc._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
+                plc._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
 
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
