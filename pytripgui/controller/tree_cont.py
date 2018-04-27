@@ -215,14 +215,12 @@ class TreeController(object):
     def add_vdx(self, vdx):
         """ Adds a VDX item to the treeView
         """
-        # self.items.append(CustomNode("ROIs"))
         self.items.append(CustomNode(vdx))
         # TODO: add something to expand the node
 
         # add all the VOIs to the tree, but use those from the model.class. We want to show all available
         # VOIs, also those which are not plotted in the canvas.
         for voi in vdx.vois:
-            # self.items[-1].addChild(CustomNode(voi.name))
             self.items[-1].addChild(CustomNode(voi))
 
             # TODO: add colored icon or checkbox
@@ -281,8 +279,7 @@ class CustomNode(object):
         self._parent = None
         self._row = 0
         if data:
-            # self._columncount = len(in_data)
-            self._columncount = 1  # hardcoded for now
+            self._columncount = len(self._data)
         else:
             self._columncount = 0
 
@@ -349,14 +346,16 @@ class CustomNode(object):
         child._isChecked = True  # new kids always added as checked by default
         child._row = len(self._children)  # last row number + 1 where new child will be inserted.
         self._children.append(child)
-        # self._columncount = max(in_child.columnCount(), self._columncount)
-        self._columncount = 1  # hardcoded for now
+        self._columncount = max(child.columnCount(), self._columncount)
+        # self._columncount = 1  # hardcoded for now
 
 
 class CustomModel(QtCore.QAbstractItemModel):
     """
     Custom data model derived from QAbstractItemModel
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
+    Note the link has a bug.
+    "In the full-code version, the columnCount method of the model returns self._root.childCount().
     """
 
     def __init__(self, nodes, model, mctrl):
@@ -373,6 +372,8 @@ class CustomModel(QtCore.QAbstractItemModel):
 
         self.model = model
         self.mctrl = mctrl
+        from PyQt5.QtCore import Qt
+        self.setHeaderData(0, Qt.Horizontal, "Test")
 
     def rowCount(self, idx):
         """
@@ -427,7 +428,7 @@ class CustomModel(QtCore.QAbstractItemModel):
         """
         if idx.isValid():
             return idx.internalPointer().columnCount()
-        return self._root.childCount()
+        return self._root.columnCount()
 
     def data(self, idx, role):
         """
@@ -507,6 +508,7 @@ class CustomModel(QtCore.QAbstractItemModel):
         pm = self.model.plot
         row = idx.row()
         # column = idx.column()
+
         node = idx.internalPointer()  # returns CustomNode type
         obj = node.data(idx.column())  # data object of this node which (e.g. CtxCube, VdxCube etc..)
 
