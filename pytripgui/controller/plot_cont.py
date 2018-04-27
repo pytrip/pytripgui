@@ -28,7 +28,10 @@ class PlotController(object):
         # TODO: these maybe do not belong here and could be moved to a viewer?
         self._ims = None  # placeholder for AxesImage object returned by imshow() for CTX cube
         self._dims = None  # placeholder for AxesImage object returned by imshow() for DoseCube
-        self._cb = None  # placeholder for Colorbar object returned by matplotlib.colorbar
+        self._lims = None  # placeholder for AxesImage object returned by imshow() for LETCube
+        self.hu_bar = None  # placeholder for Colorbar object returned by matplotlib.colorbar
+        self.dose_bar = None
+        self.let_bar = None
 
         # initial setup of the ViewCanvas
         rect = ui.vc.fig.patch

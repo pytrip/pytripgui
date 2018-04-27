@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class TreeController(object):
-    def __init__(self, model, treeview, app):
+    def __init__(self, model, treeview, app, mctrl):
         """
         :param MyModel model:
         :param TreeView tree:
@@ -17,10 +17,10 @@ class TreeController(object):
         self.model = model
         self.tv = treeview
         self.app = app
-
+        self.mctrl = mctrl  # refactor me
         self.items = []  # test items
 
-        self.tmodel = CustomModel(self.items, self.model)
+        self.tmodel = CustomModel(self.items, self.model, mctrl)  # refactor me
         # self.tmodel.setHeaderData("(no CT data loaded)")
 
         # needed for right click to work
@@ -78,15 +78,17 @@ class TreeController(object):
         """
         updates and populates the tree
         """
+        logger.debug("update_tree()")
         self.tv.setModel(self.tmodel)  # TODO: something with emitDataChanged, to avoid collapsing tree each update
-        pass
+        self.tmodel.updateModel(None)
+        # self.tmodel.emitDataChanged()
 
     def add_ctx(self, ctx):
         """ Adds a CTX item to the treeView
         """
         # self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
         self.items.append(CustomNode(ctx))
-        self.tmodel = CustomModel(self.items, self.model)
+        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
         self.update_tree()
 
     def rm_ctx(self, ctx):
@@ -112,7 +114,7 @@ class TreeController(object):
             # pixmap.fill(value)
             # icon = QtGui.QPixmap(pixmap)
 
-        self.tmodel = CustomModel(self.items, self.model)
+        # self.tmodel = CustomModel(self.items, self.model)
         self.update_tree()
 
     def add_dos(self, dos):
@@ -120,7 +122,7 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("Dose: {}".format(dos.basename)))
         self.items.append(CustomNode(dos))
-        self.tmodel = CustomModel(self.items, self.model)
+        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
         self.update_tree()
 
     def add_let(self, let):
@@ -128,7 +130,7 @@ class TreeController(object):
         """
         # self.items.append(CustomNode("LET: {}".format(let.basename)))
         self.items.append(CustomNode(let))
-        self.tmodel = CustomModel(self.items, self.model)
+        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
         self.update_tree()
 
 
@@ -180,7 +182,7 @@ class CustomNode(object):
         :value bool: True or False.
         """
         # TODO: copy/remove data into plotmodel
-        self._isChecked
+        self._isChecked = value
 
     def columnCount(self):
         """
@@ -233,11 +235,12 @@ class CustomModel(QtCore.QAbstractItemModel):
     Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
     """
 
-    def __init__(self, nodes, model):
+    def __init__(self, nodes, model, mctrl):
         """
         Initializes model and sets the root node in self._root.
         :params list nodes: list of data. One child will be added for each item 'nodes'.
         :model MainModel: MainModel for GUI.
+        :mctrl MainController: refactor me please
         """
         QtCore.QAbstractItemModel.__init__(self)
         self._root = CustomNode(None)
@@ -245,6 +248,7 @@ class CustomModel(QtCore.QAbstractItemModel):
             self._root.addChild(node)
 
         self.model = model
+        self.mctrl = mctrl
 
     def rowCount(self, idx):
         """
@@ -362,8 +366,9 @@ class CustomModel(QtCore.QAbstractItemModel):
         This should update the TreeView widget, to reflect the current state of all.
         """
         logger.debug("updateModel() called")
-        self.dataChanged.emit(idx, idx)
-        self.layoutChanged.emit()
+        self.emitDataChanged()
+        # self.dataChanged.emit(idx, idx)
+        # self.layoutChanged.emit()
 
     def setData(self, idx, value, role):
         """
@@ -385,14 +390,20 @@ class CustomModel(QtCore.QAbstractItemModel):
 
             if node.isChecked():  # unselect something and remove it from model.plot
                 node.setChecked(False)
-                logger.debug("row {} isChecked(False)".format(row))
                 if isinstance(obj, pt.CtxCube):
+                    logger.debug("set pm.ctx = None")
                     pm.ctx = None
                 if isinstance(obj, pt.Voi):
-                    pm.vois.remove(obj)
+                    logger.debug("remove Voi {}".format(obj.name))
+                    if obj in pm.vois:
+                        pm.vois.remove(obj)
+                    else:
+                        logger.warning("Tried to remove Voi {} which is not in pm.vois.")
                 if isinstance(obj, pt.DosCube):
+                    logger.debug("set pm.dos = None")
                     pm.dos = None
                 if isinstance(obj, pt.LETCube):
+                    logger.debug("set pm.let = None")
                     pm.let = None
 
             else:  # select something and add it to model.plot
@@ -408,6 +419,7 @@ class CustomModel(QtCore.QAbstractItemModel):
                     pm.let = obj
 
         self.updateModel(idx)  # TODO: this does not work? How to update the TreeView?
+        self.mctrl.plot.update_viewcanvas()
 
         return True
 

@@ -44,9 +44,12 @@ class Ctx(object):
         # First time the this function is called, the plot is created with the image_show.
         # Once it has been created, retain a reference to the plot for future updates with set_data()
         # which is much faster.
-        if plc._ims is None:
-            plc._ims = plc._ui.vc.axes.imshow(
-                ct_data, cmap=plt.get_cmap("gray"), vmin=pm.contrast_ct[0], vmax=pm.contrast_ct[1], aspect=pm.aspect)
+        if not plc._ims:
+            plc._ims = plc._ui.vc.axes.imshow(ct_data,
+                                              cmap=plt.get_cmap("gray"),
+                                              vmin=pm.contrast_ct[0],
+                                              vmax=pm.contrast_ct[1],
+                                              aspect=pm.aspect)
             plc._figure = plc._ui.vc.axes
         else:
             plc._ims.set_data(ct_data)
@@ -61,15 +64,16 @@ class Ctx(object):
         plc._figure.get_xaxis().set_visible(False)
         plc._figure.get_yaxis().set_visible(False)
 
-        # strictly the contrast bas should be set in the viewer?
-        if not plc._cb:
+        # strictly the contrast bar should be set in the viewer?
+        # setup the HU bar:
+        if not plc.hu_bar:
             cax = plc._figure.figure.add_axes([0.1, 0.1, 0.03, 0.8])
             cb = plc._figure.figure.colorbar(plc._ims, cax=cax)
-            cb.set_label("HU", color=pm.fg_color)
+            cb.set_label("HU", color=pm.fg_color, fontsize=pm.cb_fontsize)
             cb.outline.set_edgecolor(pm.bg_color)
             cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
             plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
-            plc._cb = cb
+            plc.hu_bar = cb
 
     @staticmethod
     def change_contrast(plc, contrast):
