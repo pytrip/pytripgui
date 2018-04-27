@@ -56,7 +56,7 @@ class Vdx(object):
                 else:
                     xy = d
 
-                plc._figure.plot(xy[:, 0], xy[:, 1], color=contour_color)
+                plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
 
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
@@ -96,29 +96,29 @@ class Vdx(object):
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
         # plot a line (two segments) pointing to dot and underlining legend text
-        plc.figure.plot([x, x1, x2], [y, y1, y2], color=bright_color)
+        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, zorder=15)
 
         # add the legend text
-        plc.figure.text(
-            x1,
-            y1 - 0.025 * height,
-            legend,
-            color=bright_color,
-            va="top",
-            fontsize=7,
-            weight='semibold',
-            backgroundcolor=(0.0, 0.0, 0.0, 0.8))
-        plc.figure.plot(x, y, 'o', color=color)  # plot the dot
+        plc.axes.text(x1,
+                      y1 - 0.025 * height,
+                      legend,
+                      color=bright_color,
+                      va="top",
+                      fontsize=7,
+                      weight='semibold',
+                      backgroundcolor=(0.0, 0.0, 0.0, 0.8),
+                      zorder=20)  # zorder higher, so text is always above the lines
+        plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
 
     @staticmethod
     def clean_plot(plc):
         """
         Scrub the plot for any lines and text.
         """
-        while len(plc._figure.lines) > 0:
-            plc._figure.lines.pop(0)
-        while len(plc._figure.texts) > 0:
-            plc._figure.texts.pop(0)
+        while len(plc.axes.lines) > 0:
+            plc.axes.lines.pop(0)
+        while len(plc.axes.texts) > 0:
+            plc.axes.texts.pop(0)
 
     @staticmethod
     def plane_points_idx(points, ctx, plane="Transversal"):

@@ -29,7 +29,13 @@ class Let(object):
         pm = plc._model.plot
 
         if let is None:
-            # self.clear_let_view()
+            logger.debug("LETCube clear")
+            if plc.axim_let:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
+                plc.axim_let.remove()
+                plc.axim_let = None
+            if plc.let_bar:
+                plc.let_bar.ax.cla()
+                plc.let_bar = None
             return
 
         # TODO: this is code duplication from dos.py.
@@ -51,14 +57,20 @@ class Let(object):
 
             let_data[let_data <= pm.min_let] = pm.min_let
 
-            if not plc._lims:
-                plc._lims = plc._ui.vc.axes.imshow(let_data, cmap=cmap, vmax=(pm.max_let), aspect=pm.aspect)
-                plc._lfigure = plc._ui.vc.axes
+            if not plc.axim_let:
+                plc.axim_let = plc._ui.vc.axes.imshow(let_data,
+                                                      cmap=cmap,
+                                                      vmax=(pm.max_let),
+                                                      aspect=pm.aspect,
+                                                      zorder=10)
+                # update the extent actual size in data pixels # TODO, must also be called if plane of view is changed.
+                pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
+                plc.plot_bg()
 
                 if not plc.let_bar:
                     # if not pm.let_bar:
-                    cax = plc._lfigure.figure.add_axes([0.92, 0.1, 0.02, 0.8])
-                    cb = plc._lfigure.figure.colorbar(plc._lims, cax=cax)
+                    cax = plc.axes.figure.add_axes([0.92, 0.1, 0.02, 0.8])
+                    cb = plc.axes.figure.colorbar(plc.axim_let, cax=cax)
                     # setup some colours
                     cb.set_label("LET (keV/um)", color=pm.fg_color, fontsize=pm.cb_fontsize)
                     cb.outline.set_edgecolor(pm.bg_color)
@@ -67,4 +79,4 @@ class Let(object):
                     cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
                     plc.let_bar = cb
             else:
-                plc._lims.set_data(let_data)
+                plc.axim_let.set_data(let_data)
