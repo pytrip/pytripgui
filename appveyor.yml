@@ -49,7 +49,7 @@ install:
   - python -V
   - pip -V
 # generate qt5 files
-  - makeui.bat
+  - bash makeui.sh
 
 before_test:
   - python %PYTHON%\\scripts\\versioneer install
