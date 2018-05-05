@@ -9,8 +9,8 @@ environment:
 #    - platform: x86
 #      PYTHON: "C:\\Python35"
 
-    - platform: x64
-      PYTHON: "C:\\Python35-x64"
+#    - platform: x64
+#      PYTHON: "C:\\Python35-x64"
 
 #    - platform: x86
 #      PYTHON: "C:\\Python36"
@@ -96,6 +96,9 @@ artifacts:
     name: wheel
   - path: 'Output\pytrip*exe'
     name: installer
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 # push artifacts to github
 deploy:
