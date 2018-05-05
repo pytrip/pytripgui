@@ -83,10 +83,6 @@ test_script:
   - del setup.py
 # install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
   - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
-# install optional deps
-  - python -m pip install matplotlib
-# pytrip98 installation (optional)
-  - python -m pip install pytrip98
 # run tests
   - pytest
 
