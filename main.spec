@@ -12,7 +12,7 @@ with open(mplrc) as fd:
     data = fd.readlines()
 for ii, l in enumerate(data):
     if l.strip().startswith("backend "):
-        data[ii] = "backend : WXAgg\n"
+        data[ii] = "backend : Qt5Agg\n"
 with open(mplrc, "w") as fd:
     fd.writelines(data)
 

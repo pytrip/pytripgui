@@ -76,19 +76,14 @@ test_script:
 # generate installer
   - pyinstaller main.spec
   - iscc win10_innosetup.iss
-
-# testing
-# remove source directory, to be sure that we use only wheel package for testing
-  - rd /s /q pytripgui
-  - del setup.py
-# install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
-  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
-# install optional deps
-  - python -m pip install matplotlib
-# pytrip98 installation (optional)
-  - python -m pip install pytrip98
-# run tests
-  - pytest
+## testing
+## remove source directory, to be sure that we use only wheel package for testing
+#  - rd /s /q pytripgui
+#  - del setup.py
+## install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
+#  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
+## run tests
+#  - pytest
 
 # upload artifacts
 artifacts:
