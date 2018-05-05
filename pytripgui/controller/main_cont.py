@@ -21,7 +21,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.tree = TreeController(self.model, app.view.ui.treeView, self.app, self)  # TODO: refactor me!
+        self.tree = TreeController(self.model, app.view.ui)
         self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
         self.lvh = Lvh(self.model, self.app.view)   # DVH plot
@@ -183,7 +183,8 @@ class MainController(object):
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
 
         # add cube to the treeview
-        self.tree.add_ctx(ctx)
+        # self.tree.update_tree()
+        # self.tree.add_ctx(ctx)
 
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
@@ -210,7 +211,8 @@ class MainController(object):
                 pm.vois.append(voi)
 
         # add cube to the treeview
-        self.tree.add_vdx(vdx)
+        # self.tree.add_vdx(vdx)
+        self.tree.update_tree()
 
         # update the canvas
         self.plot.update_viewcanvas()
