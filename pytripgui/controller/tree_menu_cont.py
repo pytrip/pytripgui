@@ -19,10 +19,11 @@ class TreeMenuController(object):
     Here goes all the logic for the rightclick menus in TreeWidget
     """
 
-    def __init__(self, model, view):
+    def __init__(self, model, view, ctrl):
 
         self.model = model
         self.view = view
+        self.ctrl = ctrl
         tw = view.treeWidget
 
         tw.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -118,11 +119,12 @@ class TreeMenuController(object):
         logger.debug("menu_dvh() {}".format(None))
         logger.debug("this was from VOI '{}'".format(self._node_obj.name))
 
-        voi = self.node_obj
+        voi = self._node_obj
+        ctrl = self.ctrl
 
         # calculate DVH for all DOS cubes available.
         for dos in self.model.dos:
-            tctrl.dvh.add_dvh(dos, voi)
+            ctrl.dvh.add_dvh(dos, voi)
 
     def menu_lvh(self):
         logger.debug("menu_lvh() {}".format(None))

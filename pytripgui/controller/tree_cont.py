@@ -26,14 +26,14 @@ class TreeController(object):
     After modification, update_tree() is called, which will populate accordingly.
     """
 
-    def __init__(self, model, view, plot_ctrl):
+    def __init__(self, model, view, ctrl):
         """
         :param MyModel model:
         :param view:
         """
         self.model = model
         self.view = view
-        self.pctrl = plot_ctrl  # this is only needed to trigger canvas update, if tree change.
+        self.pctrl = ctrl.plot  # this is only needed to trigger canvas update, if tree change.
         tw = view.treeWidget
 
         # QTreeWidgetItem placeholders, only the top level nodes.
@@ -49,7 +49,7 @@ class TreeController(object):
         self._plancol = PlanCollection()
 
         # setup the submenus:
-        self.tmc = TreeMenuController(model, view)  # self, else it goes out of scope?
+        self.tmc = TreeMenuController(model, view, ctrl)  # self, else it goes out of scope?
 
         # connect checkbox change state to callback
         tw.itemClicked.connect(self.on_checked_changed)
