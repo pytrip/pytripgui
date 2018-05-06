@@ -182,10 +182,6 @@ class MainController(object):
         # show file basename in window title
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
 
-        # add cube to the treeview
-        # self.tree.update_tree()
-        # self.tree.add_ctx(ctx)
-
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
         from pytrip.util import TRiP98FilePath
@@ -210,19 +206,11 @@ class MainController(object):
             for voi in vdx.vois:
                 pm.vois.append(voi)
 
-        # add cube to the treeview
-        # self.tree.add_vdx(vdx)
+        # add cube to the treeview<s
         self.tree.update_tree()
 
         # update the canvas
         self.plot.update_viewcanvas()
-        # self.updateplot.emit()
-        # testing, not sure if this is proper
-        # emit signal to update the plot
-        # update_viewcanvas()
-        # from controller.plot_cont import PlotController
-        # self.plotupdate.connect(PlotController.update_viewcanvas)
-        # self.plotupdate.emit()
 
     def import_dos_dialog(self, event):
         """
@@ -262,7 +250,7 @@ class MainController(object):
         pm.dos = dos  # display new loaded cube immediately.
 
         # add cube to the treeview
-        self.tree.add_dos(dos)
+        self.tree.update_tree()
         self.plot.update_viewcanvas()
 
     def import_let_dialog(self, event):
@@ -283,6 +271,7 @@ class MainController(object):
                                             'let')
         if not path:
             return
+
         self.import_let(path)
 
     def import_let(self, let_path):
@@ -302,7 +291,7 @@ class MainController(object):
         pm.let = let  # display new loaded cube immediately.
 
         # add cube to the treeview
-        self.tree.add_let(let)
+        self.tree.update_tree()
         self.plot.update_viewcanvas()
 
     def import_exec_dialog(self, event):

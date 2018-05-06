@@ -104,8 +104,16 @@ class TreeController(object):
         """
         Syncs the tree with the main_model, adding and removing items accordingly.
         """
+        self._model_sync_add_items()
+        self._model_sync_remove_items()
+
+    def _model_sync_add_items(self):
+        """
+        Syncs the tree with the main_model, adding and removing items accordingly.
+
+        TODO: this probably be programmed more elegantly.
+        """
         model = self.model
-        # view = self.view
         tw = self.view.treeWidget
 
         # CTX data
@@ -128,13 +136,13 @@ class TreeController(object):
         # VOIS
         if model.vdx:
             vois = model.vdx.vois
-
-            for i, voi in enumerate(vois):
-                # child = QTreeWidgetItem(parent)
-                self.tvdx.addChild(QTreeWidgetItem([voi.name]))
-                child = self.tvdx.child(i)
-                child.setData(0, Qt.UserRole, voi)
-                child.setCheckState(0, Qt.Checked)
+            if vois:
+                for i, voi in enumerate(vois):
+                    # child = QTreeWidgetItem(parent)
+                    self.tvdx.addChild(QTreeWidgetItem([voi.name]))
+                    child = self.tvdx.child(i)
+                    child.setData(0, Qt.UserRole, voi)
+                    child.setCheckState(0, Qt.Checked)
 
         if model.plans and not self._in_tree(model.plans):
             self.plans.append(QTreeWidgetItem(["Plan: {}".format(model.plan.basename)]))
@@ -143,23 +151,70 @@ class TreeController(object):
             self.tplans.setExpanded(True)
 
         if model.dos and not self._in_tree(model.dos):
-            self.tdoss.append(QTreeWidgetItem(["DOS: {}".format(model.dos.basename)]))
-            self.tdoss[-1].setData(0, Qt.UserRole, model.dos)
-            tw.addTopLevelItem(self.tdoss[-1])
-            self.tdos.setExpanded(True)
+            for dos in model.dos:
+                self.tdos.append(QTreeWidgetItem(["DOS: {}".format(dos.basename)]))
+                self.tdos[-1].setData(0, Qt.UserRole, dos)
+                tw.addTopLevelItem(self.tdos[-1])
+                self.tdos[-1].setExpanded(True)
 
         if model.let and not self._in_tree(model.let):
-            self.tlets.append(QTreeWidgetItem(["LET: {}".format(model.let.basename)]))
-            self.tlets[-1].setData(0, Qt.UserRole, model.let)
-            tw.addTopLevelItem(self.tlet)
-            self.tlet.setExpanded(True)
+            for let in model.let:
+                self.tlet.append(QTreeWidgetItem(["LET: {}".format(let.basename)]))
+                self.tlet[-1].setData(0, Qt.UserRole, let)
+                tw.addTopLevelItem(self.tlet)
+                self.tlet[-1].setExpanded(True)
 
-        # TODO: check for items to be removed.
+    def _model_sync_remove_items(self):
+        """
+        Sync TreeWidget with data model.
+        If items are found in TreeWidget, which are not found in
+        data model, the item will be removed from TreeWidget.
+        """
+
+        model = self.model
+        tw = self.view.treeWidget
+
+        # Check for items to be removed.
+        # First lets make a flat list of all pytrip objects in the model (called "lo"):
+        lo = [model.ctx, model.vdx]
+        if model.vdx.vois:
+            lo += model.vdx.vois  # extend the list with a list of voi objects
+        if model.dos:
+            lo += model.dos
+        if model.let:
+            lo += model.let
+        if model.plans:
+            lo += model.plans
+            for plan in model.plans:
+                if plan.fields:
+                    lo += plan.fields
+
+        root = tw.invisibleRootItem()
+        count = root.childCount()
+
+        # Check if TreeWidget item data object is found in model.
+        # if not, remove it from TreeWidget.
+        for i in range(count):
+            item = root.child(i)
+            if item:
+                _obj = item.data(0, Qt.UserRole)
+                if _obj not in lo:
+                    (item.parent() or root).removeChild(item)
+
+            count2 = item.childCount()
+            for j in range(count2):
+                item = item.child(j)
+                if item:
+                    _obj = item.data(0, Qt.UserRole)
+                    if _obj not in lo:
+                        (item.parent() or root).removeChild(item)
 
     def _in_tree(self, obj):
         """
         Crawls the entire treewidget, and search for the object.
         Returns corresponding QTreeWidgetItem, if found, else None.
+
+        :params PyTRiPobject obj: such as CtxCube, DosCube, VdxCube, Plan, ...etc
         """
         tw = self.view.treeWidget
 
