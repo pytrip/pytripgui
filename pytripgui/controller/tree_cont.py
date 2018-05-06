@@ -7,6 +7,10 @@ import logging
 from PyQt5.QtCore import Qt
 # from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QTreeWidgetItem
+from pytripgui.controller.tree_cont_aux import DosCollection
+from pytripgui.controller.tree_cont_aux import LetCollection
+from pytripgui.controller.tree_cont_aux import PlanCollection
+# from tree_cont_aux import FieldCollection
 
 import pytrip as pt
 import pytrip.tripexecuter as pte
@@ -38,6 +42,11 @@ class TreeController(object):
         self.tplans = None
         self.tdos = None
         self.tlet = None
+
+        # These "articial" objects are made since they do not exist in pytrip.model
+        self._doscol = DosCollection()
+        self._letcol = LetCollection()
+        self._plancol = PlanCollection()
 
         # setup the submenus:
         self.tmc = TreeMenuController(model, view)  # self, else it goes out of scope?
@@ -104,6 +113,7 @@ class TreeController(object):
         """
         Syncs the tree with the main_model, adding and removing items accordingly.
         """
+        logger.debug("update_tree()")
         self._model_sync_add_items()
         self._model_sync_remove_items()
 
@@ -166,10 +176,10 @@ class TreeController(object):
         tw = self.view.treeWidget
 
         # Plans node:
-        if model.plans and not self._in_tree(model.plans):
+        if model.plans and not self.tplans:
             self.tplans = QTreeWidgetItem(["Plans:"])
-            # self.plans.setData(0, Qt.UserRole, <<<list of plans object>>>)
-            tw.addTopLevelItem(self.plans)
+            self.tplans.setData(0, Qt.UserRole, self._plancol)
+            tw.addTopLevelItem(self.tplans)
             self.tplans.setExpanded(True)
 
         # Plans has one child for each plan.
@@ -188,15 +198,10 @@ class TreeController(object):
         model = self.model
         tw = self.view.treeWidget
 
-        print("FAFA: {}".format(model.dos))
-        print("FAFA: {}".format(self.tdos))
-
         # Add the top level DOS node:
         if model.dos and not self.tdos:
-
-            logger.debug("------ EEFFFEEFFEE ------------------ ")
             self.tdos = QTreeWidgetItem(["Dose Cubes"])
-            # self.tdos.setData(0, Qt.UserRole, <<<list of plans object>>>)
+            self.tdos.setData(0, Qt.UserRole, self._doscol)
             tw.addTopLevelItem(self.tdos)
             self.tdos.setExpanded(True)
 
@@ -218,7 +223,7 @@ class TreeController(object):
         # Add the top level LET node:
         if model.let and not self.tlet:
             self.tlet = QTreeWidgetItem(["LET Cubes"])
-            # self.tlet.setData(0, Qt.UserRole, <<<list of plans object>>>)
+            self.tlet.setData(0, Qt.UserRole, self._letcol)
             tw.addTopLevelItem(self.tlet)
             self.tlet.setExpanded(True)
 
@@ -256,6 +261,16 @@ class TreeController(object):
             for plan in model.plans:
                 if plan.fields:
                     lo += plan.fields
+        # TODO: this part needs some rework.
+        # The top level nodes: plans, dos and let
+        # should not be removed, if they hold data. They do not have a class, tough
+        # Therefore this little hack for now:
+        if model.dos:
+            lo += [self._doscol]
+        if model.let:
+            lo += [self._letcol]
+        if model.plans:
+            lo += [self._plancol]
 
         root = tw.invisibleRootItem()
         count = root.childCount()
