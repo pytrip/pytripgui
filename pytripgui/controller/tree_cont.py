@@ -29,7 +29,7 @@ class TreeController(object):
         """
         self.model = model
         self.view = view
-        # tw = view.treeWidget
+        tw = view.treeWidget
 
         # QTreeWidgetItem placeholders
         self.tctx = None
@@ -42,9 +42,12 @@ class TreeController(object):
         # setup the submenus:
         self.tmc = TreeMenuController(model, view)  # self, else it goes out of scope?
 
+        tw.itemClicked.connect(self.on_checked_changed)
+
     def on_checked_changed(self, pos):
         logger.debug("on_checked_changed() {}".format(pos))
         # tw = self.view.tw
+        print("FOFO:", pos.data(0, Qt.DisplayRole))
 
     def update_tree(self):
         """
