@@ -8,8 +8,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QTreeWidgetItem
 
-# import pytrip as pt
-# import pytrip.tripexecuter as pte
+import pytrip as pt
+import pytrip.tripexecuter as pte
 
 from pytripgui.controller.tree_menu_cont import TreeMenuController
 
@@ -22,13 +22,14 @@ class TreeController(object):
     After modification, update_tree() is called, which will populate accordingly.
     """
 
-    def __init__(self, model, view):
+    def __init__(self, model, view, plot_ctrl):
         """
         :param MyModel model:
         :param view:
         """
         self.model = model
         self.view = view
+        self.pctrl = plot_ctrl  # this is only needed to trigger canvas update, if tree change.
         tw = view.treeWidget
 
         # QTreeWidgetItem placeholders
@@ -45,9 +46,59 @@ class TreeController(object):
         tw.itemClicked.connect(self.on_checked_changed)
 
     def on_checked_changed(self, pos):
+        """
+        If checkbox is changed in the TreeWidget, then then corresponding object is removed
+        or added to the plot_model.
+        """
         logger.debug("on_checked_changed() {}".format(pos))
+
+        pm = self.model.plot
+        obj = pos.data(0, Qt.UserRole)
+        # state = pos.data(0, Qt.CheckStateRole)
         # tw = self.view.tw
-        print("FOFO:", pos.data(0, Qt.DisplayRole))
+
+        if pos.checkState(0) == Qt.Unchecked:
+            if isinstance(obj, pt.CtxCube):
+                logger.debug("set pm.ctx = None")
+                pm.ctx = None
+
+            if isinstance(obj, pt.Voi):
+                logger.debug("remove Voi {}".format(obj.name))
+                if obj in pm.vois:
+                    pm.vois.remove(obj)
+                else:
+                    logger.warning("Tried to remove Voi {} which is not in pm.vois.")
+
+            if isinstance(obj, pte.Plan):
+                logger.debug("remove Plan {}".format(obj.name))
+                if obj in pm.plans:
+                    pm.plans.remove(obj)
+                else:
+                    logger.warning("Tried to remove Plan {} which is not in pm.plans.")
+
+            # TODO: Field
+
+            if isinstance(obj, pt.DosCube):
+                logger.debug("set pm.dos = None")
+                pm.dos = None
+
+            if isinstance(obj, pt.LETCube):
+                logger.debug("set pm.let = None")
+                pm.let = None
+
+        else:  # select something and add it to model.plot
+            logger.debug("{} isChecked(True)".format(pos))
+            if isinstance(obj, pt.CtxCube):
+                pm.ctx = obj
+            if isinstance(obj, pt.Voi):
+                pm.vois.append(obj)
+            if isinstance(obj, pt.DosCube):
+                pm.dos = obj
+            if isinstance(obj, pt.LETCube):
+                pm.let = obj
+
+        # trigger update plot after model was changed.
+        self.pctrl.update_viewcanvas()
 
     def update_tree(self):
         """

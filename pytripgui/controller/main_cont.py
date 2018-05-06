@@ -21,8 +21,8 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.tree = TreeController(self.model, app.view.ui)
         self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
+        self.tree = TreeController(self.model, app.view.ui, self.plot)  # TODO: get rid of self.plot here
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
         self.lvh = Lvh(self.model, self.app.view)   # DVH plot
         self.plnc = PlanController(self.model)
