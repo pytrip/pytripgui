@@ -47,6 +47,9 @@ class TreeMenuController(object):
         popup_menu = self.create_popup_menu(obj)
         node = tw.mapToGlobal(pos)
 
+        self._node_menu = node
+        self._node_obj = obj
+
         action = popup_menu.exec_(node)
         logger.debug("action {}".format(action))
 
@@ -113,6 +116,13 @@ class TreeMenuController(object):
 
     def menu_dvh(self):
         logger.debug("menu_dvh() {}".format(None))
+        logger.debug("this was from VOI '{}'".format(self._node_obj.name))
+
+        voi = self.node_obj
+
+        # calculate DVH for all DOS cubes available.
+        for dos in self.model.dos:
+            tctrl.dvh.add_dvh(dos, voi)
 
     def menu_lvh(self):
         logger.debug("menu_lvh() {}".format(None))
