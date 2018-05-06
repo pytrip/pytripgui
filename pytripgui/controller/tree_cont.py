@@ -32,17 +32,17 @@ class TreeController(object):
         self.pctrl = plot_ctrl  # this is only needed to trigger canvas update, if tree change.
         tw = view.treeWidget
 
-        # QTreeWidgetItem placeholders
+        # QTreeWidgetItem placeholders, only the top level nodes.
         self.tctx = None
         self.tvdx = None
-        self.vois = []
-        self.tplans = []
-        self.tdos = []
-        self.tlet = []
+        self.tplans = None
+        self.tdos = None
+        self.tlet = None
 
         # setup the submenus:
         self.tmc = TreeMenuController(model, view)  # self, else it goes out of scope?
 
+        # connect checkbox change state to callback
         tw.itemClicked.connect(self.on_checked_changed)
 
     def on_checked_changed(self, pos):
@@ -111,7 +111,16 @@ class TreeController(object):
         """
         Syncs the tree with the main_model, adding and removing items accordingly.
 
-        TODO: this probably be programmed more elegantly.
+        TODO: this can probably be programmed more elegantly.
+        """
+        self._add_ctx()
+        self._add_vdxvoi()
+        self._add_plans()
+        self._add_dos()
+        self._add_let()
+
+    def _add_ctx(self):
+        """
         """
         model = self.model
         tw = self.view.treeWidget
@@ -126,6 +135,12 @@ class TreeController(object):
             tw.addTopLevelItem(self.tctx)
             self.tctx.setCheckState(0, Qt.Checked)
 
+    def _add_vdxvoi(self):
+        """
+        """
+        model = self.model
+        tw = self.view.treeWidget
+
         # VDX data
         if model.vdx and not self._in_tree(model.vdx):
             self.tvdx = QTreeWidgetItem(["ROIs: " + model.vdx.basename])
@@ -133,36 +148,89 @@ class TreeController(object):
             tw.addTopLevelItem(self.tvdx)
             self.tvdx.setExpanded(True)
 
-        # VOIS
-        if model.vdx:
+        # VOIs
+        if model.vdx and model.vdx.vois:
             vois = model.vdx.vois
-            if vois:
-                for i, voi in enumerate(vois):
-                    # child = QTreeWidgetItem(parent)
+            for i, voi in enumerate(vois):
+                # Add only Vois which are not in the tree.
+                if not self._in_tree(voi):
                     self.tvdx.addChild(QTreeWidgetItem([voi.name]))
                     child = self.tvdx.child(i)
                     child.setData(0, Qt.UserRole, voi)
                     child.setCheckState(0, Qt.Checked)
 
+    def _add_plans(self):
+        """
+        """
+        model = self.model
+        tw = self.view.treeWidget
+
+        # Plans node:
         if model.plans and not self._in_tree(model.plans):
-            self.plans.append(QTreeWidgetItem(["Plan: {}".format(model.plan.basename)]))
-            self.tdoss[-1].setData(0, Qt.UserRole, model.plan)
-            tw.addTopLevelItem(self.tdoss[-1])
+            self.tplans = QTreeWidgetItem(["Plans:"])
+            # self.plans.setData(0, Qt.UserRole, <<<list of plans object>>>)
+            tw.addTopLevelItem(self.plans)
             self.tplans.setExpanded(True)
 
-        if model.dos and not self._in_tree(model.dos):
-            for dos in model.dos:
-                self.tdos.append(QTreeWidgetItem(["DOS: {}".format(dos.basename)]))
-                self.tdos[-1].setData(0, Qt.UserRole, dos)
-                tw.addTopLevelItem(self.tdos[-1])
-                self.tdos[-1].setExpanded(True)
+        # Plans has one child for each plan.
+        if model.plans:
+            for i, plan in enumerate(model.plans):
+                # Add only plans, which are not already in the tree
+                if not self._in_tree(plan):
+                    self.tplans.addChild(QTreeWidgetItem([plan.basename]))
+                    child = self.tplans.child(i)
+                    child.setData(0, Qt.UserRole, plan)
+                    child.setCheckState(0, Qt.Checked)
 
-        if model.let and not self._in_tree(model.let):
-            for let in model.let:
-                self.tlet.append(QTreeWidgetItem(["LET: {}".format(let.basename)]))
-                self.tlet[-1].setData(0, Qt.UserRole, let)
-                tw.addTopLevelItem(self.tlet)
-                self.tlet[-1].setExpanded(True)
+    def _add_dos(self):
+        """
+        """
+        model = self.model
+        tw = self.view.treeWidget
+
+        print("FAFA: {}".format(model.dos))
+        print("FAFA: {}".format(self.tdos))
+
+        # Add the top level DOS node:
+        if model.dos and not self.tdos:
+
+            logger.debug("------ EEFFFEEFFEE ------------------ ")
+            self.tdos = QTreeWidgetItem(["Dose Cubes"])
+            # self.tdos.setData(0, Qt.UserRole, <<<list of plans object>>>)
+            tw.addTopLevelItem(self.tdos)
+            self.tdos.setExpanded(True)
+
+        # Each DosCube will be treated as a child to the top level DOS node.
+        if model.dos:
+            for i, dos in enumerate(model.dos):
+                if not self._in_tree(dos):
+                    self.tdos.addChild(QTreeWidgetItem([dos.basename]))
+                    child = self.tdos.child(i)
+                    child.setData(0, Qt.UserRole, dos)
+                    child.setCheckState(0, Qt.Checked)
+
+    def _add_let(self):
+        """
+        """
+        model = self.model
+        tw = self.view.treeWidget
+
+        # Add the top level LET node:
+        if model.let and not self.tlet:
+            self.tlet = QTreeWidgetItem(["LET Cubes"])
+            # self.tlet.setData(0, Qt.UserRole, <<<list of plans object>>>)
+            tw.addTopLevelItem(self.tlet)
+            self.tlet.setExpanded(True)
+
+        # Each LETCube will be treated as a child to the top level DOS node.
+        if model.let:
+            for i, let in enumerate(model.let):
+                if not self._in_tree(let):
+                    self.tlet.addChild(QTreeWidgetItem([let.basename]))
+                    child = self.tlet.child(i)
+                    child.setData(0, Qt.UserRole, let)
+                    child.setCheckState(0, Qt.Checked)
+
 
     def _model_sync_remove_items(self):
         """
@@ -201,13 +269,13 @@ class TreeController(object):
                 if _obj not in lo:
                     (item.parent() or root).removeChild(item)
 
-            count2 = item.childCount()
-            for j in range(count2):
-                item = item.child(j)
-                if item:
-                    _obj = item.data(0, Qt.UserRole)
-                    if _obj not in lo:
-                        (item.parent() or root).removeChild(item)
+                count2 = item.childCount()
+                for j in range(count2):
+                    item2 = item.child(j)
+                    if item2:
+                        _obj = item2.data(0, Qt.UserRole)
+                        if _obj not in lo:
+                            (item2.parent() or root).removeChild(item)
 
     def _in_tree(self, obj):
         """
