@@ -236,7 +236,6 @@ class TreeController(object):
                     child.setData(0, Qt.UserRole, let)
                     child.setCheckState(0, Qt.Checked)
 
-
     def _model_sync_remove_items(self):
         """
         Sync TreeWidget with data model.
@@ -244,8 +243,36 @@ class TreeController(object):
         data model, the item will be removed from TreeWidget.
         """
 
-        model = self.model
         tw = self.view.treeWidget
+
+        lo = self._flat_model()
+
+        root = tw.invisibleRootItem()
+        count = root.childCount()
+
+        # Check if TreeWidget item data object is found in model.
+        # if not, remove it from TreeWidget.
+        for i in range(count):
+            item = root.child(i)
+            if item:
+                _obj = item.data(0, Qt.UserRole)
+                if _obj not in lo:
+                    (item.parent() or root).removeChild(item)
+
+                count2 = item.childCount()
+                for j in range(count2):
+                    item2 = item.child(j)
+                    if item2:
+                        _obj = item2.data(0, Qt.UserRole)
+                        if _obj not in lo:
+                            (item2.parent() or root).removeChild(item)
+
+    def _flat_model(self):
+        """ Produces a searchable and flat array of model data
+        which should be displayed in the TreeWidget.
+        This array will be used for syncing the treeWidget items with the model items.
+        """
+        model = self.model
 
         # Check for items to be removed.
         # First lets make a flat list of all pytrip objects in the model (called "lo"):
@@ -272,25 +299,7 @@ class TreeController(object):
         if model.plans:
             lo += [self._plancol]
 
-        root = tw.invisibleRootItem()
-        count = root.childCount()
-
-        # Check if TreeWidget item data object is found in model.
-        # if not, remove it from TreeWidget.
-        for i in range(count):
-            item = root.child(i)
-            if item:
-                _obj = item.data(0, Qt.UserRole)
-                if _obj not in lo:
-                    (item.parent() or root).removeChild(item)
-
-                count2 = item.childCount()
-                for j in range(count2):
-                    item2 = item.child(j)
-                    if item2:
-                        _obj = item2.data(0, Qt.UserRole)
-                        if _obj not in lo:
-                            (item2.parent() or root).removeChild(item)
+        return lo
 
     def _in_tree(self, obj):
         """

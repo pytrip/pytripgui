@@ -76,6 +76,8 @@ class TreeMenuController(object):
         if isinstance(obj, pt.Voi):
             popup_menu.addAction("Color", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
+            popup_menu.addAction("Calculate DVH", self.menu_dvh)
+            popup_menu.addAction("Calculate LVH", self.menu_lvh)
             popup_menu.addSeparator()
             popup_menu.addAction("Delete", self.menu_open)
 
@@ -108,3 +110,9 @@ class TreeMenuController(object):
 
     def menu_open(self):
         logger.debug("menu_open() {}".format(None))
+
+    def menu_dvh(self):
+        logger.debug("menu_dvh() {}".format(None))
+
+    def menu_lvh(self):
+        logger.debug("menu_lvh() {}".format(None))
