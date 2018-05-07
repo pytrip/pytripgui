@@ -128,3 +128,11 @@ class TreeMenuController(object):
 
     def menu_lvh(self):
         logger.debug("menu_lvh() {}".format(None))
+        logger.debug("this was from VOI '{}'".format(self._node_obj.name))
+
+        voi = self._node_obj
+        ctrl = self.ctrl
+
+        # calculate DVH for all DOS cubes available.
+        for let in self.model.let:
+            ctrl.lvh.add_lvh(let, voi)

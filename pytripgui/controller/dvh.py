@@ -22,6 +22,7 @@ class Dvh(object):
     def add_dvh(self, dos, voi):
         """
         Calculates and plots a DVH for all dos in model based on voi.
+        TODO: fix me later
         """
         pm = self.model.plot
 
