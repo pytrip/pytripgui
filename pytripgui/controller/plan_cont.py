@@ -45,9 +45,11 @@ class PlanController(object):
         # https://stackoverflow.com/questions/42505429/pyqt5-gui-structure-advice-needed
         dialog = QtWidgets.QDialog()
         dialog_ui = Ui_PlanDialog()
+        plan_ui = dialog_ui
+
         dialog_ui.setupUi(dialog)
         PlanController._populate_plan_ui(dialog_ui, model, plan)
-        PlanController._callbacks_plan_ui(dialog_ui, model, plan)
+        PlanController._setup_plan_callbacks(dialog_ui, model, plan)
         dialog.exec_()
         dialog.show()
 
@@ -66,6 +68,12 @@ class PlanController(object):
         from PyQt5.QtGui import QStandardItemModel
         from PyQt5.QtGui import QStandardItem
 
+        # ----------- General Info Tab ---------------------------
+        ui.lineEdit.setText(plan.basename)
+        ui.lineEdit_2.setText(plan.comment)
+        ui.lineEdit_3.setText(str(plan.__uuid__))
+
+        # ----------- Target Tab ---------------------------------
         voinames = [voi.name for voi in model.vdx.vois]
 
         # TARGET
@@ -98,6 +106,7 @@ class PlanController(object):
         ui.comboBox_4.addItem("(not implemented)")
         ui.comboBox_4.setEnabled(False)
 
+        # ----------- Dose Delivery Tab ---------------------------
         # TODO: Projectile
 
         # TODO: Ripple filter
@@ -106,6 +115,7 @@ class PlanController(object):
         ui.doubleSpinBox.setValue(plan.target_dose_percent)
         ui.doubleSpinBox_4.setValue(plan.target_dose)
 
+        # ----------- Optimization Tab ----------------------------
         # Iterations
         ui.spinBox.setValue(plan.iterations)
         ui.doubleSpinBox_2.setValue(plan.eps)
@@ -117,16 +127,13 @@ class PlanController(object):
         PlanController._setup_plan_combobox(ui.comboBox_10, Plan.bio_algs)
         PlanController._setup_plan_combobox(ui.comboBox_11, Plan.opt_algs)
 
+        # ----------- Results Tab --------------------------------
         ui.checkBox_2.setChecked(plan.want_phys_dose)
         ui.checkBox_3.setChecked(plan.want_bio_dose)
         ui.checkBox_4.setChecked(plan.want_dlet)
         ui.checkBox_5.setChecked(plan.want_rst)
         ui.checkBox_6.setEnabled(False)
         ui.checkBox_7.setEnabled(False)
-
-        ui.lineEdit.setText(plan.basename)
-        ui.lineEdit_2.setText(plan.comment)
-        ui.lineEdit_3.setText(str(plan.__uuid__))
 
     @staticmethod
     def _setup_plan_combobox(ui_combobox, plan_dict):
@@ -148,9 +155,29 @@ class PlanController(object):
                 uic.setItemData(i, _ttip, Qt.ToolTipRole)  # set tool tip for this item
 
     @staticmethod
-    def _callbacks_plan_ui(ui, model, plan):
+    def _setup_plan_callbacks(ui, model, plan):
         """
         Connect all widgets to model.
         No OK button needs to be pressed, when a value is changed, model is updated immediately.
         """
-        pass
+
+        ui.lineEdit.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "basename"))  # basename
+        ui.lineEdit_2.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "comment"))  # comments
+
+    @staticmethod
+    def _callback(ui, model, plan, plan_attribute_name):
+        """
+        :params str plan_attribute_name: attribute in pytrip.Plan object.
+
+        TODO: Leszek will kill me for this.
+        """
+        pa = plan_attribute_name
+
+        if pa == "basename":
+            logger.debug("_callback set basename {}".format(ui.lineEdit.text()))
+            plan.basename = ui.lineEdit.text()
+            return
+
+        if pa == "comment":
+            plan.comment = ui.lineEdit_2.text()
+            return
