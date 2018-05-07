@@ -63,6 +63,7 @@ class MainController(object):
         ui.actionSave_Project.triggered.connect(self.save_project)
         ui.actionExit.triggered.connect(self.on_exit)
         ui.actionAbout.triggered.connect(self.on_about)
+        ui.actionNew_Plan.triggered.connect(self.on_new_plan)
 
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
@@ -349,6 +350,16 @@ class MainController(object):
         text += "    Jakob Toftegaard\n"
 
         QMessageBox.about(self.app, title, text)
+
+    def on_new_plan(self, event):
+        """
+        New plan opened from window->plan->New Plan
+        """
+        model = self.model
+        from pytripgui.controller.plan_cont import PlanController
+        PlanController.new_plan(model)
+
+
 
     @staticmethod
     def on_exit(event):

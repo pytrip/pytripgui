@@ -105,7 +105,17 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuPlan">
+    <property name="title">
+     <string>Plan</string>
+    </property>
+    <addaction name="actionNew_Plan"/>
+    <addaction name="actionEdit_Plan"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Plan"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPlan"/>
    <addaction name="menuTools"/>
    <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
@@ -179,6 +189,21 @@
   <action name="action_exec">
    <property name="text">
     <string>Plan (.exec)</string>
+   </property>
+  </action>
+  <action name="actionNew_Plan">
+   <property name="text">
+    <string>New Plan</string>
+   </property>
+  </action>
+  <action name="actionEdit_Plan">
+   <property name="text">
+    <string>Edit Plan</string>
+   </property>
+  </action>
+  <action name="actionDelete_Plan">
+   <property name="text">
+    <string>Delete Plan</string>
    </property>
   </action>
  </widget>
