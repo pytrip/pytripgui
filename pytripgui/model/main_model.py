@@ -1,7 +1,7 @@
 import logging
 
 from pytripgui.model.plot_model import PlotModel
-from pytripgui.model.tree_model import TreeModel
+# from pytripgui.model.tree_model import TreeModel
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 class MainModel(object):
     def __init__(self, app):
         self._update_funce = []
-        self.foobar = 10
+
         self.ctx = None  # Only one CTX is allowed
         self.vdx = None  # Only one VDX is allowed
         self.plans = []
@@ -24,7 +24,7 @@ class MainModel(object):
 
         # attach submodels
         self.plot = PlotModel()
-        self.tree = TreeModel()
+        # self.tree = TreeModel()
 
     def subscribe_update_func(self, func):
         """

@@ -1,557 +1,329 @@
 import logging
-from functools import partial
+# from functools import partial
 
-from PyQt5 import QtCore
+# from PyQt5 import QtCore
 # from PyQt5 import QtGui
-from PyQt5 import QtWidgets
+# from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+# from PyQt5.QtWidgets import QMenu
+from PyQt5.QtWidgets import QTreeWidgetItem
+from pytripgui.controller.tree_cont_aux import DosCollection
+from pytripgui.controller.tree_cont_aux import LetCollection
+from pytripgui.controller.tree_cont_aux import PlanCollection
+# from tree_cont_aux import FieldCollection
+
 import pytrip as pt
 import pytrip.tripexecuter as pte
+
+from pytripgui.controller.tree_menu_cont import TreeMenuController
 
 logger = logging.getLogger(__name__)
 
 
 class TreeController(object):
-    def __init__(self, model, treeview, app, mctrl):
+    """
+    Idea is that the tree is entirely controlled by modifying the main_model.
+    After modification, update_tree() is called, which will populate accordingly.
+    """
+
+    def __init__(self, model, view, ctrl):
         """
         :param MyModel model:
-        :param TreeView tree:
+        :param view:
         """
         self.model = model
-        self.tv = treeview
-        self.app = app
-        self.mctrl = mctrl  # refactor me
-        self.items = []  # test items
+        self.view = view
+        self.pctrl = ctrl.plot  # this is only needed to trigger canvas update, if tree change.
+        tw = view.treeWidget
 
-        self.tmodel = CustomModel(self.items, self.model, mctrl)  # refactor me
-        # self.tmodel.setHeaderData("(no CT data loaded)")
+        # QTreeWidgetItem placeholders, only the top level nodes.
+        self.tctx = None
+        self.tvdx = None
+        self.tplans = None
+        self.tdos = None
+        self.tlet = None
 
-        # needed for right click to work
-        self.tv.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.tv.customContextMenuRequested.connect(self.openTreeMenu)
+        # These "articial" objects are made since they do not exist in pytrip.model
+        self._doscol = DosCollection()
+        self._letcol = LetCollection()
+        self._plancol = PlanCollection()
 
-        self.tv.setModel(self.tmodel)
+        # setup the submenus:
+        self.tmc = TreeMenuController(model, view, ctrl)  # self, else it goes out of scope?
 
-    def openTreeMenu(self, position):
+        # connect checkbox change state to callback
+        tw.itemClicked.connect(self.on_checked_changed)
+
+    def on_checked_changed(self, pos):
         """
-        In case of right click on TreeView
-        TODO: question, any better way of handling this? Passing self.app all the way here seems strange.
+        If checkbox is changed in the TreeWidget, then then corresponding object is removed
+        or added to the plot_model.
         """
-        logger.debug("openTreeMenu")
+        logger.debug("on_checked_changed() {}".format(pos))
 
-        model = self.model
         pm = self.model.plot
-        indexes = self.tv.selectedIndexes()
+        obj = pos.data(0, Qt.UserRole)
+        # state = pos.data(0, Qt.CheckStateRole)
+        # tw = self.view.tw
 
-        menu = QtWidgets.QMenu(self.app)
-        treeMenu = None
-        obj = None  # object stored at current node
-
-        if len(indexes) < 1:  # we are at the root node.
-            # Root node menu:
-            if not pm.ctx:
-                treeMenu = QtWidgets.QAction("New CTCube", self.app)
-                menu.addAction(treeMenu)
-                treeMenu_openDicom = QtWidgets.QAction("Open DICOM", self.app)
-                menu.addAction(treeMenu_openDicom)
-                treeMenu_openVoxelplan = QtWidgets.QAction("Open Voxelplan", self.app)
-                menu.addAction(treeMenu_openVoxelplan)
-
-                treeMenu_openDicom.triggered.connect(self._open_dicom)
-                treeMenu_openVoxelplan.triggered.connect(self._open_voxelplan)
-            else:
-                treeMenu = QtWidgets.QAction("New ROI List", self.app)  # TODO: always have (empty) VDX with CTX
-                menu.addAction(treeMenu)
-            if model.vdx:
-                treeMenu_newPlan = QtWidgets.QAction("New Plan", self.app)
-                menu.addAction(treeMenu_newPlan)
-                treeMenu_newPlan.triggered.connect(self._new_plan)
-        else:  # we are in some node in the TreeView
-
-            index = indexes[0]
-            disp = self.tmodel.data(index, QtCore.Qt.DisplayRole)
-
-            node = index.internalPointer()  # returns CustomNode type
-
-            disp = self.tmodel.data(index, QtCore.Qt.DisplayRole)  # display string in this node
-            obj = node.data(index.column())  # data object stored in this node.
-            logger.debug("FOOBAR: index data: {}".format(disp))
-
-            # CTX node:
+        if pos.checkState(0) == Qt.Unchecked:
             if isinstance(obj, pt.CtxCube):
-                treeMenu = QtWidgets.QAction("Export .ctx", self.app)
-                menu.addAction(treeMenu)
+                logger.debug("set pm.ctx = None")
+                pm.ctx = None
 
-            # VDX node:
-            if isinstance(obj, pt.VdxCube):
-                treeMenu = QtWidgets.QAction("New ROI", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Open .vdx", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Export .vdx", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Delete all", self.app)
-                menu.addAction(treeMenu)
-            # VOI nodes:
             if isinstance(obj, pt.Voi):
-                treeMenu = QtWidgets.QAction("Edit name", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Set Color", self.app)
-                menu.addAction(treeMenu)
-                if len(model.let) > 0:
-                    treeMenu_dvh = QtWidgets.QAction("Calculate DVH", self.app)
-                    menu.addAction(treeMenu_dvh)
-                    treeMenu_dvh.triggered.connect(partial(self._calc_dvh, obj.name))
+                logger.debug("remove Voi {}".format(obj.name))
+                if obj in pm.vois:
+                    pm.vois.remove(obj)
+                else:
+                    logger.warning("Tried to remove Voi {} which is not in pm.vois.")
 
-                if len(model.let) > 0:
-                    treeMenu_lvh = QtWidgets.QAction("Calculate LVH", self.app)
-                    menu.addAction(treeMenu_lvh)
-                    treeMenu_lvh.triggered.connect(self._calc_lvh)
+            if isinstance(obj, pte.Plan):
+                logger.debug("remove Plan {}".format(obj.name))
+                if obj in pm.plans:
+                    pm.plans.remove(obj)
+                else:
+                    logger.warning("Tried to remove Plan {} which is not in pm.plans.")
 
-                treeMenu = QtWidgets.QAction("Delete", self.app)
-                menu.addAction(treeMenu)
+            # TODO: Field
 
-            # DOS node:
             if isinstance(obj, pt.DosCube):
-                treeMenu = QtWidgets.QAction("Export .dos", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Delete", self.app)
-                menu.addAction(treeMenu)
+                logger.debug("set pm.dos = None")
+                pm.dos = None
 
-            # LET node:
             if isinstance(obj, pt.LETCube):
-                treeMenu = QtWidgets.QAction("Export .dosemlet.dos", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Delete", self.app)
-                menu.addAction(treeMenu)
+                logger.debug("set pm.let = None")
+                pm.let = None
 
-            # we have no "Plans" / "Fields" object, but can only check if list is made of plans or fields.
-            if isinstance(obj, list) > 1:
-                # Plans node:
-                if isinstance(obj[0], pte.Plan):
-                    treeMenu = QtWidgets.QAction("Import .exec", self.app)
-                    menu.addAction(treeMenu)
-                    treeMenu = QtWidgets.QAction("Delete", self.app)
-                    menu.addAction(treeMenu)
-                # Fields node:
-                if isinstance(obj[0], pte.Field):  # we have no "Fields" object.
-                    treeMenu = QtWidgets.QAction("New", self.app)
-                    menu.addAction(treeMenu)
-                    treeMenu = QtWidgets.QAction("Delete", self.app)
-                    menu.addAction(treeMenu)
+        else:  # select something and add it to model.plot
+            logger.debug("{} isChecked(True)".format(pos))
+            if isinstance(obj, pt.CtxCube):
+                pm.ctx = obj
+            if isinstance(obj, pt.Voi):
+                pm.vois.append(obj)
+            if isinstance(obj, pt.DosCube):
+                pm.dos = obj
+            if isinstance(obj, pt.LETCube):
+                pm.let = obj
 
-            # Plan node:
-            if isinstance(obj, pte.Plan):  # we have no "Plans" object, but can only check if list is made of plans.
-                treeMenu = QtWidgets.QAction("Edit", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Optimize", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Expert .exec", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Delete", self.app)
-                menu.addAction(treeMenu)
-
-            # Field
-            if isinstance(obj, pte.Field):  # we have no "Plans" object, but can only check if list is made of plans.
-                treeMenu = QtWidgets.QAction("Edit", self.app)
-                menu.addAction(treeMenu)
-                treeMenu = QtWidgets.QAction("Delete", self.app)
-                menu.addAction(treeMenu)
-
-        treeMenu.triggered.connect(self._foobar)
-        menu.exec_(self.tv.viewport().mapToGlobal(position))
-
-    # Callback functions for treeMenu. "event"contains the string of the viewable.
-    def _foobar(self, event):
-        logger.warning("Unimplemented feature: action triggered TreeView '{}''".format(event))
-        print(event)
-        print(dir(event))
-
-    def _new_plan(self, event):
-        """
-        """
-        logger.debug("_new_plan({})".format(event))
-        from pytripgui.controller.plan_cont import PlanController
-        print("FOOBAR", self.model)
-        PlanController.new_plan(self.model)
-
-    def _open_dicom(self, event):
-        self.app.ctrl.open_dicom_dialog(event)
-
-    def _open_voxelplan(self, event):
-        self.app.ctrl.open_voxelplan_dialog(event)
-
-    def _calc_dvh(self, event):
-        print(event)
-        print(dir(event))
-        self.app.ctrl.dvh.add_dvh(self.app.model.dos[-1], self.app.model.vdx.get_voi_by_name(event))
-
-    def _calc_lvh(self, event):
-        print(event)
-        print(dir(event))
-        self.app.ctrl.lvh.add_lvh(self.app.model.let[-1], self.app.model.vdx.get_voi_by_name(event))
+        # trigger update plot after model was changed.
+        self.pctrl.update_viewcanvas()
 
     def update_tree(self):
         """
-        updates and populates the tree
+        Syncs the tree with the main_model, adding and removing items accordingly.
         """
         logger.debug("update_tree()")
-        self.tv.setModel(self.tmodel)  # TODO: something with emitDataChanged, to avoid collapsing tree each update
-        self.tmodel.updateModel(None)
-        # self.tmodel.emitDataChanged()
+        self._model_sync_add_items()
+        self._model_sync_remove_items()
 
-    def add_ctx(self, ctx):
-        """ Adds a CTX item to the treeView
+    def _model_sync_add_items(self):
         """
-        # self.items.append(CustomNode("CTX: {}".format(ctx.basename)))
-        self.items.append(CustomNode(ctx))
-        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
-        self.update_tree()
+        Syncs the tree with the main_model, adding and removing items accordingly.
 
-    def rm_ctx(self, ctx):
-        """ TODO
+        TODO: this can probably be programmed more elegantly.
         """
-        pass
+        self._add_ctx()
+        self._add_vdxvoi()
+        self._add_plans()
+        self._add_dos()
+        self._add_let()
 
-    def add_vdx(self, vdx):
-        """ Adds a VDX item to the treeView
+    def _add_ctx(self):
         """
-        self.items.append(CustomNode(vdx))
-        # TODO: add something to expand the node
+        """
+        model = self.model
+        tw = self.view.treeWidget
 
-        # add all the VOIs to the tree, but use those from the model.class. We want to show all available
-        # VOIs, also those which are not plotted in the canvas.
-        for voi in vdx.vois:
-            self.items[-1].addChild(CustomNode(voi))
+        # CTX data
+        if model.ctx and not self._in_tree(model.ctx):
+            # Add CTX to tree widget.
+            tw.setHeaderLabels(["'{}'".format(model.ctx.basename)])  # TODO:patient name
 
-            # TODO: add colored icon or checkbox
-            # pixmap = QtGui.QPixmap(12,12)
-            # pixmap.fill(value)
-            # icon = QtGui.QPixmap(pixmap)
+            self.tctx = QTreeWidgetItem([model.ctx.basename])
+            self.tctx.setData(0, Qt.UserRole, model.ctx)
+            tw.addTopLevelItem(self.tctx)
+            self.tctx.setCheckState(0, Qt.Checked)
 
-        self.tmodel = CustomModel(self.items, self.model, self.mctrl)
-        self.update_tree()
+    def _add_vdxvoi(self):
+        """
+        """
+        model = self.model
+        tw = self.view.treeWidget
 
-    def add_dos(self, dos):
-        """ Adds a DosCube item to the treeView
-        """
-        # self.items.append(CustomNode("Dose: {}".format(dos.basename)))
-        self.items.append(CustomNode(dos))
-        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
-        self.update_tree()
+        # VDX data
+        if model.vdx and not self._in_tree(model.vdx):
+            self.tvdx = QTreeWidgetItem(["ROIs: " + model.vdx.basename])
+            self.tvdx.setData(0, Qt.UserRole, model.vdx)
+            tw.addTopLevelItem(self.tvdx)
+            self.tvdx.setExpanded(True)
 
-    def add_let(self, let):
-        """ Adds a LETCube item to the treeView
-        """
-        # self.items.append(CustomNode("LET: {}".format(let.basename)))
-        self.items.append(CustomNode(let))
-        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
-        self.update_tree()
+        # VOIs
+        if model.vdx and model.vdx.vois:
+            vois = model.vdx.vois
+            for i, voi in enumerate(vois):
+                # Add only Vois which are not in the tree.
+                if not self._in_tree(voi):
+                    self.tvdx.addChild(QTreeWidgetItem([voi.name]))
+                    child = self.tvdx.child(i)
+                    child.setData(0, Qt.UserRole, voi)
+                    child.setCheckState(0, Qt.Checked)
 
-    def add_plan(self, plan):
-        """ Adds a Plan item to the treeView
+    def _add_plans(self):
         """
-        # self.items.append(CustomNode("LET: {}".format(let.basename)))
-        self.items.append(CustomNode(plan))
-        self.tmodel = CustomModel(self.items, self.model, self.mctrl)  # TODO: brutal hack, fix me
-        self.update_tree()
+        """
+        model = self.model
+        tw = self.view.treeWidget
 
+        # Plans node:
+        if model.plans and not self.tplans:
+            self.tplans = QTreeWidgetItem(["Plans:"])
+            self.tplans.setData(0, Qt.UserRole, self._plancol)
+            tw.addTopLevelItem(self.tplans)
+            self.tplans.setExpanded(True)
 
-class CustomNode(object):
-    """
-    http://doc.qt.io/qt-5/qtwidgets-itemviews-editabletreemodel-example.html
-    Class dealing with nodes in a tree _model
-    Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
-    """
+        # Plans has one child for each plan.
+        if model.plans:
+            for i, plan in enumerate(model.plans):
+                # Add only plans, which are not already in the tree
+                if not self._in_tree(plan):
+                    self.tplans.addChild(QTreeWidgetItem([plan.basename]))
+                    child = self.tplans.child(i)
+                    child.setData(0, Qt.UserRole, plan)
+                    child.setCheckState(0, Qt.Checked)
 
-    def __init__(self, data):
+    def _add_dos(self):
         """
-        Create a new node instance, with the input data "data"
         """
+        model = self.model
+        tw = self.view.treeWidget
 
-        self._data = data  # set the data, this is of type str or a tuple of str.
-        self._isChecked = False
-        if type(data) == tuple:
-            self._data = list(data)
-        if type(data) == str or not hasattr(data, '__getitem__'):
-            self._data = [data]
+        # Add the top level DOS node:
+        if model.dos and not self.tdos:
+            self.tdos = QTreeWidgetItem(["Dose Cubes"])
+            self.tdos.setData(0, Qt.UserRole, self._doscol)
+            tw.addTopLevelItem(self.tdos)
+            self.tdos.setExpanded(True)
 
-        self._children = []
-        self._parent = None
-        self._row = 0
-        if data:
-            self._columncount = len(self._data)
-        else:
-            self._columncount = 0
+        # Each DosCube will be treated as a child to the top level DOS node.
+        if model.dos:
+            for i, dos in enumerate(model.dos):
+                if not self._in_tree(dos):
+                    self.tdos.addChild(QTreeWidgetItem([dos.basename]))
+                    child = self.tdos.child(i)
+                    child.setData(0, Qt.UserRole, dos)
+                    child.setCheckState(0, Qt.Checked)
 
-    def data(self, column):
+    def _add_let(self):
         """
-        Return data in column number 'column'
-        :params int column: column number
         """
-        if column >= 0 and column < len(self._data):
-            return self._data[column]
+        model = self.model
+        tw = self.view.treeWidget
 
-    def isChecked(self):
-        """
-        Returns True if checkbox is checked for this node.
-        """
-        return self._isChecked
+        # Add the top level LET node:
+        if model.let and not self.tlet:
+            self.tlet = QTreeWidgetItem(["LET Cubes"])
+            self.tlet.setData(0, Qt.UserRole, self._letcol)
+            tw.addTopLevelItem(self.tlet)
+            self.tlet.setExpanded(True)
 
-    def setChecked(self, value):
-        """
-        Toggle whether checkbox shall be shown checked or uncheckedself.
-        :value bool: True or False.
-        """
-        # TODO: copy/remove data into plotmodel
-        self._isChecked = value
+        # Each LETCube will be treated as a child to the top level DOS node.
+        if model.let:
+            for i, let in enumerate(model.let):
+                if not self._in_tree(let):
+                    self.tlet.addChild(QTreeWidgetItem([let.basename]))
+                    child = self.tlet.child(i)
+                    child.setData(0, Qt.UserRole, let)
+                    child.setCheckState(0, Qt.Checked)
 
-    def columnCount(self):
+    def _model_sync_remove_items(self):
         """
-        Returns number of columns in this node.
-        """
-        return self._columncount
-
-    def childCount(self):
-        """
-        Returns number of children in this node.
-        """
-        return len(self._children)
-
-    def child(self, row):
-        """
-        Returns child in row number 'row'.
-        :params int row: row number which child should be returned.
-        """
-        if row >= 0 and row < self.childCount():
-            return self._children[row]
-
-    def parent(self):
-        """
-        Returns parent node of current row.
-        """
-        return self._parent
-
-    def row(self):
-        """
-        Returns current row.
-        """
-        return self._row
-
-    def addChild(self, child):
-        """
-        Adds a new child to current row (making it a parent).
-        """
-        logger.debug("add child '{}' to CustomModel".format(child._data))
-        child._parent = self
-        child._isChecked = True  # new kids always added as checked by default
-        child._row = len(self._children)  # last row number + 1 where new child will be inserted.
-        self._children.append(child)
-        self._columncount = max(child.columnCount(), self._columncount)
-        # self._columncount = 1  # hardcoded for now
-
-
-class CustomModel(QtCore.QAbstractItemModel):
-    """
-    Custom data model derived from QAbstractItemModel
-    Based on http://trevorius.com/scrapbook/uncategorized/pyqt-custom-abstractitemmodel/
-    Note the link has a bug.
-    "In the full-code version, the columnCount method of the model returns self._root.childCount().
-    """
-
-    def __init__(self, nodes, model, mctrl):
-        """
-        Initializes model and sets the root node in self._root.
-        :params list nodes: list of data. One child will be added for each item 'nodes'.
-        :model MainModel: MainModel for GUI.
-        :mctrl MainController: refactor me please
-        """
-        QtCore.QAbstractItemModel.__init__(self)
-        self._root = CustomNode(None)
-        for node in nodes:
-            self._root.addChild(node)
-
-        self.model = model
-        self.mctrl = mctrl
-        from PyQt5.QtCore import Qt
-        self.setHeaderData(0, Qt.Horizontal, "Test")
-
-    def rowCount(self, idx):
-        """
-        Returns number of rows at index 'idx'.
-        """
-        if idx.isValid():
-            return idx.internalPointer().childCount()
-        return self._root.childCount()
-
-    def addChild(self, node, parent):
-        """
-        Adds a new 'node' to 'parent'.
-        If parent is not given, then it will be added to the root node.
-        """
-        if not parent or not parent.isValid():
-            _parent = self._root
-        else:
-            _parent = parent.internalPointer()
-        _parent.addChild(node)
-
-    def index(self, row, column, parent=None):
-        """
-        Returns model index of item at 'row' and 'column' of 'parent'. If None parent, root node is assumed.
-        """
-        if not parent or not parent.isValid():
-            _parent = self._root
-        else:
-            _parent = parent.internalPointer()
-
-        if not QtCore.QAbstractItemModel.hasIndex(self, row, column, parent):
-            return QtCore.QModelIndex()
-
-        child = _parent.child(row)  # get the child at current row.
-        if child:
-            return QtCore.QAbstractItemModel.createIndex(self, row, column, child)
-        else:
-            return QtCore.QModelIndex()
-
-    def parent(self, idx):
-        """
-        Get current parent form index 'idx'.
-        """
-        if idx.isValid():
-            p = idx.internalPointer().parent()
-            if p:
-                return QtCore.QAbstractItemModel.createIndex(self, p.row(), 0, p)
-        return QtCore.QModelIndex()
-
-    def columnCount(self, idx):
-        """
-        Returns number of columns at current index.
-        """
-        if idx.isValid():
-            return idx.internalPointer().columnCount()
-        return self._root.columnCount()
-
-    def data(self, idx, role):
-        """
-        Overloading data. Some logic for what of model.plot is supposed to be shown where in the TreeView widget.
+        Sync TreeWidget with data model.
+        If items are found in TreeWidget, which are not found in
+        data model, the item will be removed from TreeWidget.
         """
 
-        if not idx.isValid():
-            return None
+        tw = self.view.treeWidget
 
-        # pm = self.model.plot
-        # row = idx.row()
-        column = idx.column()
-        node = idx.internalPointer()  # returns CustomNode type
+        lo = self._flat_model()
 
-        # in case a text string is to be displayed:
-        # depending on what object is in the node, show various text strings.
-        if role == QtCore.Qt.DisplayRole and column == 0:
-            obj = node.data(idx.column())
-            if isinstance(obj, pt.CtxCube):
-                return "CTX: {}".format(obj.basename)
-            if isinstance(obj, pt.VdxCube):
-                return "ROIs"
-            if isinstance(obj, pt.Voi):
-                return "{}".format(obj.name)
-            if isinstance(obj, pt.DosCube):
-                return "DOS: {}".format(obj.basename)
-            if isinstance(obj, pt.LETCube):
-                return "LET: {}".format(obj.basename)
+        root = tw.invisibleRootItem()
+        count = root.childCount()
 
-        # in case a checkbox is to be displayed, set state based on which objects are in self.model.plot
-        if role == QtCore.Qt.CheckStateRole and column == 0:
-            obj = node.data(idx.column())
-            checked = QtCore.QVariant(QtCore.Qt.Checked)
-            unchecked = QtCore.QVariant(QtCore.Qt.Unchecked)
+        # Check if TreeWidget item data object is found in model.
+        # if not, remove it from TreeWidget.
+        for i in range(count):
+            item = root.child(i)
+            if item:
+                _obj = item.data(0, Qt.UserRole)
+                if _obj not in lo:
+                    (item.parent() or root).removeChild(item)
 
-            # "ROIs" node should not have a checkbox at all for now.
-            if isinstance(obj, pt.VdxCube):
-                return None
-            else:
-                if node.isChecked():
-                    return checked
-                return unchecked
+                count2 = item.childCount()
+                for j in range(count2):
+                    item2 = item.child(j)
+                    if item2:
+                        _obj = item2.data(0, Qt.UserRole)
+                        if _obj not in lo:
+                            (item2.parent() or root).removeChild(item)
 
-        # for future use, possibly editing names.
-        if role == QtCore.Qt.EditRole:
-            return node.data(idx.column())
+    def _flat_model(self):
+        """ Produces a searchable and flat array of model data
+        which should be displayed in the TreeWidget.
+        This array will be used for syncing the treeWidget items with the model items.
+        """
+        model = self.model
+
+        # Check for items to be removed.
+        # First lets make a flat list of all pytrip objects in the model (called "lo"):
+        lo = [model.ctx, model.vdx]
+        if model.vdx.vois:
+            lo += model.vdx.vois  # extend the list with a list of voi objects
+        if model.dos:
+            lo += model.dos
+        if model.let:
+            lo += model.let
+        if model.plans:
+            lo += model.plans
+            for plan in model.plans:
+                if plan.fields:
+                    lo += plan.fields
+        # TODO: this part needs some rework.
+        # The top level nodes: plans, dos and let
+        # should not be removed, if they hold data. They do not have a class, tough
+        # Therefore this little hack for now:
+        if model.dos:
+            lo += [self._doscol]
+        if model.let:
+            lo += [self._letcol]
+        if model.plans:
+            lo += [self._plancol]
+
+        return lo
+
+    def _in_tree(self, obj):
+        """
+        Crawls the entire treewidget, and search for the object.
+        Returns corresponding QTreeWidgetItem, if found, else None.
+
+        :params PyTRiPobject obj: such as CtxCube, DosCube, VdxCube, Plan, ...etc
+        """
+        tw = self.view.treeWidget
+
+        root = tw.invisibleRootItem()
+        count = root.childCount()
+
+        for i in range(count):
+            child = root.child(i)
+            _obj = child.data(0, Qt.UserRole)
+            if obj == _obj:
+                return child
+
+            count2 = child.childCount()
+            for j in range(count2):
+                child2 = child.child(j)
+                _obj = child2.data(0, Qt.UserRole)
+                if obj == _obj:
+                    return child2
 
         return None
-
-    def flags(self, idx):
-        """
-        Flags for adjusting Qt.Item* behaviour.
-        """
-        if not idx.isValid():
-            return None
-        return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsUserCheckable
-
-    def updateModel(self, idx):
-        """
-        This should update the TreeView widget, to reflect the current state of all.
-        """
-        logger.debug("updateModel() called")
-        self.emitDataChanged()
-        # self.dataChanged.emit(idx, idx)
-        # self.layoutChanged.emit()
-
-    def setData(self, idx, value, role):
-        """
-        If the user is chaning the state of the TreeView widget, i.e. by unchecking boxes, then
-        the model.plot will be updated accordingly.
-        After model.plot is updated, then the TreeView should be updated accordingly.
-        """
-        logger.debug("setData() called")
-        if not idx.isValid():
-            return None
-
-        pm = self.model.plot
-        row = idx.row()
-        # column = idx.column()
-
-        node = idx.internalPointer()  # returns CustomNode type
-        obj = node.data(idx.column())  # data object of this node which (e.g. CtxCube, VdxCube etc..)
-
-        if role == QtCore.Qt.CheckStateRole and idx.column() == 0:
-
-            if node.isChecked():  # unselect something and remove it from model.plot
-                node.setChecked(False)
-                if isinstance(obj, pt.CtxCube):
-                    logger.debug("set pm.ctx = None")
-                    pm.ctx = None
-                if isinstance(obj, pt.Voi):
-                    logger.debug("remove Voi {}".format(obj.name))
-                    if obj in pm.vois:
-                        pm.vois.remove(obj)
-                    else:
-                        logger.warning("Tried to remove Voi {} which is not in pm.vois.")
-                if isinstance(obj, pt.DosCube):
-                    logger.debug("set pm.dos = None")
-                    pm.dos = None
-                if isinstance(obj, pt.LETCube):
-                    logger.debug("set pm.let = None")
-                    pm.let = None
-
-            else:  # select something and add it to model.plot
-                node.setChecked(True)
-                logger.debug("row{} isChecked(True)".format(row))
-                if isinstance(obj, pt.CtxCube):
-                    pm.ctx = obj
-                if isinstance(obj, pt.Voi):
-                    pm.vois.append(obj)
-                if isinstance(obj, pt.DosCube):
-                    pm.dos = obj
-                if isinstance(obj, pt.LETCube):
-                    pm.let = obj
-
-        self.updateModel(idx)  # TODO: this does not work? How to update the TreeView?
-        self.mctrl.plot.update_viewcanvas()
-
-        return True
-
-    def emitDataChanged(self):
-        """
-        TODO: not sure if this one is needed at all.
-        """
-        print("emit data changed")
-        self.dataChanged.emit(QtCore.QModelIndex(), QtCore.QModelIndex())

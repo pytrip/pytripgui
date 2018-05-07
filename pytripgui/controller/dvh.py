@@ -21,6 +21,17 @@ class Dvh(object):
 
     def add_dvh(self, dos, voi):
         """
+        Calculates and plots a DVH for all dos in model based on voi.
+        TODO: fix me later
+        """
+        pm = self.model.plot
+
+        dvh = self._calc_dvh(dos, voi)
+        pm.dvhs.append(dvh)
+        self.update_plotdvh()
+
+    def add_dvh_dos(self, dos, voi):
+        """
         Calculates and plots a DVH based on dos and voi.
         """
         pm = self.model.plot
