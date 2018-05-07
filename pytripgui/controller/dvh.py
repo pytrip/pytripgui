@@ -28,6 +28,8 @@ class Dvh(object):
 
         dvh = self._calc_dvh(dos, voi)
         pm.dvhs.append(dvh)
+        if not dvh.x or not dvh.y:
+            return
         self.update_plotdvh()
 
     def add_dvh_dos(self, dos, voi):

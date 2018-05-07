@@ -49,7 +49,7 @@ class ViewCanvasText(object):
         _slice_pos = pm.slice_pos_mm
 
         if pm.plane == "Transversal":
-            markers = ['L', 'R', 'A', 'P']
+            markers = ['R', 'L', 'A', 'P']
         elif pm.plane == "Sagittal":
             markers = ['D', 'V', 'A', 'P']
         elif pm.plane == "Coronal":
