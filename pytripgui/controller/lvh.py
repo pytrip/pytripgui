@@ -26,6 +26,8 @@ class Lvh(object):
         pm = self.model.plot
 
         lvh = self._calc_lvh(let, voi)
+        if not lvh.x or not lvh.y:
+            return
         pm.lvhs.append(lvh)
         self.update_plotlvh()
 
