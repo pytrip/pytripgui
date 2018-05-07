@@ -80,6 +80,15 @@ class PlanController(object):
         ui.comboBox.clear()
         for voi in model.vdx.vois:
             ui.comboBox.addItem(voi.name, voi)
+            if plan.voi_target:
+                _i = ui.comboBox.findData(voi)
+                if _i == -1:  # not found
+                    logger.warning("_populate_plan_ui() FIXME")
+                else:
+                    ui.comboBox.setCurrentIndex(_i)
+            else:
+                plan.voi_target = model.vdx.vois[0]
+                ui.comboBox.setCurrentIndex(0)
 
         # OAR
         list = ui.listView
@@ -93,8 +102,22 @@ class PlanController(object):
 
         # INCUBE
         ui.comboBox_2.clear()
-        for dos in model.dos:
-            ui.comboBox_2.addItem(dos.basename, dos)
+        if model.dos:
+            for dos in model.dos:
+                ui.comboBox_2.addItem(dos.basename, dos)
+
+            if plan.incube_basename:
+                ui.comboBox_2.setEnabled(True)
+                ui.checkBox.setChecked(True)
+                _i = ui.comboBox_2.findText(dos.basename)
+                if _i == -1:  # not found
+                    logger.warning("_populate_plan_ui() FIXME 2")
+                else:
+                    ui.comboBox_2.setCurrentIndex(_i)
+            else:
+                plan.incube_basename = None
+                ui.comboBox_2.setEnabled(False)
+                ui.checkBox.setChecked(False)
 
         # TISSUE
         ui.comboBox_3.clear()
@@ -161,8 +184,13 @@ class PlanController(object):
         No OK button needs to be pressed, when a value is changed, model is updated immediately.
         """
 
-        ui.lineEdit.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "basename"))  # basename
-        ui.lineEdit_2.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "comment"))  # comments
+        ui.lineEdit.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "basename"))
+        ui.lineEdit_2.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "comment"))
+
+        ui.comboBox.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "voi_target"))
+        #TODO: OAR
+        ui.comboBox.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube"))
+        ui.checkBox.stateChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube_check"))
 
     @staticmethod
     def _callback(ui, model, plan, plan_attribute_name):
@@ -181,3 +209,28 @@ class PlanController(object):
         if pa == "comment":
             plan.comment = ui.lineEdit_2.text()
             return
+
+        if pa == "voi_target":
+            i = ui.comboBox.currentIndex()
+            obj = ui.comboBox.itemData(i)
+            logger.debug("Set voi_target to VOI {}".format(obj.name))
+            plan.target_dose = obj
+            return
+
+        if pa == "incube":
+            i = ui.comboBox.currentIndex()
+            basename = ui.comboBox.itemText(i)
+            logger.debug("Set incube to dos.basename {}".format(basename))
+            plan.incube_basename = basename
+            return
+
+        if pa == "incube_check":
+            if ui.checkBox.isChecked():
+                ui.comboBox_2.setEnabled(True)
+                ui.comboBox_2.setCurrentIndex(0)
+                plan.incube_basename = ui.comboBox_2.currentText()
+                logger.debug("incube_check: plan.incube_basename set to {}".format(plan.incube_basename))
+            else:
+                plan.incube_basename = None
+                logger.debug("incube_check: plan.incube_basename set to {}".format(plan.incube_basename))
+                ui.comboBox_2.setEnabled(False)
