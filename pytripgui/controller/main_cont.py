@@ -63,6 +63,7 @@ class MainController(object):
         ui.actionSave_Project.triggered.connect(self.save_project)
         ui.actionExit.triggered.connect(self.on_exit)
         ui.actionAbout.triggered.connect(self.on_about)
+        ui.actionNew_Plan.triggered.connect(self.on_new_plan)
 
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
@@ -327,14 +328,12 @@ class MainController(object):
         from PyQt5.QtWidgets import QMessageBox
         from pytripgui import __version__ as pytripgui_version
         from pytrip import __version__ as pytrip_version
-        # from pytripgui.util import main_dir
 
         # with open(os.path.join(main_dir(), "res", "LICENSE.rst"), "rU") as fp:
         #     licence = fp.read()
 
         title = "PyTRiPGUI"
         text = ""
-        # text += "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
         text += "PyTRipGUI Version: " + pytripgui_version + "\n"
         text += "PyTRiP Version:" + pytrip_version + "\n"
         text += "\n"
@@ -349,6 +348,14 @@ class MainController(object):
         text += "    Jakob Toftegaard\n"
 
         QMessageBox.about(self.app, title, text)
+
+    def on_new_plan(self, event):
+        """
+        New plan opened from window->plan->New Plan
+        """
+        model = self.model
+        from pytripgui.controller.plan_cont import PlanController
+        PlanController.new_plan(model)
 
     @staticmethod
     def on_exit(event):

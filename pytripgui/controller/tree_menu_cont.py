@@ -6,7 +6,7 @@ import logging
 # from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMenu
-from PyQt5.QtWidgets import QDialog
+# from PyQt5.QtWidgets import QDialog
 # from PyQt5.QtWidgets import QTreeWidgetItem
 
 import pytrip as pt
@@ -121,16 +121,10 @@ class TreeMenuController(object):
     def menu_newplan(self):
         logger.debug("menu_plan() {}".format(None))
         model = self.model
-        plan = pte.Plan()
 
-        from pytripgui.view.gen.plan import Ui_PlanDialog
-        dialog = QDialog()
-        pd = Ui_PlanDialog()
-        # TODO: setup callbacks linking to model
-        pd.setupUi(dialog)
-        dialog.exec_()
-        dialog.show()
-        model.plans.append(plan)
+        from pytripgui.controller.plan_cont import PlanController
+
+        PlanController.new_plan(model)
 
     def menu_dvh(self):
         logger.debug("menu_dvh() {}".format(None))

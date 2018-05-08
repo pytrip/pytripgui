@@ -34,9 +34,7 @@ class ViewCanvas(FigureCanvas):
         layout.addWidget(self)
         parent.setLayout(layout)
 
-        FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
