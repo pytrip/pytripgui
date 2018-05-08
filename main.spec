@@ -12,7 +12,7 @@ with open(mplrc) as fd:
     data = fd.readlines()
 for ii, l in enumerate(data):
     if l.strip().startswith("backend "):
-        data[ii] = "backend : WXAgg\n"
+        data[ii] = "backend : Qt5Agg\n"
 with open(mplrc, "w") as fd:
     fd.writelines(data)
 
@@ -52,10 +52,10 @@ a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
              binaries=[],
              datas=[ ('pytripgui/res/*', 'res' )],
-             hiddenimports=['wx', 'wx._xml', 'matplotlib', 'FileDialog', 'wx.lib.pubsub', 'wx.lib.pubsub.core.arg1', 'appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+             hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['pywin.debugger', 'tcl', 'PyQt5', 'IPython', 'tornado'],
+             excludes=['pywin.debugger', 'tcl', 'IPython', 'tornado'],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=None)
@@ -92,11 +92,10 @@ coll = COLLECT(exe,
 #             pathex=['.'],
 #             binaries=[],
 #             datas=[ ('pytripgui/res/*', 'res' )],
-#             # TODO add wx.lib.pubsub.core.kwargs if pubsub API v3 is going to be used
-#             hiddenimports=['wx', 'wx._xml', 'matplotlib', 'FileDialog', 'wx.lib.pubsub', 'wx.lib.pubsub.core.arg1', 'appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+#             hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
 #             hookspath=[],
 #             runtime_hooks=[],
-#             excludes=['pywin.debugger', 'tcl', 'PyQt5', 'IPython', 'tornado'],
+#             excludes=['pywin.debugger', 'tcl', 'IPython', 'tornado'],
 #             win_no_prefer_redirects=False,
 #             win_private_assemblies=False,
 #             cipher=None)

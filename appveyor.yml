@@ -1,100 +1,90 @@
+
 # validation page for appveyor config: https://ci.appveyor.com/tools/validate-yaml
-
-# build Configuration, i.e. Debug, Release, etc.
-configuration: Release
-
-# check also https://github.com/BjornFJohansson/seguid_calculator/blob/master/appveyor.yml
 
 # we are not building Visual Studio project, so default build step is off
 build: off
 
-# encrypting data done here: https://ci.appveyor.com/tools/encrypt
 environment:
-#  PYPIPASS:
-#    secure: TODO
-  PYPIUSER: grzanka
-
   matrix:
-#    # http://www.appveyor.com/docs/installed-software#python
-    - platform: x86
-      PYTHON_ROOT: "C:\\Python27"
-      PYTHON_VERSION: "2.7"
-      MINICONDAPATH: "C:\\Miniconda"
+#    - platform: x86
+#      PYTHON: "C:\\Python35"
+
     - platform: x64
-      PYTHON_ROOT: "C:\\Python27-x64"
-      PYTHON_VERSION: "2.7"
-      MINICONDAPATH: "C:\\Miniconda-x64"
+      PYTHON: "C:\\Python35-x64"
+
+#    - platform: x86
+#      PYTHON: "C:\\Python36"
+
+    - platform: x64
+      PYTHON: "C:\\Python36-x64"
+
 
 init:
-# add Python interpreter to PATH variable
-  - set PATH=%PYTHON_ROOT%;%PYTHON_ROOT%\Scripts;%PATH%
-# add Miniconda to PATH variable
-  - set PATH=%MINICONDAPATH%\Scripts;%PATH%
-# following this one: https://github.com/audreyr/cookiecutter/issues/599
-  - "git config --system http.sslcainfo \"C:\\Program Files\\Git\\mingw64\\ssl\\certs\\ca-bundle.crt\""
 # check python version
   - python -V
 # check 32 or 64 bit
   - python -c "import struct;print(8 * struct.calcsize('P'))"
+
 
 install:
-# tell miniconda to always follow default answers
-  - conda config --set always_yes yes --set changeps1 no
-# update miniconda
-  - conda update -q conda
-# create new conda workspace and activate it
-  - conda create -q --name python%PYTHON_VERSION% python=%PYTHON_VERSION%
-  - activate python%PYTHON_VERSION%
-# as scipy and classic wxpython doesn't yet have wheels for windows, install it using conda
-  - conda install -q --name python%PYTHON_VERSION% scipy wxpython pytest
+  # If there is a newer build queued for the same PR, cancel this one.
+  # The AppVeyor 'rollout builds' option is supposed to serve the same
+  # purpose but it is problematic because it tends to cancel builds pushed
+  # directly to master instead of just PR builds (or the converse).
+  # credits: JuliaLang developers.
+  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+          throw "There are newer queued builds for this pull request, failing early." }
+  # Prepend Python to the PATH of this build
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+# check pip version
+  - pip -V
 # install usual requirements
   - pip install --upgrade -r requirements.txt
-# check numpy & scipy versions
+  - pip install --upgrade -r tests\\requirements-test.txt
+# check numpy version
   - python -c "import numpy as np;print(np.version.version)"
-  - python -c "import scipy as sp;print(sp.version.version)"
-# check python version
+# check python and pip versions
   - python -V
-# check 32 or 64 bit
-  - python -c "import struct;print(8 * struct.calcsize('P'))"
-# wxPython version
-  - python -c "import wx; print(wx.__version__)"
+  - pip -V
+# generate qt5 files
+  - bash makeui.sh
+
+before_test:
+  - python %PYTHON%\\scripts\\versioneer install
 
 test_script:
-# generate versioneer stuff
-  - pip install "versioneer<0.18"
-  - python %MINICONDAPATH%/envs/python%PYTHON_VERSION%/Scripts/versioneer install
-# TODO fix running tests:
-#  - FOR %%I in (tests\test*.py) DO python -m pytest %%I TODO to be fixed
-# deploy package, TODO to be fixed
-#  - ps: If ($env:Platform -eq "x86") {bash appveyor\deploy_package.sh}
-#
-## making single exe
-  # Installing InnoSetup
+# make wheel package
+  - pip install wheel
+  - python setup.py bdist_wheel
+# clean build directory
+  - rd /s /q build
+
+# installer
+# generate single dir installation
+# Installing InnoSetup
   - choco install -y curl InnoSetup
   - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
 # upx is needed by pyinstaller to compress files
   - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.93/upx393w.zip
   - 7z e upx.zip *.exe -r
-# latest pyinstaller (3.2.1) complains about missing Tkinter matplotlib dependency
-# previous pyinstaller (3.2) complains about missing pubsub wxpython dependency
-# funny thing is that by adding hooks from https://github.com/pyinstaller/pyinstaller/pull/2233 is solving the problem
-# we are using pyinstaller from github.com/grzanka/pyinstaller in case dhyams user deletes his branch
-  - pip install git+https://github.com/grzanka/pyinstaller@feature/pubsub
+# pyinstaller
+  - pip install pyinstaller
 # install missing dependencies
   - pip install appdirs tornado packaging
-#
-# generate single dir installation
-  - pyinstaller main.spec
 # generate installer
+  - pyinstaller main.spec
   - iscc win10_innosetup.iss
-# make wheel package
-  - python setup.py bdist_wheel
-# clean build directory
-  - rd /s /q build
-# install generated package
-  - cd dist
-  - python -c "import os; import pip; pip.main(['install', os.listdir('.')[0]]);"
-  - cd ..
+
+# testing
+# remove source directory, to be sure that we use only wheel package for testing
+  - rd /s /q pytripgui
+  - del setup.py
+# install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
+  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
+# run tests
+  - pytest
 
 # upload artifacts
 artifacts:

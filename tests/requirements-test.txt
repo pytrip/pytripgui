@@ -1,0 +1,8 @@
+# micro-language and markers are described here: https://www.python.org/dev/peps/pep-0496/
+versioneer<0.18
+pytest
+pytest-timeout
+pytest-cov
+pytest-qt
+pytest-xvfb
+tox
