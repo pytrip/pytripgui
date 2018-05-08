@@ -328,14 +328,12 @@ class MainController(object):
         from PyQt5.QtWidgets import QMessageBox
         from pytripgui import __version__ as pytripgui_version
         from pytrip import __version__ as pytrip_version
-        # from pytripgui.util import main_dir
 
         # with open(os.path.join(main_dir(), "res", "LICENSE.rst"), "rU") as fp:
         #     licence = fp.read()
 
         title = "PyTRiPGUI"
         text = ""
-        # text += "PyTRiPGUI is a webfrontend to PyTRiP and TRiP98.\n"
         text += "PyTRipGUI Version: " + pytripgui_version + "\n"
         text += "PyTRiP Version:" + pytrip_version + "\n"
         text += "\n"
@@ -358,8 +356,6 @@ class MainController(object):
         model = self.model
         from pytripgui.controller.plan_cont import PlanController
         PlanController.new_plan(model)
-
-
 
     @staticmethod
     def on_exit(event):

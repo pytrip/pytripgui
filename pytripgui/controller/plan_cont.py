@@ -45,7 +45,7 @@ class PlanController(object):
         # https://stackoverflow.com/questions/42505429/pyqt5-gui-structure-advice-needed
         dialog = QtWidgets.QDialog()
         dialog_ui = Ui_PlanDialog()
-        plan_ui = dialog_ui
+        # plan_ui = dialog_ui # TODO why not being used ?
 
         dialog_ui.setupUi(dialog)
         PlanController._populate_plan_ui(dialog_ui, model, plan)
@@ -188,7 +188,7 @@ class PlanController(object):
         ui.lineEdit_2.textChanged.connect(lambda: PlanController._callback(ui, model, plan, "comment"))
 
         ui.comboBox.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "voi_target"))
-        #TODO: OAR
+        # TODO: OAR
         ui.comboBox.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube"))
         ui.checkBox.stateChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube_check"))
 
