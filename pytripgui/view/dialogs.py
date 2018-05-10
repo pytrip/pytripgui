@@ -60,7 +60,7 @@ class MyDialogs(object):
 
         if filename:
             logger.debug(filename)
-            return filename  # TODO: alternatively pass the filename as a signal to some slot?
+            return filename
 
         options = QFileDialog.Options()
 
@@ -79,7 +79,7 @@ class MyDialogs(object):
             app, title, dir, filters, options=options)
         if fileName:
             logger.debug(fileName)
-            return fileName  # TODO: alternatively pass the filename as a signal to some slot?
+            return fileName
 
     @staticmethod
     def saveFileNameDialog(app, title="", dir="", ftype=""):
@@ -96,7 +96,19 @@ class MyDialogs(object):
             app, title, dir, filters, options=options)
         if fileName:
             logger.debug(fileName)
-            return fileName  # TODO: alternatively pass the filename as a signal to some slot?
+            return fileName
+
+    @staticmethod
+    def saveDirectoryDialog(app, title="", dir=""):
+        """
+        :params title str: title for dialog
+        :params dir str: default dir
+        """
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        dir = QFileDialog.getExistingDirectory(app, title, dir, options=options)
+        return dir
 
     @staticmethod
     def openFileNamesDialog(app):

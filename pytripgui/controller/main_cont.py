@@ -297,10 +297,46 @@ class MainController(object):
 
     def export_dicom_dialog(self, event):
         """
-        Choose path for CTX + associated VDX file Export.
+        Choose dir for DICOM Export.
         """
-        logger.warning("export_dicom_dialog() not implemented")
+        logger.warning("export_dicom_dialog()")
+
+        model = self.model
+        st = self.settings
+        dir = os.path.dirname(model.dicom_path)
+
+        from pytripgui.view.dialogs import MyDialogs
+        dir = MyDialogs.saveDirectoryDialog(self.app, "Export DICOM to Directory", dir)
+
+        if not dir:
+            return
+
+        self.export_dicom(dir)
+        model.dicom_path = dir
+        st.save("general.import.dicom_path", dir)
         return None
+
+    def export_dicom(self, dir):
+        """
+        Export model.ctx data to a dir as DICOM.
+        If model.ctx is absent, throw an error dialog.
+        if model.vdx is present, export these as well.
+        """
+        logger.warning("export_dicom() not implemented dir={}".format(dir))
+        model = self.model
+        ctx = model.ctx
+        vdx = model.vdx
+
+        if ctx:
+            logger.debug("export CTX to DICOM")
+            ctx.write_dicom(dir)
+        else:
+            from pytripgui.view.dialogs import MyDialogs
+            MyDialogs.show_error("No CT Data available for export.")
+
+        if vdx:
+            logger.debug("export VDX to DICOM")
+            vdx.write_dicom(dir)
 
     def import_dos_dialog(self, event):
         """
