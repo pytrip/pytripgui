@@ -1,6 +1,7 @@
 import logging
 
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QMessageBox
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +13,15 @@ class MyDialogs(object):
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def show_error(text="Unspecified Error"):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText("Error")
+        msg.setInformativeText(text)
+        msg.setWindowTitle("Error")
+        msg.exec_()
 
     @staticmethod
     def _filter(ftype):
@@ -66,6 +76,23 @@ class MyDialogs(object):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
+            app, title, dir, filters, options=options)
+        if fileName:
+            logger.debug(fileName)
+            return fileName  # TODO: alternatively pass the filename as a signal to some slot?
+
+    @staticmethod
+    def saveFileNameDialog(app, title="", dir="", ftype=""):
+        """
+        :params path str: default where to look for file
+        :params type str: default suffix to look for
+        """
+
+        filters = MyDialogs._filter(ftype)
+
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(
             app, title, dir, filters, options=options)
         if fileName:
             logger.debug(fileName)

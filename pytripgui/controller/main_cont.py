@@ -1,4 +1,5 @@
 import logging
+import os
 import pytrip as pt
 
 from pytripgui.controller.tree_cont import TreeController
@@ -56,11 +57,17 @@ class MainController(object):
 
         ui.actionOpen_Dicom.triggered.connect(self.open_dicom_dialog)
         ui.actionOpen_Voxelplan.triggered.connect(self.open_voxelplan_dialog)
+
         ui.actionDoseCube.triggered.connect(self.import_dos_dialog)
         ui.actionLETCube.triggered.connect(self.import_let_dialog)
         ui.action_exec.triggered.connect(self.import_exec_dialog)
+
         ui.actionOpen_Project.triggered.connect(self.open_project)
         ui.actionSave_Project.triggered.connect(self.save_project)
+
+        ui.actionExport_Dicom.triggered.connect(self.export_dicom_dialog)
+        ui.actionExport_Voxelplan.triggered.connect(self.export_voxelplan_dialog)
+
         ui.actionExit.triggered.connect(self.on_exit)
         ui.actionAbout.triggered.connect(self.on_about)
         ui.actionNew_Plan.triggered.connect(self.on_new_plan)
@@ -82,7 +89,6 @@ class MainController(object):
         model = self.model
         st = self.settings
 
-        import os
         dir = os.path.dirname(model.dicom_path)
 
         # Start a file dialog for selecting input files
@@ -98,6 +104,7 @@ class MainController(object):
 
     def open_dicom(self, dir):
         """
+        Open a DICOM directory. Images must be present. RTSS is optional.
         """
         model = self.model    # local object of plot_model
         pm = self.model.plot  # local object of plot_model
@@ -112,8 +119,13 @@ class MainController(object):
             logger.debug("Found images in DICOM")
             ctx = pt.CtxCube()
             ctx.read_dicom(dcm)
+
             model.ctx = ctx
             pm.ctx = ctx
+        else:
+            from pytripgui.view.dialogs import MyDialogs
+            MyDialogs.show_error("No images found in selected DICOM directory.")
+            return
 
         if 'rtss' in dcm:
             logger.debug("Found rtss in DICOM")
@@ -122,13 +134,16 @@ class MainController(object):
             for voi in vdx.vois:
                 pm.vois.append(voi)
 
+            # This is a workaround for pytrip issue #455 https://github.com/pytrip/pytrip/issues/455
+            vdx.basename = "basename"
+
             model.vdx = vdx
             pm.vdx = vdx
 
-        # TODO: plan data
+        # TODO: RTplan data
 
-        # add cube to the treeview
-        self.tree.add_vdx(vdx)
+        # add cube to the treeview<s
+        self.tree.update_tree()
 
         # update the canvas
         self.plot.update_viewcanvas()
@@ -141,7 +156,6 @@ class MainController(object):
         model = self.model
         st = self.settings
 
-        import os
         model.wdir = os.path.dirname(model.voxelplan_path)
 
         # Start a file dialog for selecting input files
@@ -193,7 +207,6 @@ class MainController(object):
         logger.debug("Check if '{:s}' exists...".format(vdx_path))
 
         # If VDX is there, load it.
-        import os.path
         if os.path.isfile(vdx_path):
             logger.debug("   Open '{:s}'".format(vdx_path))
             vdx = pt.VdxCube(self.model.ctx)
@@ -212,6 +225,82 @@ class MainController(object):
 
         # update the canvas
         self.plot.update_viewcanvas()
+
+    def export_voxelplan_dialog(self, event):
+        """
+        Choose path for CTX + associated VDX file Export.
+        """
+        model = self.model
+        st = self.settings
+
+        from pytripgui.view.dialogs import MyDialogs
+
+        if not model.ctx:
+            MyDialogs.show_error("No CTX data available for export.")
+            return None
+
+        import os
+        model.wdir = os.path.dirname(model.voxelplan_path)
+        path_guess = os.path.join(model.wdir, model.ctx.basename + ".hed")
+
+        # Start a file dialog for selecting input files
+        path = MyDialogs.saveFileNameDialog(self.app,
+                                            "Open Voxelplan file",
+                                            path_guess,
+                                            'hed')
+
+        self.export_voxelplan(path)
+        model.voxelplan_path = path
+        st.save("general.import.voxelplan_path", path)
+
+    def export_voxelplan(self, ctx_path):
+        """
+        Saves CTX and optional VDX data.
+        Changes the ctx.basename to be in sync with the stem of the ctx_path. Same for optional VDX.
+        """
+        logger.debug("export_voxelplan() ctx_path={}".format(ctx_path))
+
+        vdx_path = ctx_path   # hardcoded: VDX will always be stored along with CTX.
+        if ".hed" in ctx_path:
+            vdx_path = vdx_path.replace(".hed", ".vdx")
+        elif ".ctx" in ctx_path:
+            vdx_path = vdx_path.replace(".ctx", ".vdx")
+        model = self.model
+        ctx = model.ctx
+
+        # If filename is not the default basename, then change the basename to the new stem of new path.
+        from pytrip.util import TRiP98FilePath
+
+        # os.path.basename(): see pytrip #456 https://github.com/pytrip/pytrip/issues/456
+        _new_basename = TRiP98FilePath(os.path.basename(ctx_path), pt.CtxCube).basename
+        if _new_basename != ctx.basename:
+            logger.info("ctx.basename changed '{}' -> '{}'".format(ctx.basename, _new_basename))
+            ctx.basename = _new_basename
+            self.tree.update_tree()  # to trigger update of basenames in tree
+            self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))  # update window
+
+        # Get the CTX cubes first
+        logger.debug("Export CTX {:s}".format(ctx_path))
+        ctx.write(ctx_path)
+
+        # Check if there is a VDX file with the same basename
+        if model.vdx:
+            vdx = model.vdx
+            # see pytrip #456 https://github.com/pytrip/pytrip/issues/456
+            _new_basename = TRiP98FilePath(os.path.basename(vdx_path), pt.Cube).basename
+            if _new_basename != vdx.basename:
+                logger.info("vdx.basename changed '{}' -> '{}'".format(vdx.basename, _new_basename))
+                vdx.basename = _new_basename
+                self.tree.update_tree()  # to trigger update of basenames in tree
+            logger.debug("Export VDX {:s}".format(vdx_path))
+            vdx.write(vdx_path)
+
+    def export_dicom_dialog(self, event):
+        """
+        Choose path for CTX + associated VDX file Export.
+        """
+        logger.warning("export_dicom_dialog() not implemented")
+        return None
 
     def import_dos_dialog(self, event):
         """

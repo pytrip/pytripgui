@@ -48,6 +48,8 @@ class Settings:
         :params str value: the value to be stored. Must be string format.
         """
 
+        logger.debug("save() key={} value= {}".format(key, value))
+
         self.config.read(self.path)
 
         # for 'trip98.spc.z6.rifi3' key the first word before the dot is the section.
