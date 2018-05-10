@@ -324,7 +324,6 @@ class MainController(object):
         if model.vdx is present, export these as well.
         """
         logger.warning("export_dicom() ddir={}".format(ddir))
-        model = self.model
         ctx = self.model.ctx
         vdx = self.model.vdx
 
