@@ -131,7 +131,7 @@ class PlanController(object):
 
         # ----------- Dose Delivery Tab ---------------------------
         # TODO: Projectile
-
+        PlanController._setup_plan_combobox(ui.comboBox_5, Plan.opt_methods)
         # TODO: Ripple filter
 
         # Target Dose Percent
@@ -157,6 +157,23 @@ class PlanController(object):
         ui.checkBox_5.setChecked(plan.want_rst)
         ui.checkBox_6.setEnabled(False)
         ui.checkBox_7.setEnabled(False)
+
+    @staticmethod
+    def _setup_projectile_combobox(ui, model, plan):
+        """
+        This populates the Projectile combobox
+        """
+        uic = ui.combobox_5
+        kernels = model.kernels
+
+        if not kernels:
+            MyDialogs.show_error("Setup dose kernels first in Settings.")
+            return
+
+        uic.clear()
+
+        for kernel in kernels:
+            uic.addItem(kernel.projectile_name, kernel)
 
     @staticmethod
     def _setup_plan_combobox(ui_combobox, plan_dict):
@@ -191,6 +208,8 @@ class PlanController(object):
         # TODO: OAR
         ui.comboBox.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube"))
         ui.checkBox.stateChanged.connect(lambda: PlanController._callback(ui, model, plan, "incube_check"))
+
+        ui.comboBox_5.currentIndexChanged.connect(lambda: PlanController._callback(ui, model, plan, "projectile"))
 
     @staticmethod
     def _callback(ui, model, plan, plan_attribute_name):
@@ -234,3 +253,6 @@ class PlanController(object):
                 plan.incube_basename = None
                 logger.debug("incube_check: plan.incube_basename set to {}".format(plan.incube_basename))
                 ui.comboBox_2.setEnabled(False)
+
+        if pa == "projectile":
+            logger.debug("Projectile Changed")

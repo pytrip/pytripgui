@@ -25,6 +25,7 @@ class MainModel(object):
         # attach submodels
         self.plot = PlotModel()
         # self.tree = TreeModel()
+        self.kernels = []  # placeholder for KernelModels
 
     def subscribe_update_func(self, func):
         """
