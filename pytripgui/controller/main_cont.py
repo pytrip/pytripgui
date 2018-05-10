@@ -89,28 +89,28 @@ class MainController(object):
         model = self.model
         st = self.settings
 
-        dir = os.path.dirname(model.dicom_path)
+        ddir = os.path.dirname(model.dicom_path)
 
         # Start a file dialog for selecting input files
         from pytripgui.view.dialogs import MyDialogs
-        dir = MyDialogs.openDirectoryDialog(self.app,
-                                            "Open Directory with DICOM Files",
-                                            dir)
-        if not dir:
+        ddir = MyDialogs.openDirectoryDialog(self.app,
+                                             "Open Directory with DICOM Files",
+                                             ddir)
+        if not ddir:
             return
-        self.open_dicom(dir)
-        model.dicom_path = dir
-        st.save("general.import.dicom_path", dir)
+        self.open_dicom(ddir)
+        model.dicom_path = ddir
+        st.save("general.import.dicom_path", ddir)
 
-    def open_dicom(self, dir):
+    def open_dicom(self, ddir):
         """
         Open a DICOM directory. Images must be present. RTSS is optional.
         """
         model = self.model    # local object of plot_model
         pm = self.model.plot  # local object of plot_model
 
-        logger.debug("open dicom '{}'".format(dir))
-        dcm = pt.dicomhelper.read_dicom_dir(dir)
+        logger.debug("open dicom '{}'".format(ddir))
+        dcm = pt.dicomhelper.read_dicom_dir(ddir)
 
         ctx = None
         vdx = None
@@ -249,9 +249,10 @@ class MainController(object):
                                             path_guess,
                                             'hed')
 
-        self.export_voxelplan(path)
-        model.voxelplan_path = path
-        st.save("general.import.voxelplan_path", path)
+        if path:
+            self.export_voxelplan(path)
+            model.voxelplan_path = path
+            st.save("general.import.voxelplan_path", path)
 
     def export_voxelplan(self, ctx_path):
         """
@@ -266,7 +267,7 @@ class MainController(object):
         elif ".ctx" in ctx_path:
             vdx_path = vdx_path.replace(".ctx", ".vdx")
         model = self.model
-        ctx = model.ctx
+        ctx = self.model.ctx
 
         # If filename is not the default basename, then change the basename to the new stem of new path.
         from pytrip.util import TRiP98FilePath
@@ -303,40 +304,40 @@ class MainController(object):
 
         model = self.model
         st = self.settings
-        dir = os.path.dirname(model.dicom_path)
+        ddir = os.path.dirname(model.dicom_path)
 
         from pytripgui.view.dialogs import MyDialogs
-        dir = MyDialogs.saveDirectoryDialog(self.app, "Export DICOM to Directory", dir)
+        ddir = MyDialogs.saveDirectoryDialog(self.app, "Export DICOM to Directory", ddir)
 
-        if not dir:
+        if not ddir:
             return
 
-        self.export_dicom(dir)
-        model.dicom_path = dir
-        st.save("general.import.dicom_path", dir)
+        self.export_dicom(ddir)
+        model.dicom_path = ddir
+        st.save("general.import.dicom_path", ddir)
         return None
 
-    def export_dicom(self, dir):
+    def export_dicom(self, ddir):
         """
-        Export model.ctx data to a dir as DICOM.
+        Export model.ctx data to directory "ddir" as DICOM.
         If model.ctx is absent, throw an error dialog.
         if model.vdx is present, export these as well.
         """
-        logger.warning("export_dicom() dir={}".format(dir))
+        logger.warning("export_dicom() ddir={}".format(ddir))
         model = self.model
-        ctx = model.ctx
-        vdx = model.vdx
+        ctx = self.model.ctx
+        vdx = self.model.vdx
 
         if ctx:
             logger.debug("export CTX to DICOM")
-            ctx.write_dicom(dir)
+            ctx.write_dicom(ddir)
         else:
             from pytripgui.view.dialogs import MyDialogs
             MyDialogs.show_error("No CT Data available for export.")
 
         if vdx:
             logger.debug("export VDX to DICOM")
-            vdx.write_dicom(dir)
+            vdx.write_dicom(ddir)
 
     def import_dos_dialog(self, event):
         """

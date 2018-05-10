@@ -43,7 +43,7 @@ class MyDialogs(object):
         return "AllFiles (*)"
 
     @staticmethod
-    def openDirectoryDialog(app, title="", dir=""):
+    def openDirectoryDialog(app, title="", ddir=""):
         """
         :params dir str: default where to look for file
         """
@@ -55,7 +55,7 @@ class MyDialogs(object):
 
         filename = QFileDialog.getExistingDirectory(app,
                                                     title,
-                                                    dir,
+                                                    ddir,
                                                     options=options)
 
         if filename:
@@ -65,7 +65,7 @@ class MyDialogs(object):
         options = QFileDialog.Options()
 
     @staticmethod
-    def openFileNameDialog(app, title="", dir="", ftype=""):
+    def openFileNameDialog(app, title="", ddir="", ftype=""):
         """
         :params path str: default where to look for file
         :params type str: default suffix to look for
@@ -76,13 +76,13 @@ class MyDialogs(object):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getOpenFileName(
-            app, title, dir, filters, options=options)
+            app, title, ddir, filters, options=options)
         if fileName:
             logger.debug(fileName)
             return fileName
 
     @staticmethod
-    def saveFileNameDialog(app, title="", dir="", ftype=""):
+    def saveFileNameDialog(app, title="", ddir="", ftype=""):
         """
         :params path str: default where to look for file
         :params type str: default suffix to look for
@@ -93,22 +93,22 @@ class MyDialogs(object):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
         fileName, _ = QFileDialog.getSaveFileName(
-            app, title, dir, filters, options=options)
+            app, title, ddir, filters, options=options)
         if fileName:
             logger.debug(fileName)
             return fileName
 
     @staticmethod
-    def saveDirectoryDialog(app, title="", dir=""):
+    def saveDirectoryDialog(app, title="", ddir=""):
         """
         :params title str: title for dialog
-        :params dir str: default dir
+        :params ddir str: default dir
         """
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        dir = QFileDialog.getExistingDirectory(app, title, dir, options=options)
-        return dir
+        ddir = QFileDialog.getExistingDirectory(app, title, ddir, options=options)
+        return ddir
 
     @staticmethod
     def openFileNamesDialog(app):
