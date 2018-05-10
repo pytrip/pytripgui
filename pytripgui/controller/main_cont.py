@@ -322,7 +322,7 @@ class MainController(object):
         If model.ctx is absent, throw an error dialog.
         if model.vdx is present, export these as well.
         """
-        logger.warning("export_dicom() not implemented dir={}".format(dir))
+        logger.warning("export_dicom() dir={}".format(dir))
         model = self.model
         ctx = model.ctx
         vdx = model.vdx
