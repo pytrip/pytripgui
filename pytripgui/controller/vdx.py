@@ -19,8 +19,6 @@ class Vdx(object):
         """
         Plots the VOIs.
         """
-        data = []
-        data_closed = []
         pm = plc._model.plot
         ctx = plc._model.ctx
         idx = plc._model.plot.zslice
@@ -32,32 +30,32 @@ class Vdx(object):
             return
 
         for voi in pm.vois:
+            logger.debug("plot() voi:{}".format(voi.name))
+
             _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
             if _slice is None:
                 continue
-            for contour in _slice.contour:
-                data.append(np.array(contour.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0]))
-            data_closed.append(contour.contour_closed)
 
-        # get current plane of interest from contours
-        data = Vdx.plane_points_idx(data, ctx, plc._model.plot.plane)
+            # for a given VOI, the slice viewed may consist of multiple Contours.
+            # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
+            # they will be transformed and put into <data>
+            for _c in _slice.contours:
+                data = np.array(_c.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0])
+                Vdx.plane_points_idx([data], ctx, plc._model.plot.plane)  # this transforms the <data> array
+                contour_color = np.array(voi.color) / 255.0
 
-        contour_color = np.array(voi.color) / 255.0
-        for d, dc in zip(data, data_closed):  # data is list of numpy arrays, holding several contours
-            # d has shape (n,3) : represents a single contour, with a list of x,y,z coordinates
-            # if n is 1, it means it is a point
-            # if n > 1, it means it is a contour
-            if d.shape[0] == 1:  # This is a POI, so plot it clearly as a POI
-                plc._plot_poi(d[0, 0], d[0, 1], contour_color, voi.name)
-            else:  # This is a contour
-                # Now check whether contour is open or closed.
-                if dc:  # it is closed, we need to repeat the first point at the end
-                    xy = np.concatenate((d, [d[0, :]]), axis=0)
+                if _c.contour_closed:
+                    xy = np.concatenate((data, [data[0]]), axis=0)
                 else:
-                    xy = d
+                    xy = data
 
-                plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
+                # TODO: what are plotting here? in terms of mm or pixels?
+                if _c.number_of_points() == 1:
+                    Vdx._plot_poi(plc, xy[0, 0], xy[0, 1], contour_color, voi.name)
+                else:
+                    plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
 
+    @staticmethod
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
         """ Plot a point of interest at x,y
         :params x,y: position in real world CT units
@@ -65,9 +63,19 @@ class Vdx(object):
         :params legend: name of POI
         """
 
-        size = plc.get_size()  # width and height in pixels
-        width = float(size[0]) / plc.zoom * 100.0
-        height = float(size[1]) / plc.zoom * 100.0
+        logger.debug("_plot_poi x,y {} {} mm".format(x, y))
+
+        bbox = plc.axes.get_window_extent().transformed(plc.figure.dpi_scale_trans.inverted())
+        width, height = bbox.width * plc.figure.dpi, bbox.height * plc.figure.dpi
+        size = [width, height]
+        logger.debug("_plot_poi width,height: {} {} pixels".format(width, height))
+
+        # size = plc.get_size()  # width and height in pixels
+        width = (float(size[0]) / plc.zoom) * 100.0
+        height = (float(size[1]) / plc.zoom) * 100.0
+
+        # TODO: this solution does not scale too well when minimizing maximizing windows.
+        # a better solution would be to use absolute pixel values instead.
 
         # we draw two line segments : one which will underline legend text
         # and other one which will connect the first one with point of interest
@@ -96,7 +104,7 @@ class Vdx(object):
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
         # plot a line (two segments) pointing to dot and underlining legend text
-        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, zorder=15)
+        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, linestyle=":", lw=1, zorder=15)
 
         # add the legend text
         plc.axes.text(x1,
@@ -123,24 +131,26 @@ class Vdx(object):
     @staticmethod
     def plane_points_idx(points, ctx, plane="Transversal"):
         """
-        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx]
+        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
 
-        :param points:
+        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
+                       OUTPUT: list of points pseudo-2D format.
         :param ctx:
         :param plane:
 
         TODO: code would be easier to read, if this is split up into two steps. 1) conv. to index, 2) extraction.
         """
 
-        d = points  # why needed? Makes a copy?
-        for point in d:
+        ct_pixsize_inv = 1.0 / ctx.pixel_size
+        ct_slicedist_inv = 1.0 / ctx.slice_distance
+
+        for point in points:
             if plane == "Transversal":
-                point[:, 0] /= ctx.pixel_size
-                point[:, 1] /= ctx.pixel_size
+                point[:, 0] *= ct_pixsize_inv
+                point[:, 1] *= ct_pixsize_inv
             elif plane == "Sagittal":
-                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) / ctx.pixel_size
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) / ctx.slice_distance
+                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
             elif plane == "Coronal":
-                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) / ctx.pixel_size
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) / ctx.slice_distance
-        return d
+                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
