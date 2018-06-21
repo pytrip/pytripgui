@@ -40,6 +40,8 @@ class PlotController(object):
         self.dose_bar = None
         self.let_bar = None
 
+        self.zoom = 100.0  # zoom level in percent
+
         self.plot_bg()
 
         # initial setup of the ViewCanvas

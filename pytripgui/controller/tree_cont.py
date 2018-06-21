@@ -100,7 +100,8 @@ class TreeController(object):
             if isinstance(obj, pt.CtxCube):
                 pm.ctx = obj
             if isinstance(obj, pt.Voi):
-                pm.vois.append(obj)
+                if obj not in pm.vois:
+                    pm.vois.append(obj)
             if isinstance(obj, pt.DosCube):
                 pm.dos = obj
             if isinstance(obj, pt.LETCube):
@@ -108,6 +109,9 @@ class TreeController(object):
 
         # trigger update plot after model was changed.
         self.pctrl.update_viewcanvas()
+
+        for i, item in enumerate(pm.vois):
+            logger.debug("pm.vois {}:{}".format(i, item.name))
 
     def update_tree(self):
         """
