@@ -26,6 +26,10 @@ class PlanController(object):
         """
         logger.debug("new_plan()")
 
+        if not model.ctx:
+            logger.error("No CT data loaded.")
+            return
+
         # setup a new tripexecuter.plan object
         import pytrip.tripexecuter as pte
         plan = pte.Plan(basename=model.ctx.basename)
@@ -167,6 +171,7 @@ class PlanController(object):
         kernels = model.kernels
 
         if not kernels:
+            from pytripgui.view.dialogs import MyDialogs
             MyDialogs.show_error("Setup dose kernels first in Settings.")
             return
 

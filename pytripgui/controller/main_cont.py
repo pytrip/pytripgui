@@ -72,6 +72,8 @@ class MainController(object):
         ui.actionAbout.triggered.connect(self.on_about)
         ui.actionNew_Plan.triggered.connect(self.on_new_plan)
 
+        ui.actionBeam_Kernels.triggered.connect(self.on_kernel)
+
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
     # called from view class
@@ -481,6 +483,14 @@ class MainController(object):
         model = self.model
         from pytripgui.controller.plan_cont import PlanController
         PlanController.new_plan(model)
+
+    def on_kernel(self, event):
+        """
+        Kernel dialog opened from window->settings->kernel
+        """
+        model = self.model
+        from pytripgui.controller.kernel_cont import KernelController
+        KernelController.edit_kernel(model)
 
     @staticmethod
     def on_exit(event):
