@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>939</width>
-    <height>581</height>
+    <width>842</width>
+    <height>603</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,10 +21,13 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2" colspan="2">
+   <item row="0" column="1" colspan="3">
     <widget class="QComboBox" name="comboBox_5">
      <property name="toolTip">
       <string>Select a kernel to edit</string>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
      </property>
     </widget>
    </item>
@@ -68,7 +71,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="8">
+   <item row="0" column="8" colspan="2">
     <spacer name="horizontalSpacer_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -88,13 +91,6 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2" colspan="7">
-    <widget class="QTextEdit" name="textEdit">
-     <property name="toolTip">
-      <string>Any comment describing this data set.</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="0">
     <widget class="QLabel" name="label_5">
      <property name="text">
@@ -102,14 +98,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2" colspan="2">
+   <item row="2" column="1" colspan="3">
     <widget class="QLineEdit" name="lineEdit">
      <property name="toolTip">
       <string>Free text projectile names, e.g. &quot;Negative Pi Mesons&quot;</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="4" colspan="5">
+   <item row="2" column="4" colspan="6">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -129,14 +125,14 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2" colspan="2">
+   <item row="3" column="1" colspan="3">
     <widget class="QComboBox" name="comboBox">
      <property name="toolTip">
       <string>IUPAC Symbol to use for this beam</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="4" colspan="5">
+   <item row="3" column="4" colspan="6">
     <spacer name="horizontalSpacer_8">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -156,7 +152,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="2">
+   <item row="4" column="1">
     <widget class="QSpinBox" name="spinBox">
      <property name="toolTip">
       <string>Projectile charge</string>
@@ -170,7 +166,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="4" colspan="5">
+   <item row="4" column="4" colspan="6">
     <spacer name="horizontalSpacer_11">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -193,7 +189,7 @@
      </property>
     </widget>
    </item>
-   <item row="5" column="2" colspan="7">
+   <item row="5" column="1" colspan="9">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -213,14 +209,14 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="2" colspan="2">
+   <item row="6" column="1" colspan="3">
     <widget class="QLineEdit" name="lineEdit_6">
      <property name="toolTip">
       <string>Free ripple filter name, e.g. &quot;GSI 2D 4mm&quot;</string>
      </property>
     </widget>
    </item>
-   <item row="6" column="4" colspan="4">
+   <item row="6" column="4" colspan="6">
     <spacer name="horizontalSpacer_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -233,17 +229,20 @@
      </property>
     </spacer>
    </item>
-   <item row="7" column="0" colspan="2">
+   <item row="7" column="0">
     <widget class="QLabel" name="label_23">
      <property name="text">
       <string>Ripple Filter Tickness [mm]</string>
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
+   <item row="7" column="1" colspan="2">
     <widget class="QDoubleSpinBox" name="doubleSpinBox">
      <property name="toolTip">
       <string>Ripple filter thickness. Will only be used for documentation purposes.</string>
+     </property>
+     <property name="singleStep">
+      <double>0.100000000000000</double>
      </property>
     </widget>
    </item>
@@ -254,7 +253,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="2" colspan="7">
+   <item row="8" column="1" colspan="7">
     <widget class="QLineEdit" name="lineEdit_8">
      <property name="font">
       <font>
@@ -273,7 +272,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="2" colspan="7">
+   <item row="9" column="1" colspan="7">
     <widget class="QLineEdit" name="lineEdit_9">
      <property name="font">
       <font>
@@ -292,7 +291,7 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="2" colspan="7">
+   <item row="10" column="1" colspan="7">
     <widget class="QLineEdit" name="lineEdit_10">
      <property name="font">
       <font>
@@ -304,7 +303,53 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
+   <item row="11" column="1" colspan="7">
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>464</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="11" column="8">
+    <spacer name="horizontalSpacer_7">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>83</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="8" column="8" colspan="2">
+    <spacer name="horizontalSpacer_6">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>168</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="11" column="9">
+    <widget class="QPushButton" name="pushButton_5">
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -312,10 +357,17 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>90</height>
+       <height>38</height>
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="1" column="1" colspan="9">
+    <widget class="QPlainTextEdit" name="plainTextEdit">
+     <property name="toolTip">
+      <string>Any comment describing this data set.</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
