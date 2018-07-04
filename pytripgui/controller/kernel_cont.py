@@ -23,6 +23,7 @@ class KernelController(object):
         self.current_kernel_idx = -1
         self.current_kernel = None
         self._kcounter = 0  # internal counter for new kernels
+        self._kernel_changed = False  # hack to avoid messy signal firing
 
         self.edit()
 
@@ -59,10 +60,15 @@ class KernelController(object):
         """
         Fill all widgets with current model data.
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("_populate_kernel_ui()")
 
         model = self.model
         ui = self.dialog_ui
+
+        # import export currently disabled
+        ui.pushButton_3.setEnabled(False)
+        ui.pushButton_4.setEnabled(False)
 
         # Handle Projectiles
         ui.comboBox.clear()  # list of projectiles
@@ -91,6 +97,7 @@ class KernelController(object):
         """
         Update all widgets for a given kernel to be shown.
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelCrontroller._show_kernel() '{}'".format(kernel.name))
 
         model = self.model
@@ -132,6 +139,7 @@ class KernelController(object):
 
         ui.comboBox_5.currentIndexChanged.connect(self._change_kernel)
         ui.comboBox_5.lineEdit().textEdited.connect(self._kernel_name_changed)
+        # ui.comboBox_5.editTextChanged.connect(self._kernel_name_changed)
         ui.pushButton.clicked.connect(self._new)
         ui.pushButton_2.clicked.connect(self._remove)
         ui.pushButton_3.clicked.connect(self._import)
@@ -139,7 +147,6 @@ class KernelController(object):
         ui.pushButton_5.clicked.connect(self._save)
 
         # comment box
-        print(dir(ui.plainTextEdit))
         ui.plainTextEdit.textChanged.connect(self._comment_changed)
 
         # projectile
@@ -166,6 +173,7 @@ class KernelController(object):
         """
         Append a new kernel to model.kernels[]
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelController._new()")
         model = self.model
         ui = self.dialog_ui
@@ -191,6 +199,7 @@ class KernelController(object):
     def _remove(self):
         """
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelController._remove()")
         model = self.model
         ui = self.dialog_ui
@@ -221,24 +230,43 @@ class KernelController(object):
     def _kernel_name_changed(self):
         """
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelController._kernel_name_changed()")
         model = self.model
         ui = self.dialog_ui
-        kernel = self.current_kernel
 
-        for kernel in model.kernels:
-            print("--- {}".format(kernel.name))
+        # if this signal was called because kernel was changed, do not update any models
+        if self._kernel_changed:
+            self._kernel_changed = False
+            return
 
-        _txt = ui.comboBox_5.lineEdit().text()
-        kernel.name = _txt  # this should also update model.kernel[].name as they are linked
-        ui.comboBox_5.setEditable(True)
         i = ui.comboBox_5.currentIndex()
+        kernel = model.kernels[i]
+
+        logger.debug("KNC: --- current index {} '{}'".format(i, kernel.name))
+
+        for ii, kernel in enumerate(model.kernels):
+            logger.debug("KNC: --- {} '{}'".format(ii, kernel.name))
+
+        # Get the text which is entered into the comboBox line edit:
+        _txt = ui.comboBox_5.lineEdit().text()
+        model.kernels[i].name = _txt  # this should also update model.kernel[].name as they are linked
+        print("FOFOOFO", _txt)
+
+        # reset the data
+        # this does not seem to work for some reason:
         ui.comboBox_5.setItemText(i, kernel.name)
         ui.comboBox_5.setItemData(i, kernel)
+
+        # ui.comboBox_5.clear()  # list of kernels
+        # for kernel in model.kernels:
+        #     ui.comboBox_5.addItem(kernel.name, kernel)
+        # ui.comboBox_5.setCurrentIndex(i)
 
     def _comment_changed(self):
         """
         """
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelController._comment_changed()")
         ui = self.dialog_ui
         kernel = self.current_kernel
@@ -334,27 +362,17 @@ class KernelController(object):
         """
         :params str attribute_name: attribute in pytrip.kernel object.
         """
-
+        logger.debug("----------------------------------------------------")
         logger.debug("KernelController._change_kernel()")
 
+        self._kernel_changed = True
         model = self.model
         ui = self.dialog_ui
 
         i = ui.comboBox_5.currentIndex()
-        self.current_kernel_idx = i
-
-        print("Current index is {:d}".format(i))
-
         if i > -1:
-            obj = ui.comboBox_5.itemData(i)
-            self.current_kernel = obj
-
-            logger.debug("Set kernels to kernel '{}'".format(obj.name))
-            self._show_kernel(obj)
-            # print(obj)
-            print(obj.name)
-            print(obj.comment)
-            print(obj.ddd_path)
-
+            self.current_kernel = model.kernels[i]
+            self.current_kernel_idx = i
+            self._show_kernel(self.current_kernel)
 
         ui.plainTextEdit.setFocus()
