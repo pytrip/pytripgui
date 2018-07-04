@@ -487,7 +487,7 @@ class MainController(object):
         """
         model = self.model
         from pytripgui.controller.kernel_cont import KernelController
-        KernelController.edit_kernel(model)
+        KernelController(model, self.settings)
 
     @staticmethod
     def on_exit(event):

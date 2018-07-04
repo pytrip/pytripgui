@@ -3,7 +3,8 @@ import logging
 from PyQt5 import QtWidgets
 # from PyQt5.QtCore import Qt
 
-# from pytrip.tripexecuter import KernelModel
+from pytrip.tripexecuter import KernelModel
+from pytrip.tripexecuter import Projectile
 
 from pytripgui.view.gen.kernel import Ui_KernelDialog
 
@@ -14,40 +15,346 @@ class KernelController(object):
     """
     """
 
-    def __init__(self, model):
+    def __init__(self, model, settings):
         """
         """
         self.model = model
+        self.settings = settings
+        self.current_kernel_idx = -1
+        self.current_kernel = None
+        self._kcounter = 0  # internal counter for new kernels
 
-    @staticmethod
-    def edit_kernel(model):
+        self.edit()
+
+    def edit(self):
         """
-        Show an instance of a kernel.
+        Edits the kernels
         """
         logger.debug("edit_kernel()")
+
+        model = self.model
 
         # open the plan configuration dialog
         # https://stackoverflow.com/questions/42505429/pyqt5-gui-structure-advice-needed
         dialog = QtWidgets.QDialog()
-        dialog_ui = Ui_KernelDialog()
-        # plan_ui = dialog_ui # TODO why not being used ?
+        ui = Ui_KernelDialog()
+        self.dialog_ui = ui
 
-        dialog_ui.setupUi(dialog)
-        # KernelController._populate_kernel_ui(dialog_ui, model, plan)
-        # KernelController._setup_kernel_callbacks(dialog_ui, model, plan)
+        ui.setupUi(dialog)
+        self._populate_kernel_ui()
+        self._setup_kernel_callbacks()
+
         dialog.exec_()
         dialog.show()
 
-    @staticmethod
-    def delete_kernel(model):
+    def delete_kernel(self):
         """
         Deletes a kernel from the model.
         """
+        model = self.model
+
         logger.debug("edit_kernel()")
 
-    @staticmethod
-    def _populate_kernel_ui(ui, model, kernel):
+    def _populate_kernel_ui(self):
         """
         Fill all widgets with current model data.
         """
         logger.debug("_populate_kernel_ui()")
+
+        model = self.model
+        ui = self.dialog_ui
+
+        # Handle Projectiles
+        ui.comboBox.clear()  # list of projectiles
+        projs = Projectile._projectile_defaults
+        for proj in projs:
+            ui.comboBox.addItem(proj)
+
+        # If there are no kernels present: start by adding an empty kernel
+        if not model.kernels:
+            self._new()
+
+        self.current_kernel = model.kernels[0]
+
+        ui.comboBox_5.clear()  # list of kernels
+        for kernel in model.kernels:
+            logger.debug("_populate_kernel_ui() kernels: {}".format(kernel.name))
+            ui.comboBox_5.addItem(kernel.name, kernel)
+
+        self.current_kernel = model.kernels[0]
+
+        self._show_kernel(self.current_kernel)
+
+        ui.plainTextEdit.setFocus()
+
+    def _show_kernel(self, kernel):
+        """
+        Update all widgets for a given kernel to be shown.
+        """
+        logger.debug("KernelCrontroller._show_kernel() '{}'".format(kernel.name))
+
+        model = self.model
+        ui = self.dialog_ui
+
+        ui.plainTextEdit.setPlainText(kernel.comment)
+
+        ui.lineEdit.setText(kernel.projectile.name)
+        _i = ui.comboBox.findText(kernel.projectile.iupac)
+        if _i == -1:  # not found
+            logger.warning("_show_kernel() FIXME")
+        else:
+            ui.comboBox.setCurrentIndex(_i)
+
+        ui.spinBox.setValue(kernel.projectile.z)
+        ui.spinBox_2.setValue(kernel.projectile.a)
+
+        if kernel.rifi_thickness:
+            ui.checkBox.setChecked(True)
+            ui.lineEdit_6.setText(kernel.rifi_name)
+            ui.doubleSpinBox.setValue(float(kernel.rifi_thickness))  # TODO: pytrip should have it as float, not str.
+            ui.lineEdit_6.setEnabled(True)
+            ui.doubleSpinBox.setEnabled(True)
+        else:
+            ui.checkBox.setChecked(False)
+            ui.lineEdit_6.setEnabled(False)
+            ui.doubleSpinBox.setEnabled(False)
+
+        ui.lineEdit_8.setText(kernel.ddd_path)
+        ui.lineEdit_9.setText(kernel.spc_path)
+        ui.lineEdit_10.setText(kernel.sis_path)
+
+    def _setup_kernel_callbacks(self):
+        """
+        Connect all widgets to model.
+        """
+        model = self.model
+        ui = self.dialog_ui
+
+        ui.comboBox_5.currentIndexChanged.connect(self._change_kernel)
+        ui.comboBox_5.lineEdit().textEdited.connect(self._kernel_name_changed)
+        ui.pushButton.clicked.connect(self._new)
+        ui.pushButton_2.clicked.connect(self._remove)
+        ui.pushButton_3.clicked.connect(self._import)
+        ui.pushButton_4.clicked.connect(self._export)
+        ui.pushButton_5.clicked.connect(self._save)
+
+        # comment box
+        print(dir(ui.plainTextEdit))
+        ui.plainTextEdit.textChanged.connect(self._comment_changed)
+
+        # projectile
+        ui.lineEdit.textEdited.connect(self._projectile_name_changed)
+        ui.comboBox.currentIndexChanged.connect(self._projectile_symbol_changed)
+
+        # RiFi stuff
+        ui.checkBox.toggled.connect(self._rifi_toggled)
+        ui.lineEdit_6.textEdited.connect(self._rifi_name_changed)
+        ui.doubleSpinBox.valueChanged.connect(self._rifi_thickness_changed)
+
+        # paths
+        ui.lineEdit_8.textEdited.connect(self._ddd_changed)
+        ui.lineEdit_9.textEdited.connect(self._spc_changed)
+        ui.lineEdit_10.textEdited.connect(self._sis_changed)
+
+    def _save(self):
+        """
+        """
+        logger.debug("KernelController._save()")
+        self.settings.save()
+
+    def _new(self):
+        """
+        Append a new kernel to model.kernels[]
+        """
+        logger.debug("KernelController._new()")
+        model = self.model
+        ui = self.dialog_ui
+
+        self._kcounter += 1
+        _str = "New kernel ({:d})".format(self._kcounter)  # default string for new kenrel
+
+        model.kernels.append(KernelModel(name=_str))
+        self.current_kernel = model.kernels[-1]
+        kernel = self.current_kernel
+        self.current_kernel_idx = model.kernels.index(self.current_kernel)
+        self.current_kernel.projectile = Projectile("H", a=1)
+
+        ui.comboBox_5.addItem(kernel.name, kernel)
+        # combobox should point to next item
+        _last = ui.comboBox_5.count() - 1
+        ui.comboBox_5.setCurrentIndex(_last)
+
+        # set focus to editable name, to encourage user to enter a new name.
+        ui.comboBox_5.lineEdit().setFocus()
+        ui.comboBox_5.lineEdit().selectAll()
+
+    def _remove(self):
+        """
+        """
+        logger.debug("KernelController._remove()")
+        model = self.model
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+
+        if kernel in model.kernels:
+            model.kernels.remove(kernel)
+            i = ui.comboBox_5.currentIndex()  # hope current kernel is in sync with currentIndex. Not too robust this.
+            ui.comboBox_5.removeItem(i)
+            if model.kernels:
+                self.current_kernel = model.kernels[-1]
+            else:
+                # if there are no more kernels in model.kernels, point to a fresh new one.
+                self._new()
+
+    def _import(self):
+        """
+        """
+        logger.debug("KernelController._import()")
+        logger.warning("KernelController._import() - not implemented")
+
+    def _export(self):
+        """
+        """
+        logger.debug("KernelController._export()")
+        logger.warning("KernelController._export() - not implemented")
+
+    def _kernel_name_changed(self):
+        """
+        """
+        logger.debug("KernelController._kernel_name_changed()")
+        model = self.model
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+
+        for kernel in model.kernels:
+            print("--- {}".format(kernel.name))
+
+        _txt = ui.comboBox_5.lineEdit().text()
+        kernel.name = _txt  # this should also update model.kernel[].name as they are linked
+        ui.comboBox_5.setEditable(True)
+        i = ui.comboBox_5.currentIndex()
+        ui.comboBox_5.setItemText(i, kernel.name)
+        ui.comboBox_5.setItemData(i, kernel)
+
+    def _comment_changed(self):
+        """
+        """
+        logger.debug("KernelController._comment_changed()")
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+
+        kernel.comment = ui.plainTextEdit.toPlainText()
+
+    def _ddd_changed(self):
+        """
+        """
+        logger.debug("KernelController._ddd_changed()")
+        ui = self.dialog_ui
+        model = self.model
+
+        self.current_kernel.ddd_path = ui.lineEdit_8.text()
+        logger.debug("{}".format(self.current_kernel.ddd_path))
+
+        for kernel in model.kernels:
+            logger.debug("+++ {} --- {}".format(kernel.name, kernel.ddd_path))
+
+    def _projectile_name_changed(self):
+        """
+        """
+        logger.debug("KernelController._projectile_name_changed")
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+        kernel.projectile.name = ui.lineEdit.text()
+
+    def _projectile_symbol_changed(self):
+        """
+        """
+        logger.debug("KernelController._projectile_symbol_changed")
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+
+        i = ui.comboBox.currentIndex()
+        if i > -1:
+            iupac = ui.comboBox.itemText(i)
+            kernel.projectile.iupac = iupac
+            _z = Projectile._projectile_defaults[iupac][0]  # extract z from default list
+            _a = Projectile._projectile_defaults[iupac][1]  # extract A from default list
+            logger.debug("iupac, z, a: {} {} {}".format(iupac, _z, _a))
+
+            kernel.projectile.z = _z
+            kernel.projectile.a = _a
+
+            ui.spinBox.setValue(_z)
+            ui.spinBox_2.setValue(_a)
+
+    def _rifi_toggled(self):
+        """
+        """
+        logger.debug("KernelController._rifi_toggled")
+        ui = self.dialog_ui
+
+        if ui.checkBox.isChecked():
+            ui.lineEdit_6.setEnabled(True)
+            ui.doubleSpinBox.setEnabled(True)
+        else:
+            ui.lineEdit_6.setEnabled(False)
+            ui.doubleSpinBox.setEnabled(False)
+
+    def _rifi_name_changed(self):
+        """
+        """
+        logger.debug("KernelController._rifi_name_changed")
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+        kernel.rifi_name = ui.lineEdit_6.text()
+
+    def _rifi_thickness_changed(self):
+        """
+        """
+        logger.debug("KernelController._rifi_thickness_changed")
+        ui = self.dialog_ui
+        kernel = self.current_kernel
+        kernel.rifi_thickness = str(ui.doubleSpinBox.value())  # TODO: change this to a float
+
+    def _spc_changed(self):
+        """
+        """
+        logger.debug("KernelController._spc_changed()")
+        ui = self.dialog_ui
+        self.current_kernel.spc_path = ui.lineEdit_9.text()
+
+    def _sis_changed(self):
+        """
+        """
+        logger.debug("KernelController._sis_changed()")
+        ui = self.dialog_ui
+        self.current_kernel.sis_path = ui.lineEdit_10.text()
+
+    def _change_kernel(self):
+        """
+        :params str attribute_name: attribute in pytrip.kernel object.
+        """
+
+        logger.debug("KernelController._change_kernel()")
+
+        model = self.model
+        ui = self.dialog_ui
+
+        i = ui.comboBox_5.currentIndex()
+        self.current_kernel_idx = i
+
+        print("Current index is {:d}".format(i))
+
+        if i > -1:
+            obj = ui.comboBox_5.itemData(i)
+            self.current_kernel = obj
+
+            logger.debug("Set kernels to kernel '{}'".format(obj.name))
+            self._show_kernel(obj)
+            # print(obj)
+            print(obj.name)
+            print(obj.comment)
+            print(obj.ddd_path)
+
+
+        ui.plainTextEdit.setFocus()
