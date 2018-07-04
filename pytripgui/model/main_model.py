@@ -62,15 +62,20 @@ class SettingsModel(object):
     """
     This class contains a list model parameters which need to be retained when closing PyTRiPGUI.
     The attribute names must be identical to those in Model.
-    Attribute names with leading _ are saved, but not loaded.
+    Model attribute names with leading _ are saved, but not loaded.
+    Model attribute names with leading __ are not saved and not loaded.
     """
 
     def __init__(self, model):
         """
-        Establishes links to the model.
+        This object is pickled upon save and unpickled upon load.
+        It is connected to Model, in a way that
+        - upon SettingsController.load(), SettingsModel attributes starting with "_"  are not written to         Model.
+        - upon SettingsController.save(),         Model attributes starting with "__" are not written to SettingsModel.
 
-        All attributes will be pickled upon save.
-        Upon load, attributes starting with "_" are note imported.
+        This way,
+            a) _version is written to disk, but imported into Model when loading
+            b) __internal_attribute__ are not passed between Model and SettingsModel
         """
         self.dicom_path = model.dicom_path
         self.voxelplan_path = model.voxelplan_path

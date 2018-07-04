@@ -27,7 +27,13 @@ class SettingsController:
         Load confif, sets self.model accordingly.
         If file does not exist, exit silently.
 
-        Setting attributes starting with "_" are not written to model.
+        It is connected to Model, in a way that
+        - upon SettingsController.load(), SettingsModel attributes starting with "_"  are not written to         Model.
+        - upon SettingsController.save(),         Model attributes starting with "__" are not written to SettingsModel.
+
+        This way,
+            a) _version is written to disk, but imported into Model when loading
+            b) __internal_attribute__ are not passed between Model and SettingsModel
         """
 
         logger.debug("SettingsController.load() : loading settings from {}".format(self.pyc_path))
@@ -54,6 +60,14 @@ class SettingsController:
 
         If path is given, then it will be saved at the given path, but this path is forgotten afterwards.
         This is useful for exporting the settings to different computers.
+
+        It is connected to Model, in a way that
+        - upon SettingsController.load(), SettingsModel attributes starting with "_"  are not written to         Model.
+        - upon SettingsController.save(),         Model attributes starting with "__" are not written to SettingsModel.
+
+        This way,
+            a) _version is written to disk, but imported into Model when loading
+            b) __internal_attribute__ are not passed between Model and SettingsModel
         """
         model = self.model
         _ms = self.model.settings
