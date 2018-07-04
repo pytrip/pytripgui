@@ -8,6 +8,13 @@ logger = logging.getLogger(__name__)
 
 class MainModel(object):
     def __init__(self, app):
+
+        from pytrip import __version__ as _pytrip_version
+        from pytripgui import __version__ as _pytripgui_version
+
+        self._pytrip_version = _pytrip_version
+        self._pytripgui_version = _pytripgui_version
+
         self._update_funce = []
 
         self.ctx = None  # Only one CTX is allowed
@@ -53,12 +60,17 @@ class MainModel(object):
 
 class SettingsModel(object):
     """
-    This class contains links to the model parameters which need to be retained when closing PyTRiPGUI
+    This class contains a list model parameters which need to be retained when closing PyTRiPGUI.
+    The attribute names must be identical to those in Model.
+    Attribute names with leading _ are saved, but not loaded.
     """
 
     def __init__(self, model):
         """
         Establishes links to the model.
+
+        All attributes will be pickled upon save.
+        Upon load, attributes starting with "_" are note imported.
         """
         self.dicom_path = model.dicom_path
         self.voxelplan_path = model.voxelplan_path
@@ -67,8 +79,5 @@ class SettingsModel(object):
 
         self.kernels = model.kernels
 
-        from pytrip import __version__ as _pytrip_version
-        from pytripgui import __version__ as _pytripgui_version
-
-        self._pytrip_version = _pytrip_version
-        self._pytripgui_version = _pytripgui_version
+        self._pytrip_version = model._pytrip_version  # saved, but not loaded
+        self._pytripgui_version = model._pytripgui_version  # saved, but not loaded

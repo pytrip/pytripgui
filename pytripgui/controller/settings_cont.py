@@ -24,21 +24,26 @@ class SettingsController:
 
     def load(self):
         """
-        Loads the configuration file, sets attributes in model accordingly.
+        Load confif, sets self.model accordingly.
         If file does not exist, exit silently.
+
+        Setting attributes starting with "_" are not written to model.
         """
+
+        logger.debug("SettingsController.load() : loading settings from {}".format(self.pyc_path))
 
         model = self.model
         pyc = self.pyc_path
 
         if os.path.isfile(pyc):
             with open(pyc, 'rb') as f:
-                model.settings = pickle.load(f)
+                _ms = pickle.load(f)
 
             # set all model attributes accordingly
-            for _attr in dir(model.settings):
-                _value = getattr(model.settings, _attr)
-                setattr(model, _attr, _value)
+            for _attr in dir(_ms):
+                if _attr[0] != "_":  # do not copy internal variables
+                    _value = getattr(_ms, _attr)
+                    setattr(model, _attr, _value)
         else:
             logger.info("Settings file {} not found.".format(pyc))
 
@@ -51,11 +56,20 @@ class SettingsController:
         This is useful for exporting the settings to different computers.
         """
         model = self.model
+        _ms = self.model.settings
 
         if path:
             pyc = path
         else:
             pyc = self.pyc_path
+
+        logger.debug("SettingsController.save() : saving settings to {}".format(self.pyc_path))
+
+        # sync model.settings attributes from model
+        for _attr in dir(_ms):
+            if "__" not in _attr:  # do not copy internal variables
+                _value = getattr(model, _attr)
+                setattr(_ms, _attr, _value)
 
         with open(pyc, 'wb') as f:
             pickle.dump(model.settings, f)
@@ -63,7 +77,7 @@ class SettingsController:
     @staticmethod
     def get_user_directory():
         """
-        Returns PyTRiP user config dir. Create it, if it does not exitself.
+        Returns PyTRiP user config dir. Create it, if it does not exsist.
         """
         import os
         path = os.path.join(os.path.expanduser("~"), ".pytrip")
