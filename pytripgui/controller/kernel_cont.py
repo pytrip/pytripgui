@@ -33,8 +33,6 @@ class KernelController(object):
         """
         logger.debug("edit_kernel()")
 
-        model = self.model
-
         # open the plan configuration dialog
         # https://stackoverflow.com/questions/42505429/pyqt5-gui-structure-advice-needed
         dialog = QtWidgets.QDialog()
@@ -52,8 +50,6 @@ class KernelController(object):
         """
         Deletes a kernel from the model.
         """
-        model = self.model
-
         logger.debug("edit_kernel()")
 
     def _populate_kernel_ui(self):
@@ -100,7 +96,6 @@ class KernelController(object):
         logger.debug("----------------------------------------------------")
         logger.debug("KernelCrontroller._show_kernel() '{}'".format(kernel.name))
 
-        model = self.model
         ui = self.dialog_ui
 
         ui.plainTextEdit.setPlainText(kernel.comment)
@@ -134,7 +129,6 @@ class KernelController(object):
         """
         Connect all widgets to model.
         """
-        model = self.model
         ui = self.dialog_ui
 
         ui.comboBox_5.currentIndexChanged.connect(self._change_kernel)
@@ -243,18 +237,11 @@ class KernelController(object):
         i = ui.comboBox_5.currentIndex()
         kernel = model.kernels[i]
 
-        logger.debug("KNC: --- current index {} '{}'".format(i, kernel.name))
-
-        for ii, kernel in enumerate(model.kernels):
-            logger.debug("KNC: --- {} '{}'".format(ii, kernel.name))
-
         # Get the text which is entered into the comboBox line edit:
         _txt = ui.comboBox_5.lineEdit().text()
         model.kernels[i].name = _txt  # this should also update model.kernel[].name as they are linked
-        print("FOFOOFO", _txt)
 
-        # reset the data
-        # this does not seem to work for some reason:
+        # reset the data in the Combobox model
         ui.comboBox_5.setItemText(i, kernel.name)
         ui.comboBox_5.setItemData(i, kernel)
 
@@ -278,13 +265,8 @@ class KernelController(object):
         """
         logger.debug("KernelController._ddd_changed()")
         ui = self.dialog_ui
-        model = self.model
 
         self.current_kernel.ddd_path = ui.lineEdit_8.text()
-        logger.debug("{}".format(self.current_kernel.ddd_path))
-
-        for kernel in model.kernels:
-            logger.debug("+++ {} --- {}".format(kernel.name, kernel.ddd_path))
 
     def _projectile_name_changed(self):
         """
@@ -307,7 +289,7 @@ class KernelController(object):
             kernel.projectile.iupac = iupac
             _z = Projectile._projectile_defaults[iupac][0]  # extract z from default list
             _a = Projectile._projectile_defaults[iupac][1]  # extract A from default list
-            logger.debug("iupac, z, a: {} {} {}".format(iupac, _z, _a))
+            logger.debug("Set projectile: iupac, z, a: {} {} {}".format(iupac, _z, _a))
 
             kernel.projectile.z = _z
             kernel.projectile.a = _a
