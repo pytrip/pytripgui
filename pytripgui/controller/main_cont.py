@@ -6,7 +6,6 @@ from pytripgui.controller.tree_cont import TreeController
 from pytripgui.controller.plot_cont import PlotController
 from pytripgui.controller.plan_cont import PlanController
 from pytripgui.controller.settings_cont import SettingsController
-from pytripgui.controller.settings import Settings  # DEPRECATED
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -38,16 +37,8 @@ class MainController(object):
         """
         """
         model = self.model
-        st = Settings()  # DEPRECATED
-        self.settings = st  # DEPRECATED
 
-        model.dicom_path = st.load("general.import.dicom_path")  # DEPRECATED
-        model.voxelplan_path = st.load("general.import.voxelplan_path")  # DEPRECATED
-        model.tripexec_path = st.load("general.import.tripexec_path")  # DEPRECATED
-
-        # New version
-        st2 = SettingsController(model)
-        self.settings2 = st2
+        self.settings = SettingsController(model)
 
     def _connect_ui(self):
         """
@@ -95,7 +86,6 @@ class MainController(object):
         logger.debug("Open DICOM triggered")
         model = self.model
         st = self.settings
-        st2 = self.settings2
 
         ddir = os.path.dirname(model.dicom_path)
 
@@ -108,8 +98,7 @@ class MainController(object):
             return
         self.open_dicom(ddir)
         model.dicom_path = ddir
-        st.save("general.import.dicom_path", ddir)  # DEPRECATED
-        st2.save()
+        st.save()
 
     def open_dicom(self, ddir):
         """
@@ -163,8 +152,7 @@ class MainController(object):
         Path will be saved to settings.
         """
         model = self.model
-        st = self.settings  # DEPRECATED
-        st2 = self.settings2
+        st = self.settings
 
         model.wdir = os.path.dirname(model.voxelplan_path)
 
@@ -178,8 +166,8 @@ class MainController(object):
             return
         self.open_voxelplan(path)
         model.voxelplan_path = path
-        st.save("general.import.voxelplan_path", path)  # DEPRECATED
-        st2.save()
+
+        st.save()
 
     def open_voxelplan(self, ctx_path):
         """
@@ -242,8 +230,7 @@ class MainController(object):
         Choose path for CTX + associated VDX file Export.
         """
         model = self.model
-        st = self.settings  # DEPRECATED
-        st2 = self.settings2
+        st = self.settings
 
         from pytripgui.view.dialogs import MyDialogs
 
@@ -264,8 +251,7 @@ class MainController(object):
         if path:
             self.export_voxelplan(path)
             model.voxelplan_path = path
-            st.save("general.import.voxelplan_path", path)  # DEPRECATED
-            st2.save()
+            st.save()
 
     def export_voxelplan(self, ctx_path):
         """
@@ -316,8 +302,7 @@ class MainController(object):
         logger.warning("export_dicom_dialog()")
 
         model = self.model
-        st = self.settings  # DEPRECATED
-        st2 = self.settings2
+        st = self.settings
         ddir = os.path.dirname(model.dicom_path)
 
         from pytripgui.view.dialogs import MyDialogs
@@ -328,8 +313,7 @@ class MainController(object):
 
         self.export_dicom(ddir)
         model.dicom_path = ddir
-        st.save("general.import.dicom_path", ddir)  # DEPRECATED
-        st2.save()
+        st.save()
         return None
 
     def export_dicom(self, ddir):
