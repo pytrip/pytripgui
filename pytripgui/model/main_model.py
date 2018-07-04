@@ -27,6 +27,8 @@ class MainModel(object):
         # self.tree = TreeModel()
         self.kernels = []  # placeholder for KernelModels
 
+        self.settings = SettingsModel(self)
+
     def subscribe_update_func(self, func):
         """
         Subscribe a view method for updating
@@ -47,3 +49,26 @@ class MainModel(object):
         """
         for func in self._update_funcs:
             func()
+
+
+class SettingsModel(object):
+    """
+    This class contains links to the model parameters which need to be retained when closing PyTRiPGUI
+    """
+
+    def __init__(self, model):
+        """
+        Establishes links to the model.
+        """
+        self.dicom_path = model.dicom_path
+        self.voxelplan_path = model.voxelplan_path
+        self.tripexec_path = model.tripexec_path
+        self.wdir = model.wdir
+
+        self.kernels = model.kernels
+
+        from pytrip import __version__ as _pytrip_version
+        from pytripgui import __version__ as _pytripgui_version
+
+        self._pytrip_version = _pytrip_version
+        self._pytripgui_version = _pytripgui_version

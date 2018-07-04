@@ -1,3 +1,7 @@
+"""
+DEPRECATED this file may be remove soon.
+"""
+
 import logging
 import configparser
 
@@ -5,7 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class Settings:
-    """ Class for interacting with saved configurations
+    """
+    Class for interacting with saved configurations
+    DEPRECATED - will be removed soon.
     """
 
     def __init__(self):
