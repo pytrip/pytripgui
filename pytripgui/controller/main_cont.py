@@ -85,7 +85,6 @@ class MainController(object):
         """
         logger.debug("Open DICOM triggered")
         model = self.model
-        st = self.settings
 
         ddir = os.path.dirname(model.dicom_path)
 
@@ -98,7 +97,7 @@ class MainController(object):
             return
         self.open_dicom(ddir)
         model.dicom_path = ddir
-        st.save()
+        self.settings.save()
 
     def open_dicom(self, ddir):
         """
@@ -152,7 +151,6 @@ class MainController(object):
         Path will be saved to settings.
         """
         model = self.model
-        st = self.settings
 
         model.wdir = os.path.dirname(model.voxelplan_path)
 
@@ -167,7 +165,7 @@ class MainController(object):
         self.open_voxelplan(path)
         model.voxelplan_path = path
 
-        st.save()
+        self.settings.save()
 
     def open_voxelplan(self, ctx_path):
         """
@@ -230,7 +228,6 @@ class MainController(object):
         Choose path for CTX + associated VDX file Export.
         """
         model = self.model
-        st = self.settings
 
         from pytripgui.view.dialogs import MyDialogs
 
@@ -251,7 +248,7 @@ class MainController(object):
         if path:
             self.export_voxelplan(path)
             model.voxelplan_path = path
-            st.save()
+            self.settings.save()
 
     def export_voxelplan(self, ctx_path):
         """
@@ -302,7 +299,7 @@ class MainController(object):
         logger.warning("export_dicom_dialog()")
 
         model = self.model
-        st = self.settings
+
         ddir = os.path.dirname(model.dicom_path)
 
         from pytripgui.view.dialogs import MyDialogs
@@ -313,7 +310,7 @@ class MainController(object):
 
         self.export_dicom(ddir)
         model.dicom_path = ddir
-        st.save()
+        self.settings.save()
         return None
 
     def export_dicom(self, ddir):
