@@ -101,6 +101,7 @@
     </property>
     <addaction name="actionTRiP98_Config"/>
     <addaction name="actionPreferences"/>
+    <addaction name="actionBeam_Kernels"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -224,6 +225,11 @@
   <action name="actionExport_Plan">
    <property name="text">
     <string>Export Plan</string>
+   </property>
+  </action>
+  <action name="actionBeam_Kernels">
+   <property name="text">
+    <string>Beam Kernels</string>
    </property>
   </action>
  </widget>

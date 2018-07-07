@@ -5,7 +5,7 @@ import pytrip as pt
 from pytripgui.controller.tree_cont import TreeController
 from pytripgui.controller.plot_cont import PlotController
 from pytripgui.controller.plan_cont import PlanController
-from pytripgui.controller.settings import Settings
+from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh
 # from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
@@ -37,12 +37,8 @@ class MainController(object):
         """
         """
         model = self.model
-        st = Settings()
-        self.settings = st
 
-        model.dicom_path = st.load("general.import.dicom_path")
-        model.voxelplan_path = st.load("general.import.voxelplan_path")
-        model.tripexec_path = st.load("general.import.tripexec_path")
+        self.settings = SettingsController(model)
 
     def _connect_ui(self):
         """
@@ -72,6 +68,8 @@ class MainController(object):
         ui.actionAbout.triggered.connect(self.on_about)
         ui.actionNew_Plan.triggered.connect(self.on_new_plan)
 
+        ui.actionBeam_Kernels.triggered.connect(self.on_kernel)
+
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
 
     # called from view class
@@ -87,7 +85,6 @@ class MainController(object):
         """
         logger.debug("Open DICOM triggered")
         model = self.model
-        st = self.settings
 
         ddir = os.path.dirname(model.dicom_path)
 
@@ -100,7 +97,7 @@ class MainController(object):
             return
         self.open_dicom(ddir)
         model.dicom_path = ddir
-        st.save("general.import.dicom_path", ddir)
+        self.settings.save()
 
     def open_dicom(self, ddir):
         """
@@ -154,7 +151,6 @@ class MainController(object):
         Path will be saved to settings.
         """
         model = self.model
-        st = self.settings
 
         model.wdir = os.path.dirname(model.voxelplan_path)
 
@@ -168,7 +164,8 @@ class MainController(object):
             return
         self.open_voxelplan(path)
         model.voxelplan_path = path
-        st.save("general.import.voxelplan_path", path)
+
+        self.settings.save()
 
     def open_voxelplan(self, ctx_path):
         """
@@ -231,7 +228,6 @@ class MainController(object):
         Choose path for CTX + associated VDX file Export.
         """
         model = self.model
-        st = self.settings
 
         from pytripgui.view.dialogs import MyDialogs
 
@@ -252,7 +248,7 @@ class MainController(object):
         if path:
             self.export_voxelplan(path)
             model.voxelplan_path = path
-            st.save("general.import.voxelplan_path", path)
+            self.settings.save()
 
     def export_voxelplan(self, ctx_path):
         """
@@ -303,7 +299,7 @@ class MainController(object):
         logger.warning("export_dicom_dialog()")
 
         model = self.model
-        st = self.settings
+
         ddir = os.path.dirname(model.dicom_path)
 
         from pytripgui.view.dialogs import MyDialogs
@@ -314,7 +310,7 @@ class MainController(object):
 
         self.export_dicom(ddir)
         model.dicom_path = ddir
-        st.save("general.import.dicom_path", ddir)
+        self.settings.save()
         return None
 
     def export_dicom(self, ddir):
@@ -481,6 +477,14 @@ class MainController(object):
         model = self.model
         from pytripgui.controller.plan_cont import PlanController
         PlanController.new_plan(model)
+
+    def on_kernel(self, event):
+        """
+        Kernel dialog opened from window->settings->kernel
+        """
+        model = self.model
+        from pytripgui.controller.kernel_cont import KernelController
+        KernelController(model, self.settings)
 
     @staticmethod
     def on_exit(event):
