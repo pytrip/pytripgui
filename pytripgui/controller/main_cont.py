@@ -486,6 +486,20 @@ class MainController(object):
         from pytripgui.controller.kernel_cont import KernelController
         KernelController(model, self.settings)
 
+    def on_field(self, event):
+        """
+        Field dialog opened from window->settings->field
+        """
+
+        from pytripgui.controller.field_cont import FieldController
+
+        # TODO: need to figure out how to make the code aware of what is the current active field
+        # which is to be edited.
+        # field = model.fields[-1]
+
+        fc = FieldController(self.model, self.settings)
+        fc.edit()  # add field to argument
+
     @staticmethod
     def on_exit(event):
         logger.debug("on_exit() triggered")
