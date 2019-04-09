@@ -139,8 +139,8 @@ class MainController(object):
 
         # TODO: RTplan data
 
-        # add cube to the treeview<s
-        self.tree.update_tree()
+        # add cube to the treeviews
+        # self.tree.update_tree()
 
         # update the canvas
         self.plot.update_viewcanvas()
