@@ -25,5 +25,3 @@
   exclude appveyor.yml
   prune .travis
   prune install_deps.sh
-include versioneer.py
-include pytripgui/_version.py
