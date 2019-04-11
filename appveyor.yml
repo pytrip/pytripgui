@@ -41,7 +41,7 @@ install:
 # check pip version
   - pip -V
 # install usual requirements
-  - pip install "setuptools>=30.0.0"
+  - pip install "setuptools>=30.0.0"  # minimal version of setuptools required to build package without error
   - pip install --upgrade -r requirements.txt
   - pip install --upgrade -r tests\\requirements-test.txt
 # check numpy version
