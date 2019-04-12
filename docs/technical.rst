@@ -81,6 +81,13 @@ To unistall, simply use::
 
     pip uninstall pytrip98gui
 
+
+Running pytripgui
+=================
+from the pytripgui base directory::
+
+        $ PYTHONPATH=. python3 pytripgui/main.py
+
 Documentation
 =============
 
