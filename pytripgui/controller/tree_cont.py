@@ -281,8 +281,9 @@ class TreeController(object):
         # Check for items to be removed.
         # First lets make a flat list of all pytrip objects in the model (called "lo"):
         lo = [model.ctx, model.vdx]
-        if model.vdx.vois:
-            lo += model.vdx.vois  # extend the list with a list of voi objects
+        if model.vdx:
+            if model.vdx.vois:
+                lo += model.vdx.vois  # extend the list with a list of voi objects
         if model.dos:
             lo += model.dos
         if model.let:
