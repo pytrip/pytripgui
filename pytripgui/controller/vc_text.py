@@ -69,8 +69,7 @@ class ViewCanvasText(object):
         # text label on current slice# and position in mm
         axes.text(offset[0],
                   offset[1] + 3.0 / pm.zoom * 100,
-                  "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) +
-                  "Slice Position: {:.1f} mm ".format(_slice_pos),
+                  "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) + "Slice Position: {:.1f} mm ".format(_slice_pos),
                   color=pm.text_color,
                   va="top",
                   fontsize=8)

@@ -51,7 +51,7 @@ class Dos(object):
         if pm.dose_plot == "colorwash":
             if dos.target_dose <= 0:
                 scale = "rel"
-            elif pm.dose_axis == "auto" and dos.target_dose is not 0.0:
+            elif pm.dose_axis == "auto" and dos.target_dose != 0.0:
                 scale = "abs"
             else:
                 scale = pm.dose_axis

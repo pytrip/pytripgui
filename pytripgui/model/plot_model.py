@@ -150,9 +150,9 @@ class PlotModel(object):
         logger.debug("setter: slice_size: {}".format(self.slice_size[2]))
 
         if value > self.slice_size[2] - 1:
-                value = 0
+            value = 0
         if value < 0:
-                value = self.slice_size[2] - 1
+            value = self.slice_size[2] - 1
 
         # remember last X,Y,Z slice (needed if view is switched back and forth)
         if self.plane == "Transversal":
