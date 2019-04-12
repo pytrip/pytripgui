@@ -197,9 +197,8 @@ class MainController(object):
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
         from pytrip.util import TRiP98FilePath
-        _b = TRiP98FilePath(ctx_path, ctx).basename
-        _n = TRiP98FilePath(ctx_path, ctx).name
-        vdx_path = ctx_path.replace(_n, _b) + '.vdx'
+        _d = TRiP98FilePath(ctx_path, ctx).dir_basename  # returns full path, but without suffix.
+        vdx_path = _d + ".vdx"
 
         logger.debug("Check if '{:s}' exists...".format(vdx_path))
 
