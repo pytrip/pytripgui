@@ -1,9 +1,9 @@
 # generated UIs
-pytripgui/view/gen/field.py
-pytripgui/view/gen/kernel.py
-pytripgui/view/gen/main_window.py
-pytripgui/view/gen/plan.py
-pytripgui/view/gen/trip_config.py
+# pytripgui/view/gen/field.py
+# pytripgui/view/gen/kernel.py
+# pytripgui/view/gen/main_window.py
+# pytripgui/view/gen/plan.py
+# pytripgui/view/gen/trip_config.py
 
 # versioneer stuff  # TODO find some solution
 # pytripgui/_version.py
