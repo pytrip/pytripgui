@@ -217,7 +217,7 @@ class MainController(object):
             for voi in vdx.vois:
                 pm.vois.append(voi)
 
-        # add cube to the treeview<s
+        # add cube to the treeviews
         self.tree.update_tree()
 
         # update the canvas
