@@ -30,6 +30,9 @@ class PlanController(object):
             logger.error("No CT data loaded.")
             return
 
+        if not model.vdx:
+            logger.error("No structure data loaded.")
+
         # setup a new tripexecuter.plan object
         import pytrip.tripexecuter as pte
         plan = pte.Plan(basename=model.ctx.basename)
@@ -39,7 +42,11 @@ class PlanController(object):
 
         # open a dialog for the user to edit it
         PlanController.edit_plan(model, plan)
+
+        logger.debug("model.plans.append(plan)")
         model.plans.append(plan)
+        logger.debug(plan)
+        # TODO: TreeController.update_tree()
 
     @staticmethod
     def edit_plan(model, plan):

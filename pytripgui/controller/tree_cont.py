@@ -175,12 +175,21 @@ class TreeController(object):
 
     def _add_plans(self):
         """
+        This will sync the plan tree with whatever is found in model.plans.
+        Missing plans in the tree will be added.
         """
+        logger.debug("_add_plans()")
+
         model = self.model
         tw = self.view.treeWidget
 
+        # there may be plans in the model, and then they should be shown in the tree.
+        # the plans in the tree are self.tplans
+
         # Plans node:
+        # check if there are any plans, and tplans are missing
         if model.plans and not self.tplans:
+            # we need to create the Plans node then in the treeview
             self.tplans = QTreeWidgetItem(["Plans:"])
             self.tplans.setData(0, Qt.UserRole, self._plancol)
             tw.addTopLevelItem(self.tplans)
