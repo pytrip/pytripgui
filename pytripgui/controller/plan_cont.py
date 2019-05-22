@@ -34,11 +34,10 @@ class PlanController(object):
         import pytrip.tripexecuter as pte
         plan = pte.Plan(basename=model.ctx.basename)
 
-        # attach this plan to the list of plans in models.
-        model.plans.append(plan)
-
         # open a dialog for the user to edit it
         PlanController.edit_plan(model, plan)
+
+        # attach this plan to the list of plans in models.
         model.plans.append(plan)
 
     @staticmethod
@@ -78,7 +77,7 @@ class PlanController(object):
         ui.lineEdit_3.setText(str(plan.__uuid__))
 
         # ----------- Target Tab ---------------------------------
-        voinames = [voi.name for voi in model.vdx.vois]
+        voinames = model.vdx.voi_names()
 
         # TARGET
         ui.comboBox.clear()
