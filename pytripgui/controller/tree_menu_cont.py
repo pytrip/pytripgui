@@ -89,6 +89,8 @@ class TreeMenuController(object):
             popup_menu.addAction("Delete", self.menu_open)
 
         if isinstance(obj, pte.Plan):
+            popup_menu.addAction("Add field", self.add_field)
+            popup_menu.addSeparator()
             popup_menu.addAction("Edit", self.menu_open)
             popup_menu.addAction("Export", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
@@ -96,7 +98,7 @@ class TreeMenuController(object):
             popup_menu.addAction("Delete", self.menu_open)
 
         if isinstance(obj, pte.Field):
-            popup_menu.addAction("Edit", self.menu_open)
+            popup_menu.addAction("Edit", self.edit_field)
             popup_menu.addAction("Rename", self.menu_open)
             popup_menu.addSeparator()
             popup_menu.addAction("Delete", self.menu_open)
@@ -115,6 +117,20 @@ class TreeMenuController(object):
 
         return popup_menu
 
+    def add_field(self):
+        logger.debug("add_field_new() {}".format(None))
+
+        from pytripgui.controller.field_cont import FieldControl
+        FieldControl.new_field(self._node_obj)
+        self.ctrl.tree.update_tree()
+
+    def edit_field(self):
+        logger.debug("edit_field() {}".format(None))
+
+        from pytripgui.controller.field_cont import FieldControl
+        FieldControl.edit_field(self._node_obj)
+        self.ctrl.tree.update_tree()
+
     def menu_open(self):
         logger.debug("menu_open() {}".format(None))
 
@@ -125,6 +141,7 @@ class TreeMenuController(object):
         from pytripgui.controller.plan_cont import PlanController
 
         PlanController.new_plan(model)
+        self.ctrl.tree.update_tree()
 
     def menu_dvh(self):
         logger.debug("menu_dvh() {}".format(None))
