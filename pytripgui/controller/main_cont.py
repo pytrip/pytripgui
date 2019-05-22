@@ -196,10 +196,12 @@ class MainController(object):
 
         # Check if there is a VDX file with the same basename
         logger.debug("Check for VDX")
-        from pytrip.util import TRiP98FilePath
-        _b = TRiP98FilePath(ctx_path, ctx).basename
-        _n = TRiP98FilePath(ctx_path, ctx).name
-        vdx_path = ctx_path.replace(_n, _b) + '.vdx'
+        # from pytrip.util import TRiP98FilePath
+        # _b = TRiP98FilePath(ctx_path, ctx).basename
+        # _n = TRiP98FilePath(ctx_path, ctx).name
+        logger.debug("Check if '{:s}' exists...".format(ctx_path))
+        # TODO: Determine the way files will be found in directories
+        vdx_path = ctx_path.replace('.hed', '.vdx')
 
         logger.debug("Check if '{:s}' exists...".format(vdx_path))
 
@@ -477,6 +479,7 @@ class MainController(object):
         model = self.model
         from pytripgui.controller.plan_cont import PlanController
         PlanController.new_plan(model)
+        self.tree.update_tree()
 
     def on_kernel(self, event):
         """
