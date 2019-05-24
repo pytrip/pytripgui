@@ -130,6 +130,7 @@ class TreeController(object):
         self._add_ctx()
         self._add_vdxvoi()
         self._add_plans()
+        self._add_fields()
         self._add_dos()
         self._add_let()
 
@@ -204,6 +205,34 @@ class TreeController(object):
                     child = self.tplans.child(i)
                     child.setData(0, Qt.UserRole, plan)
                     child.setCheckState(0, Qt.Checked)
+
+    def _add_fields(self):
+        """
+        This method fills root_tree->plans with fields in GUI
+        """
+        tplans = self.tplans
+        if tplans is not None:
+            for i in range(tplans.childCount()):
+                # make variable for current treePlan(QT)
+                tplan = tplans.child(i)
+                # get plan(pytrip) from treePlan(QT)
+                plan = tplan.data(0, Qt.UserRole)
+
+                # if fields in processed plan aren't empty, add them all to the tree
+                if plan is not None and len(plan.fields) > 0:
+                    for field in plan.fields:
+                        if not self._is_in_this_tree(field, tplan):
+                            child = QTreeWidgetItem([field.basename])
+                            child.setData(0, Qt.UserRole, field)
+                            child.setCheckState(0, Qt.Checked)
+                            tplan.addChild(child)
+
+    @staticmethod
+    def _is_in_this_tree(field, tree):
+        for i in range(tree.childCount()):
+            if field == tree.child(i).data(0, Qt.UserRole):
+                return True
+        return False
 
     def _add_dos(self):
         """

@@ -14,9 +14,6 @@ class FieldController(object):
     """
     """
 
-    def __init__(self, model, settings):
-        pass
-
     def edit(self, field=None):
         """
         Edits a field.
@@ -35,15 +32,14 @@ class FieldController(object):
             field = Field()
 
         ui.setupUi(dialog)
+        self.ui = ui
+        self.field = field
 
         self._set_form_from_model()
-        self._setup_field_callbacks(ui, field)
+        #self._setup_field_callbacks(ui, field)
 
         dialog.exec_()
         dialog.show()
-
-        self.ui = ui
-        self.field = field
 
         return field
 
@@ -86,7 +82,7 @@ class FieldController(object):
         ui.doubleSpinBox_10.valueChanged.connect(self._form_changed)
         ui.doubleSpinBox_11.valueChanged.connect(self._form_changed)
 
-    def set_form_from_model(self):
+    def _set_form_from_model(self):
         """
         Loads a field, and sets the form according to what is in the field model.
         """
