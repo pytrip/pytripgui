@@ -36,7 +36,7 @@ class FieldController(object):
         self.field = field
 
         self._set_form_from_model()
-        #self._setup_field_callbacks(ui, field)
+        # self._setup_field_callbacks(ui, field)
 
         dialog.exec_()
         dialog.show()
