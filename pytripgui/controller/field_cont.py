@@ -1,7 +1,6 @@
 import logging
 
 from PyQt5 import QtWidgets
-# from PyQt5.QtCore import Qt
 
 from pytrip.tripexecuter import Field
 
