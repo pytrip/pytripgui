@@ -81,6 +81,19 @@ To unistall, simply use::
 
     pip uninstall pytrip98gui
 
+
+Running pytripgui
+=================
+before calling pytripgui for the first time, you need to create a few userinterfaces and setup versioneer:
+From the pytripgui base directory::
+
+        $ ./makeui.sh
+        $ ./install_versioneer.sh
+
+Now you can
+
+        $ PYTHONPATH=. python3 pytripgui/main.py
+
 Documentation
 =============
 

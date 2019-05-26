@@ -30,16 +30,20 @@ class PlanController(object):
             logger.error("No CT data loaded.")
             return
 
+        if not model.vdx:
+            logger.error("No structure data loaded.")
+
         # setup a new tripexecuter.plan object
         import pytrip.tripexecuter as pte
         plan = pte.Plan(basename=model.ctx.basename)
 
-        # attach this plan to the list of plans in models.
-        model.plans.append(plan)
-
         # open a dialog for the user to edit it
         PlanController.edit_plan(model, plan)
+
+        logger.debug("model.plans.append(plan)")
         model.plans.append(plan)
+        logger.debug(plan)
+        # TODO: TreeController.update_tree()
 
     @staticmethod
     def edit_plan(model, plan):
@@ -78,7 +82,7 @@ class PlanController(object):
         ui.lineEdit_3.setText(str(plan.__uuid__))
 
         # ----------- Target Tab ---------------------------------
-        voinames = [voi.name for voi in model.vdx.vois]
+        voinames = model.vdx.voi_names()
 
         # TARGET
         ui.comboBox.clear()
