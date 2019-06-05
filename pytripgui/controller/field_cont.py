@@ -118,9 +118,6 @@ class FieldController(object):
         for kernel in self.model.kernels:
             ui.kernel_comboBox.addItem(kernel.name, kernel)
 
-        for kernel in self.model.kernels:
-            ui.comboBox.addItem(kernel.name, kernel)
-
     def _form_changed(self):
         """
         What to do if the form was changed.
