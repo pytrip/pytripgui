@@ -61,7 +61,8 @@ def main(args=sys.argv[1:]):
         logging.basicConfig()
 
     w = AppWindow()
-    w.open_files(args)
+    if args:
+        w.open_files(args)
     w.show()
 
     return app.exec_()
