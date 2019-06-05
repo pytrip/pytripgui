@@ -37,7 +37,7 @@ class FieldController(object):
         self.field = field
 
         self._set_form_from_model()
-        # self._setup_field_callbacks(ui, field)
+        self._setup_field_callbacks()
 
         dialog.exec_()
         dialog.show()
@@ -50,38 +50,38 @@ class FieldController(object):
         """
         logger.debug("_populate_field_ui()")
 
-    def _setup_kernel_callbacks(self):
+    def _setup_field_callbacks(self):
         """
         Connect all widgets to model.
         """
         ui = self.ui
 
         # isocenter
-        ui.doubleSpinBox.valueChanged.connect(self._form_changed)
-        ui.doubleSpinBox_2.valueChanged.connect(self._form_changed)
-        ui.doubleSpinBox_3.valueChanged.connect(self._form_changed)
+        ui.isocenterX_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.isocenterY_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.isocenterZ_doubleSpinBox.valueChanged.connect(self._form_changed)
 
         # gantry
-        ui.doubleSpinBox_4.valueChanged.connect(self._form_changed)
-        ui.pushButton_3.clicked.connect(self._gantry_p90)  # +90 deg
-        ui.pushButton_4.clicked.connect(self._gantry_m90)  # -90 deg
+        ui.gantry_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
+        ui.gantry_pushButton_m90.clicked.connect(self._gantry_m90)  # -90 deg
 
         # couch
-        ui.doubleSpinBox_5.valueChanged.connect(self._form_changed)
-        ui.pushButton.clicked.connect(self._couch_p90)  # +90 deg
-        ui.pushButton_2.clicked.connect(self._couch_m90)  # -90 deg
+        ui.couch_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.couch_pushButton_p90.clicked.connect(self._couch_p90)  # +90 deg
+        ui.couch_pushButton_m90.clicked.connect(self._couch_m90)  # -90 deg
 
         # spot size
-        ui.doubleSpinBox_6.valueChanged.connect(self._form_changed)
+        ui.spotSize_doubleSpinBox.valueChanged.connect(self._form_changed)
 
         # raster spacing
-        ui.doubleSpinBox_7.valueChanged.connect(self._form_changed)
-        ui.doubleSpinBox_8.valueChanged.connect(self._form_changed)
+        ui.rasterSpaceX_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.rasterSpaceY_doubleSpinBox.valueChanged.connect(self._form_changed)
 
         # dose and contour ext, depth steps:
-        ui.doubleSpinBox_9.valueChanged.connect(self._form_changed)
-        ui.doubleSpinBox_10.valueChanged.connect(self._form_changed)
-        ui.doubleSpinBox_11.valueChanged.connect(self._form_changed)
+        ui.doseext_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.contourext_doubleSpinBox.valueChanged.connect(self._form_changed)
+        ui.depthStep_doubleSpinBox.valueChanged.connect(self._form_changed)
 
     def _set_form_from_model(self):
         """
@@ -92,31 +92,31 @@ class FieldController(object):
         field = self.field
 
         if field.isocenter:
-            ui.checkBox.setChecked(True)
-            ui.doubleSpinBox.setEnabled(True)
-            ui.doubleSpinBox_2.setEnabled(True)
-            ui.doubleSpinBox_3.setEnabled(True)
-            ui.doubleSpinBox.setValue(field.isocenter[0])
-            ui.doubleSpinBox_2.setValue(field.isocenter[1])
-            ui.doubleSpinBox_3.setValue(field.isocenter[2])
+            ui.manualIsocenter_checkBox.setChecked(True)
+            ui.isocenterX_doubleSpinBox.setEnabled(True)
+            ui.isocenterY_doubleSpinBox.setEnabled(True)
+            ui.isocenterZ_doubleSpinBox.setEnabled(True)
+            ui.isocenterX_doubleSpinBox.setValue(field.isocenter[0])
+            ui.isocenterY_doubleSpinBox.setValue(field.isocenter[1])
+            ui.isocenterZ_doubleSpinBox.setValue(field.isocenter[2])
         else:
-            ui.checkBox.setChecked(False)
-            ui.doubleSpinBox.setEnabled(False)
-            ui.doubleSpinBox_2.setEnabled(False)
-            ui.doubleSpinBox_3.setEnabled(False)
+            ui.manualIsocenter_checkBox.setChecked(False)
+            ui.isocenterX_doubleSpinBox.setEnabled(False)
+            ui.isocenterY_doubleSpinBox.setEnabled(False)
+            ui.isocenterZ_doubleSpinBox.setEnabled(False)
 
-        ui.doubleSpinBox_4.setValue(field.gantry)
-        ui.doubleSpinBox_5.setValue(field.couch)
+        ui.gantry_doubleSpinBox.setValue(field.gantry)
+        ui.couch_doubleSpinBox.setValue(field.couch)
 
-        ui.doubleSpinBox_6.setValue(field.fwhm)
-        ui.doubleSpinBox_7.setValue(field.raster_step[0])
-        ui.doubleSpinBox_8.setValue(field.raster_step[1])
-        ui.doubleSpinBox_9.setValue(field.dose_extension)
-        ui.doubleSpinBox_10.setValue(field.contour_extension)
-        ui.doubleSpinBox_11.setValue(field.zsteps)
+        ui.spotSize_doubleSpinBox.setValue(field.fwhm)
+        ui.rasterSpaceX_doubleSpinBox.setValue(field.raster_step[0])
+        ui.rasterSpaceY_doubleSpinBox.setValue(field.raster_step[1])
+        ui.doseext_doubleSpinBox.setValue(field.dose_extension)
+        ui.contourext_doubleSpinBox.setValue(field.contour_extension)
+        ui.depthStep_doubleSpinBox.setValue(field.zsteps)
 
         for kernel in self.model.kernels:
-            ui.comboBox.addItem(kernel.name, kernel)
+            ui.kernel_comboBox.addItem(kernel.name, kernel)
 
     def _form_changed(self):
         """
@@ -133,19 +133,37 @@ class FieldController(object):
         ui = self.ui
         field = self.field
 
-        field.rifi_name = ui.lineEdit_6.text()
-
-        if ui.checkBox.isChecked():
-            field.isocenter = [ui.doubleSpinBox.value(),
-                               ui.doubleSpinBox_2.value(),
-                               ui.doubleSpinBox_3.value()]
+        if ui.manualIsocenter_checkBox.isChecked():
+            field.isocenter = [ui.isocenterX_doubleSpinBox.value(),
+                               ui.isocenterY_doubleSpinBox.value(),
+                               ui.isocenterZ_doubleSpinBox.value()]
         else:
             field.isocenter = None
 
-        field.gantry = ui.doubleSpinBox_4.value()
-        field.couch = ui.doubleSpinBox_5.value()
-        field.fwhm = ui.doubleSpinBox_6.value()
-        field.raster_step = [ui.doubleSpinBox_7.value(), ui.doubleSpinBox_8.value()]
-        field.dose_extension = ui.doubleSpinBox_9.value()
-        field.contour_extension = ui.doubleSpinBox_10.value()
-        field.zsteps = ui.doubleSpinBox_11.value()
+        field.gantry = ui.gantry_doubleSpinBox.value()
+        field.couch = ui.couch_doubleSpinBox.value()
+        field.fwhm = ui.spotSize_doubleSpinBox.value()
+        field.raster_step = [ui.rasterSpaceX_doubleSpinBox.value(), ui.rasterSpaceY_doubleSpinBox.value()]
+        field.dose_extension = ui.doseext_doubleSpinBox.value()
+        field.contour_extension = ui.contourext_doubleSpinBox.value()
+        field.zsteps = ui.depthStep_doubleSpinBox.value()
+
+    def _gantry_p90(self):
+        self.field.gantry = self.field.gantry + 90.0
+
+        self._set_form_from_model()
+
+    def _gantry_m90(self):
+        self.field.gantry = self.field.gantry - 90.0
+
+        self._set_form_from_model()
+
+    def _couch_p90(self):
+        self.field.couch = self.field.couch + 90.0
+
+        self._set_form_from_model()
+
+    def _couch_m90(self):
+        self.field.couch = self.field.couch - 90.0
+
+        self._set_form_from_model()
