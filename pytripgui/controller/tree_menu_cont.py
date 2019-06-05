@@ -121,7 +121,7 @@ class TreeMenuController(object):
         logger.debug("add_field_new() {}".format(None))
 
         from pytripgui.controller.field_cont import FieldController
-        new_field = FieldController().edit()
+        new_field = FieldController(self.model).edit()
         new_field.basename = self._node_obj.basename
         self._node_obj.fields.append(new_field)
         self.ctrl.tree.update_tree()
@@ -130,7 +130,7 @@ class TreeMenuController(object):
         logger.debug("edit_field() {}".format(None))
 
         from pytripgui.controller.field_cont import FieldController
-        FieldController().edit(self._node_obj)
+        FieldController(self.model).edit(self._node_obj)
         self.ctrl.tree.update_tree()
 
     def menu_open(self):

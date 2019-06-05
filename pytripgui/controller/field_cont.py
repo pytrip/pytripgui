@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class FieldController(object):
     """
     """
+    def __init__(self, model):
+        self.model = model
 
     def edit(self, field=None):
         """
@@ -112,6 +114,9 @@ class FieldController(object):
         ui.doubleSpinBox_9.setValue(field.dose_extension)
         ui.doubleSpinBox_10.setValue(field.contour_extension)
         ui.doubleSpinBox_11.setValue(field.zsteps)
+
+        for kernel in self.model.kernels:
+            ui.comboBox.addItem(kernel.name, kernel)
 
     def _form_changed(self):
         """
