@@ -91,6 +91,7 @@ class TreeMenuController(object):
         if isinstance(obj, pte.Plan):
             popup_menu.addAction("Add field", self.add_field)
             popup_menu.addSeparator()
+            popup_menu.addAction("Execute plan", self.execute_plan)
             popup_menu.addAction("Edit", self.menu_open)
             popup_menu.addAction("Export", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
@@ -116,6 +117,9 @@ class TreeMenuController(object):
             popup_menu.addAction("Delete", self.menu_open)
 
         return popup_menu
+
+    def execute_plan(self):
+        logger.debug("execute_plan".format())
 
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
