@@ -42,6 +42,8 @@ class FieldController(object):
         dialog.exec_()
         dialog.show()
 
+        self._set_model_from_form()
+
         return field
 
     def _populate_field_ui(self):
@@ -138,7 +140,7 @@ class FieldController(object):
                                ui.isocenterY_doubleSpinBox.value(),
                                ui.isocenterZ_doubleSpinBox.value()]
         else:
-            field.isocenter = None
+            field.isocenter = []
 
         field.gantry = ui.gantry_doubleSpinBox.value()
         field.couch = ui.couch_doubleSpinBox.value()
@@ -147,6 +149,7 @@ class FieldController(object):
         field.dose_extension = ui.doseext_doubleSpinBox.value()
         field.contour_extension = ui.contourext_doubleSpinBox.value()
         field.zsteps = ui.depthStep_doubleSpinBox.value()
+        field.kernel = ui.kernel_comboBox.currentData()
 
     def _gantry_p90(self):
         self.field.gantry = self.field.gantry + 90.0
@@ -167,3 +170,4 @@ class FieldController(object):
         self.field.couch = self.field.couch - 90.0
 
         self._set_form_from_model()
+

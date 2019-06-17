@@ -120,6 +120,34 @@ class TreeMenuController(object):
 
     def execute_plan(self):
         logger.debug("execute_plan".format())
+        plan = self._node_obj
+
+        from PyQt5.QtWidgets import QFileDialog
+        self.model.wdir = QFileDialog.getExistingDirectory(None, "Select temporary directory", "/home", QFileDialog.ShowDirsOnly)
+        logger.debug("Temporary dir:{}".format(self.model.wdir))
+
+        plan.working_dir = self.model.wdir
+
+        plan.xd = 5
+
+        import pytrip as pt
+        import pytrip.tripexecuter as pte
+
+        current_field = plan.fields[0]
+        plan.projectile = current_field.kernel.projectile.iupac
+        plan.projectile_a = current_field.kernel.projectile.a
+        plan.rifi = current_field.kernel.rifi_thickness
+        plan.ddd_dir = current_field.kernel.ddd_path
+        plan.spc_dir = current_field.kernel.spc_path
+        plan.sis_path = current_field.kernel.sis_path
+        plan.dedx_path = "$TRIP98/DATA/DEDX/20000830.dedx"
+
+        te = pte.Execute(self.model.ctx, self.model.vdx)
+
+        try:
+            te.execute(plan)
+        except RuntimeError:
+            pass
 
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
