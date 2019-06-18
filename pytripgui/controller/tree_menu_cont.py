@@ -122,15 +122,18 @@ class TreeMenuController(object):
         logger.debug("execute_plan".format())
         plan = self._node_obj
 
-        from PyQt5.QtWidgets import QFileDialog
-        self.model.wdir = QFileDialog.getExistingDirectory(None, "Select temporary directory", "/home", QFileDialog.ShowDirsOnly)
+        import tempfile, os
+        self.model.wdir = tempfile.gettempdir() + "/pytripgui/"
+
+        try:
+            os.mkdir(self.model.wdir)
+        except OSError:
+            pass
+
         logger.debug("Temporary dir:{}".format(self.model.wdir))
 
         plan.working_dir = self.model.wdir
 
-        plan.xd = 5
-
-        import pytrip as pt
         import pytrip.tripexecuter as pte
 
         current_field = plan.fields[0]
