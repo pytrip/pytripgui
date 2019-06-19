@@ -91,6 +91,7 @@ class TreeMenuController(object):
         if isinstance(obj, pte.Plan):
             popup_menu.addAction("Add field", self.add_field)
             popup_menu.addSeparator()
+            popup_menu.addAction("Execute plan", self.execute_plan)
             popup_menu.addAction("Edit", self.menu_open)
             popup_menu.addAction("Export", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
@@ -117,12 +118,47 @@ class TreeMenuController(object):
 
         return popup_menu
 
+    def execute_plan(self):
+        logger.debug("execute_plan".format())
+        plan = self._node_obj
+
+        import tempfile
+        import os
+        self.model.wdir = tempfile.gettempdir() + "/pytripgui/"
+
+        try:
+            os.mkdir(self.model.wdir)
+        except OSError:
+            pass
+
+        logger.debug("Temporary dir:{}".format(self.model.wdir))
+
+        plan.working_dir = self.model.wdir
+
+        import pytrip.tripexecuter as pte
+
+        current_field = plan.fields[0]
+        plan.projectile = current_field.kernel.projectile.iupac
+        plan.projectile_a = current_field.kernel.projectile.a
+        plan.rifi = current_field.kernel.rifi_thickness
+        plan.ddd_dir = current_field.kernel.ddd_path
+        plan.spc_dir = current_field.kernel.spc_path
+        plan.sis_path = current_field.kernel.sis_path
+        plan.dedx_path = "$TRIP98/DATA/DEDX/20000830.dedx"
+
+        te = pte.Execute(self.model.ctx, self.model.vdx)
+
+        try:
+            te.execute(plan)
+        except RuntimeError:
+            pass
+
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
 
         from pytripgui.controller.field_cont import FieldController
         new_field = FieldController(self.model).edit()
-        new_field.basename = self._node_obj.basename
+        new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
         self._node_obj.fields.append(new_field)
         self.ctrl.tree.update_tree()
 

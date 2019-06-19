@@ -88,15 +88,15 @@ class PlanController(object):
         ui.comboBox.clear()
         for voi in model.vdx.vois:
             ui.comboBox.addItem(voi.name, voi)
-            if plan.voi_target:
-                _i = ui.comboBox.findData(voi)
-                if _i == -1:  # not found
-                    logger.warning("_populate_plan_ui() FIXME")
-                else:
-                    ui.comboBox.setCurrentIndex(_i)
+        if plan.voi_target:
+            _i = ui.comboBox.findData(voi)
+            if _i == -1:  # not found
+                logger.warning("_populate_plan_ui() FIXME")
             else:
-                plan.voi_target = model.vdx.vois[0]
-                ui.comboBox.setCurrentIndex(0)
+                ui.comboBox.setCurrentIndex(_i)
+        else:
+            plan.voi_target = model.vdx.vois[0]
+            ui.comboBox.setCurrentIndex(ui.comboBox.findData(plan.voi_target))
 
         # OAR
         list = ui.listView
@@ -242,7 +242,7 @@ class PlanController(object):
             i = ui.comboBox.currentIndex()
             obj = ui.comboBox.itemData(i)
             logger.debug("Set voi_target to VOI {}".format(obj.name))
-            plan.target_dose = obj
+            plan.voi_target = obj
             return
 
         if pa == "incube":
