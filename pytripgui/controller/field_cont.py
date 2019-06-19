@@ -170,4 +170,3 @@ class FieldController(object):
         self.field.couch = self.field.couch - 90.0
 
         self._set_form_from_model()
-
