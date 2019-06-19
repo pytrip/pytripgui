@@ -122,7 +122,8 @@ class TreeMenuController(object):
         logger.debug("execute_plan".format())
         plan = self._node_obj
 
-        import tempfile, os
+        import tempfile
+        import os
         self.model.wdir = tempfile.gettempdir() + "/pytripgui/"
 
         try:
