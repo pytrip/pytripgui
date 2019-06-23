@@ -6,16 +6,157 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>351</height>
+    <width>620</width>
+    <height>383</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>10</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Field</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="manualIsocenter_checkBox">
+     <property name="text">
+      <string>Set isocenter manually</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="isocenter_label">
+     <property name="text">
+      <string>Isocenter X, Y, Z [mm]</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <layout class="QHBoxLayout" name="isocenterSection">
+     <item>
+      <widget class="QDoubleSpinBox" name="isocenterX_doubleSpinBox"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="isocenterY_doubleSpinBox"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="isocenterZ_doubleSpinBox"/>
+     </item>
+    </layout>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="gantry_label">
+     <property name="text">
+      <string>Gantry angle [°]</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <layout class="QHBoxLayout" name="gantryAngleSection">
+     <item>
+      <widget class="QDoubleSpinBox" name="gantry_doubleSpinBox"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="gantry_pushButton_p90">
+       <property name="text">
+        <string>+ 90°</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="gantry_pushButton_m90">
+       <property name="text">
+        <string>- 90°</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="couch_label">
+     <property name="text">
+      <string>Couch angle [°]</string>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="1">
-    <widget class="QDoubleSpinBox" name="couch_doubleSpinBox"/>
+    <layout class="QHBoxLayout" name="couchAngleSection">
+     <item>
+      <widget class="QDoubleSpinBox" name="couch_doubleSpinBox"/>
+     </item>
+     <item>
+      <widget class="QPushButton" name="couch_pushButton_p90">
+       <property name="text">
+        <string>+ 90°</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="couch_pushButton_m90">
+       <property name="text">
+        <string>- 90°</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="spotSize_label">
+     <property name="text">
+      <string>Spot size FWHM [mm]</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QDoubleSpinBox" name="spotSize_doubleSpinBox"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="rasterSpace_label">
+     <property name="text">
+      <string>Raster spacing X, Y [mm]</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <layout class="QHBoxLayout" name="rasterSpacingSection">
+     <item>
+      <widget class="QDoubleSpinBox" name="rasterSpaceX_doubleSpinBox"/>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="rasterSpaceY_doubleSpinBox"/>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="doseext_label">
+     <property name="text">
+      <string>Doseext</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QDoubleSpinBox" name="doseext_doubleSpinBox">
+     <property name="value">
+      <double>1.200000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="contourext_label">
+     <property name="text">
+      <string>Contourext</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QDoubleSpinBox" name="contourext_doubleSpinBox">
+     <property name="value">
+      <double>0.600000000000000</double>
+     </property>
+    </widget>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="depthStep_label">
@@ -34,87 +175,6 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>43</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0">
-    <widget class="QCheckBox" name="manualIsocenter_checkBox">
-     <property name="text">
-      <string>Set isocenter manually</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QDoubleSpinBox" name="gantry_doubleSpinBox"/>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="contourext_label">
-     <property name="text">
-      <string>Contourext</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="doseext_label">
-     <property name="text">
-      <string>Doseext</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QPushButton" name="gantry_pushButton_p90">
-     <property name="text">
-      <string>+ 90°</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="spotSize_label">
-     <property name="text">
-      <string>Spot size FWHM [mm]</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="gantry_label">
-     <property name="text">
-      <string>Gantry angle [°]</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="isocenter_label">
-     <property name="text">
-      <string>Isocenter [mm]</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1" colspan="2">
-    <widget class="QComboBox" name="kernel_comboBox"/>
-   </item>
-   <item row="5" column="2">
-    <widget class="QDoubleSpinBox" name="rasterSpaceY_doubleSpinBox"/>
-   </item>
-   <item row="1" column="1">
-    <widget class="QDoubleSpinBox" name="isocenterX_doubleSpinBox"/>
-   </item>
-   <item row="3" column="3">
-    <widget class="QPushButton" name="couch_pushButton_m90">
-     <property name="text">
-      <string>- 90°</string>
-     </property>
-    </widget>
-   </item>
    <item row="9" column="0">
     <widget class="QLabel" name="kernel_label">
      <property name="text">
@@ -122,69 +182,25 @@
      </property>
     </widget>
    </item>
-   <item row="7" column="1">
-    <widget class="QDoubleSpinBox" name="contourext_doubleSpinBox">
-     <property name="value">
-      <double>0.600000000000000</double>
+   <item row="9" column="1">
+    <widget class="QComboBox" name="kernel_comboBox"/>
+   </item>
+   <item row="11" column="1">
+    <widget class="QDialogButtonBox" name="accept_ButtonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="3">
-    <widget class="QDoubleSpinBox" name="isocenterZ_doubleSpinBox"/>
-   </item>
-   <item row="6" column="1">
-    <widget class="QDoubleSpinBox" name="doseext_doubleSpinBox">
-     <property name="value">
-      <double>1.200000000000000</double>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="3">
-    <widget class="QPushButton" name="gantry_pushButton_m90">
-     <property name="text">
-      <string>- 90°</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QDoubleSpinBox" name="spotSize_doubleSpinBox"/>
-   </item>
-   <item row="5" column="1">
-    <widget class="QDoubleSpinBox" name="rasterSpaceX_doubleSpinBox"/>
-   </item>
-   <item row="1" column="2">
-    <widget class="QDoubleSpinBox" name="isocenterY_doubleSpinBox"/>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="couch_label">
-     <property name="text">
-      <string>Couch angle [°]</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QPushButton" name="couch_pushButton_p90">
-     <property name="text">
-      <string>+ 90°</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="rasterSpace_label">
-     <property name="text">
-      <string>Raster spacing X,Y [mm]</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="4">
-    <spacer name="horizontalSpacer">
+   <item row="10" column="1">
+    <spacer name="verticalSpacer">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>40</width>
-       <height>20</height>
+       <width>20</width>
+       <height>10</height>
       </size>
      </property>
     </spacer>
