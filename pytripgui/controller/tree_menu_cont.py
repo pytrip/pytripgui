@@ -156,7 +156,7 @@ class TreeMenuController(object):
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
 
-        from pytripgui.controller.field_cont import FieldController
+        from pytripgui.field_editor.field_cont import FieldController
         new_field = FieldController(self.model).edit()
         new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
         self._node_obj.fields.append(new_field)
@@ -165,7 +165,7 @@ class TreeMenuController(object):
     def edit_field(self):
         logger.debug("edit_field() {}".format(None))
 
-        from pytripgui.controller.field_cont import FieldController
+        from pytripgui.field_editor.field_cont import FieldController
         FieldController(self.model).edit(self._node_obj)
         self.ctrl.tree.update_tree()
 
