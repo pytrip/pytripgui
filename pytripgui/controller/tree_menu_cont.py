@@ -156,18 +156,39 @@ class TreeMenuController(object):
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
 
-        from pytripgui.controller.field_cont import FieldController
-        new_field = FieldController(self.model).edit()
-        new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
-        self._node_obj.fields.append(new_field)
-        self.ctrl.tree.update_tree()
+        from pytrip.tripexecuter import Field
+        from pytripgui.field_editor import FieldQtView
+        from pytripgui.field_editor import FieldController
+
+        selected_plan = self._node_obj
+        new_field = Field()
+        view = FieldQtView()
+        global_kernels = self.model.kernels
+        default_kernel = self.model.kernels[0]  # TODO select default kernel
+        new_field.kernel = default_kernel
+
+        controller = FieldController(new_field, view, global_kernels)
+        controller.set_view_from_model()
+        view.show()
+
+        if controller.save_data:
+            new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
+            selected_plan.fields.append(new_field)
+            self.ctrl.tree.update_tree()
 
     def edit_field(self):
         logger.debug("edit_field() {}".format(None))
 
-        from pytripgui.controller.field_cont import FieldController
-        FieldController(self.model).edit(self._node_obj)
-        self.ctrl.tree.update_tree()
+        from pytripgui.field_editor import FieldQtView
+        from pytripgui.field_editor import FieldController
+
+        field = self._node_obj
+        view = FieldQtView()
+        global_kernels = self.model.kernels
+
+        controller = FieldController(field, view, global_kernels)
+        controller.set_view_from_model()
+        view.show()
 
     def menu_open(self):
         logger.debug("menu_open() {}".format(None))
