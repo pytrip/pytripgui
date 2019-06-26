@@ -11,9 +11,9 @@ class FieldQtView(object):
     """
     def __init__(self):
         self.ui = Ui_FieldDialog()
-        self.widget = QtWidgets.QWidget()
+        self.dialog = QtWidgets.QDialog()
 
-        self.ui.setupUi(self.widget)
+        self.ui.setupUi(self.dialog)
         self._setup_callbacks()
 
     def _setup_callbacks(self):
@@ -126,15 +126,16 @@ class FieldQtView(object):
         ui = self.ui
 
         index_of_kernel = ui.kernel_comboBox.findData(kernel, Qt.UserRole)
-        if index_of_kernel is -1:
+        if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
         ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
 
     def show(self):
-        self.widget.show()
+        self.dialog.show()
+        self.dialog.exec_()
 
     def exit(self):
-        self.widget.close()
+        self.dialog.close()
 
     def set_ok_callback(self, fun):
         self.ui.accept_ButtonBox.accepted.connect(fun)

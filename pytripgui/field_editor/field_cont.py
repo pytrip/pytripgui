@@ -7,12 +7,13 @@ class FieldController(object):
         self.model = model
         self.view = view
         self.kernels = kernels
+        self.save_data = False
 
     def set_view_from_model(self):
         model = self.model
         view = self.view
 
-        if self.is_isocenter_manually() is True:
+        if self._is_isocenter_manually():
             view.set_isocenter_values(model.isocenter)
             view.set_isocenter_state(True)
         else:
@@ -29,11 +30,8 @@ class FieldController(object):
         self._set_view_to_chosen_kernel()
         self._setup_ok_and_cancel_buttons_callbacks()
 
-    def is_isocenter_manually(self):
-        if len(self.model.isocenter) is 3:
-            return True
-
-        return False
+    def _is_isocenter_manually(self):
+        return len(self.model.isocenter) == 3
 
     def _fill_view_with_kernels(self):
         view = self.view
@@ -54,6 +52,7 @@ class FieldController(object):
 
     def _save_this_field(self):
         self.set_model_from_view()
+        self.save_data = True
         self.view.exit()
 
     def _dont_save_this_field(self):
@@ -63,7 +62,7 @@ class FieldController(object):
         model = self.model
         view = self.view
 
-        if view.is_isocenter_manually() is True:
+        if view.is_isocenter_manually():
             model.isocenter = view.get_isocenter_value()
         else:
             model.isocenter = []
