@@ -157,8 +157,8 @@ class TreeMenuController(object):
         logger.debug("add_field_new() {}".format(None))
 
         from pytrip.tripexecuter import Field
-        from pytripgui.field_editor import FieldQtView
-        from pytripgui.field_editor import FieldController
+        from pytripgui.field_vc import FieldQtView
+        from pytripgui.field_vc import FieldController
 
         selected_plan = self._node_obj
         new_field = Field()
@@ -171,7 +171,7 @@ class TreeMenuController(object):
         controller.set_view_from_model()
         view.show()
 
-        if controller.save_data:
+        if controller.user_clicked_save:
             new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
             selected_plan.fields.append(new_field)
             self.ctrl.tree.update_tree()
@@ -179,8 +179,8 @@ class TreeMenuController(object):
     def edit_field(self):
         logger.debug("edit_field() {}".format(None))
 
-        from pytripgui.field_editor import FieldQtView
-        from pytripgui.field_editor import FieldController
+        from pytripgui.field_vc import FieldQtView
+        from pytripgui.field_vc import FieldController
 
         field = self._node_obj
         view = FieldQtView()

@@ -7,7 +7,7 @@ class FieldController(object):
         self.model = model
         self.view = view
         self.kernels = kernels
-        self.save_data = False
+        self.user_clicked_save = False
 
     def set_view_from_model(self):
         model = self.model
@@ -19,6 +19,7 @@ class FieldController(object):
         else:
             view.set_isocenter_state(False)
 
+        self._setup_ok_and_cancel_buttons_callbacks()
         view.set_gantry_angle_value(model.gantry)
         view.set_couch_angle_value(model.couch)
         view.set_spot_size_value(model.fwhm)
@@ -26,36 +27,31 @@ class FieldController(object):
         view.set_dose_extension_value(model.dose_extension)
         view.set_contour_extension_value(model.contour_extension)
         view.set_depth_steps_value(model.zsteps)
-        self._fill_view_with_kernels()
-        self._set_view_to_chosen_kernel()
-        self._setup_ok_and_cancel_buttons_callbacks()
+        self._setup_kernels()
 
     def _is_isocenter_manually(self):
         return len(self.model.isocenter) == 3
 
-    def _fill_view_with_kernels(self):
+    def _setup_kernels(self):
         view = self.view
+        model = self.model
         kernels = self.kernels
 
         for kernel in kernels:
             view.add_kernel_with_name(kernel, kernel.name)
 
-    def _set_view_to_chosen_kernel(self):
-        model = self.model
-        view = self.view
-
         view.set_kernel_view_to_this(model.kernel)
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
-        self.view.set_ok_callback(self._save_this_field)
-        self.view.set_cancel_callback(self._dont_save_this_field)
+        self.view.set_ok_callback(self._save_and_exit)
+        self.view.set_cancel_callback(self._exit)
 
-    def _save_this_field(self):
+    def _save_and_exit(self):
         self.set_model_from_view()
-        self.save_data = True
+        self.user_clicked_save = True
         self.view.exit()
 
-    def _dont_save_this_field(self):
+    def _exit(self):
         self.view.exit()
 
     def set_model_from_view(self):

@@ -16,6 +16,19 @@ class FieldQtView(object):
         self.ui.setupUi(self.dialog)
         self._setup_callbacks()
 
+    def show(self):
+        self.dialog.show()
+        self.dialog.exec_()
+
+    def exit(self):
+        self.dialog.close()
+
+    def set_ok_callback(self, fun):
+        self.ui.accept_ButtonBox.accepted.connect(fun)
+
+    def set_cancel_callback(self, fun):
+        self.ui.accept_ButtonBox.rejected.connect(fun)
+
     def _setup_callbacks(self):
         ui = self.ui
         ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
@@ -122,23 +135,10 @@ class FieldQtView(object):
     def add_kernel_with_name(self, kernel, kernel_name):
         self.ui.kernel_comboBox.addItem(kernel_name, kernel)
 
-    def set_kernel_view_to_this(self, kernel):
+    def select_kernel_view_to_this(self, kernel):
         ui = self.ui
 
         index_of_kernel = ui.kernel_comboBox.findData(kernel, Qt.UserRole)
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
         ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
-
-    def show(self):
-        self.dialog.show()
-        self.dialog.exec_()
-
-    def exit(self):
-        self.dialog.close()
-
-    def set_ok_callback(self, fun):
-        self.ui.accept_ButtonBox.accepted.connect(fun)
-
-    def set_cancel_callback(self, fun):
-        self.ui.accept_ButtonBox.rejected.connect(fun)
