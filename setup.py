@@ -40,6 +40,7 @@ def git_version():
 
     return version
 
+
 def write_version_py(filename='pytripgui/__init__.py'):
     cnt = """
 __version__ = '%(version)s'
@@ -61,7 +62,7 @@ with open('README.rst') as readme_file:
 
 setuptools.setup(
     name='pytrip98gui',
-    version=get_version(),
+    version=git_version(),
     packages=setuptools.find_packages(exclude="tests"),
     url='https://github.com/pytrip/pytripgui',
     license='GPL',
@@ -98,7 +99,5 @@ setuptools.setup(
         'console_scripts': [
             'pytripgui=pytripgui.main:start',
         ],
-    },
-    cmdclass=get_cmdclass(),
-
+    }
 )
