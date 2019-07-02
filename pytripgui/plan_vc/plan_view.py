@@ -88,3 +88,97 @@ class PlanQtView(object):
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
         ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
+
+    def set_target_dose_value(self, target_dose):
+        self.ui.targetDose_doubleSpinBox.setValue(target_dose)
+
+    def set_relative_target_dose_value(self, relative_target_dose):
+        self.ui.relativeTargetDose_doubleSpinBox.setValue(relative_target_dose)
+
+    def set_iterations_value(self, iterations):
+        self.ui.iterations_spinBox.setValue(iterations)
+
+    def set_eps_value(self, eps):
+        self.ui.eps_doubleSpinBox.setValue(eps)
+
+    def set_geps_value(self, geps):
+        self.ui.geps_doubleSpinBox.setValue(geps)
+
+    def add_opti_method_with_name(self, opti, opti_name):
+        self.ui.optiMethod_comboBox.addItem(opti_name, opti)
+
+    def select_opti_method_view_to_this(self, opti):
+        ui = self.ui
+
+        index_of_kernel = ui.optiMethod_comboBox.findData(opti, Qt.UserRole)
+        if index_of_kernel == -1:
+            raise Exception("Given kernel wasn't found on the list")
+        ui.optiMethod_comboBox.setCurrentIndex(index_of_kernel)
+
+    def add_principle_with_name(self, principle, principle_name):
+        self.ui.principle_comboBox.addItem(principle_name, principle)
+
+    def select_principle_view_to_this(self, principle):
+        ui = self.ui
+
+        index_of_principle = ui.principle_comboBox.findData(principle, Qt.UserRole)
+        if index_of_principle == -1:
+            raise Exception("Given principle wasn't found on the list")
+        ui.principle_comboBox.setCurrentIndex(index_of_principle)
+
+    def add_dose_algorithm_with_name(self, dose_alg, dose_alg_name):
+        self.ui.doseAlgorithm_comboBox.addItem(dose_alg_name, dose_alg)
+
+    def select_dose_algorithm_view_to_this(self, dose_alg):
+        ui = self.ui
+
+        index_of_dose_alg = ui.doseAlgorithm_comboBox.findData(dose_alg, Qt.UserRole)
+        if index_of_dose_alg == -1:
+            raise Exception("Given dose algorithm wasn't found on the list")
+        ui.doseAlgorithm_comboBox.setCurrentIndex(index_of_dose_alg)
+
+    def add_biol_algorithm_with_name(self, biol_alg, biol_alg_name):
+        self.ui.bioAlgorithm_comboBox.addItem(biol_alg_name, biol_alg)
+
+    def select_biol_algorithm_view_to_this(self, biol_alg):
+        ui = self.ui
+
+        index_of_biol_alg = ui.bioAlgorithm_comboBox.findData(biol_alg, Qt.UserRole)
+        if index_of_biol_alg == -1:
+            raise Exception("Given biological algorithm wasn't found on the list")
+        ui.bioAlgorithm_comboBox.setCurrentIndex(index_of_biol_alg)
+
+    def add_opti_algorithm_with_name(self, opti_alg, opti_alg_name):
+        self.ui.optiAlgorithm_comboBox.addItem(opti_alg_name, opti_alg)
+
+    def select_opti_algorithm_view_to_this(self, opti_alg):
+        ui = self.ui
+
+        index_of_opti_alg = ui.optiAlgorithm_comboBox.findData(opti_alg, Qt.UserRole)
+        if index_of_opti_alg == -1:
+            raise Exception("Given optimization algorithm wasn't found on the list")
+        ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
+
+    def set_physical_dose_dist_state(self, state):
+        if state is True:
+            self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Checked)
+        else:
+            self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
+
+    def set_biological_dose_dist_state(self, state):
+        if state is True:
+            self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Checked)
+        else:
+            self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
+
+    def set_dose_averaged_let_state(self, state):
+        if state is True:
+            self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Checked)
+        else:
+            self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Unchecked)
+
+    def set_raster_scan_file_state(self, state):
+        if state is True:
+            self.ui.rasterScanFile_checkBox.setCheckState(Qt.Checked)
+        else:
+            self.ui.rasterScanFile_checkBox.setCheckState(Qt.Unchecked)

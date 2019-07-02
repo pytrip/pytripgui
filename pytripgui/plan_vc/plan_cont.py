@@ -23,6 +23,20 @@ class PlanController(object):
         self._setup_target_tissue()
         self._setup_residual_tissue()
         self._setup_kernels()
+        view.set_target_dose_value(model.target_dose)
+        view.set_relative_target_dose_value(model.target_dose_percent)
+        view.set_iterations_value(model.iterations)
+        view.set_eps_value(model.eps)
+        view.set_geps_value(model.geps)
+        self._setup_optimization_metod()
+        self._setup_principle()
+        self._setup_dose_algorithm()
+        self._setup_biological_algorithm()
+        self._setup_opti_algorithm()
+        view.set_physical_dose_dist_state(model.want_phys_dose)
+        view.set_biological_dose_dist_state(model.want_bio_dose)
+        view.set_dose_averaged_let_state(model.want_dlet)
+        view.set_raster_scan_file_state(model.want_rst)
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)
@@ -90,3 +104,53 @@ class PlanController(object):
             view.add_kernel_with_name(kernel, kernel.name)
 
         view.select_kernel_view_to_this(model.kernel)
+
+    def _setup_optimization_metod(self):
+        view = self.view
+        opt_methods = self.model.opt_methods
+
+        for i, key in enumerate(opt_methods):
+            method_name = opt_methods[key][1]
+            view.add_opti_method_with_name(key, method_name)
+
+        view.select_opti_method_view_to_this(self.model.opt_method)
+
+    def _setup_principle(self):
+        view = self.view
+        principles = self.model.opt_principles
+
+        for i, key in enumerate(principles):
+            principle_name = principles[key][1]
+            view.add_principle_with_name(key, principle_name)
+
+        view.select_principle_view_to_this(self.model.opt_principle)
+
+    def _setup_dose_algorithm(self):
+        view = self.view
+        dose_alg = self.model.dose_algs
+
+        for i, key in enumerate(dose_alg):
+            dose_alg_name = dose_alg[key][1]
+            view.add_dose_algorithm_with_name(key, dose_alg_name)
+
+        view.select_dose_algorithm_view_to_this(self.model.dose_alg)
+
+    def _setup_biological_algorithm(self):
+        view = self.view
+        bio_algs = self.model.bio_algs
+
+        for i, key in enumerate(bio_algs):
+            biol_alg_name = bio_algs[key][1]
+            view.add_biol_algorithm_with_name(key, biol_alg_name)
+
+        view.select_biol_algorithm_view_to_this(self.model.bio_alg)
+
+    def _setup_opti_algorithm(self):
+        view = self.view
+        opti_algs = self.model.opt_algs
+
+        for i, key in enumerate(opti_algs):
+            biol_alg_name = opti_algs[key][1]
+            view.add_opti_algorithm_with_name(key, biol_alg_name)
+
+        view.select_opti_algorithm_view_to_this(self.model.opt_alg)
