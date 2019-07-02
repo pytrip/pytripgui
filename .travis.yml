@@ -56,7 +56,6 @@ script:
   - pip install -r requirements.txt --upgrade
   - pip install -r tests/requirements-test.txt --upgrade
   - ./makeui.sh
-  - ./install_versioneer.sh
   - tox --recreate --notest && tox
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
 

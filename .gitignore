@@ -5,11 +5,6 @@
 # pytripgui/view/gen/plan.py
 # pytripgui/view/gen/trip_config.py
 
-# versioneer stuff  # TODO find some solution
-# pytripgui/_version.py
-# versioneer.py
-
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
