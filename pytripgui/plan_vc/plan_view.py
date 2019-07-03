@@ -12,14 +12,14 @@ class PlanQtView(object):
     """
     def __init__(self):
         self.ui = Ui_PlanDialog()
-        self.dialog = QtWidgets.QWidget()
+        self.dialog = QtWidgets.QDialog()
 
         self.ui.setupUi(self.dialog)
         self._setup_callbacks()
 
     def show(self):
         self.dialog.show()
-        #self.dialog.exec_()
+        self.dialog.exec_()
 
     def exit(self):
         self.dialog.close()
