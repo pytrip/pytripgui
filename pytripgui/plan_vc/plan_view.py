@@ -76,7 +76,21 @@ class PlanQtView(object):
         oar_list.addTopLevelItem(oar_item)
 
     def set_oar_as_checked(self, voi):
-        pass    # todo
+        oar_list = self.ui.OAR_treeWidget.findItems(voi.name, Qt.MatchExactly)
+        found_oar_to_check = oar_list.pop()
+        found_oar_to_check.setCheckState(0, Qt.Checked)
+
+    def get_all_checked_oar_as_list(self):
+        oar_widget = self.ui.OAR_treeWidget
+        voi_count = oar_widget.topLevelItemCount()
+
+        checked_oars = []
+        for i in range(voi_count):
+            oar = oar_widget.topLevelItem(i)
+            if oar.checkState(0):
+                checked_oars.append(oar.data(0, Qt.UserRole))
+
+        return checked_oars
 
     def add_kernel_with_name(self, kernel, kernel_name):
         self.ui.kernel_comboBox.addItem(kernel_name, kernel)
@@ -193,7 +207,9 @@ class PlanQtView(object):
         ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
 
     def get_physical_dose_dist_state(self):
-        return self.ui.physicalDoseDist_checkBox.checkState()
+        if self.ui.physicalDoseDist_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
 
     def set_physical_dose_dist_state(self, state):
         if state is True:
@@ -202,7 +218,9 @@ class PlanQtView(object):
             self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
 
     def get_biological_dose_dist_state(self):
-        return self.ui.biologicalDoseDist_checkBox.checkState()
+        if self.ui.biologicalDoseDist_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
 
     def set_biological_dose_dist_state(self, state):
         if state is True:
@@ -211,7 +229,9 @@ class PlanQtView(object):
             self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
 
     def get_dose_averaged_let_state(self):
-        return self.ui.doseAveragedLET_checkBox.checkState()
+        if self.ui.doseAveragedLET_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
 
     def set_dose_averaged_let_state(self, state):
         if state is True:
@@ -220,7 +240,9 @@ class PlanQtView(object):
             self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Unchecked)
 
     def get_raster_scan_file_state(self):
-        return self.ui.rasterScanFile_checkBox.checkState()
+        if self.ui.rasterScanFile_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
 
     def set_raster_scan_file_state(self, state):
         if state is True:

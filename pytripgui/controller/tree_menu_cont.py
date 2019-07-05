@@ -76,7 +76,7 @@ class TreeMenuController(object):
             popup_menu.addAction("Rename", self.menu_open)
             popup_menu.addAction("Export .vdx", self.menu_open)
             popup_menu.addSeparator()
-            popup_menu.addAction("New Plan", self.menu_newplan)  # TODO: may move somewhere else
+            # popup_menu.addAction("New Plan", self.menu_newplan)  # TODO: may move somewhere else
             popup_menu.addSeparator()
             popup_menu.addAction("Delete all", self.menu_open)
 
@@ -92,7 +92,7 @@ class TreeMenuController(object):
             popup_menu.addAction("Add field", self.add_field)
             popup_menu.addSeparator()
             popup_menu.addAction("Execute plan", self.execute_plan)
-            popup_menu.addAction("Edit", self.menu_open)
+            popup_menu.addAction("Edit", self.edit_plan)
             popup_menu.addAction("Export", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
             popup_menu.addSeparator()
@@ -187,6 +187,20 @@ class TreeMenuController(object):
         global_kernels = self.model.kernels
 
         controller = FieldController(field, view, global_kernels)
+        controller.set_view_from_model()
+        view.show()
+
+    def edit_plan(self):
+        logger.debug("edit_plan() {}".format(None))
+
+        from pytripgui.plan_vc import PlanQtView
+        from pytripgui.plan_vc import PlanController
+
+        plan = self._node_obj
+        view = PlanQtView()
+        global_kernels = self.model.kernels
+
+        controller = PlanController(plan, view, global_kernels, self.model.vdx.vois)
         controller.set_view_from_model()
         view.show()
 

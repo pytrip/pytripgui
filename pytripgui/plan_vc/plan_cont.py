@@ -3,22 +3,23 @@ logger = logging.getLogger(__name__)
 
 
 class PlanController(object):
-    def __init__(self, model, view, kernels, patient_vdx):
+    def __init__(self, model, view, kernels, patient_vois):
         self.model = model
         self.view = view
         self.kernels = kernels
         self.user_clicked_save = False
-        self.vdx = patient_vdx
+        self.vois = patient_vois
 
     def set_view_from_model(self):
         model = self.model
         view = self.view
 
         self._setup_ok_and_cancel_buttons_callbacks()
+
         view.set_basename_value(model.basename)
         view.set_comment_value(model.comment)
-
         view.set_uuid_value(str(model.__uuid__))
+
         self._setup_target_roi()
         self._setup_oar()
         self._setup_target_tissue()
@@ -62,7 +63,9 @@ class PlanController(object):
 
         model.basename = view.get_basename_value()
         model.comment = view.get_comment_value()
+
         model.voi_target = view.get_selected_target_roi()
+        self.model.vois_oar = view.get_all_checked_oar_as_list()
 
         model.kernel = view.get_selected_krenel()
         model.target_dose = view.get_target_dose_value()
@@ -89,7 +92,7 @@ class PlanController(object):
     def _fill_view_with_rois(self):
         view = self.view
 
-        for voi in self.vdx.vois:
+        for voi in self.vois:
             view.add_target_roi_with_name(voi, voi.name)
 
     def _set_correct_target_roi_view(self):
@@ -106,11 +109,12 @@ class PlanController(object):
     def _fill_view_with_oars(self):
         view = self.view
 
-        for voi in self.vdx.vois:
+        for voi in self.vois:
             view.add_oar_with_name(voi, voi.name)
 
     def _mark_specified_oars_as_checked(self):
-        pass        # TODO
+        for oar in self.model.vois_oar:
+            self.view.set_oar_as_checked(oar)
 
     def _setup_target_tissue(self):
         pass        # TODO
