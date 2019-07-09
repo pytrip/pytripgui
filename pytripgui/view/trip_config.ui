@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>747</width>
-    <height>476</height>
+    <width>425</width>
+    <height>327</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,104 +17,50 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_access">
       <attribute name="title">
        <string>Access</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QFormLayout" name="formLayout_2">
        <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>TRiP98 install</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1" colspan="2">
-        <widget class="QLineEdit" name="lineEdit_trippath"/>
-       </item>
-       <item row="2" column="3">
-        <widget class="QPushButton" name="pushButton_browsetrippath">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="wdirpath_label">
          <property name="text">
           <string>Working dir</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0" colspan="5">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string>Remote</string>
+       <item row="1" column="1">
+        <layout class="QHBoxLayout" name="wdir_horizontalLayout">
+         <item>
+          <widget class="QLineEdit" name="wdirPath_lineEdit">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="wdirPath_pushButton">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="tripAccess_label">
+         <property name="text">
+          <string>TRiP98 install</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Server IP/Hostname</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit_server"/>
-          </item>
-          <item row="0" column="2" rowspan="2">
-           <spacer name="horizontalSpacer_8">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>245</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Username</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="lineEdit_username"/>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Password</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="lineEdit_password"/>
-          </item>
-          <item row="3" column="0">
-           <spacer name="verticalSpacer_3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox">
+       <item row="2" column="1">
+        <widget class="QComboBox" name="tripAccess_comboBox">
          <item>
           <property name="text">
            <string>Local</string>
@@ -127,42 +73,71 @@
          </item>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="3" column="0">
+        <widget class="QLabel" name="tripPath_label">
          <property name="text">
           <string>TRiP98 path</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1" colspan="2">
-        <widget class="QLineEdit" name="lineEdit_wdir">
+       <item row="3" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLineEdit" name="tripPath_lineEdit"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="tripPath_pushButton">
+           <property name="text">
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="8" column="0" colspan="2">
+        <widget class="QGroupBox" name="remote_tab">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="title">
+          <string>Remote</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="serverip_lineEdit"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="username_label">
+            <property name="text">
+             <string>Username</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="username_lineEdit"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="password_label">
+            <property name="text">
+             <string>Password</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="password_lineEdit"/>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="serverip_label">
+            <property name="text">
+             <string>Server IP/Hostname</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QPushButton" name="pushButton_browsewdir">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -170,54 +145,46 @@
       <attribute name="title">
        <string>Lookup tables</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBox_hlut">
+         <property name="title">
           <string>Hounsfield lookup table (HLUT)</string>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLineEdit" name="hlut_lineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="hlut_pushButton">
+            <property name="text">
+             <string>Browse</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="1" colspan="2">
-        <spacer name="horizontalSpacer_6">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>359</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit_hlut"/>
-       </item>
-       <item row="1" column="2">
-        <spacer name="horizontalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>274</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
           <string>Stopping power table (dE/dx)</string>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLineEdit" name="dedx_lineEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="dedx_pushButton">
+            <property name="text">
+             <string>Browse</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QLineEdit" name="lineEdit_dedx"/>
-       </item>
-       <item row="4" column="0">
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -225,24 +192,10 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>137</height>
+           <height>20</height>
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="pushButton_browsehlut">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="pushButton_browsededx">
-         <property name="text">
-          <string>Browse</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>
@@ -250,67 +203,101 @@
       <attribute name="title">
        <string>Test Config</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Check TRiP98 Version</string>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QGroupBox" name="groupBox_version">
+         <property name="title">
+          <string>TRiP98 Version</string>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="version_label">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Version: </string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="version_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Check</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Version : ???</string>
+       <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>Check selected kernel</string>
          </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QComboBox" name="checkKernel_comboBox">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="checkKernel_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Check Kernel</string>
+            </property>
+            <property name="autoRepeatDelay">
+             <number>300</number>
+            </property>
+            <property name="autoRepeatInterval">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
-       <item row="0" column="2">
-        <widget class="QCheckBox" name="checkBox">
-         <property name="text">
-          <string>Success</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>383</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="text">
-          <string>Check Kernel</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="comboBox_2"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QCheckBox" name="checkBox_2">
-         <property name="text">
-          <string>Success</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <spacer name="verticalSpacer_2">
+       <item>
+        <spacer name="verticalSpacer_testab">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
            <width>20</width>
-           <height>351</height>
+           <height>40</height>
           </size>
          </property>
         </spacer>
