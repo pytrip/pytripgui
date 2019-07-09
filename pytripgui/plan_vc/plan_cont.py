@@ -16,9 +16,9 @@ class PlanController(object):
 
         self._setup_ok_and_cancel_buttons_callbacks()
 
-        view.set_basename_value(model.basename)
-        view.set_comment_value(model.comment)
-        view.set_uuid_value(str(model.__uuid__))
+        view.basename = model.basename
+        view.comment = model.comment
+        view.uuid = str(model.__uuid__)
 
         self._setup_target_roi()
         self._setup_oar()
@@ -26,22 +26,22 @@ class PlanController(object):
         self._setup_residual_tissue()
 
         self._setup_kernels()
-        view.set_target_dose_value(model.target_dose)
-        view.set_relative_target_dose_value(model.target_dose_percent)
+        view.target_dose = model.target_dose
+        view.relative_target_dose = model.target_dose_percent
 
-        view.set_iterations_value(model.iterations)
-        view.set_eps_value(model.eps)
-        view.set_geps_value(model.geps)
+        view.iterations = model.iterations
+        view.eps = model.eps
+        view.geps = model.geps
         self._setup_optimization_metod()
         self._setup_principle()
         self._setup_dose_algorithm()
         self._setup_biological_algorithm()
         self._setup_opti_algorithm()
 
-        view.set_physical_dose_dist_state(model.want_phys_dose)
-        view.set_biological_dose_dist_state(model.want_bio_dose)
-        view.set_dose_averaged_let_state(model.want_dlet)
-        view.set_raster_scan_file_state(model.want_rst)
+        view.physical_dose_dist = model.want_phys_dose
+        view.biological_dose_dist = model.want_bio_dose
+        view.dose_averaged_let = model.want_dlet
+        view.raster_scan_file = model.want_rst
 
         view.set_unimplemented_fields_disabled()
 
@@ -61,29 +61,29 @@ class PlanController(object):
         model = self.model
         view = self.view
 
-        model.basename = view.get_basename_value()
-        model.comment = view.get_comment_value()
+        model.basename = view.basename
+        model.comment = view.comment
 
         model.voi_target = view.get_selected_target_roi()
         self.model.vois_oar = view.get_all_checked_oar_as_list()
 
         model.kernel = view.get_selected_krenel()
-        model.target_dose = view.get_target_dose_value()
-        model.target_dose_percent = view.get_relative_target_dose_value()
+        model.target_dose = view.target_dose
+        model.target_dose_percent = view.relative_target_dose
 
-        model.iterations = view.get_iterations_value()
-        model.eps = view.get_eps_value()
-        model.geps = view.get_geps_value()
+        model.iterations = view.iterations
+        model.eps = view.eps
+        model.geps = view.geps
         model.opt_method = view.get_selected_opti_method()
         model.opt_principle = view.get_selected_principle()
         model.dose_alg = view.get_selected_dose_algorithm()
         model.bio_alg = view.get_selected_bio_algorithm()
         model.opt_alg = view.get_selected_opti_algorithm()
 
-        model.want_phys_dose = view.get_physical_dose_dist_state()
-        model.want_bio_dose = view.get_biological_dose_dist_state()
-        model.want_dlet = view.get_dose_averaged_let_state()
-        model.want_rst = view.get_raster_scan_file_state()
+        model.want_phys_dose = view.physical_dose_dist
+        model.want_bio_dose = view.biological_dose_dist
+        model.want_dlet = view.dose_averaged_let
+        model.want_rst = view.raster_scan_file
 
     def _setup_target_roi(self):
         self._fill_view_with_rois()

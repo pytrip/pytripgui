@@ -33,22 +33,40 @@ class PlanQtView(object):
     def _setup_callbacks(self):
         pass
 
-    def get_basename_value(self):
+    @property
+    def basename(self):    # start
         return self.ui.basename_lineEdit.text()
 
-    def set_basename_value(self, basename):
+    @basename.getter
+    def basename(self):    # start
+        return self.ui.basename_lineEdit.text()
+
+    @basename.setter
+    def basename(self, basename):
         self.ui.basename_lineEdit.setText(basename)
 
-    def get_comment_value(self):
+    @property
+    def comment(self):
         return self.ui.comment_lineEdit.text()
 
-    def set_comment_value(self, comment):
+    @comment.getter
+    def comment(self):
+        return self.ui.comment_lineEdit.text()
+
+    @comment.setter
+    def comment(self, comment):
         self.ui.comment_lineEdit.setText(comment)
 
-    def get_uuid_value(self):
+    @property
+    def uuid(self):
         return self.ui.uuid_lineEdit.text()
 
-    def set_uuid_value(self, uuid):
+    @uuid.getter
+    def uuid(self):
+        return self.ui.uuid_lineEdit.text()
+
+    @uuid.setter
+    def uuid(self, uuid):
         self.ui.uuid_lineEdit.setText(uuid)
 
     def add_target_roi_with_name(self, target, target_name):
@@ -106,34 +124,64 @@ class PlanQtView(object):
             raise Exception("Given kernel wasn't found on the list")
         ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
 
-    def get_target_dose_value(self):
+    @property
+    def target_dose(self):
         return self.ui.targetDose_doubleSpinBox.value()
 
-    def set_target_dose_value(self, target_dose):
+    @target_dose.getter
+    def target_dose(self):
+        return self.ui.targetDose_doubleSpinBox.value()
+
+    @target_dose.setter
+    def target_dose(self, target_dose):
         self.ui.targetDose_doubleSpinBox.setValue(target_dose)
 
-    def get_relative_target_dose_value(self):
+    @property
+    def relative_target_dose(self):
         return self.ui.relativeTargetDose_doubleSpinBox.value()
 
-    def set_relative_target_dose_value(self, relative_target_dose):
+    @relative_target_dose.getter
+    def relative_target_dose(self):
+        return self.ui.relativeTargetDose_doubleSpinBox.value()
+
+    @relative_target_dose.setter
+    def relative_target_dose(self, relative_target_dose):
         self.ui.relativeTargetDose_doubleSpinBox.setValue(relative_target_dose)
 
-    def get_iterations_value(self):
+    @property
+    def iterations(self):
         return self.ui.iterations_spinBox.value()
 
-    def set_iterations_value(self, iterations):
+    @iterations.getter
+    def iterations(self):
+        return self.ui.iterations_spinBox.value()
+
+    @iterations.setter
+    def iterations(self, iterations):
         self.ui.iterations_spinBox.setValue(iterations)
 
-    def get_eps_value(self):
+    @property
+    def eps(self):
         return self.ui.eps_doubleSpinBox.value()
 
-    def set_eps_value(self, eps):
+    @eps.getter
+    def eps(self):
+        return self.ui.eps_doubleSpinBox.value()
+
+    @eps.setter
+    def eps(self, eps):
         self.ui.eps_doubleSpinBox.setValue(eps)
 
-    def get_geps_value(self):
+    @property
+    def geps(self):
         return self.ui.geps_doubleSpinBox.value()
 
-    def set_geps_value(self, geps):
+    @geps.getter
+    def geps(self):
+        return self.ui.geps_doubleSpinBox.value()
+
+    @geps.setter
+    def geps(self, geps):
         self.ui.geps_doubleSpinBox.setValue(geps)
 
     def add_opti_method_with_name(self, opti, opti_name):
@@ -206,45 +254,77 @@ class PlanQtView(object):
             raise Exception("Given optimization algorithm wasn't found on the list")
         ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
 
-    def get_physical_dose_dist_state(self):
+    @property
+    def physical_dose_dist(self):
         if self.ui.physicalDoseDist_checkBox.checkState() == Qt.Checked:
             return True
         return 0
 
-    def set_physical_dose_dist_state(self, state):
+    @physical_dose_dist.getter
+    def physical_dose_dist(self):
+        if self.ui.physicalDoseDist_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
+
+    @physical_dose_dist.setter
+    def physical_dose_dist(self, state):
         if state is True:
             self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
 
-    def get_biological_dose_dist_state(self):
+    @property
+    def biological_dose_dist(self):
         if self.ui.biologicalDoseDist_checkBox.checkState() == Qt.Checked:
             return True
         return 0
 
-    def set_biological_dose_dist_state(self, state):
+    @biological_dose_dist.getter
+    def biological_dose_dist(self):
+        if self.ui.biologicalDoseDist_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
+
+    @biological_dose_dist.setter
+    def biological_dose_dist(self, state):
         if state is True:
             self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
 
-    def get_dose_averaged_let_state(self):
+    @property
+    def dose_averaged_let(self):
         if self.ui.doseAveragedLET_checkBox.checkState() == Qt.Checked:
             return True
         return 0
 
-    def set_dose_averaged_let_state(self, state):
+    @dose_averaged_let.getter
+    def dose_averaged_let(self):
+        if self.ui.doseAveragedLET_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
+
+    @dose_averaged_let.setter
+    def dose_averaged_let(self, state):
         if state is True:
             self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Unchecked)
 
-    def get_raster_scan_file_state(self):
+    @property
+    def raster_scan_file(self):
         if self.ui.rasterScanFile_checkBox.checkState() == Qt.Checked:
             return True
         return 0
 
-    def set_raster_scan_file_state(self, state):
+    @raster_scan_file.getter
+    def raster_scan_file(self):
+        if self.ui.rasterScanFile_checkBox.checkState() == Qt.Checked:
+            return True
+        return 0
+
+    @raster_scan_file.setter
+    def raster_scan_file(self, state):
         if state is True:
             self.ui.rasterScanFile_checkBox.setCheckState(Qt.Checked)
         else:
