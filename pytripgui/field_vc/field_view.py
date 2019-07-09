@@ -61,17 +61,30 @@ class FieldQtView(object):
     def _button_box_callback(self, pressed_button):
         print(pressed_button)
 
-    def get_gantry_angle_value(self):
+    @property
+    def gantry_angle(self):
         return self.ui.gantry_doubleSpinBox.value()
 
-    def set_gantry_angle_value(self, gantry_angle):
+    @gantry_angle.getter
+    def gantry_angle(self):
+        return self.ui.gantry_doubleSpinBox.value()
+
+    @gantry_angle.setter
+    def gantry_angle(self, gantry_angle):
         self.ui.gantry_doubleSpinBox.setValue(gantry_angle)
 
-    def get_couch_angle_value(self):
+    @property
+    def couch_angle(self):
         return self.ui.couch_doubleSpinBox.value()
 
-    def set_couch_angle_value(self, gantry_angle):
+    @couch_angle.getter
+    def couch_angle(self):
+        return self.ui.couch_doubleSpinBox.value()
+
+    @couch_angle.setter
+    def couch_angle(self, gantry_angle):
         self.ui.couch_doubleSpinBox.setValue(gantry_angle)
+
 
     def is_isocenter_manually(self):
         return self.ui.manualIsocenter_checkBox.isChecked()
@@ -96,40 +109,77 @@ class FieldQtView(object):
         ui.isocenterY_doubleSpinBox.setValue(isocenter[1])
         ui.isocenterZ_doubleSpinBox.setValue(isocenter[2])
 
-    def get_spot_size_value(self):
+    @property
+    def spot_size(self):
         return self.ui.spotSize_doubleSpinBox.value()
 
-    def set_spot_size_value(self, spot_size):
+    @spot_size.getter
+    def spot_size(self):
+        return self.ui.spotSize_doubleSpinBox.value()
+
+    @spot_size.setter
+    def spot_size(self, spot_size):
         self.ui.spotSize_doubleSpinBox.setValue(spot_size)
 
-    def get_raster_step_value(self):
+    @property
+    def raster_step(self):
         raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
                        self.ui.rasterSpaceY_doubleSpinBox.value()]
         return raster_step
 
-    def set_raster_step_value(self, raster_step):
+    @raster_step.getter
+    def raster_step(self):
+        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
+                       self.ui.rasterSpaceY_doubleSpinBox.value()]
+        return raster_step
+
+    @raster_step.setter
+    def raster_step(self, raster_step):
         self.ui.rasterSpaceX_doubleSpinBox.setValue(raster_step[0])
         self.ui.rasterSpaceY_doubleSpinBox.setValue(raster_step[1])
 
-    def get_dose_extension_value(self):
+    @property
+    def dose_extension(self):
         return self.ui.doseext_doubleSpinBox.value()
 
-    def set_dose_extension_value(self, dose_extension):
+    @dose_extension.getter
+    def dose_extension(self):
+        return self.ui.doseext_doubleSpinBox.value()
+
+    @dose_extension.setter
+    def dose_extension(self, dose_extension):
         self.ui.doseext_doubleSpinBox.setValue(dose_extension)
 
-    def get_contour_extension_value(self):
+    @property
+    def contour_extension(self):
         return self.ui.contourext_doubleSpinBox.value()
 
-    def set_contour_extension_value(self, contour_extension):
+    @contour_extension.getter
+    def contour_extension(self):
+        return self.ui.contourext_doubleSpinBox.value()
+
+    @contour_extension.setter
+    def contour_extension(self, contour_extension):
         self.ui.contourext_doubleSpinBox.setValue(contour_extension)
 
-    def get_depth_steps_value(self):
+    @property
+    def depth_steps(self):
         return self.ui.depthStep_doubleSpinBox.value()
 
-    def set_depth_steps_value(self, zsteps):
+    @depth_steps.getter
+    def depth_steps(self):
+        return self.ui.depthStep_doubleSpinBox.value()
+
+    @depth_steps.setter
+    def depth_steps(self, zsteps):
         self.ui.depthStep_doubleSpinBox.setValue(zsteps)
 
-    def get_selected_kernel(self):
+    @property
+    def selected_kernel(self):
+        return self.ui.kernel_comboBox.currentData()
+
+    @selected_kernel.getter
+    def selected_kernel(self):
         return self.ui.kernel_comboBox.currentData()
 
     def add_kernel_with_name(self, kernel, kernel_name):

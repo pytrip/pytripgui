@@ -20,13 +20,13 @@ class FieldController(object):
             view.set_isocenter_state(False)
 
         self._setup_ok_and_cancel_buttons_callbacks()
-        view.set_gantry_angle_value(model.gantry)
-        view.set_couch_angle_value(model.couch)
-        view.set_spot_size_value(model.fwhm)
-        view.set_raster_step_value(model.raster_step)
-        view.set_dose_extension_value(model.dose_extension)
-        view.set_contour_extension_value(model.contour_extension)
-        view.set_depth_steps_value(model.zsteps)
+        view.gantry_angle = model.gantry
+        view.couch_angle = model.couch
+        view.spot_size = model.fwhm
+        view.raster_step = model.raster_step
+        view.dose_extension = model.dose_extension
+        view.contour_extension = model.contour_extension
+        view.depth_steps = model.zsteps
         self._setup_kernels()
 
     def _is_isocenter_manually(self):
@@ -40,7 +40,7 @@ class FieldController(object):
         for kernel in kernels:
             view.add_kernel_with_name(kernel, kernel.name)
 
-        view.set_kernel_view_to_this(model.kernel)
+        view.select_kernel_view_to_this(model.kernel)
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)
@@ -63,11 +63,11 @@ class FieldController(object):
         else:
             model.isocenter = []
 
-        model.gantry = view.get_gantry_angle_value()
-        model.couch = view.get_couch_angle_value()
-        model.fwhm = view.get_spot_size_value()
-        model.raster_step = view.get_raster_step_value()
-        model.dose_extension = view.get_dose_extension_value()
-        model.contour_extension = view.get_contour_extension_value()
-        model.zsteps = view.get_depth_steps_value()
-        model.kernel = view.get_selected_kernel()
+        model.gantry = view.gantry_angle
+        model.couch = view.couch_angle
+        model.fwhm = view.spot_size
+        model.raster_step = view.raster_step
+        model.dose_extension = view.dose_extension
+        model.contour_extension = view.contour_extension
+        model.zsteps = view.depth_steps
+        model.kernel = view.selected_kernel
