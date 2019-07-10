@@ -46,16 +46,13 @@ class FieldQtView(object):
         self.gantry_angle = self.gantry_angle + 90.0
 
     def _gantry_m90(self):
-        self.gantry_angle= self.gantry_angle - 90.0
+        self.gantry_angle = self.gantry_angle - 90.0
 
     def _couch_p90(self):
         self.couch_angle = self.couch_angle + 90.0
 
     def _couch_m90(self):
         self.couch_angle = self.couch_angle - 90.0
-
-    def _button_box_callback(self, pressed_button):
-        print(pressed_button)
 
     @property
     def gantry_angle(self):

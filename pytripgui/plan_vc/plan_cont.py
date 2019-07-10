@@ -98,7 +98,7 @@ class PlanController(object):
         view = self.view
 
         if model.voi_target is not None:
-            view.set_target_roi_to_this(model.voi_target)
+            view.select_target_roi_to_this(model.voi_target)
 
     def _setup_oar(self):
         self._fill_view_with_oars()

@@ -68,12 +68,12 @@ class PlanQtView(object):
     def add_target_roi_with_name(self, target, target_name):
         self.ui.targetROI_comboBox.addItem(target_name, target)
 
-    def set_target_roi_to_this(self, target):
+    def select_target_roi_to_this(self, target):
         ui = self.ui
 
         index_of_target = ui.targetROI_comboBox.findData(target, Qt.UserRole)
         if index_of_target == -1:
-            raise Exception("Given kernel wasn't found on the list")
+            raise Exception("Given target roi wasn't found on the list")
         ui.targetROI_comboBox.setCurrentIndex(index_of_target)
 
     def get_selected_target_roi(self):
