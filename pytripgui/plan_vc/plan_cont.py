@@ -22,8 +22,6 @@ class PlanController(object):
 
         self._setup_target_roi()
         self._setup_oar()
-        self._setup_target_tissue()
-        self._setup_residual_tissue()
 
         self._setup_kernels()
         view.target_dose = model.target_dose
@@ -115,12 +113,6 @@ class PlanController(object):
     def _mark_specified_oars_as_checked(self):
         for oar in self.model.vois_oar:
             self.view.set_oar_as_checked(oar)
-
-    def _setup_target_tissue(self):
-        pass        # TODO
-
-    def _setup_residual_tissue(self):
-        pass        # TODO
 
     def _setup_kernels(self):
         view = self.view

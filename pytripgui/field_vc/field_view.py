@@ -14,7 +14,7 @@ class FieldQtView(object):
         self.dialog = QtWidgets.QDialog()
 
         self.ui.setupUi(self.dialog)
-        self._setup_callbacks()
+        self._setup_internal_callbacks()
 
     def show(self):
         self.dialog.show()
@@ -29,7 +29,7 @@ class FieldQtView(object):
     def set_cancel_callback(self, fun):
         self.ui.accept_ButtonBox.rejected.connect(fun)
 
-    def _setup_callbacks(self):
+    def _setup_internal_callbacks(self):
         ui = self.ui
         ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
         ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
@@ -84,7 +84,6 @@ class FieldQtView(object):
     @couch_angle.setter
     def couch_angle(self, gantry_angle):
         self.ui.couch_doubleSpinBox.setValue(gantry_angle)
-
 
     def is_isocenter_manually(self):
         return self.ui.manualIsocenter_checkBox.isChecked()

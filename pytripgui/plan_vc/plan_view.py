@@ -15,7 +15,6 @@ class PlanQtView(object):
         self.dialog = QtWidgets.QDialog()
 
         self.ui.setupUi(self.dialog)
-        self._setup_callbacks()
 
     def show(self):
         self.dialog.show()
@@ -29,9 +28,6 @@ class PlanQtView(object):
 
     def set_cancel_callback(self, fun):
         self.ui.accept_buttonBox.rejected.connect(fun)
-
-    def _setup_callbacks(self):
-        pass
 
     @property
     def basename(self):    # start
@@ -256,15 +252,11 @@ class PlanQtView(object):
 
     @property
     def physical_dose_dist(self):
-        if self.ui.physicalDoseDist_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.physicalDoseDist_checkBox.isChecked()
 
     @physical_dose_dist.getter
     def physical_dose_dist(self):
-        if self.ui.physicalDoseDist_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.physicalDoseDist_checkBox.isChecked()
 
     @physical_dose_dist.setter
     def physical_dose_dist(self, state):
@@ -275,57 +267,45 @@ class PlanQtView(object):
 
     @property
     def biological_dose_dist(self):
-        if self.ui.biologicalDoseDist_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.biologicalDoseDist_checkBox.isChecked()
 
     @biological_dose_dist.getter
     def biological_dose_dist(self):
-        if self.ui.biologicalDoseDist_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.biologicalDoseDist_checkBox.isChecked()
 
     @biological_dose_dist.setter
     def biological_dose_dist(self, state):
-        if state is True:
+        if state:
             self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
 
     @property
     def dose_averaged_let(self):
-        if self.ui.doseAveragedLET_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.doseAveragedLET_checkBox.isChecked()
 
     @dose_averaged_let.getter
     def dose_averaged_let(self):
-        if self.ui.doseAveragedLET_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.doseAveragedLET_checkBox.isChecked()
 
     @dose_averaged_let.setter
     def dose_averaged_let(self, state):
-        if state is True:
+        if state:
             self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Unchecked)
 
     @property
     def raster_scan_file(self):
-        if self.ui.rasterScanFile_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.rasterScanFile_checkBox.isChecked()
 
     @raster_scan_file.getter
     def raster_scan_file(self):
-        if self.ui.rasterScanFile_checkBox.checkState() == Qt.Checked:
-            return True
-        return 0
+        return self.ui.rasterScanFile_checkBox.isChecked()
 
     @raster_scan_file.setter
     def raster_scan_file(self, state):
-        if state is True:
+        if state:
             self.ui.rasterScanFile_checkBox.setCheckState(Qt.Checked)
         else:
             self.ui.rasterScanFile_checkBox.setCheckState(Qt.Unchecked)
