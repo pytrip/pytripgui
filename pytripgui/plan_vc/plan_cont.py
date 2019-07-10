@@ -119,6 +119,13 @@ class PlanController(object):
         model = self.model
         kernels = self.kernels
 
+        kernel_exception = "You should first setup kernels with: Settings -> beam kernels"
+        try:
+            if len(kernels) == 0:
+                raise Exception(kernel_exception)
+        except TypeError:
+            raise Exception(kernel_exception)
+
         for kernel in kernels:
             view.add_kernel_with_name(kernel, kernel.name)
 
