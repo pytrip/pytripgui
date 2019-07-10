@@ -39,8 +39,8 @@ class FieldQtView(object):
 
     def _isocenter_checkbox_callback(self):
         ui = self.ui
-        checkboxState = ui.manualIsocenter_checkBox.checkState()
-        self.set_isocenter_state(checkboxState)
+        checkbox_sate = ui.manualIsocenter_checkBox.checkState()
+        self.set_isocenter_state(checkbox_sate)
 
     def _gantry_p90(self):
         self.gantry_angle = self.gantry_angle + 90.0
