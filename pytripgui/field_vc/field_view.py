@@ -43,20 +43,16 @@ class FieldQtView(object):
         self.set_isocenter_state(checkboxState)
 
     def _gantry_p90(self):
-        new_gantry_angle = self.get_gantry_angle_value() + 90.0
-        self.set_gantry_angle_value(new_gantry_angle)
+        self.gantry_angle = self.gantry_angle + 90.0
 
     def _gantry_m90(self):
-        new_gantry_angle = self.get_gantry_angle_value() - 90.0
-        self.set_gantry_angle_value(new_gantry_angle)
+        self.gantry_angle= self.gantry_angle - 90.0
 
     def _couch_p90(self):
-        new_couch_angle = self.get_couch_angle_value() + 90.0
-        self.set_couch_angle_value(new_couch_angle)
+        self.couch_angle = self.couch_angle + 90.0
 
     def _couch_m90(self):
-        new_couch_angle = self.get_couch_angle_value() - 90.0
-        self.set_couch_angle_value(new_couch_angle)
+        self.couch_angle = self.couch_angle - 90.0
 
     def _button_box_callback(self, pressed_button):
         print(pressed_button)

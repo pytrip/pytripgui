@@ -128,9 +128,8 @@ class PlanController(object):
         view = self.view
         opt_methods = self.model.opt_methods
 
-        for i, key in enumerate(opt_methods):
-            method_name = opt_methods[key][1]
-            view.add_opti_method_with_name(key, method_name)
+        for short_name, (_, full_name, _) in opt_methods.items():
+            view.add_opti_method_with_name(short_name, full_name)
 
         view.select_opti_method_view_to_this(self.model.opt_method)
 
@@ -138,19 +137,17 @@ class PlanController(object):
         view = self.view
         principles = self.model.opt_principles
 
-        for i, key in enumerate(principles):
-            principle_name = principles[key][1]
-            view.add_principle_with_name(key, principle_name)
+        for short_name, (_, full_name, _) in principles.items():
+            view.add_principle_with_name(short_name, full_name)
 
         view.select_principle_view_to_this(self.model.opt_principle)
 
     def _setup_dose_algorithm(self):
         view = self.view
-        dose_alg = self.model.dose_algs
+        dose_algs = self.model.dose_algs
 
-        for i, key in enumerate(dose_alg):
-            dose_alg_name = dose_alg[key][1]
-            view.add_dose_algorithm_with_name(key, dose_alg_name)
+        for short_name, (_, full_name, _) in dose_algs.items():
+            view.add_dose_algorithm_with_name(short_name, full_name)
 
         view.select_dose_algorithm_view_to_this(self.model.dose_alg)
 
@@ -158,9 +155,8 @@ class PlanController(object):
         view = self.view
         bio_algs = self.model.bio_algs
 
-        for i, key in enumerate(bio_algs):
-            biol_alg_name = bio_algs[key][1]
-            view.add_bio_algorithm_with_name(key, biol_alg_name)
+        for short_name, (_, full_name, _) in bio_algs.items():
+            view.add_bio_algorithm_with_name(short_name, full_name)
 
         view.select_bio_algorithm_view_to_this(self.model.bio_alg)
 
@@ -168,8 +164,7 @@ class PlanController(object):
         view = self.view
         opti_algs = self.model.opt_algs
 
-        for i, key in enumerate(opti_algs):
-            biol_alg_name = opti_algs[key][1]
-            view.add_opti_algorithm_with_name(key, biol_alg_name)
+        for short_name, (_, full_name, _) in opti_algs.items():
+            view.add_opti_algorithm_with_name(short_name, full_name)
 
         view.select_opti_algorithm_view_to_this(self.model.opt_alg)

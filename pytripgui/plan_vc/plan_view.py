@@ -260,10 +260,7 @@ class PlanQtView(object):
 
     @physical_dose_dist.setter
     def physical_dose_dist(self, state):
-        if state is True:
-            self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Checked)
-        else:
-            self.ui.physicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
+        self.ui.physicalDoseDist_checkBox.setChecked(state)
 
     @property
     def biological_dose_dist(self):
@@ -275,10 +272,7 @@ class PlanQtView(object):
 
     @biological_dose_dist.setter
     def biological_dose_dist(self, state):
-        if state:
-            self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Checked)
-        else:
-            self.ui.biologicalDoseDist_checkBox.setCheckState(Qt.Unchecked)
+        self.ui.biologicalDoseDist_checkBox.setChecked(state)
 
     @property
     def dose_averaged_let(self):
@@ -290,10 +284,7 @@ class PlanQtView(object):
 
     @dose_averaged_let.setter
     def dose_averaged_let(self, state):
-        if state:
-            self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Checked)
-        else:
-            self.ui.doseAveragedLET_checkBox.setCheckState(Qt.Unchecked)
+        self.ui.doseAveragedLET_checkBox.setChecked(state)
 
     @property
     def raster_scan_file(self):
@@ -305,10 +296,7 @@ class PlanQtView(object):
 
     @raster_scan_file.setter
     def raster_scan_file(self, state):
-        if state:
-            self.ui.rasterScanFile_checkBox.setCheckState(Qt.Checked)
-        else:
-            self.ui.rasterScanFile_checkBox.setCheckState(Qt.Unchecked)
+        self.ui.rasterScanFile_checkBox.setChecked(state)
 
     def set_unimplemented_fields_disabled(self):
         ui = self.ui
