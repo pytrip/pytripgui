@@ -11,7 +11,7 @@ class FieldController(object):
 
     def set_view_from_model(self):
         if self._is_isocenter_manually():
-            self.view.set_isocenter_values(model.isocenter)
+            self.view.set_isocenter_values(self.model.isocenter)
             self.view.set_isocenter_state(True)
         else:
             self.view.set_isocenter_state(False)
