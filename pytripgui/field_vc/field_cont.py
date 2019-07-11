@@ -10,37 +10,32 @@ class FieldController(object):
         self.user_clicked_save = False
 
     def set_view_from_model(self):
-        model = self.model
-        view = self.view
-
         if self._is_isocenter_manually():
-            view.set_isocenter_values(model.isocenter)
-            view.set_isocenter_state(True)
+            self.view.set_isocenter_values(model.isocenter)
+            self.view.set_isocenter_state(True)
         else:
-            view.set_isocenter_state(False)
+            self.view.set_isocenter_state(False)
 
         self._setup_ok_and_cancel_buttons_callbacks()
-        view.gantry_angle = model.gantry
-        view.couch_angle = model.couch
-        view.spot_size = model.fwhm
-        view.raster_step = model.raster_step
-        view.dose_extension = model.dose_extension
-        view.contour_extension = model.contour_extension
-        view.depth_steps = model.zsteps
+        self.view.gantry_angle = self.model.gantry
+        self.view.couch_angle = self.model.couch
+        self.view.spot_size = self.model.fwhm
+        self.view.raster_step = self.model.raster_step
+        self.view.dose_extension = self.model.dose_extension
+        self.view.contour_extension = self.model.contour_extension
+        self.view.depth_steps = self.model.zsteps
         self._setup_kernels()
 
     def _is_isocenter_manually(self):
         return len(self.model.isocenter) == 3
 
     def _setup_kernels(self):
-        view = self.view
-        model = self.model
         kernels = self.kernels
 
         for kernel in kernels:
-            view.add_kernel_with_name(kernel, kernel.name)
+            self.view.add_kernel_with_name(kernel, kernel.name)
 
-        view.select_kernel_view_to_this(model.kernel)
+        self.view.select_kernel_view_to_this(self.model.kernel)
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)
@@ -55,19 +50,16 @@ class FieldController(object):
         self.view.exit()
 
     def set_model_from_view(self):
-        model = self.model
-        view = self.view
-
-        if view.is_isocenter_manually():
-            model.isocenter = view.get_isocenter_value()
+        if self.view.is_isocenter_manually():
+            self.model.isocenter = self.view.get_isocenter_value()
         else:
-            model.isocenter = []
+            self.model.isocenter = []
 
-        model.gantry = view.gantry_angle
-        model.couch = view.couch_angle
-        model.fwhm = view.spot_size
-        model.raster_step = view.raster_step
-        model.dose_extension = view.dose_extension
-        model.contour_extension = view.contour_extension
-        model.zsteps = view.depth_steps
-        model.kernel = view.selected_kernel
+        self.model.gantry = self.view.gantry_angle
+        self.model.couch = self.view.couch_angle
+        self.model.fwhm = self.view.spot_size
+        self.model.raster_step = self.view.raster_step
+        self.model.dose_extension = self.view.dose_extension
+        self.model.contour_extension = self.view.contour_extension
+        self.model.zsteps = self.view.depth_steps
+        self.model.kernel = self.view.selected_kernel

@@ -30,29 +30,27 @@ class FieldQtView(object):
         self.ui.accept_ButtonBox.rejected.connect(fun)
 
     def _setup_internal_callbacks(self):
-        ui = self.ui
-        ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
-        ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
-        ui.gantry_pushButton_m90.clicked.connect(self._gantry_m90)  # -90 deg
-        ui.couch_pushButton_p90.clicked.connect(self._couch_p90)  # +90 deg
-        ui.couch_pushButton_m90.clicked.connect(self._couch_m90)  # -90 deg
+        self.ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
+        self.ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
+        self.ui.gantry_pushButton_m90.clicked.connect(self._gantry_m90)  # -90 deg
+        self.ui.couch_pushButton_p90.clicked.connect(self._couch_p90)  # +90 deg
+        self.ui.couch_pushButton_m90.clicked.connect(self._couch_m90)  # -90 deg
 
     def _isocenter_checkbox_callback(self):
-        ui = self.ui
-        checkbox_sate = ui.manualIsocenter_checkBox.checkState()
-        self.set_isocenter_state(checkbox_sate)
+        checkbox_state = self.ui.manualIsocenter_checkBox.checkState()
+        self.set_isocenter_state(checkbox_state)
 
     def _gantry_p90(self):
-        self.gantry_angle = self.gantry_angle + 90.0
+        self.gantry_angle += 90.0
 
     def _gantry_m90(self):
-        self.gantry_angle = self.gantry_angle - 90.0
+        self.gantry_angle -= 90.0
 
     def _couch_p90(self):
-        self.couch_angle = self.couch_angle + 90.0
+        self.couch_angle += 90.0
 
     def _couch_m90(self):
-        self.couch_angle = self.couch_angle - 90.0
+        self.couch_angle -= 90.0
 
     @property
     def gantry_angle(self):
@@ -82,24 +80,21 @@ class FieldQtView(object):
         return self.ui.manualIsocenter_checkBox.isChecked()
 
     def get_isocenter_value(self):
-        ui = self.ui
-        isocenter = [ui.isocenterX_doubleSpinBox.value(),
-                     ui.isocenterY_doubleSpinBox.value(),
-                     ui.isocenterZ_doubleSpinBox.value()]
+        isocenter = [self.ui.isocenterX_doubleSpinBox.value(),
+                     self.ui.isocenterY_doubleSpinBox.value(),
+                     self.ui.isocenterZ_doubleSpinBox.value()]
         return isocenter
 
     def set_isocenter_state(self, state):
-        ui = self.ui
-        ui.manualIsocenter_checkBox.setChecked(state)
-        ui.isocenterX_doubleSpinBox.setEnabled(state)
-        ui.isocenterY_doubleSpinBox.setEnabled(state)
-        ui.isocenterZ_doubleSpinBox.setEnabled(state)
+        self.ui.manualIsocenter_checkBox.setChecked(state)
+        self.ui.isocenterX_doubleSpinBox.setEnabled(state)
+        self.ui.isocenterY_doubleSpinBox.setEnabled(state)
+        self.ui.isocenterZ_doubleSpinBox.setEnabled(state)
 
     def set_isocenter_values(self, isocenter):
-        ui = self.ui
-        ui.isocenterX_doubleSpinBox.setValue(isocenter[0])
-        ui.isocenterY_doubleSpinBox.setValue(isocenter[1])
-        ui.isocenterZ_doubleSpinBox.setValue(isocenter[2])
+        self.ui.isocenterX_doubleSpinBox.setValue(isocenter[0])
+        self.ui.isocenterY_doubleSpinBox.setValue(isocenter[1])
+        self.ui.isocenterZ_doubleSpinBox.setValue(isocenter[2])
 
     @property
     def spot_size(self):
@@ -178,9 +173,7 @@ class FieldQtView(object):
         self.ui.kernel_comboBox.addItem(kernel_name, kernel)
 
     def select_kernel_view_to_this(self, kernel):
-        ui = self.ui
-
-        index_of_kernel = ui.kernel_comboBox.findData(kernel, Qt.UserRole)
+        index_of_kernel = self.ui.kernel_comboBox.findData(kernel, Qt.UserRole)
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
-        ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
+        self.ui.kernel_comboBox.setCurrentIndex(index_of_kernel)

@@ -69,12 +69,10 @@ class PlanQtView(object):
         self.ui.targetROI_comboBox.addItem(target_name, target)
 
     def select_target_roi_to_this(self, target):
-        ui = self.ui
-
-        index_of_target = ui.targetROI_comboBox.findData(target, Qt.UserRole)
+        index_of_target = self.ui.targetROI_comboBox.findData(target, Qt.UserRole)
         if index_of_target == -1:
             raise Exception("Given target roi wasn't found on the list")
-        ui.targetROI_comboBox.setCurrentIndex(index_of_target)
+        self.ui.targetROI_comboBox.setCurrentIndex(index_of_target)
 
     def get_selected_target_roi(self):
         return self.ui.targetROI_comboBox.currentData()
@@ -113,12 +111,10 @@ class PlanQtView(object):
         return self.ui.kernel_comboBox.currentData(Qt.UserRole)
 
     def select_kernel_view_to_this(self, kernel):
-        ui = self.ui
-
-        index_of_kernel = ui.kernel_comboBox.findData(kernel, Qt.UserRole)
+        index_of_kernel = self.ui.kernel_comboBox.findData(kernel, Qt.UserRole)
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
-        ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
+        self.ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
 
     @property
     def target_dose(self):
@@ -187,12 +183,10 @@ class PlanQtView(object):
         return self.ui.optiMethod_comboBox.currentData(Qt.UserRole)
 
     def select_opti_method_view_to_this(self, opti):
-        ui = self.ui
-
-        index_of_kernel = ui.optiMethod_comboBox.findData(opti, Qt.UserRole)
+        index_of_kernel = self.ui.optiMethod_comboBox.findData(opti, Qt.UserRole)
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
-        ui.optiMethod_comboBox.setCurrentIndex(index_of_kernel)
+        self.ui.optiMethod_comboBox.setCurrentIndex(index_of_kernel)
 
     def add_principle_with_name(self, principle, principle_name):
         self.ui.principle_comboBox.addItem(principle_name, principle)
@@ -201,12 +195,10 @@ class PlanQtView(object):
         return self.ui.principle_comboBox.currentData(Qt.UserRole)
 
     def select_principle_view_to_this(self, principle):
-        ui = self.ui
-
-        index_of_principle = ui.principle_comboBox.findData(principle, Qt.UserRole)
+        index_of_principle = self.ui.principle_comboBox.findData(principle, Qt.UserRole)
         if index_of_principle == -1:
             raise Exception("Given principle wasn't found on the list")
-        ui.principle_comboBox.setCurrentIndex(index_of_principle)
+        self.ui.principle_comboBox.setCurrentIndex(index_of_principle)
 
     def add_dose_algorithm_with_name(self, dose_alg, dose_alg_name):
         self.ui.doseAlgorithm_comboBox.addItem(dose_alg_name, dose_alg)
@@ -215,12 +207,10 @@ class PlanQtView(object):
         return self.ui.doseAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_dose_algorithm_view_to_this(self, dose_alg):
-        ui = self.ui
-
-        index_of_dose_alg = ui.doseAlgorithm_comboBox.findData(dose_alg, Qt.UserRole)
+        index_of_dose_alg = self.ui.doseAlgorithm_comboBox.findData(dose_alg, Qt.UserRole)
         if index_of_dose_alg == -1:
             raise Exception("Given dose algorithm wasn't found on the list")
-        ui.doseAlgorithm_comboBox.setCurrentIndex(index_of_dose_alg)
+        self.ui.doseAlgorithm_comboBox.setCurrentIndex(index_of_dose_alg)
 
     def add_bio_algorithm_with_name(self, biol_alg, biol_alg_name):
         self.ui.bioAlgorithm_comboBox.addItem(biol_alg_name, biol_alg)
@@ -229,12 +219,10 @@ class PlanQtView(object):
         return self.ui.bioAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_bio_algorithm_view_to_this(self, biol_alg):
-        ui = self.ui
-
-        index_of_biol_alg = ui.bioAlgorithm_comboBox.findData(biol_alg, Qt.UserRole)
+        index_of_biol_alg = self.ui.bioAlgorithm_comboBox.findData(biol_alg, Qt.UserRole)
         if index_of_biol_alg == -1:
             raise Exception("Given biological algorithm wasn't found on the list")
-        ui.bioAlgorithm_comboBox.setCurrentIndex(index_of_biol_alg)
+        self.ui.bioAlgorithm_comboBox.setCurrentIndex(index_of_biol_alg)
 
     def add_opti_algorithm_with_name(self, opti_alg, opti_alg_name):
         self.ui.optiAlgorithm_comboBox.addItem(opti_alg_name, opti_alg)
@@ -243,12 +231,10 @@ class PlanQtView(object):
         return self.ui.optiAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_opti_algorithm_view_to_this(self, opti_alg):
-        ui = self.ui
-
-        index_of_opti_alg = ui.optiAlgorithm_comboBox.findData(opti_alg, Qt.UserRole)
+        index_of_opti_alg = self.ui.optiAlgorithm_comboBox.findData(opti_alg, Qt.UserRole)
         if index_of_opti_alg == -1:
             raise Exception("Given optimization algorithm wasn't found on the list")
-        ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
+        self.ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
 
     @property
     def physical_dose_dist(self):
@@ -299,13 +285,11 @@ class PlanQtView(object):
         self.ui.rasterScanFile_checkBox.setChecked(state)
 
     def set_unimplemented_fields_disabled(self):
-        ui = self.ui
-
-        ui.incube_checkBox.setDisabled(True)
-        ui.incube_comboBox.setDisabled(True)
-        ui.targetTissue_label.setDisabled(True)
-        ui.targetTissue_comboBox.setDisabled(True)
-        ui.residialTissue_comboBox.setDisabled(True)
-        ui.residialTissue_label.setDisabled(True)
-        ui.beamsEyeDoseView_checkBox.setDisabled(True)
-        ui.beamsEyeLETdViewcheckBox.setDisabled(True)
+        self.ui.incube_checkBox.setDisabled(True)
+        self.ui.incube_comboBox.setDisabled(True)
+        self.ui.targetTissue_label.setDisabled(True)
+        self.ui.targetTissue_comboBox.setDisabled(True)
+        self.ui.residialTissue_comboBox.setDisabled(True)
+        self.ui.residialTissue_label.setDisabled(True)
+        self.ui.beamsEyeDoseView_checkBox.setDisabled(True)
+        self.ui.beamsEyeLETdViewcheckBox.setDisabled(True)
