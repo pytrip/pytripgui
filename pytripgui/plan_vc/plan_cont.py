@@ -53,9 +53,6 @@ class PlanController(object):
         self.view.exit()
 
     def set_model_from_view(self):
-        self.model = self.model
-        self.view = self.view
-
         self.model.basename = self.view.basename
         self.model.comment = self.view.comment
 

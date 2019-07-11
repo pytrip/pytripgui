@@ -78,14 +78,12 @@ class PlanQtView(object):
         return self.ui.targetROI_comboBox.currentData()
 
     def add_oar_with_name(self, voi, voi_name):
-        oar_list = self.ui.OAR_treeWidget
-
         oar_item = QTreeWidgetItem()
         oar_item.setText(0, voi_name)
         oar_item.setData(0, Qt.UserRole, voi)
         oar_item.setCheckState(0, Qt.Unchecked)
 
-        oar_list.addTopLevelItem(oar_item)
+        self.ui.OAR_treeWidget.addTopLevelItem(oar_item)
 
     def set_oar_as_checked(self, voi):
         oar_list = self.ui.OAR_treeWidget.findItems(voi.name, Qt.MatchExactly)
