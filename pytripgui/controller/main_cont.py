@@ -473,10 +473,27 @@ class MainController(object):
         """
         New plan opened from window->plan->New Plan
         """
-        model = self.model
-        from pytripgui.controller.plan_cont import PlanController
-        PlanController.new_plan(model)
-        self.tree.update_tree()
+        logger.debug("add_new_plan() {}".format(None))
+
+        from pytrip.tripexecuter import Plan
+        from pytripgui.plan_vc import PlanQtView
+        from pytripgui.plan_vc import PlanController
+
+        # selected_plan = self._node_obj
+        plan = Plan()
+        plan.basename = self.model.ctx.basename
+        view = PlanQtView()
+        global_kernels = self.model.kernels
+        default_kernel = self.model.kernels[0]  # TODO select default kernel
+        plan.kernel = default_kernel
+
+        controller = PlanController(plan, view, global_kernels, self.model.vdx.vois)
+        controller.set_view_from_model()
+        view.show()
+
+        if controller.user_clicked_save:
+            self.model.plans.append(plan)
+            self.tree.update_tree()
 
     def on_kernel(self, event):
         """

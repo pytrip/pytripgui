@@ -76,7 +76,7 @@ class TreeMenuController(object):
             popup_menu.addAction("Rename", self.menu_open)
             popup_menu.addAction("Export .vdx", self.menu_open)
             popup_menu.addSeparator()
-            popup_menu.addAction("New Plan", self.menu_newplan)  # TODO: may move somewhere else
+            # popup_menu.addAction("New Plan", self.menu_newplan)  # TODO: may move somewhere else
             popup_menu.addSeparator()
             popup_menu.addAction("Delete all", self.menu_open)
 
@@ -92,7 +92,7 @@ class TreeMenuController(object):
             popup_menu.addAction("Add field", self.add_field)
             popup_menu.addSeparator()
             popup_menu.addAction("Execute plan", self.execute_plan)
-            popup_menu.addAction("Edit", self.menu_open)
+            popup_menu.addAction("Edit", self.edit_plan)
             popup_menu.addAction("Export", self.menu_open)
             popup_menu.addAction("Rename", self.menu_open)
             popup_menu.addSeparator()
@@ -157,8 +157,8 @@ class TreeMenuController(object):
         logger.debug("add_field_new() {}".format(None))
 
         from pytrip.tripexecuter import Field
-        from pytripgui.field_editor import FieldQtView
-        from pytripgui.field_editor import FieldController
+        from pytripgui.field_vc import FieldQtView
+        from pytripgui.field_vc import FieldController
 
         selected_plan = self._node_obj
         new_field = Field()
@@ -171,7 +171,7 @@ class TreeMenuController(object):
         controller.set_view_from_model()
         view.show()
 
-        if controller.save_data:
+        if controller.user_clicked_save:
             new_field.basename = "Field_{}".format(new_field.number)    # TODO it not generate unique numbers
             selected_plan.fields.append(new_field)
             self.ctrl.tree.update_tree()
@@ -179,14 +179,28 @@ class TreeMenuController(object):
     def edit_field(self):
         logger.debug("edit_field() {}".format(None))
 
-        from pytripgui.field_editor import FieldQtView
-        from pytripgui.field_editor import FieldController
+        from pytripgui.field_vc import FieldQtView
+        from pytripgui.field_vc import FieldController
 
         field = self._node_obj
         view = FieldQtView()
         global_kernels = self.model.kernels
 
         controller = FieldController(field, view, global_kernels)
+        controller.set_view_from_model()
+        view.show()
+
+    def edit_plan(self):
+        logger.debug("edit_plan() {}".format(None))
+
+        from pytripgui.plan_vc import PlanQtView
+        from pytripgui.plan_vc import PlanController
+
+        plan = self._node_obj
+        view = PlanQtView()
+        global_kernels = self.model.kernels
+
+        controller = PlanController(plan, view, global_kernels, self.model.vdx.vois)
         controller.set_view_from_model()
         view.show()
 
