@@ -6,15 +6,27 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>383</height>
+    <width>500</width>
+    <height>379</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+   <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>10</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>500</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Field</string>
@@ -57,7 +69,32 @@
    <item row="2" column="1">
     <layout class="QHBoxLayout" name="gantryAngleSection">
      <item>
-      <widget class="QDoubleSpinBox" name="gantry_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="gantry_doubleSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="minimum">
+        <double>-400.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>400.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>0.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="gantry_pushButton_p90">
@@ -85,10 +122,29 @@
    <item row="3" column="1">
     <layout class="QHBoxLayout" name="couchAngleSection">
      <item>
-      <widget class="QDoubleSpinBox" name="couch_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="couch_doubleSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimum">
+        <double>-400.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>400.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="couch_pushButton_p90">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>+ 90°</string>
        </property>
@@ -111,7 +167,26 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QDoubleSpinBox" name="spotSize_doubleSpinBox"/>
+    <widget class="QDoubleSpinBox" name="spotSize_doubleSpinBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>94</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>1000</width>
+       <height>16777215</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="rasterSpace_label">
@@ -123,10 +198,61 @@
    <item row="5" column="1">
     <layout class="QHBoxLayout" name="rasterSpacingSection">
      <item>
-      <widget class="QDoubleSpinBox" name="rasterSpaceX_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="rasterSpaceX_doubleSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>94</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
-      <widget class="QDoubleSpinBox" name="rasterSpaceY_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="rasterSpaceY_doubleSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>94</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>
@@ -139,6 +265,24 @@
    </item>
    <item row="6" column="1">
     <widget class="QDoubleSpinBox" name="doseext_doubleSpinBox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>94</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="value">
       <double>0.000000000000000</double>
      </property>
@@ -153,6 +297,12 @@
    </item>
    <item row="7" column="1">
     <widget class="QDoubleSpinBox" name="contourext_doubleSpinBox">
+     <property name="maximumSize">
+      <size>
+       <width>94</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="value">
       <double>0.000000000000000</double>
      </property>
@@ -167,6 +317,12 @@
    </item>
    <item row="8" column="1">
     <widget class="QDoubleSpinBox" name="depthStep_doubleSpinBox">
+     <property name="maximumSize">
+      <size>
+       <width>94</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="maximum">
       <double>99.989999999999995</double>
      </property>
@@ -185,13 +341,6 @@
    <item row="9" column="1">
     <widget class="QComboBox" name="kernel_comboBox"/>
    </item>
-   <item row="11" column="1">
-    <widget class="QDialogButtonBox" name="accept_ButtonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
    <item row="10" column="1">
     <spacer name="verticalSpacer">
      <property name="orientation">
@@ -204,6 +353,13 @@
       </size>
      </property>
     </spacer>
+   </item>
+   <item row="12" column="1">
+    <widget class="QDialogButtonBox" name="accept_ButtonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
