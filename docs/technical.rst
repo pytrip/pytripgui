@@ -74,7 +74,6 @@ Stable version ::
 
 Latest unstable version, directly GIT repository, using::
 
-    pip install setuptools versioneer
     pip install git+https://github.com/pytrip/pytripgui.git
 
 To unistall, simply use::
@@ -84,11 +83,10 @@ To unistall, simply use::
 
 Running pytripgui
 =================
-before calling pytripgui for the first time, you need to create a few userinterfaces and setup versioneer:
+before calling pytripgui for the first time, you need to create a few userinterfaces:
 From the pytripgui base directory::
 
         $ ./makeui.sh
-        $ ./install_versioneer.sh
 
 Now you can
 
