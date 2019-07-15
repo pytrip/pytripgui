@@ -1,8 +1,9 @@
 import setuptools
 
+from pytripgui.version import git_version
+
 
 def write_version_py(filename='VERSION'):
-    from pytripgui.version import git_version
     cnt = """%(version)s
 """
 
