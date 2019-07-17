@@ -14,7 +14,7 @@ class ConfigQtView(object):
         self.dialog = QtWidgets.QDialog()
 
         self.ui.setupUi(self.dialog)
-        self._setup_callbacks()
+        self._disable_unimplemented()
 
     def show(self):
         self.dialog.show()
@@ -28,3 +28,6 @@ class ConfigQtView(object):
 
     def set_cancel_callback(self, fun):
         self.ui.accept_buttonBox.rejected.connect(fun)
+
+    def _disable_unimplemented(self):
+        pass
