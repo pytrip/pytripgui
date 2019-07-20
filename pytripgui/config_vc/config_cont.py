@@ -7,11 +7,6 @@ class ConfigController(object):
         self.model = model
         self.view = view
         self.user_clicked_save = False
-
-    def set_view_from_model(self):
-        model = self.model
-        view = self.view
-
         self._setup_ok_and_cancel_buttons_callbacks()
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
@@ -26,6 +21,14 @@ class ConfigController(object):
     def _exit(self):
         self.view.exit()
 
+    def set_view_from_model(self):
+        self.view.wdir_path = self.model.wdir_path
+        self.view.trip_path = self.model.trip_path
+        self.view.hlut_path = self.model.hlut_path
+        self.view.dedx_path = self.model.dedx_path
+
     def set_model_from_view(self):
-        model = self.model
-        view = self.view
+        self.model.wdir_path = self.view.wdir_path
+        self.model.trip_path = self.view.trip_path
+        self.model.hlut_path = self.view.hlut_path
+        self.model.dedx_path = self.view.dedx_path
