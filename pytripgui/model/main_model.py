@@ -1,6 +1,8 @@
 import logging
 
 from pytripgui.model.plot_model import PlotModel
+from pytripgui.model.config_model import Trip98ConfigModel
+
 # from pytripgui.model.tree_model import TreeModel
 
 logger = logging.getLogger(__name__)
@@ -26,8 +28,8 @@ class MainModel(object):
         # paths
         self.dicom_path = "."
         self.voxelplan_path = "."
-        self.tripexec_path = "."
-        self.wdir = "."
+
+        self.trip_config = Trip98ConfigModel()
 
         # attach submodels
         self.plot = PlotModel()
@@ -79,8 +81,7 @@ class SettingsModel(object):
         """
         self.dicom_path = model.dicom_path
         self.voxelplan_path = model.voxelplan_path
-        self.tripexec_path = model.tripexec_path
-        self.wdir = model.wdir
+        self.trip_config = model.trip_config
 
         self.kernels = model.kernels
 

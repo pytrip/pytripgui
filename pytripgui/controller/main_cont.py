@@ -68,6 +68,7 @@ class MainController(object):
         ui.actionAbout.triggered.connect(self.on_about)
         ui.actionNew_Plan.triggered.connect(self.on_new_plan)
 
+        ui.actionTRiP98_Config.triggered.connect(self.on_trip98_config)
         ui.actionBeam_Kernels.triggered.connect(self.on_kernel)
 
         # ui.tab.resized.connect(self.change_foobar) wont work, doesnt exist
@@ -468,6 +469,21 @@ class MainController(object):
         text += "    Jakob Toftegaard\n"
 
         QMessageBox.about(self.app, title, text)
+
+    def on_trip98_config(self, event):
+        """
+        Config menu opened from window->Settings->TRiP98 Config
+        """
+        logger.debug("TRiP config menu()")
+
+        from pytripgui.config_vc import ConfigQtView
+        from pytripgui.config_vc import ConfigController
+
+        view = ConfigQtView()
+
+        controller = ConfigController(self.model.trip_config, view)
+        controller.set_view_from_model()
+        view.show()
 
     def on_new_plan(self, event):
         """
