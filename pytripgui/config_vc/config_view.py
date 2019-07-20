@@ -64,7 +64,6 @@ class ConfigQtView(object):
         self.ui.remote_tab.setDisabled(True)
         self.ui.tab_test.setDisabled(True)
 
-
     def show(self):
         self.dialog.show()
         self.dialog.exec_()
