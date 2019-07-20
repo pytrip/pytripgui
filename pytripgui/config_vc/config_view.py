@@ -25,37 +25,37 @@ class ConfigQtView(object):
 
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-                    self.dialog,
-                    "Select working directory",
-                    self.wdir_path,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            self.dialog,
+            "Select working directory",
+            self.wdir_path,
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.wdir_path = selected_dir
 
     def _browse_trip_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-                    self.dialog,
-                    "Select trip executable directory",
-                    self.trip_path,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            self.dialog,
+            "Select trip executable directory",
+            self.trip_path,
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.trip_path = selected_dir
 
     def _browse_hlut_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-                    self.dialog,
-                    "Select HLUT directory",
-                    self.trip_path,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            self.dialog,
+            "Select HLUT directory",
+            self.trip_path,
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.hlut_path = selected_dir
 
     def _browse_dedx_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-                    self.dialog,
-                    "Select DEDX directory",
-                    self.dedx_path,
-                    QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            self.dialog,
+            "Select DEDX directory",
+            self.dedx_path,
+            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.dedx_path = selected_dir
 
