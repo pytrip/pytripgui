@@ -485,6 +485,9 @@ class MainController(object):
         controller.set_view_from_model()
         view.show()
 
+        if controller.user_clicked_save:
+            self.settings.save()
+
     def on_new_plan(self, event):
         """
         New plan opened from window->plan->New Plan
