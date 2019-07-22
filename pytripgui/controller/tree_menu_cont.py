@@ -122,18 +122,9 @@ class TreeMenuController(object):
         logger.debug("execute_plan".format())
         plan = self._node_obj
 
-        import tempfile
-        import os
-        self.model.wdir = tempfile.gettempdir() + "/pytripgui/"
-
-        try:
-            os.mkdir(self.model.wdir)
-        except OSError:
-            pass
-
         logger.debug("Temporary dir:{}".format(self.model.wdir))
 
-        plan.working_dir = self.model.wdir
+        plan.working_dir = self.model.trip_config.wdir_path
 
         import pytrip.tripexecuter as pte
 
@@ -144,9 +135,13 @@ class TreeMenuController(object):
         plan.ddd_dir = current_field.kernel.ddd_path
         plan.spc_dir = current_field.kernel.spc_path
         plan.sis_path = current_field.kernel.sis_path
-        plan.dedx_path = "$TRIP98/DATA/DEDX/20000830.dedx"
 
+        plan.dedx_path = self.model.trip_config.dedx_path
+        plan.hlut_path = self.model.trip_config.hlut_path
+
+        import os
         te = pte.Execute(self.model.ctx, self.model.vdx)
+        te.trip_bin_path = os.path.join(self.model.trip_config.trip_path, 'TRiP98')
 
         try:
             te.execute(plan)
