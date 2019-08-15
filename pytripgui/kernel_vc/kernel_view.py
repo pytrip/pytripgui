@@ -1,6 +1,9 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import Qt
+
 from pytripgui.view.gen.kernel import Ui_KernelDialog
+import os
 
 import logging
 logger = logging.getLogger(__name__)
@@ -14,32 +17,45 @@ class KernelQtView(object):
         self.dialog = QtWidgets.QDialog()
 
         self.ui.setupUi(self.dialog)
-        # self._setup_internal_callbacks()
-        # self._disable_unimplemented()
+        self._setup_internal_callbacks()
+        self._disable_unimplemented()
 
     def _setup_internal_callbacks(self):
-        self.ui.wdirPath_pushButton.clicked.connect(self._browse_wdir)
-        self.ui.tripPath_pushButton.clicked.connect(self._browse_trip_path)
-        self.ui.hlut_pushButton.clicked.connect(self._browse_hlut_path)
-        self.ui.dedx_pushButton.clicked.connect(self._browse_dedx_path)
+        self.ui.dddPath_pushButton.clicked.connect(self._browse_ddd_dir)
+        self.ui.spcPath_pushButton.clicked.connect(self._browse_spc_dir)
+        self.ui.sisPath_pushButton.clicked.connect(self._browse_sis_path)
 
-    def _browse_wdir(self):
+    def _browse_ddd_dir(self):
         selected_dir = QFileDialog.getExistingDirectory(
             self.dialog,
-            "Select working directory",
-            self.wdir_path,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            "Select DDD directory",
+            self.ddd_dir_path,
+            QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
-            self.wdir_path = selected_dir
+            self.ddd_dir_path = os.path.join(selected_dir, "", "*")
 
-    def _browse_trip_path(self):
+    def _browse_spc_dir(self):
         selected_dir = QFileDialog.getExistingDirectory(
             self.dialog,
-            "Select trip executable directory",
-            self.trip_path,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+            "Select SPC directory",
+            self.spc_dir_path,
+            QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
-            self.trip_path = selected_dir
+            self.spc_dir_path = os.path.join(selected_dir, "", "*")
+
+    def _browse_sis_path(self):
+        selected_file = QFileDialog.getOpenFileName(
+            self.dialog,
+            "Select sis path",
+            self.sis_path,
+            "(*.sis)")
+        if selected_file[0] != "":
+            self.sis_path = selected_file[0]
+
+    def _disable_unimplemented(self):
+        self.ui.rippleFilter_checkBox.setDisabled(True)
+        self.ui.importBeamKernel_pushButton.setDisabled(True)
+        self.ui.exportBeamKernel_pushButton.setDisabled(True)
 
     def show(self):
         self.dialog.show()
@@ -54,17 +70,137 @@ class KernelQtView(object):
     def set_cancel_callback(self, fun):
         self.ui.accept_buttonBox.rejected.connect(fun)
 
+    def set_selected_beam_kernel_callback(self, fun):
+        self.ui.beamKernel_comboBox.currentIndexChanged.connect(fun)
+
     @property
-    def wdir_path(self):
-        return self.ui.wdirPath_lineEdit.text()
+    def ddd_dir_path(self):
+        return self.ui.dddPath_lineEdit.text()
 
-    @wdir_path.getter
-    def wdir_path(self):
-        return self.ui.wdirPath_lineEdit.text()
+    @ddd_dir_path.getter
+    def ddd_dir_path(self):
+        return self.ui.dddPath_lineEdit.text()
 
-    @wdir_path.setter
-    def wdir_path(self, wdir_path):
-        self.ui.wdirPath_lineEdit.setText(wdir_path)
+    @ddd_dir_path.setter
+    def ddd_dir_path(self, ddd_dir_path):
+        self.ui.dddPath_lineEdit.setText(ddd_dir_path)
+
+    @property
+    def spc_dir_path(self):
+        return self.ui.spcPath_lineEdit.text()
+
+    @spc_dir_path.getter
+    def spc_dir_path(self):
+        return self.ui.spcPath_lineEdit.text()
+
+    @spc_dir_path.setter
+    def spc_dir_path(self, spc_dir_path):
+        self.ui.spcPath_lineEdit.setText(spc_dir_path)
+
+    @property
+    def sis_path(self):
+        return self.ui.sisPath_lineEdit.text()
+
+    @sis_path.getter
+    def sis_path(self):
+        return self.ui.sisPath_lineEdit.text()
+
+    @sis_path.setter
+    def sis_path(self, spc_dir_path):
+        self.ui.sisPath_lineEdit.setText(spc_dir_path)
+
+    @property
+    def comment(self):
+        return self.ui.comment_lineEdit.text()
+
+    @comment.getter
+    def comment(self):
+        return self.ui.comment_lineEdit.text()
+
+    @comment.setter
+    def comment(self, comment):
+        self.ui.comment_lineEdit.setText(comment)
+
+    @property
+    def projectile_name(self):
+        return self.ui.projectileName_lineEdit.text()
+
+    @projectile_name.getter
+    def projectile_name(self):
+        return self.ui.projectileName_lineEdit.text()
+
+    @projectile_name.setter
+    def projectile_name(self, projectile_name):
+        self.ui.projectileName_lineEdit.setText(projectile_name)
+
+    @property
+    def projectile_symbol(self):
+        return self.ui.symbol_comboBox.currentData()
+
+    @projectile_symbol.getter
+    def projectile_symbol(self):
+        return self.ui.symbol_comboBox.currentData()
+
+    @projectile_symbol.setter
+    def projectile_symbol(self, projectile_symbol):
+        index_of_symbol = self.ui.symbol_comboBox.findData(projectile_symbol, Qt.UserRole)
+        if index_of_symbol == -1:
+            raise Exception("Given symbol wasn't found on the list")
+        self.ui.symbol_comboBox.setCurrentIndex(index_of_symbol)
+
+    @property
+    def z(self):
+        return self.ui.z_spinBox.value()
+
+    @z.getter
+    def z(self):
+        return self.ui.z_spinBox.value()
+
+    @z.setter
+    def z(self, z):
+        self.ui.z_spinBox.setValue(z)
+
+    @property
+    def a(self):
+        return self.ui.a_spinBox.value()
+
+    @a.getter
+    def a(self):
+        return self.ui.a_spinBox.value()
+
+    @a.setter
+    def a(self, a):
+        self.ui.a_spinBox.setValue(a)
+
+    @property
+    def kernel_name(self):
+        return self.ui.kernelName_lineEdit.text()
+
+    @kernel_name.getter
+    def kernel_name(self):
+        return self.ui.kernelName_lineEdit.text()
+
+    @kernel_name.setter
+    def kernel_name(self, kernel_name):
+        return self.ui.kernelName_lineEdit.setText(kernel_name)
 
     def add_kernel_with_name(self, kernel, kernel_name):
         self.ui.beamKernel_comboBox.addItem(kernel_name, kernel)
+
+    def get_all_kernels(self):
+        kernels_count = self.ui.beamKernel_comboBox.count()
+        kernels = list()
+        for i in range(kernels_count):
+            kernel = self.ui.beamKernel_comboBox.itemData(i, Qt.UserRole)
+            kernels.append(kernel)
+        return kernels
+
+    def replace_kernel_by_index(self, kernel, kernel_index):
+        self.ui.beamKernel_comboBox.setItemData(kernel_index, kernel, Qt.UserRole)
+
+    def setup_all_available_projectile_symbols(self, symbols):
+        for symbol in symbols:
+            self.ui.symbol_comboBox.addItem(symbol, symbol)
+
+    def get_selected_kernel(self):
+        return self.ui.beamKernel_comboBox.currentData(Qt.UserRole)
