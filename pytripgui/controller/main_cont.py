@@ -526,6 +526,9 @@ class MainController(object):
         controller.set_view_from_model()
         view.show()
 
+        if controller.user_clicked_save:
+            self.settings.save()
+
     @staticmethod
     def on_exit(event):
         logger.debug("on_exit() triggered")
