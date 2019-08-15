@@ -517,9 +517,14 @@ class MainController(object):
         """
         Kernel dialog opened from window->settings->kernel
         """
-        model = self.model
-        from pytripgui.controller.kernel_cont import KernelController
-        KernelController(model, self.settings)
+        from pytripgui.kernel_vc import KernelQtView
+        from pytripgui.kernel_vc import KernelController
+
+        model = self.model.kernels
+        view = KernelQtView()
+        controller = KernelController(model, view)
+        controller.set_view_from_model()
+        view.show()
 
     @staticmethod
     def on_exit(event):

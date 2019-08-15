@@ -24,6 +24,11 @@ class KernelQtView(object):
         self.ui.dddPath_pushButton.clicked.connect(self._browse_ddd_dir)
         self.ui.spcPath_pushButton.clicked.connect(self._browse_spc_dir)
         self.ui.sisPath_pushButton.clicked.connect(self._browse_sis_path)
+        self.ui.kernelName_lineEdit.textChanged.connect(self._set_current_kernel_combobox_name)
+
+    def _set_current_kernel_combobox_name(self, name):
+        current_index = self.ui.beamKernel_comboBox.currentIndex()
+        self.ui.beamKernel_comboBox.setItemText(current_index, name)
 
     def _browse_ddd_dir(self):
         selected_dir = QFileDialog.getExistingDirectory(
@@ -72,6 +77,12 @@ class KernelQtView(object):
 
     def set_selected_beam_kernel_callback(self, fun):
         self.ui.beamKernel_comboBox.currentIndexChanged.connect(fun)
+
+    def new_beam_kernel_callback(self, fun):
+        self.ui.newBeamKernel_pushButton.clicked.connect(fun)
+
+    def remove_beam_kernel_callback(self, fun):
+        self.ui.removeBeamKernel_pushButton.clicked.connect(fun)
 
     @property
     def ddd_dir_path(self):
@@ -186,6 +197,14 @@ class KernelQtView(object):
 
     def add_kernel_with_name(self, kernel, kernel_name):
         self.ui.beamKernel_comboBox.addItem(kernel_name, kernel)
+
+    def select_recently_added_kernel(self):
+        kernel_index = self.ui.beamKernel_comboBox.count() - 1
+        self.ui.beamKernel_comboBox.setCurrentIndex(kernel_index)
+
+    def remove_current_kernel(self):
+        kernel_index = self.ui.beamKernel_comboBox.currentIndex()
+        self.ui.beamKernel_comboBox.removeItem(kernel_index)
 
     def get_all_kernels(self):
         kernels_count = self.ui.beamKernel_comboBox.count()
