@@ -42,22 +42,23 @@ class ConfigQtView(object):
             self.trip_path = selected_dir
 
     def _browse_hlut_path(self):
-        selected_dir = QFileDialog.getExistingDirectory(
+        selected_file = QFileDialog.getOpenFileName(
             self.dialog,
-            "Select HLUT directory",
-            self.trip_path,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
-        if selected_dir != "":
-            self.hlut_path = selected_dir
+            "Select HLUT",
+            self.hlut_path,
+            "Hounsfield lookup table (*.hlut)")
+        if selected_file[0] != "":
+            self.hlut_path = selected_file[0]
 
     def _browse_dedx_path(self):
-        selected_dir = QFileDialog.getExistingDirectory(
+        selected_file = QFileDialog.getOpenFileName(
             self.dialog,
-            "Select DEDX directory",
+            "Select DEDX",
             self.dedx_path,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
-        if selected_dir != "":
-            self.dedx_path = selected_dir
+            "Stopping power table (*.dedx)")
+        if selected_file[0] != "":
+            print(selected_file)
+            self.dedx_path = selected_file[0]
 
     def _disable_unimplemented(self):
         self.ui.tripAccess_comboBox.setDisabled(True)
