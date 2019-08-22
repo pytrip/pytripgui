@@ -11,18 +11,18 @@ from pytripgui.controller.main_cont import MainController
 logger = logging.getLogger(__name__)
 
 
-class AppWindow(QMainWindow):
+class AppWindow():
     def __init__(self):
-        super(AppWindow, self).__init__()
 
         logger.debug("Setup view")
-        self.view = MainView(self)
+        self.view = MainView()
 
         logger.debug("Setup model")
-        self.model = MainModel(self)
+        self.view.ui.model = MainModel(self)    # TODO: remove that 'hack'
+        self.view.ui.view = self.view           # TODO: remove that 'hack'
 
         logger.debug("Setup controller")
-        self.ctrl = MainController(self)
+        self.ctrl = MainController(self.view.ui)
 
     def open_files(self, args):
         """
@@ -63,7 +63,7 @@ def main(args=sys.argv[1:]):
     w = AppWindow()
     if args:
         w.open_files(args)
-    w.show()
+    w.view.ui.show()
 
     return app.exec_()
 

@@ -1,14 +1,16 @@
-import logging
-
-from PyQt5 import QtWidgets
-# from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets, uic
 
 from pytrip.tripexecuter import KernelModel
 from pytrip.tripexecuter import Projectile
 
-from pytripgui.view.gen.kernel import Ui_KernelDialog
-
+import logging
 logger = logging.getLogger(__name__)
+
+
+class UiKernelDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super(UiKernelDialog, self).__init__()
+        uic.loadUi('../pytripgui/view/kernel.ui', self)
 
 
 class KernelController(object):
@@ -35,16 +37,13 @@ class KernelController(object):
 
         # open the plan configuration dialog
         # https://stackoverflow.com/questions/42505429/pyqt5-gui-structure-advice-needed
-        dialog = QtWidgets.QDialog()
-        ui = Ui_KernelDialog()
-        self.dialog_ui = ui
+        self.ui = UiKernelDialog()
 
-        ui.setupUi(dialog)
         self._populate_kernel_ui()
         self._setup_kernel_callbacks()
 
-        dialog.exec_()
-        dialog.show()
+        self.ui.exec_()
+        self.ui.show()
 
     def delete_kernel(self):
         """
@@ -60,7 +59,7 @@ class KernelController(object):
         logger.debug("_populate_kernel_ui()")
 
         model = self.model
-        ui = self.dialog_ui
+        ui = self.ui
 
         # import export currently disabled
         ui.pushButton_3.setEnabled(False)
@@ -96,7 +95,7 @@ class KernelController(object):
         logger.debug("----------------------------------------------------")
         logger.debug("KernelCrontroller._show_kernel() '{}'".format(kernel.name))
 
-        ui = self.dialog_ui
+        ui = self.ui
 
         ui.plainTextEdit.setPlainText(kernel.comment)
 
@@ -129,7 +128,7 @@ class KernelController(object):
         """
         Connect all widgets to model.
         """
-        ui = self.dialog_ui
+        ui = self.ui
 
         ui.comboBox_5.currentIndexChanged.connect(self._change_kernel)
         ui.comboBox_5.lineEdit().textEdited.connect(self._kernel_name_changed)
@@ -170,7 +169,7 @@ class KernelController(object):
         logger.debug("----------------------------------------------------")
         logger.debug("KernelController._new()")
         model = self.model
-        ui = self.dialog_ui
+        ui = self.ui
 
         self._kcounter += 1
         _str = "New kernel ({:d})".format(self._kcounter)  # default string for new kenrel
@@ -196,7 +195,7 @@ class KernelController(object):
         logger.debug("----------------------------------------------------")
         logger.debug("KernelController._remove()")
         model = self.model
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
 
         if kernel in model.kernels:
@@ -227,7 +226,7 @@ class KernelController(object):
         logger.debug("----------------------------------------------------")
         logger.debug("KernelController._kernel_name_changed()")
         model = self.model
-        ui = self.dialog_ui
+        ui = self.ui
 
         # if this signal was called because kernel was changed, do not update any models
         if self._kernel_changed:
@@ -255,7 +254,7 @@ class KernelController(object):
         """
         logger.debug("----------------------------------------------------")
         logger.debug("KernelController._comment_changed()")
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
 
         kernel.comment = ui.plainTextEdit.toPlainText()
@@ -264,7 +263,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._ddd_changed()")
-        ui = self.dialog_ui
+        ui = self.ui
 
         self.current_kernel.ddd_path = ui.lineEdit_8.text()
 
@@ -272,7 +271,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._projectile_name_changed")
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
         kernel.projectile.name = ui.lineEdit.text()
 
@@ -280,7 +279,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._projectile_symbol_changed")
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
 
         i = ui.comboBox.currentIndex()
@@ -301,7 +300,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._rifi_toggled")
-        ui = self.dialog_ui
+        ui = self.ui
 
         if ui.checkBox.isChecked():
             ui.lineEdit_6.setEnabled(True)
@@ -314,7 +313,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._rifi_name_changed")
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
         kernel.rifi_name = ui.lineEdit_6.text()
 
@@ -322,7 +321,7 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._rifi_thickness_changed")
-        ui = self.dialog_ui
+        ui = self.ui
         kernel = self.current_kernel
         kernel.rifi_thickness = str(ui.doubleSpinBox.value())  # TODO: change this to a float
 
@@ -330,14 +329,14 @@ class KernelController(object):
         """
         """
         logger.debug("KernelController._spc_changed()")
-        ui = self.dialog_ui
+        ui = self.ui
         self.current_kernel.spc_path = ui.lineEdit_9.text()
 
     def _sis_changed(self):
         """
         """
         logger.debug("KernelController._sis_changed()")
-        ui = self.dialog_ui
+        ui = self.ui
         self.current_kernel.sis_path = ui.lineEdit_10.text()
 
     def _change_kernel(self):
@@ -349,7 +348,7 @@ class KernelController(object):
 
         self._kernel_changed = True
         model = self.model
-        ui = self.dialog_ui
+        ui = self.ui
 
         i = ui.comboBox_5.currentIndex()
         if i > -1:
