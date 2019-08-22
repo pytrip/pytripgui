@@ -24,6 +24,9 @@ class AppWindow():
         logger.debug("Setup controller")
         self.ctrl = MainController(self.view.ui)
 
+    def show(self):
+        self.view.ui.show()
+
     def open_files(self, args):
         """
         """
