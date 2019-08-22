@@ -1,27 +1,29 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTreeWidgetItem
-from pytripgui.view.gen.plan import Ui_PlanDialog
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+class UiPlanDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super(UiPlanDialog, self).__init__()
+        uic.loadUi('../pytripgui/view/plan.ui', self)
 
 
 class PlanQtView(object):
     """
     """
     def __init__(self):
-        self.ui = Ui_PlanDialog()
-        self.dialog = QtWidgets.QDialog()
-
-        self.ui.setupUi(self.dialog)
+        self.ui = UiPlanDialog()
 
     def show(self):
-        self.dialog.show()
-        self.dialog.exec_()
+        self.ui.show()
+        self.ui.exec_()
 
     def exit(self):
-        self.dialog.close()
+        self.ui.close()
 
     def set_ok_callback(self, fun):
         self.ui.accept_buttonBox.accepted.connect(fun)

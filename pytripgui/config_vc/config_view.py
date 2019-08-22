@@ -1,19 +1,22 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QFileDialog
-from pytripgui.view.gen.trip_config import Ui_tripConfig
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+class UiTripConfig(QtWidgets.QDialog):
+    def __init__(self):
+        super(UiTripConfig, self).__init__()
+        uic.loadUi('../pytripgui/view/trip_config.ui', self)
 
 
 class ConfigQtView(object):
     """
     """
     def __init__(self):
-        self.ui = Ui_tripConfig()
-        self.dialog = QtWidgets.QDialog()
+        self.ui = UiTripConfig()
 
-        self.ui.setupUi(self.dialog)
         self._setup_internal_callbacks()
         self._disable_unimplemented()
 
@@ -25,7 +28,7 @@ class ConfigQtView(object):
 
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.dialog,
+            self.ui,
             "Select working directory",
             self.wdir_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
@@ -34,7 +37,7 @@ class ConfigQtView(object):
 
     def _browse_trip_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.dialog,
+            self.ui,
             "Select trip executable directory",
             self.trip_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
@@ -43,7 +46,7 @@ class ConfigQtView(object):
 
     def _browse_hlut_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.dialog,
+            self.ui,
             "Select HLUT",
             self.hlut_path,
             "Hounsfield lookup table (*.hlut)")
@@ -52,7 +55,7 @@ class ConfigQtView(object):
 
     def _browse_dedx_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.dialog,
+            self.ui,
             "Select DEDX",
             self.dedx_path,
             "Stopping power table (*.dedx)")
@@ -66,11 +69,11 @@ class ConfigQtView(object):
         self.ui.tab_test.setDisabled(True)
 
     def show(self):
-        self.dialog.show()
-        self.dialog.exec_()
+        self.ui.show()
+        self.ui.exec_()
 
     def exit(self):
-        self.dialog.close()
+        self.ui.close()
 
     def set_ok_callback(self, fun):
         self.ui.accept_buttonBox.accepted.connect(fun)
