@@ -49,8 +49,6 @@ install:
 # check python and pip versions
   - python -V
   - pip -V
-# generate qt5 files
-  - bash makeui.sh
 
 test_script:
 # make wheel package
