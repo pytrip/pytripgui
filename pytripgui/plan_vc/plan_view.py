@@ -1,6 +1,8 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTreeWidgetItem
+from pytripgui import util
+import os
 
 import logging
 logger = logging.getLogger(__name__)
@@ -9,7 +11,8 @@ logger = logging.getLogger(__name__)
 class UiPlanDialog(QtWidgets.QDialog):
     def __init__(self):
         super(UiPlanDialog, self).__init__()
-        uic.loadUi('../pytripgui/view/plan.ui', self)
+        ui_path = os.path.join(util.main_dir(), 'view', 'plan.ui')
+        uic.loadUi(ui_path, self)
 
 
 class PlanQtView(object):

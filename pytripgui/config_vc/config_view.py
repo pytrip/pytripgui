@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QFileDialog
+from pytripgui import util
+import os
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,7 +10,8 @@ logger = logging.getLogger(__name__)
 class UiTripConfig(QtWidgets.QDialog):
     def __init__(self):
         super(UiTripConfig, self).__init__()
-        uic.loadUi('../pytripgui/view/trip_config.ui', self)
+        ui_path = os.path.join(util.main_dir(), 'view', 'trip_config.ui')
+        uic.loadUi(ui_path, self)
 
 
 class ConfigQtView(object):
