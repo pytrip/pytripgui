@@ -2,7 +2,7 @@ import sys
 import argparse
 import logging
 
-from PyQt5.QtWidgets import QMainWindow, QApplication
+from PyQt5.QtWidgets import QApplication
 
 from pytripgui.view.main_view import MainView
 from pytripgui.model.main_model import MainModel
