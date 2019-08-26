@@ -76,7 +76,7 @@ class PlotController(object):
         if self._model.dos_container.dos_list:
             Dos.plot(self)
 
-        if self._model.let:
+        if self._model.lets.lets:
             Let.plot(self)
 
         if self._model.plot.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
