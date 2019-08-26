@@ -52,7 +52,7 @@ setuptools.setup(
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 2.7',
     ],
-    package_data={'pytripgui': ['res/*']},
+    package_data={'pytripgui': ['res/*', './pytripgui/view/*.ui']},
     install_requires=[
         'numpy', 'scipy', 'pytrip98'
     ],
