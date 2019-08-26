@@ -1,22 +1,26 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, uic
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
-
-from pytripgui.view.gen.kernel import Ui_KernelDialog
+from pytripgui import util
 import os
 
 import logging
 logger = logging.getLogger(__name__)
 
 
+class UiKernelDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super(UiKernelDialog, self).__init__()
+        ui_path = os.path.join(util.main_dir(), 'view', 'kernel.ui')
+        uic.loadUi(ui_path, self)
+
+
 class KernelQtView(object):
     """
     """
     def __init__(self):
-        self.ui = Ui_KernelDialog()
-        self.dialog = QtWidgets.QDialog()
+        self.ui = UiKernelDialog()
 
-        self.ui.setupUi(self.dialog)
         self._setup_internal_callbacks()
         self._disable_unimplemented()
 
@@ -32,7 +36,7 @@ class KernelQtView(object):
 
     def _browse_ddd_dir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.dialog,
+            self.ui,
             "Select DDD directory",
             self.ddd_dir_path,
             QFileDialog.DontResolveSymlinks)
@@ -41,7 +45,7 @@ class KernelQtView(object):
 
     def _browse_spc_dir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.dialog,
+            self.ui,
             "Select SPC directory",
             self.spc_dir_path,
             QFileDialog.DontResolveSymlinks)
@@ -50,7 +54,7 @@ class KernelQtView(object):
 
     def _browse_sis_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.dialog,
+            self.ui,
             "Select sis path",
             self.sis_path,
             "(*.sis)")
@@ -63,11 +67,11 @@ class KernelQtView(object):
         self.ui.exportBeamKernel_pushButton.setDisabled(True)
 
     def show(self):
-        self.dialog.show()
-        self.dialog.exec_()
+        self.ui.show()
+        self.ui.exec_()
 
     def exit(self):
-        self.dialog.close()
+        self.ui.close()
 
     def set_ok_callback(self, fun):
         self.ui.accept_buttonBox.accepted.connect(fun)
