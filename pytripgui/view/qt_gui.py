@@ -33,5 +33,5 @@ class UiPlanDialog(QtWidgets.QDialog):
 class UiMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(UiMainWindow, self).__init__()
-        ui_path = os.path.join(os.curdir, 'main_window.ui')
+        ui_path = os.path.join(os.getcwd(), 'main_window.ui')
         uic.loadUi(ui_path, self)
