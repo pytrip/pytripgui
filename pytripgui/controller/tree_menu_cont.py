@@ -152,6 +152,11 @@ class TreeMenuController(object):
             self.model.plot.dos = dos
             self.ctrl.plot.update_viewcanvas()
 
+        let_path = os.path.join(plan.working_dir, plan.basename + '.dosemlet.dos')
+        let = self.model.lets.import_let_from_file(let_path)
+        self.ctrl.tree.update_tree()
+        self.plot.update_viewcanvas()
+
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
 

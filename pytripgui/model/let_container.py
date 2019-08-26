@@ -16,3 +16,9 @@ class LetContainer:
         # update model
         self.lets.append(let)
         return let
+
+    def import_let_from_list(self, let_list):
+        for let in let_list:
+            self.lets.append(let)
+
+        return let_list[-1]
