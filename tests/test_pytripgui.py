@@ -13,5 +13,5 @@ def test_basics(qtbot):
     qtbot.addWidget(widget)
     widget.show()
 
-    assert widget.isVisible()
-    assert widget.windowTitle() == 'PyTRiPGUI'
+    assert widget.view.ui.isVisible()
+    assert widget.view.ui.windowTitle() == 'PyTRiPGUI'

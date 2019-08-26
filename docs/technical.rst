@@ -83,13 +83,6 @@ To unistall, simply use::
 
 Running pytripgui
 =================
-before calling pytripgui for the first time, you need to create a few userinterfaces:
-From the pytripgui base directory::
-
-        $ ./makeui.sh
-
-Now you can
-
         $ PYTHONPATH=. python3 pytripgui/main.py
 
 Documentation
