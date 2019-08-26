@@ -1,17 +1,8 @@
-from PyQt5 import QtWidgets, uic
+from pytripgui.view.qt_gui import UiTripConfig
 from PyQt5.QtWidgets import QFileDialog
-from pytripgui import util
-import os
 
 import logging
 logger = logging.getLogger(__name__)
-
-
-class UiTripConfig(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiTripConfig, self).__init__()
-        ui_path = os.path.join(util.main_dir(), 'view', 'trip_config.ui')
-        uic.loadUi(ui_path, self)
 
 
 class ConfigQtView(object):

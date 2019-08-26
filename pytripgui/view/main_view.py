@@ -1,19 +1,10 @@
-from PyQt5 import QtWidgets, uic
-
+from pytripgui.view.qt_gui import UiMainWindow
+from PyQt5 import QtWidgets
 from pytripgui.view.plot_viewcanvas import ViewCanvas
 from pytripgui.view.plot_volhist import VolHist
-from pytripgui import util
-import os
 
 import logging
 logger = logging.getLogger(__name__)
-
-
-class UiMainWindow(QtWidgets.QMainWindow):
-    def __init__(self):
-        super(UiMainWindow, self).__init__()
-        ui_path = os.path.join(util.main_dir(), 'view', 'main_window.ui')
-        uic.loadUi(ui_path, self)
 
 
 class MainView(object):

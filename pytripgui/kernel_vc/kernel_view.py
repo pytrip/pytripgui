@@ -1,18 +1,10 @@
-from PyQt5 import QtWidgets, uic
+from pytripgui.view.qt_gui import UiKernelDialog
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import Qt
-from pytripgui import util
 import os
 
 import logging
 logger = logging.getLogger(__name__)
-
-
-class UiKernelDialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiKernelDialog, self).__init__()
-        ui_path = os.path.join(util.main_dir(), 'view', 'kernel.ui')
-        uic.loadUi(ui_path, self)
 
 
 class KernelQtView(object):
