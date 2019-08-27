@@ -390,7 +390,7 @@ class MainController(object):
         """
         pm = self.model.plot  # local object of plot_model
 
-        let = self.model.lets.import_let_from_file(let_path)
+        let = self.model.let_container.import_let_from_file(let_path)
         pm.let = let  # display new loaded cube immediately.
 
         # add cube to the treeview

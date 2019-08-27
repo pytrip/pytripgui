@@ -23,7 +23,7 @@ class MainModel(object):
         self.vdx = None  # Only one VDX is allowed
         self.plans = []
         self.dos_container = DosContainer()
-        self.lets = LetContainer()
+        self.let_container = LetContainer()
 
         # paths
         self.dicom_path = "."
