@@ -148,6 +148,12 @@ class TreeMenuController(object):
         except RuntimeError:
             pass
 
+        if plan.want_phys_dose:
+            dos_path = os.path.join(plan.working_dir, plan.basename + '.phys.dos')
+            logger.debug("Loading dose file {}".format(dos_path))
+            self.model.dos_container.import_from_file(dos_path)
+            self.ctrl.tree.update_tree()
+
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
 

@@ -73,7 +73,7 @@ class PlotController(object):
         if self._model.vdx:
             Vdx.plot(self)
 
-        if self._model.dos:
+        if self._model.dos_container.dos_list:
             Dos.plot(self)
 
         if self._model.let:
