@@ -155,8 +155,10 @@ class TreeMenuController(object):
         if plan.want_dlet:
             let_path = os.path.join(plan.working_dir, plan.basename + '.dosemlet.dos')
             logger.debug("Loading dose let file {}".format(let_path))
-            self.model.let_container.import_let_from_file(let_path)
+            let = self.model.let_container.import_from_file(let_path)
             self.ctrl.tree.update_tree()
+            self.model.plot.let = let
+            self.ctrl.plot.update_viewcanvas()
 
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))
