@@ -1,13 +1,8 @@
 import logging
 # from functools import partial
 
-# from PyQt5 import QtCore
-# from PyQt5 import QtGui
-# from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QMenu
-# from PyQt5.QtWidgets import QDialog
-# from PyQt5.QtWidgets import QTreeWidgetItem
 
 import pytrip as pt
 import pytrip.tripexecuter as pte
@@ -146,7 +141,16 @@ class TreeMenuController(object):
         try:
             te.execute(plan)
         except RuntimeError:
-            pass
+            logger.error("TRiP98 executer: Runtime error")
+            exit(-1)
+
+        if plan.want_phys_dose:
+            dos_path = os.path.join(plan.working_dir, plan.basename + '.phys.dos')
+            logger.debug("Loading dose file {}".format(dos_path))
+            dos = self.model.dos_container.import_from_file(dos_path)
+            self.ctrl.tree.update_tree()
+            self.model.plot.dos = dos
+            self.ctrl.plot.update_viewcanvas()
 
     def add_field(self):
         logger.debug("add_field_new() {}".format(None))

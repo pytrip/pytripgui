@@ -356,18 +356,8 @@ class MainController(object):
         """
         Import a dos cube, add it to the list of loaded dos cubes.
         """
-
-        model = self.model    # local object of plot_model
-        pm = self.model.plot  # local object of plot_model
-
-        logger.debug("Open DosCube {:s}".format(dos_path))
-        dos = pt.DosCube()
-
-        dos.read(dos_path)
-
-        # update model
-        model.dos.append(dos)
-        pm.dos = dos  # display new loaded cube immediately.
+        dos = self.model.dos_container.import_from_file(dos_path)
+        self.model.plot.dos = dos  # display new loaded cube immediately.
 
         # add cube to the treeview
         self.tree.update_tree()

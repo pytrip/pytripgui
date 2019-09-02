@@ -241,15 +241,15 @@ class TreeController(object):
         tw = self.view.treeWidget
 
         # Add the top level DOS node:
-        if model.dos and not self.tdos:
+        if model.dos_container.dos_list and not self.tdos:
             self.tdos = QTreeWidgetItem(["Dose Cubes"])
             self.tdos.setData(0, Qt.UserRole, self._doscol)
             tw.addTopLevelItem(self.tdos)
             self.tdos.setExpanded(True)
 
         # Each DosCube will be treated as a child to the top level DOS node.
-        if model.dos:
-            for i, dos in enumerate(model.dos):
+        if model.dos_container.dos_list:
+            for i, dos in enumerate(model.dos_container.dos_list):
                 if not self._in_tree(dos):
                     self.tdos.addChild(QTreeWidgetItem([dos.basename]))
                     child = self.tdos.child(i)
@@ -322,8 +322,8 @@ class TreeController(object):
         if model.vdx:
             if model.vdx.vois:
                 lo += model.vdx.vois  # extend the list with a list of voi objects
-        if model.dos:
-            lo += model.dos
+        if model.dos_container.dos_list:
+            lo += model.dos_container.dos_list
         if model.let:
             lo += model.let
         if model.plans:
@@ -335,7 +335,7 @@ class TreeController(object):
         # The top level nodes: plans, dos and let
         # should not be removed, if they hold data. They do not have a class, tough
         # Therefore this little hack for now:
-        if model.dos:
+        if model.dos_container.dos_list:
             lo += [self._doscol]
         if model.let:
             lo += [self._letcol]

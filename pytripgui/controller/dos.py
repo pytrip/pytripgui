@@ -23,7 +23,7 @@ class Dos(object):
         """
         logger.debug("plot Dos cube")
 
-        if not plc._model.dos:
+        if not plc._model.dos_container.dos_list:
             return
 
         dos = plc._model.plot.dos

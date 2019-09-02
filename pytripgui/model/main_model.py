@@ -2,8 +2,7 @@ import logging
 
 from pytripgui.model.plot_model import PlotModel
 from pytripgui.model.config_model import Trip98ConfigModel
-
-# from pytripgui.model.tree_model import TreeModel
+from pytripgui.model.dos_container import DosContainer
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ class MainModel(object):
         self.ctx = None  # Only one CTX is allowed
         self.vdx = None  # Only one VDX is allowed
         self.plans = []
-        self.dos = []   # TODO: change to self.doss (plural s)
+        self.dos_container = DosContainer()
         self.let = []   # TODO: change to self.lets (plural s)
 
         # paths
