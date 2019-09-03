@@ -3,7 +3,7 @@ import logging
 from pytripgui.model.plot_model import PlotModel
 from pytripgui.model.config_model import Trip98ConfigModel
 from pytripgui.model.let_container import LetContainer
-pytripgui.model.dos_container import DosContainer
+from pytripgui.model.dos_container import DosContainer
 
 logger = logging.getLogger(__name__)
 
