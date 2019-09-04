@@ -111,13 +111,7 @@ class PlotController(object):
             'double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata)
         self._ui.statusbar.showMessage(_str)
 
-        # put up a pop up menu if right clicked on canvas
-        if event.button == 3:
-            from PyQt5.QtGui import QCursor
-            cursor = QCursor()
-            pos = cursor.pos()
-            self._ui.popMenu.move(pos)
-            self._ui.popMenu.show()
+        # TODO put up a pop up menu if right clicked on canvas
 
     def on_mouse_move(self, event):
         """
