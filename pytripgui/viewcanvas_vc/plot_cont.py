@@ -1,14 +1,9 @@
-import logging
-
-from pytripgui.controller.ctx import Ctx
 from pytripgui.controller.vdx import Vdx
 from pytripgui.controller.dos import Dos
 from pytripgui.controller.let import Let
 from pytripgui.controller.vc_text import ViewCanvasText
-# import matplotlib.pyplot as plt
-# from PyQt5.QtCore import pyqtSlot
-# import pytrip as pt
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +25,6 @@ class PlotController(object):
         # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
         # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
         self.figcanvas = ui.vc      # widget for Qt
-        self.figure = ui.vc.figure  # placeholder for figure class
         self.axes = ui.vc.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
         self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
@@ -43,10 +37,6 @@ class PlotController(object):
         self.zoom = 100.0  # zoom level in percent
 
         self.plot_bg()
-
-        # initial setup of the ViewCanvas
-        rect = self.figure.patch
-        rect.set_facecolor(model.plot.bg_color)
 
         # Connect events to callbacks
         self._connect_ui_plot(ui.vc)

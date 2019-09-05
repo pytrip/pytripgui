@@ -3,7 +3,7 @@ import os
 import pytrip as pt
 
 from pytripgui.controller.tree_cont import TreeController
-from pytripgui.controller.plot_cont import PlotController
+from pytripgui.viewcanvas_vc.plot_cont import PlotController
 from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh

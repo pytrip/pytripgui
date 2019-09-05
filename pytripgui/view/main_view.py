@@ -1,5 +1,4 @@
 from pytripgui.view.qt_gui import UiMainWindow
-from PyQt5 import QtWidgets
 from pytripgui.view.viewcanvas_widget import ViewCanvasWidget
 from pytripgui.view.plot_volhist import VolHist
 from PyQt5.QtWidgets import QVBoxLayout
