@@ -12,7 +12,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvas(FigureCanvas):
+class ViewCanvasView(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """

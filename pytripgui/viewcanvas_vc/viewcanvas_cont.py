@@ -1,5 +1,6 @@
 from pytripgui.controller.vdx import Vdx
 from pytripgui.controller.dos import Dos
+from pytripgui.viewcanvas_vc.ctx import Ctx
 from pytripgui.controller.let import Let
 from pytripgui.controller.vc_text import ViewCanvasText
 

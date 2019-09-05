@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Ctxx(object):
+class Ctx(object):
     """
     This class holds logic for plotting CTX stuff.
     """
