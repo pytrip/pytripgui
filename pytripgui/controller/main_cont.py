@@ -388,16 +388,9 @@ class MainController(object):
         """
         Import a let cube, add it to the list of loaded dos cubes.
         """
-
-        model = self.model    # local object of plot_model
         pm = self.model.plot  # local object of plot_model
 
-        logger.debug("Open LETCube {:s}".format(let_path))
-        let = pt.LETCube()
-        let.read(let_path)
-
-        # update model
-        model.let.append(let)
+        let = self.model.let_container.import_let_from_file(let_path)
         pm.let = let  # display new loaded cube immediately.
 
         # add cube to the treeview

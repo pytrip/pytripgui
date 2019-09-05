@@ -263,15 +263,15 @@ class TreeController(object):
         tw = self.view.treeWidget
 
         # Add the top level LET node:
-        if model.let and not self.tlet:
+        if model.let_container.let_list and not self.tlet:
             self.tlet = QTreeWidgetItem(["LET Cubes"])
             self.tlet.setData(0, Qt.UserRole, self._letcol)
             tw.addTopLevelItem(self.tlet)
             self.tlet.setExpanded(True)
 
         # Each LETCube will be treated as a child to the top level DOS node.
-        if model.let:
-            for i, let in enumerate(model.let):
+        if model.let_container.let_list:
+            for i, let in enumerate(model.let_container.let_list):
                 if not self._in_tree(let):
                     self.tlet.addChild(QTreeWidgetItem([let.basename]))
                     child = self.tlet.child(i)
@@ -324,8 +324,8 @@ class TreeController(object):
                 lo += model.vdx.vois  # extend the list with a list of voi objects
         if model.dos_container.dos_list:
             lo += model.dos_container.dos_list
-        if model.let:
-            lo += model.let
+        if model.let_container.let_list:
+            lo += model.let_container.let_list
         if model.plans:
             lo += model.plans
             for plan in model.plans:
@@ -337,7 +337,7 @@ class TreeController(object):
         # Therefore this little hack for now:
         if model.dos_container.dos_list:
             lo += [self._doscol]
-        if model.let:
+        if model.let_container.let_list:
             lo += [self._letcol]
         if model.plans:
             lo += [self._plancol]

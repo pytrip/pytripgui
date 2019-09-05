@@ -22,9 +22,6 @@ class Let(object):
         """
         logger.debug("plot LET cube")
 
-        if not plc._model.dos:
-            return
-
         let = plc._model.plot.let
         pm = plc._model.plot
 
