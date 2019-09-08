@@ -2,31 +2,31 @@ from pytripgui.controller.vdx import Vdx
 from pytripgui.viewcanvas_vc.dos import Dos
 from pytripgui.viewcanvas_vc.ctx import Ctx
 from pytripgui.viewcanvas_vc.let import Let
-from pytripgui.controller.vc_text import ViewCanvasText
+from pytripgui.viewcanvas_vc.vc_text import ViewCanvasTextCont
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-class PlotController(object):
+class ViewCanvasCont(object):
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
 
-    def __init__(self, model, ui):
+    def __init__(self, model, view):
         """
         :param MainModel model:
         :param MainWindow ui:
         """
         self._model = model
-        self._ui = ui
+        self._ui = view
 
         # TODO: these maybe do not belong here and could be moved to a viewer?
         # Outline:
         # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
         # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
-        self.figcanvas = ui.vc      # widget for Qt
-        self.axes = ui.vc.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
+        self.figcanvas = self._ui      # widget for Qt
+#        self.axes = self._ui.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
         self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
         self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
@@ -40,7 +40,7 @@ class PlotController(object):
         self.plot_bg()
 
         # Connect events to callbacks
-        self._connect_ui_plot(ui.vc)
+#        self._connect_ui_plot(self._ui.vc)
 
     def _connect_ui_plot(self, vc):
         """
@@ -71,7 +71,7 @@ class PlotController(object):
             Let.plot(self)
 
         if self._model.plot.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
-            ViewCanvasText.plot(self)
+            ViewCanvasTextCont.plot(self)
 
         self.figcanvas.draw()
         self.figcanvas.move(0, 0)
@@ -88,11 +88,11 @@ class PlotController(object):
             self.axim_bg.remove()
 
         import matplotlib.pyplot as plt
-        self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
-                                        vmin=-5, vmax=5,
-                                        interpolation='nearest',
-                                        extent=self._model.plot.extent,
-                                        zorder=0)
+        # self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
+        #                                 vmin=-5, vmax=5,
+        #                                 interpolation='nearest',
+        #                                 extent=self._model.plot.extent,
+        #                                 zorder=0)
 
     def on_click(self, event):
         """

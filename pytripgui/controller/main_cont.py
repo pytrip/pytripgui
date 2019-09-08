@@ -3,11 +3,10 @@ import os
 import pytrip as pt
 
 from pytripgui.controller.tree_cont import TreeController
-from pytripgui.viewcanvas_vc.viewcanvas_cont import PlotController
+from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh
-# from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +20,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
+        self.plot = ViewCanvasCont(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
         self.tree = TreeController(self.model, app.view.ui, self)  # TODO: get rid of self here
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
         self.lvh = Lvh(self.model, self.app.view)   # DVH plot

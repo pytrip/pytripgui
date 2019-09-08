@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class MainModel(object):
-    def __init__(self, app):
+    def __init__(self, app=None):
 
         from pytrip import __version__ as _pytrip_version
         from pytripgui import __version__ as _pytripgui_version

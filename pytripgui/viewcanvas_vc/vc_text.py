@@ -1,12 +1,8 @@
 import logging
-# import matplotlib.colors
-
-# import numpy as np
-
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasText(object):
+class ViewCanvasTextCont(object):
     """
     This class holds logic for plotting all various text decorators for the ViewCanvas plot.
     # TODO: find better name than "ViewCanvas" for this object.
@@ -37,7 +33,7 @@ class ViewCanvasText(object):
         pm = plc._model.plot
 
         size = pm.slice_size
-        offset = ViewCanvasText.offset(pm)
+        offset = ViewCanvasTextCont.offset(pm)
         idx = pm.slice_pos_idx  # current slice index (starts at 0, takes plane of view into account)
 
         axes = plc.axes

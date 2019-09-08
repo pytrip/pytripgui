@@ -7,7 +7,7 @@ from PyQt5 import QtCore
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 
-# from controller.plot_cont import PlotController
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class ViewCanvasView(FigureCanvas):
     Viewer class for matplotlib 2D plotting widget
     """
 
-    def __init__(self, parent=None, width=6, height=4, dpi=110):
+    def __init__(self, width=6, height=4, dpi=110):
         """
         Init canvas.
         """
@@ -29,10 +29,6 @@ class ViewCanvasView(FigureCanvas):
         # self.axes = self.fig.add_subplot(111)
 
         FigureCanvas.__init__(self, self.figure)
-
-        layout = QVBoxLayout(parent)
-        layout.addWidget(self)
-        parent.setLayout(layout)
 
         FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)

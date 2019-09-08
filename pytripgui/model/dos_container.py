@@ -11,6 +11,7 @@ class DosContainer:
     def import_from_file(self, dos_path):
         logger.debug("Open DosCube {:s}".format(dos_path))
         dos = pt.DosCube()
+
         dos.read(dos_path)
 
         # update model

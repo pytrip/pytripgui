@@ -104,6 +104,7 @@ class PlotModel(object):
         self.slice_pos_nr = 1
         self.slice_pos_mm = 0.0
 
+
     # Here follows primitive getter/setter logic for plot_model. It does not touch anything outside the model.
     @property
     def cube(self):
