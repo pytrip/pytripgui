@@ -7,27 +7,17 @@ logger = logging.getLogger(__name__)
 
 
 class Dos(object):
-    """
-    This class holds logic for plotting DOS stuff.
-    """
-
     def __init__(self):
         pass
 
     @staticmethod
     def plot(plc):
-        """
-        Plot the active dos cube.
-        :params plc: PlotController
 
-        """
-        logger.debug("plot Dos cube")
-
-        if not plc._model.dos_container.dos_list:
+        if not plc._model.dos:
             return
 
-        dos = plc._model.plot.dos
-        pm = plc._model.plot
+        dos = plc._model.dos
+        pm = plc._model
 
         if dos is None:
             logger.debug("DosCube clear")
@@ -40,7 +30,7 @@ class Dos(object):
             return
 
         if pm.plane == "Transversal":
-            dos_data = dos.cube[pm.zslice]
+            dos_data = dos.cube[pm.current_z_slice]
         elif pm.plane == "Sagittal":
             dos_data = dos.cube[-1:0:-1, -1:0:-1, pm.xslice]
             pm.aspect = dos.slice_distance / dos.pixel_size
@@ -77,9 +67,9 @@ class Dos(object):
             plot_data[plot_data <= pm.min_dose] = pm.min_dose
 
             if not plc.axim_dos:
-                plc.axim_dos = plc._ui.vc.axes.imshow(plot_data,
+                plc.axim_dos = plc._ui.axes.imshow(plot_data,
                                                       cmap=cmap,
-                                                      vmax=(pm.max_dose),
+                                                      vmax=pm.max_dose,
                                                       aspect=pm.aspect,
                                                       zorder=5)
 

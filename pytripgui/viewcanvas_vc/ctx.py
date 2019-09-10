@@ -26,7 +26,7 @@ class Ctx(object):
         ctx = plc._model.plot.ctx
         pm = plc._model.plot
 
-        # figure = plc.figure
+        figure = plc.figure
         axes = plc.axes
 
         if ctx is None:
@@ -81,13 +81,13 @@ class Ctx(object):
         # setup the HU bar:
         if not plc.hu_bar:
             pass
-            # cax = figure.add_axes([0.1, 0.1, 0.03, 0.8])
-            # cb = figure.colorbar(plc.axim_ctx, cax=cax)
-            # cb.set_label("HU", color=pm.fg_color, fontsize=pm.cb_fontsize)
-            # cb.outline.set_edgecolor(pm.bg_color)
-            # cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
-            # plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
-            # plc.hu_bar = cb
+            cax = figure.add_axes([0.1, 0.1, 0.03, 0.8])
+            cb = figure.colorbar(plc.axim_ctx, cax=cax)
+            cb.set_label("HU", color=pm.fg_color, fontsize=pm.cb_fontsize)
+            cb.outline.set_edgecolor(pm.bg_color)
+            cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
+            plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
+            plc.hu_bar = cb
 
     @staticmethod
     def change_contrast(plc, contrast):

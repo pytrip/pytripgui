@@ -13,20 +13,21 @@ class ViewCanvasCont(object):
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
 
-    def __init__(self, model, view):
+    def __init__(self, model, ui):
         """
         :param MainModel model:
         :param MainWindow ui:
         """
         self._model = model
-        self._ui = view
+        self._ui = ui
 
         # TODO: these maybe do not belong here and could be moved to a viewer?
         # Outline:
         # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
         # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
-        self.figcanvas = self._ui      # widget for Qt
-#        self.axes = self._ui.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
+        self.figcanvas = ui      # widget for Qt
+        self.figure = ui.figure  # placeholder for figure class
+        self.axes = ui.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
         self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
         self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
@@ -39,60 +40,16 @@ class ViewCanvasCont(object):
 
         self.plot_bg()
 
+        # initial setup of the ViewCanvas
+        rect = self.figure.patch
+        rect.set_facecolor(model.bg_color)
+
         # Connect events to callbacks
-#        self._connect_ui_plot(self._ui.vc)
+        self._setup_ui_callbacks()
 
-    def _connect_ui_plot(self, vc):
-        """
-        Note sure this is the correct place to do this.
-        """
-        vc.fig.canvas.mpl_connect('button_press_event', self.on_click)
-        vc.fig.canvas.mpl_connect('motion_notify_event', self.on_mouse_move)
-        vc.fig.canvas.mpl_connect('scroll_event', self.on_mouse_wheel)
-        vc.fig.canvas.mpl_connect('key_press_event', self.on_key_press)
-
-    def update_viewcanvas(self):
-        """
-        Updating ViewCanvas which holds CTX, VDX, DOS and LET.
-        """
-
-        logger.info("Enter update_viewcanvas()")
-
-        if self._model.ctx:
-            Ctx.plot(self)
-
-        if self._model.vdx:
-            Vdx.plot(self)
-
-        if self._model.dos_container.dos_list:
-            Dos.plot(self)
-
-        if self._model.let_container.let_list:
-            Let.plot(self)
-
-        if self._model.plot.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
-            ViewCanvasTextCont.plot(self)
-
-        self.figcanvas.draw()
-        self.figcanvas.move(0, 0)
-        self.figcanvas.show()
-
-    def plot_bg(self):
-        """
-        (Re)plots the background chessboard image
-        """
-        # add some default background image
-        import numpy as np
-        self.chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        if self.axim_bg:
-            self.axim_bg.remove()
-
-        import matplotlib.pyplot as plt
-        # self.axim_bg = self.axes.imshow(self.chessboard_data, cmap=plt.cm.gray,
-        #                                 vmin=-5, vmax=5,
-        #                                 interpolation='nearest',
-        #                                 extent=self._model.plot.extent,
-        #                                 zorder=0)
+    def _setup_ui_callbacks(self):
+        self._ui.set_button_press_callback(self.on_click)
+        self._ui.set_scroll_event_callback(self.on_mouse_wheel)
 
     def on_click(self, event):
         """
@@ -100,26 +57,18 @@ class ViewCanvasCont(object):
         """
         _str = '{:s} click: button={:.0f}, x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
             'double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata)
-        self._ui.statusbar.showMessage(_str)
+        print(_str)
 
-        # TODO put up a pop up menu if right clicked on canvas
-
-    def on_mouse_move(self, event):
-        """
-        Callback for mouse moved over canvas.
-        """
-        _str = 'move: x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(event.x, event.y, event.xdata, event.ydata)
-        self._ui.statusbar.showMessage(_str)
+        # put up a pop up menu if right clicked on canvas
+        if event.button == 3:
+            from PyQt5.QtGui import QCursor
+            cursor = QCursor()
+            pos = cursor.pos()
+            self._ui.popMenu.move(pos)
+            self._ui.popMenu.show()
 
     def on_mouse_wheel(self, event):
-        """
-        Callback for mouse wheel over canvas.
-        """
-        _str = 'wheel: {:s} x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(event.button, event.x, event.y, event.xdata,
-                                                                           event.ydata)
-        self._ui.statusbar.showMessage(_str)
-
-        pm = self._model.plot  # plot model
+        pm = self._model  # plot model
 
         if not pm.cube:
             return
@@ -129,11 +78,32 @@ class ViewCanvasCont(object):
         else:
             pm.slice_pos_idx -= 1
 
+        print(pm.slice_pos_idx)
+
         self.update_viewcanvas()
 
-    def on_key_press(self, event):
-        """
-        Callback for key pressed while over canvas.
-        """
-        _str = 'keypress: {} '.format(event)
-        print(_str)
+    def update_viewcanvas(self):
+        if self._model.ctx:
+            Ctx.plot(self)
+
+        if self._model.vdx:
+            Vdx.plot(self)
+
+        if self._model.dos:
+            Dos.plot(self)
+
+        if self._model.let:
+            Let.plot(self)
+
+        if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
+            ViewCanvasTextCont().plot(self)
+
+        self.figcanvas.draw()
+
+    def plot_bg(self):
+        import numpy as np
+        chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
+        self._ui.plot_bg(chessboard_data)
+
+
+

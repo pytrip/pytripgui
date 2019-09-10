@@ -5,27 +5,21 @@ logger = logging.getLogger(__name__)
 
 
 class PlotModel(object):
-    """
-    Class for holding attributes for plotting.
-    """
-
     def __init__(self):
-        # total number of slices along either axis
-        self.xslice = 0
-        self.yslice = 0
-        self.zslice = 0
 
-        # current plane to be plotted.
-        # May be "Transversal" (xy)
+        self.current_x_slice = 0
+        self.current_y_slice = 0
+        self.current_z_slice = 0
+
+        # "Transversal" (xy)
         # "Sagittal" (yz)
         # "Coronal"  (xz)
         self.plane = "Transversal"
         self.aspect = 1.0  # aspect ratio of plot
 
-        self.zoom = 100.0
-        self.zoom_levels = [100.0, 110.0, 125.0, 150.0, 200.0, 250.0, 300.0, 400.0]
-        self.center = [50.0, 50.0]
-        self.extent = [0, 255, 0, 255]  # extention of the axesimage, used for plotting the background image.
+
+
+
 
         # ViewCanvas specific:
         self.text_color = "#33DD33"  # text decorator colour
@@ -50,7 +44,7 @@ class PlotModel(object):
         # ViewCanvas specific:
         self.text_color = "#33DD33"  # text decorator colour
         self.fg_color = 'white'  # colour for colourbar ticks and labels
-        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
+        self.g_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
         self.cb_fontsize = 8     # fontsize of colourbar labels
 
         # DVHPlot specific
@@ -104,7 +98,6 @@ class PlotModel(object):
         self.slice_pos_nr = 1
         self.slice_pos_mm = 0.0
 
-
     # Here follows primitive getter/setter logic for plot_model. It does not touch anything outside the model.
     @property
     def cube(self):
@@ -128,21 +121,10 @@ class PlotModel(object):
 
     @property
     def slice_pos_idx(self):
-        """
-        Current slice position as index, starting at 0.
-        Plane of view is taken into account.
-        """
-        print("called slice_pos_idx getter")
-        return self._slice_pos_idx  # why this fails?
+        return self._slice_pos_idx
 
     @slice_pos_idx.setter
     def slice_pos_idx(self, value):
-        """
-        Set current slice position, but let it wrap around last slice, if overshot.
-        Index starts at 0.
-        Plane of view is taken into account.
-        Returns 0 if no data are loaded.
-        """
         if not self.slice_size:
             self._slice_pos_idx = 0
             return
@@ -157,11 +139,11 @@ class PlotModel(object):
 
         # remember last X,Y,Z slice (needed if view is switched back and forth)
         if self.plane == "Transversal":
-            self.zslice = value
+            self.current_z_slice = value
         elif self.plane == "Sagittal":
-            self.yslice = value
+            self.current_y_slice = value
         elif self.plane == "Coronal":
-            self.xslice = value
+            self.current_x_slice = value
 
         self._slice_pos_idx = value
 

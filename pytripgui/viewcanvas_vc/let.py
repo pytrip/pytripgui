@@ -37,7 +37,7 @@ class Let(object):
 
         # TODO: this is code duplication from dos.py.
         if pm.plane == "Transversal":
-            let_data = let.cube[pm.zslice]
+            let_data = let.cube[pm.current_z_slice]
         elif pm.plane == "Sagittal":
             let_data = let.cube[-1:0:-1, -1:0:-1, pm.xslice]
             pm.aspect = let.slice_distance / let.pixel_size
@@ -55,7 +55,7 @@ class Let(object):
             let_data[let_data <= pm.min_let] = pm.min_let
 
             if not plc.axim_let:
-                plc.axim_let = plc._ui.vc.axes.imshow(let_data,
+                plc.axim_let = plc._ui.axes.imshow(let_data,
                                                       cmap=cmap,
                                                       vmax=(pm.max_let),
                                                       aspect=pm.aspect,
