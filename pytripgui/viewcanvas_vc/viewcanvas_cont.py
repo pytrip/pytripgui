@@ -30,19 +30,13 @@ class ViewCanvasCont(object):
         self.axes = ui.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
         self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
-        self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
         self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
         self.hu_bar = None    # placeholder for Colorbar object returned by matplotlib.colorbar
-        self.dose_bar = None
         self.let_bar = None
 
         self.zoom = 100.0  # zoom level in percent
 
         self.plot_bg()
-
-        # initial setup of the ViewCanvas
-        rect = self.figure.patch
-        rect.set_facecolor(model.bg_color)
 
         # Connect events to callbacks
         self._setup_ui_callbacks()
@@ -52,20 +46,7 @@ class ViewCanvasCont(object):
         self._ui.set_scroll_event_callback(self.on_mouse_wheel)
 
     def on_click(self, event):
-        """
-        Callback for click on canvas.
-        """
-        _str = '{:s} click: button={:.0f}, x={:.0f}, y={:.0f}, xdata={}, ydata={}'.format(
-            'double' if event.dblclick else 'single', event.button, event.x, event.y, event.xdata, event.ydata)
-        print(_str)
-
-        # put up a pop up menu if right clicked on canvas
-        if event.button == 3:
-            from PyQt5.QtGui import QCursor
-            cursor = QCursor()
-            pos = cursor.pos()
-            self._ui.popMenu.move(pos)
-            self._ui.popMenu.show()
+        pass
 
     def on_mouse_wheel(self, event):
         pm = self._model  # plot model
@@ -90,13 +71,13 @@ class ViewCanvasCont(object):
             Vdx.plot(self)
 
         if self._model.dos:
-            Dos.plot(self)
+            self._model.dos.plot(self)
 
         if self._model.let:
             Let.plot(self)
 
-        if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
-            ViewCanvasTextCont().plot(self)
+        # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
+        #     ViewCanvasTextCont().plot(self)
 
         self.figcanvas.draw()
 

@@ -1,51 +1,27 @@
 import logging
 import matplotlib.pyplot as plt
 
+from pytripgui.viewcanvas_vc.dos import Dos
+
 logger = logging.getLogger(__name__)
 
 
-class PlotModel(object):
+class PlotConfig():
     def __init__(self):
-
-        self.current_x_slice = 0
-        self.current_y_slice = 0
-        self.current_z_slice = 0
+        self.current_x_slice = 50
+        self.current_y_slice = 50
+        self.current_z_slice = 54
 
         # "Transversal" (xy)
         # "Sagittal" (yz)
         # "Coronal"  (xz)
         self.plane = "Transversal"
-        self.aspect = 1.0  # aspect ratio of plot
 
 
+class PlotModel(object):
+    def __init__(self):
 
 
-
-        # ViewCanvas specific:
-        self.text_color = "#33DD33"  # text decorator colour
-        self.fg_color = 'white'  # colour for colourbar ticks and labels
-        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
-        self.cb_fontsize = 8     # fontsize of colourbar labels
-
-        # DVHPlot specific
-        # TODO: these will be future pt.VolHist objects.
-        # Here we shall only keep a list of those dvh's we want to plot.
-        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
-
-        # Idea is to attach the VolHist classes to the DosCube objects themselves.
-        # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
-        # Here in the plotmodel, we will then keep a list of links to those cubes which the user wants to have plotted.
-
-        # LVHPlot specific
-        # TODO: these will be future pt.VolHist objects.
-        # Here we shall only keep a list of those dvh's we want to plot.
-        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
-
-        # ViewCanvas specific:
-        self.text_color = "#33DD33"  # text decorator colour
-        self.fg_color = 'white'  # colour for colourbar ticks and labels
-        self.g_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
-        self.cb_fontsize = 8     # fontsize of colourbar labels
 
         # DVHPlot specific
         # TODO: these will be future pt.VolHist objects.
@@ -70,16 +46,8 @@ class PlotModel(object):
         self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
         self.plot_vois = True  # whether all vois are plotted at all
 
-        # DosCube specific
-        self.dos = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
-        self.dose_show = True  # decides whether DosCube is shown or not.
-        self.dose_plot = "colorwash"
-        self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
-        self.dose_axis = "auto"
-        self.colormap_dose = plt.get_cmap(None)
-        self.dos_scale = None  # TODO: check what this is, change possibly to dose_scale (with 'e')
-        self.min_dose = 0
-        self.max_dose = None
+        self.config = PlotConfig()
+        self.dos = Dos(self.config)
 
         # LETCube specific
         self.let = None  # Placeholder for LETCube() object to be plotted. Only one (!) LETCube can be plotted.
@@ -108,7 +76,7 @@ class PlotModel(object):
         if self.ctx:
             self._cube = self.ctx
         elif self.dos:
-            self._cube = self.dos
+            self._cube = self.dos.dos
         elif self.let:
             self._cube = self.let
         else:

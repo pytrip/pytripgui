@@ -1,95 +1,73 @@
-import logging
-
 import numpy as np
-import matplotlib.pyplot as plt
 
+import logging
 logger = logging.getLogger(__name__)
 
 
 class Dos(object):
-    def __init__(self):
-        pass
+    def __init__(self, config):
+        self.aspect = 1.0  # aspect ratio of plot
 
-    @staticmethod
-    def plot(plc):
+        self.dos = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
+        self.data_to_plot = None
+        self.dose_show = True  # decides whether DosCube is shown or not.
+        self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
+        self.dose_axis = "auto"
 
-        if not plc._model.dos:
+        self.dos_scale = None  # TODO: check what this is, change possibly to dose_scale (with 'e')
+        self.min_dose = 0
+        self.max_dose = None
+
+        self.config = config
+
+    def plot(self, view):
+
+        if not self.dos:
             return
 
-        dos = plc._model.dos
-        pm = plc._model
+        scale = self.get_proposed_scale()
 
-        if dos is None:
-            logger.debug("DosCube clear")
-            if plc.axim_dos:  # this can happen if LET cube was removed, and DOS cube is remove afterwards.
-                plc.axim_dos.remove()
-                plc.axim_dos = None
-            if plc.dose_bar:
-                plc.dose_bar.ax.cla()
-                plc.dose_bar = None
-            return
+        if scale == "abs":
+            factor = 1000 / self.dos.target_dose
+        if scale == "rel":
+            factor = 10
 
-        if pm.plane == "Transversal":
-            dos_data = dos.cube[pm.current_z_slice]
-        elif pm.plane == "Sagittal":
-            dos_data = dos.cube[-1:0:-1, -1:0:-1, pm.xslice]
-            pm.aspect = dos.slice_distance / dos.pixel_size
-        elif pm.plane == "Coronal":
-            dos_data = dos.cube[-1:0:-1, pm.yslice, -1:0:-1]
-            pm.aspect = dos.slice_distance / dos.pixel_size
+        if not self.dos_scale and self.dos_scale != scale:
+            self.max_dose = np.amax(self.dos.cube) / factor
+            # self.clear_dose_view()
+        elif not self.dos_scale:
+            self.max_dose = np.amax(self.dos.cube) / factor
 
-        if pm.dose_plot == "colorwash":
-            if dos.target_dose <= 0:
-                scale = "rel"
-            elif pm.dose_axis == "auto" and dos.target_dose != 0.0:
-                scale = "abs"
-            else:
-                scale = pm.dose_axis
-            if scale == "abs":
-                factor = 1000 / dos.target_dose
-            if scale == "rel":
-                factor = 10
+        self.dos_scale = scale
 
-            if not pm.dos_scale and pm.dos_scale != scale:
-                pm.max_dose = np.amax(dos.cube) / factor
-                # self.clear_dose_view()
-            elif not pm.dos_scale:
-                pm.max_dose = np.amax(dos.cube) / factor
+        dos_data = self.get_data(50)
 
-            pm.dos_scale = scale
+        self.data_to_plot = dos_data / float(factor)
+        self.data_to_plot[self.data_to_plot <= self.min_dose] = self.min_dose
 
-            cmap = pm.colormap_dose
-            cmap._init()
-            cmap._lut[:, -1] = 0.7
-            cmap._lut[0, -1] = 0.0
+        view._ui.plot_dos(self)
 
-            plot_data = dos_data / float(factor)
-            plot_data[plot_data <= pm.min_dose] = pm.min_dose
+    def get_proposed_scale(self):
+        if self.dos.target_dose <= 0:
+            return "rel"
+        elif self.dose_axis == "auto" and self.dos.target_dose != 0.0:
+            return "abs"
+        else:
+            return self.dose_axis
 
-            if not plc.axim_dos:
-                plc.axim_dos = plc._ui.axes.imshow(plot_data,
-                                                      cmap=cmap,
-                                                      vmax=pm.max_dose,
-                                                      aspect=pm.aspect,
-                                                      zorder=5)
+    def get_data(self, current_slice):
+        if self.config.plane == "Transversal":
+            return self.dos.cube[current_slice]
+        elif self.config.plane == "Sagittal":
+            return self.dos.cube[-1:0:-1, -1:0:-1, current_slice]
+        elif self.config.plane == "Coronal":
+            return self.dos.cube[-1:0:-1, current_slice, -1:0:-1]
 
-                # update the extent actual size in data pixels # TODO, must also be called if plane of view is changed.
-                pm.extent = [0, pm.slice_size[0], 0, pm.slice_size[1]]
-                plc.plot_bg()
-                # setup colourbar, here called "dose_bar"
-                if not plc.dose_bar:
-                    cax = plc.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
-                    cb = plc.axes.figure.colorbar(plc.axim_dos, cax=cax)
-                    cb.set_label("Dose", color=pm.fg_color, fontsize=pm.cb_fontsize)
-                    cb.outline.set_edgecolor(pm.bg_color)
-                    cb.ax.yaxis.set_tick_params(color=pm.fg_color)
-                    plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=pm.fg_color)
-                    cb.ax.yaxis.set_tick_params(color=pm.fg_color, labelsize=pm.cb_fontsize)
-                    plc.dose_bar = cb
+        raise NameError("Invalid plane name: " + self.plane);
 
-                    if scale == "abs":
-                        plc.dose_bar.set_label("Dose [Gy]")
-                    else:
-                        plc.dose_bar.set_label("Dose [%]")
-            else:
-                plc.axim_dos.set_data(plot_data)
+    def get_aspect(self):
+        if self.config.plane == "Transversal":
+            return 1.0
+        else:
+            return self.dos.slice_distance / self.dos.pixel_size
+

@@ -6,6 +6,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -18,12 +19,24 @@ class ViewCanvasView(FigureCanvas):
         """
         Init canvas.
         """
-        self.axim_bg = None   # placehodler for AxisImage for background image
+        # ViewCanvas specific:
+        self.text_color = "#33DD33"  # text decorator colour
+        self.fg_color = 'white'  # colour for colourbar ticks and labels
+        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
+        self.cb_fontsize = 8  # fontsize of colourbar labels
+        # Data Specific
+        self.axim_bg = None  # placehodler for AxisImage for background image
+        # DOS
+        self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
+        self.dose_bar = None
+        self.colormap_dose = plt.get_cmap(None)
+        self.colormap_dose._init()
+        self.colormap_dose._lut[:, -1] = 0.7
+        self.colormap_dose._lut[0, -1] = 0.0
+
 
         self.figure = Figure(figsize=(width, height), dpi=dpi)
 
-        # Here one can adjust the position of the CTX plot area.
-        self.axes = self.figure.add_axes([0, 0, 1, 1])
         self.axes = self.figure.add_subplot(111)
 
         FigureCanvas.__init__(self, self.figure)
@@ -37,6 +50,8 @@ class ViewCanvasView(FigureCanvas):
         # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
         FigureCanvas.setFocusPolicy(self, QtCore.Qt.ClickFocus)
         FigureCanvas.setFocus(self)
+
+        self.figure.patch.set_facecolor(self.bg_color)
 
     def set_button_press_callback(self, callback):
         self.figure.canvas.mpl_connect('button_press_event', callback)
@@ -58,3 +73,40 @@ class ViewCanvasView(FigureCanvas):
             interpolation='nearest',
             extent=extent,
             zorder=0)
+
+    def remove_dos(self):
+        if self.axim_dos:
+            self.axim_dos.remove()
+            self.axim_dos = None
+        if self.dose_bar:
+            self.dose_bar.ax.cla()
+            self.dose_bar = None
+
+    def plot_dos(self, dos):
+        if not self.axim_dos:
+            self.axim_dos = self.axes.imshow(
+                dos.data_to_plot,
+                cmap=self.colormap_dose,
+                vmax=dos.max_dose,
+                aspect=dos.aspect,
+                zorder=5
+            )
+            if not self.dose_bar:
+                self._plot_dos_bar(dos)
+        else:
+            self.axim_dos.set_data(dos)
+
+    def _plot_dos_bar(self, dos):
+        cax = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
+        cb = self.axes.figure.colorbar(self.axim_dos, cax=cax)
+        cb.set_label("Dose", color=self.fg_color, fontsize=self.cb_fontsize)
+        cb.outline.set_edgecolor(self.bg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color)
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
+        self.dose_bar = cb
+
+        if dos.dos_scale == "abs":
+            self.dose_bar.set_label("Dose [Gy]")
+        else:
+            self.dose_bar.set_label("Dose [%]")
