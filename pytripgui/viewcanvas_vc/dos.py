@@ -18,29 +18,26 @@ class Dos(object):
         self.min_dose = 0
         self.max_dose = None
 
-        self.config = config
+        self.projection_selector = config
 
     def plot(self, view):
 
         if not self.dos:
             return
 
-        scale = self.get_proposed_scale()
+        self.dos_scale = self.get_proposed_scale()
 
-        if scale == "abs":
+        if self.dos_scale == "abs":
             factor = 1000 / self.dos.target_dose
-        if scale == "rel":
+        if self.dos_scale == "rel":
             factor = 10
 
-        if not self.dos_scale and self.dos_scale != scale:
+        if not self.dos_scale and self.dos_scale != self.dos_scale:
             self.max_dose = np.amax(self.dos.cube) / factor
-            # self.clear_dose_view()
         elif not self.dos_scale:
             self.max_dose = np.amax(self.dos.cube) / factor
 
-        self.dos_scale = scale
-
-        dos_data = self.get_data(50)
+        dos_data = self.projection_selector.get_projection(self.dos)
 
         self.data_to_plot = dos_data / float(factor)
         self.data_to_plot[self.data_to_plot <= self.min_dose] = self.min_dose
@@ -54,16 +51,6 @@ class Dos(object):
             return "abs"
         else:
             return self.dose_axis
-
-    def get_data(self, current_slice):
-        if self.config.plane == "Transversal":
-            return self.dos.cube[current_slice]
-        elif self.config.plane == "Sagittal":
-            return self.dos.cube[-1:0:-1, -1:0:-1, current_slice]
-        elif self.config.plane == "Coronal":
-            return self.dos.cube[-1:0:-1, current_slice, -1:0:-1]
-
-        raise NameError("Invalid plane name: " + self.plane);
 
     def get_aspect(self):
         if self.config.plane == "Transversal":

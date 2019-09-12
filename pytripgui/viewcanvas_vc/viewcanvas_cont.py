@@ -51,15 +51,10 @@ class ViewCanvasCont(object):
     def on_mouse_wheel(self, event):
         pm = self._model  # plot model
 
-        if not pm.cube:
-            return
-
         if event.button == "up":
-            pm.slice_pos_idx += 1
+            pm.projection_selector.next_slice()
         else:
-            pm.slice_pos_idx -= 1
-
-        print(pm.slice_pos_idx)
+            pm.projection_selector.prev_slice()
 
         self.update_viewcanvas()
 
@@ -70,8 +65,8 @@ class ViewCanvasCont(object):
         if self._model.vdx:
             Vdx.plot(self)
 
-        if self._model.dos:
-            self._model.dos.plot(self)
+        if self._model.dose:
+            self._model.dose.plot(self)
 
         if self._model.let:
             Let.plot(self)

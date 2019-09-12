@@ -6,7 +6,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 import logging
-
 logger = logging.getLogger(__name__)
 
 
@@ -94,7 +93,7 @@ class ViewCanvasView(FigureCanvas):
             if not self.dose_bar:
                 self._plot_dos_bar(dos)
         else:
-            self.axim_dos.set_data(dos)
+            self.axim_dos.set_data(dos.data_to_plot)
 
     def _plot_dos_bar(self, dos):
         cax = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
