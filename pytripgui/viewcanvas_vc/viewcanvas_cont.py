@@ -46,6 +46,7 @@ class ViewCanvasCont(object):
         self._ui.set_scroll_event_callback(self.on_mouse_wheel)
 
     def on_click(self, event):
+        # TODO - add popup menu if needed
         pass
 
     def on_mouse_wheel(self, event):
@@ -66,7 +67,8 @@ class ViewCanvasCont(object):
             Vdx.plot(self)
 
         if self._model.dose:
-            self._model.dose.plot(self)
+            self._model.dose.prepare_data_to_plot()
+            self._ui.plot_dos(self._model.dose)
 
         if self._model.let:
             Let.plot(self)
@@ -80,6 +82,3 @@ class ViewCanvasCont(object):
         import numpy as np
         chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
         self._ui.plot_bg(chessboard_data)
-
-
-

@@ -10,18 +10,17 @@ class Dos(object):
 
         self.dos = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
         self.data_to_plot = None
-        self.dose_show = True  # decides whether DosCube is shown or not.
-        self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
+        # self.dose_show = True  # decides whether DosCube is shown or not.
+        # self.dose_contour_levels = [10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 95.0, 98.0, 100.0, 102.0]
         self.dose_axis = "auto"
 
-        self.dos_scale = None  # TODO: check what this is, change possibly to dose_scale (with 'e')
+        self.dos_scale = None
         self.min_dose = 0
         self.max_dose = None
 
         self.projection_selector = config
 
-    def plot(self, view):
-
+    def prepare_data_to_plot(self):
         if not self.dos:
             return
 
@@ -41,8 +40,6 @@ class Dos(object):
 
         self.data_to_plot = dos_data / float(factor)
         self.data_to_plot[self.data_to_plot <= self.min_dose] = self.min_dose
-
-        view._ui.plot_dos(self)
 
     def get_proposed_scale(self):
         if self.dos.target_dose <= 0:
