@@ -1,6 +1,5 @@
-import matplotlib.pyplot as plt
-
 from pytripgui.viewcanvas_vc.dos import Dos
+from pytripgui.viewcanvas_vc.let import Let
 
 import logging
 logger = logging.getLogger(__name__)
@@ -70,14 +69,7 @@ class PlotModel(object):
 
         self.projection_selector = ProjectionSelector()
         self.dose = None
-
-        # LETCube specific
-        self.let = None  # Placeholder for LETCube() object to be plotted. Only one (!) LETCube can be plotted.
-        self.let_show = True  # decides whether LETCube is shown or not.
-        self.let_plot = "colorwash"
-        self.colormap_let = plt.get_cmap(None)
-        self.min_let = 0
-        self.max_let = None
+        self.let = None
 
         # Plan specific
         self.plan = None  # Placeholder for plan to be plotted
@@ -88,6 +80,10 @@ class PlotModel(object):
 
     def set_dose(self, dose):
         self.dose = Dos(self.projection_selector)
-        self.dose.dos = dose
+        self.dose.cube = dose
+
+    def set_let(self, let):
+        self.let = Let(self.projection_selector)
+        self.let.cube = let
 
 

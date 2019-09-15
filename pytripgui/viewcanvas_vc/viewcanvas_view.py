@@ -28,14 +28,20 @@ class ViewCanvasView(FigureCanvas):
         # DOS
         self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
         self.dose_bar = None
-        self.colormap_dose = plt.get_cmap(None)
+        self.colormap_dose = plt.get_cmap()
         self.colormap_dose._init()
         self.colormap_dose._lut[:, -1] = 0.7
         self.colormap_dose._lut[0, -1] = 0.0
+        # LET
+        self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
+        self.let_bar = None
+        self.colormap_let = plt.get_cmap()
+        self.colormap_let._init()
+        self.colormap_let._lut[:, -1] = 0.7
+        self.colormap_let._lut[0, -1] = 0.0
 
-
+        # Figure
         self.figure = Figure(figsize=(width, height), dpi=dpi)
-
         self.axes = self.figure.add_subplot(111)
 
         FigureCanvas.__init__(self, self.figure)
@@ -65,7 +71,7 @@ class ViewCanvasView(FigureCanvas):
         self.figure.canvas.mpl_connect('key_press_event', callback)
 
     def plot_bg(self, background):
-        extent = [0, 256, 0, 256]  # extention of the axesimage, used for plotting the background image.
+        extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
         self.axim_bg = self.axes.imshow(
             background, cmap=plt.cm.gray,
             vmin=-5, vmax=5,
@@ -109,3 +115,35 @@ class ViewCanvasView(FigureCanvas):
             self.dose_bar.set_label("Dose [Gy]")
         else:
             self.dose_bar.set_label("Dose [%]")
+
+    def remove_let(self):
+        if self.axim_let:
+            self.axim_let.remove()
+            self.axim_let = None
+        if self.let_bar:
+            self.let_bar.ax.cla()
+            self.let_bar = None
+
+    def plot_let(self, data):
+        if not self.axim_let:
+            self.axim_let = self.axes.imshow(
+                data.data_to_plot,
+                cmap=self.colormap_let,
+                vmax=data.max_let,
+                aspect=data.aspect,
+                zorder=10
+            )
+            if not self.let_bar:
+                self._plot_let_bar()
+        else:
+            self.axim_let.set_data(data.data_to_plot)
+
+    def _plot_let_bar(self):
+        cax = self.axes.figure.add_axes([0.92, 0.1, 0.02, 0.8])
+        cb = self.axes.figure.colorbar(self.axim_let, cax=cax)
+        cb.set_label("LET (keV/um)", color=self.fg_color, fontsize=self.cb_fontsize)
+        cb.outline.set_edgecolor(self.bg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color)
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
+        self.let_bar = cb

@@ -1,5 +1,4 @@
 from pytripgui.controller.vdx import Vdx
-from pytripgui.viewcanvas_vc.dos import Dos
 from pytripgui.viewcanvas_vc.ctx import Ctx
 from pytripgui.viewcanvas_vc.let import Let
 from pytripgui.viewcanvas_vc.vc_text import ViewCanvasTextCont
@@ -14,31 +13,15 @@ class ViewCanvasCont(object):
     """
 
     def __init__(self, model, ui):
-        """
-        :param MainModel model:
-        :param MainWindow ui:
-        """
         self._model = model
         self._ui = ui
-
-        # TODO: these maybe do not belong here and could be moved to a viewer?
-        # Outline:
-        # The CTX/VDX/DOS/LET plotting area is a single Figure with a single set of Axes, which contains up to three
-        # layers of AxesImages. One for CTX, DOS and LET. VDX stuff is plotted directly to the figure.
-        self.figcanvas = ui      # widget for Qt
-        self.figure = ui.figure  # placeholder for figure class
-        self.axes = ui.axes  # self.axes = plc._ui.vc.axes   # Axes for the figure, i.e. = self.figure.axes
-        self.axim_bg = None   # placehodler for AxisImage for background image
         self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
-        self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
         self.hu_bar = None    # placeholder for Colorbar object returned by matplotlib.colorbar
-        self.let_bar = None
 
         self.zoom = 100.0  # zoom level in percent
 
         self.plot_bg()
 
-        # Connect events to callbacks
         self._setup_ui_callbacks()
 
     def _setup_ui_callbacks(self):
@@ -71,12 +54,13 @@ class ViewCanvasCont(object):
             self._ui.plot_dos(self._model.dose)
 
         if self._model.let:
-            Let.plot(self)
+            self._model.let.prepare_data_to_plot()
+            self._ui.plot_let(self._model.let)
 
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
 
-        self.figcanvas.draw()
+        self._ui.draw()
 
     def plot_bg(self):
         import numpy as np
