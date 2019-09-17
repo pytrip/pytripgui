@@ -39,6 +39,10 @@ class ViewCanvasView(FigureCanvas):
         self.colormap_let._init()
         self.colormap_let._lut[:, -1] = 0.7
         self.colormap_let._lut[0, -1] = 0.0
+        # CTX
+        self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
+        self.hu_bar = None  # placeholder for Colorbar object returned by matplotlib.colorbar
+        self.colormap_ctx = plt.get_cmap("gray")
 
         # Figure
         self.figure = Figure(figsize=(width, height), dpi=dpi)
@@ -139,7 +143,7 @@ class ViewCanvasView(FigureCanvas):
             self.axim_let.set_data(data.data_to_plot)
 
     def _plot_let_bar(self):
-        cax = self.axes.figure.add_axes([0.92, 0.1, 0.02, 0.8])
+        cax = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
         cb = self.axes.figure.colorbar(self.axim_let, cax=cax)
         cb.set_label("LET (keV/um)", color=self.fg_color, fontsize=self.cb_fontsize)
         cb.outline.set_edgecolor(self.bg_color)
@@ -147,3 +151,36 @@ class ViewCanvasView(FigureCanvas):
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.let_bar = cb
+
+    def remove_ctx(self):
+        if self.axim_ctx:
+            self.axim_ctx.remove()
+            self.axim_ctx = None
+        if self.hu_bar:
+            self.hu_bar.ax.cla()
+            self.hu_bar = None
+
+    def plot_ctx(self, data):
+        if not self.axim_ctx:
+            self.axim_ctx = self.axes.imshow(
+                data.data_to_plot,
+                cmap=self.colormap_ctx,
+                vmin=data.contrast_ct[0],
+                vmax=data.contrast_ct[1],
+                aspect=data.aspect,
+                zorder=1
+            )
+            if not self.hu_bar:
+                self._plot_hu_bar()
+        else:
+            self.axim_ctx.set_data(data.data_to_plot)
+
+    def _plot_hu_bar(self):
+        cax = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8])
+        cb = self.axes.figure.colorbar(self.axim_ctx, cax=cax)
+        cb.set_label("HU", color=self.fg_color, fontsize=self.cb_fontsize)
+        cb.outline.set_edgecolor(self.bg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color)
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
+        self.hu_bar = cb

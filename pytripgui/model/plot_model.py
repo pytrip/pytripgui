@@ -1,5 +1,6 @@
 from pytripgui.viewcanvas_vc.dos import Dos
 from pytripgui.viewcanvas_vc.let import Let
+from pytripgui.viewcanvas_vc.ctx import Ctx
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,8 +9,8 @@ logger = logging.getLogger(__name__)
 class ProjectionSelector:
     def __init__(self):
         self.current_x_slice = 50
-        self.current_y_slice = 50
-        self.current_z_slice = 54
+        self.current_y_slice = 125
+        self.current_z_slice = 125
 
         # "Transversal" (xy)
         # "Sagittal" (yz)
@@ -58,10 +59,6 @@ class PlotModel(object):
         # Here we shall only keep a list of those dvh's we want to plot.
         self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
 
-        # CTX specific
-        self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.contrast_ct = [-500, 2000]
-
         # VDX specific
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
@@ -70,6 +67,7 @@ class PlotModel(object):
         self.projection_selector = ProjectionSelector()
         self.dose = None
         self.let = None
+        self.ctx = None
 
         # Plan specific
         self.plan = None  # Placeholder for plan to be plotted
@@ -86,4 +84,6 @@ class PlotModel(object):
         self.let = Let(self.projection_selector)
         self.let.cube = let
 
-
+    def set_ctx(self, ctx):
+        self.ctx = Ctx(self.projection_selector)
+        self.ctx.cube = ctx

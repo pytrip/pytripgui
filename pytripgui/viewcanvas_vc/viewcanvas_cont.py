@@ -15,10 +15,6 @@ class ViewCanvasCont(object):
     def __init__(self, model, ui):
         self._model = model
         self._ui = ui
-        self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
-        self.hu_bar = None    # placeholder for Colorbar object returned by matplotlib.colorbar
-
-        self.zoom = 100.0  # zoom level in percent
 
         self.plot_bg()
 
@@ -44,10 +40,11 @@ class ViewCanvasCont(object):
 
     def update_viewcanvas(self):
         if self._model.ctx:
-            Ctx.plot(self)
+            self._model.ctx.prepare_data_to_plot()
+            self._ui.plot_ctx(self._model.ctx)
 
-        if self._model.vdx:
-            Vdx.plot(self)
+        # if self._model.vdx:
+        #     Vdx.plot(self)
 
         if self._model.dose:
             self._model.dose.prepare_data_to_plot()
