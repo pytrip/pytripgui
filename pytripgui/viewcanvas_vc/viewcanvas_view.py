@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
+from pytripgui.view.qt_gui import UiViewCanvas
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -9,7 +10,27 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasView(FigureCanvas):
+class ViewCanvasView:
+    def __init__(self):
+        self.ui = UiViewCanvas()
+        self.plotter = ViewCanvasWidget()
+
+        self.ui.vc_layout.addWidget(self.plotter)
+
+    def show(self):
+        self.ui.show()
+
+    def set_transversal_callback(self, fun):
+        self.ui.transversal_pushButton.clicked.connect(fun)
+
+    def set_sagittal_callback(self, fun):
+        self.ui.sagittal_pushButton.clicked.connect(fun)
+
+    def set_coronal_callback(self, fun):
+        self.ui.coronal_pushButton.clicked.connect(fun)
+
+
+class ViewCanvasWidget(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
@@ -82,6 +103,11 @@ class ViewCanvasView(FigureCanvas):
             interpolation='nearest',
             extent=extent,
             zorder=0)
+
+    def clear(self):
+        self.remove_dos()
+        self.remove_let()
+        self.remove_ctx()
 
     def remove_dos(self):
         if self.axim_dos:

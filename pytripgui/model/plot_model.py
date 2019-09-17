@@ -1,6 +1,6 @@
-from pytripgui.viewcanvas_vc.dos import Dos
-from pytripgui.viewcanvas_vc.let import Let
-from pytripgui.viewcanvas_vc.ctx import Ctx
+from pytripgui.model.dos import Dos
+from pytripgui.model.let import Let
+from pytripgui.model.ctx import Ctx
 
 import logging
 logger = logging.getLogger(__name__)

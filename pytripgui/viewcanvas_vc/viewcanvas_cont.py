@@ -1,8 +1,3 @@
-from pytripgui.controller.vdx import Vdx
-from pytripgui.viewcanvas_vc.ctx import Ctx
-from pytripgui.viewcanvas_vc.let import Let
-from pytripgui.viewcanvas_vc.vc_text import ViewCanvasTextCont
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -21,8 +16,29 @@ class ViewCanvasCont(object):
         self._setup_ui_callbacks()
 
     def _setup_ui_callbacks(self):
-        self._ui.set_button_press_callback(self.on_click)
-        self._ui.set_scroll_event_callback(self.on_mouse_wheel)
+        # plotter
+        self._ui.plotter.set_button_press_callback(self.on_click)
+        self._ui.plotter.set_scroll_event_callback(self.on_mouse_wheel)
+        # ui
+        self._ui.set_transversal_callback(self.set_transversal_view)
+        self._ui.set_sagittal_callback(self.set_sagittal_view)
+        self._ui.set_coronal_callback(self.set_coronal_view)
+
+    def set_transversal_view(self):
+        self._model.projection_selector.plane = "Transversal"
+        self.clear_view()
+        self.update_viewcanvas()
+
+    def set_sagittal_view(self):
+        self._model.projection_selector.plane = "Sagittal"
+        self.clear_view()
+        self.update_viewcanvas()
+
+    def set_coronal_view(self):
+        self._model.projection_selector.plane = "Coronal"
+        self.clear_view()
+        self.update_viewcanvas()
+
 
     def on_click(self, event):
         # TODO - add popup menu if needed
@@ -38,28 +54,31 @@ class ViewCanvasCont(object):
 
         self.update_viewcanvas()
 
+    def clear_view(self):
+        self._ui.plotter.clear()
+
     def update_viewcanvas(self):
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
-            self._ui.plot_ctx(self._model.ctx)
+            self._ui.plotter.plot_ctx(self._model.ctx)
 
         # if self._model.vdx:
         #     Vdx.plot(self)
 
         if self._model.dose:
             self._model.dose.prepare_data_to_plot()
-            self._ui.plot_dos(self._model.dose)
+            self._ui.plotter.plot_dos(self._model.dose)
 
         if self._model.let:
             self._model.let.prepare_data_to_plot()
-            self._ui.plot_let(self._model.let)
+            self._ui.plotter.plot_let(self._model.let)
 
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
 
-        self._ui.draw()
+        self._ui.plotter.draw()
 
     def plot_bg(self):
         import numpy as np
         chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        self._ui.plot_bg(chessboard_data)
+        self._ui.plotter.plot_bg(chessboard_data)

@@ -9,11 +9,10 @@ from pytripgui.model.let_container import LetContainer
 
 from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
-from pytripgui.view.qt_gui import UiViewCanvas
+
 
 import pytrip as pt
 import os
-
 
 def open_voxelplan(smodel, ctx_path):
     """
@@ -59,38 +58,75 @@ def open_voxelplan(smodel, ctx_path):
             pm.vois.append(voi)
 
 
-app = QApplication(sys.argv)
-
-widget = UiViewCanvas()
-
-
-# dos = MainModel()
-model = PlotModel()
-model2 = PlotModel()
-
-dos = DosContainer().import_from_file("/home/deerjelen/guit/TST000000.phys.dos")
-let = LetContainer().import_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
-
-ctx = pt.CtxCube()
-ctx.read("/home/deerjelen/guit/TST000000.hed")
+def test1():
+    app = QApplication(sys.argv)
 
 
-model.set_let(let)
-model.set_ctx(ctx)
-model2.projection_selector.plane = "Sagittal"
-model2.set_ctx(ctx)
-model2.set_dose(dos)
-# dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
-# open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
 
-view = ViewCanvasView()
-widget.vc_layout.addWidget(view)
-cont = ViewCanvasCont(model, view)
-# cont.plot_ctx()
-cont.update_viewcanvas()
+    # dos = MainModel()
+    model = PlotModel()
+    model2 = PlotModel()
+
+    dos = DosContainer().import_from_file("/home/deerjelen/guit/TST000000.phys.dos")
+    let = LetContainer().import_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
+
+    ctx = pt.CtxCube()
+    ctx.read("/home/deerjelen/guit/TST000000.hed")
 
 
-widget.show()
+    model.set_let(let)
+    model.set_ctx(ctx)
+    model2.projection_selector.plane = "Sagittal"
+    model2.set_ctx(ctx)
+    model2.set_dose(dos)
+    # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
+    # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
+
+    widget = UiViewCanvas()
+    view = ViewCanvasView()
+    widget.vc_layout.addWidget(view)
+    cont = ViewCanvasCont(model, view)
+    # cont.plot_ctx()
+    # cont.update_viewcanvas()
+
+    widget.show()
+
+    app.exec_()
+
+def test2():
+    app = QApplication(sys.argv)
 
 
-app.exec_()
+
+    # dos = MainModel()
+    model = PlotModel()
+    model2 = PlotModel()
+
+    dos = DosContainer().import_from_file("/home/deerjelen/guit/TST000000.phys.dos")
+    let = LetContainer().import_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
+
+    ctx = pt.CtxCube()
+    ctx.read("/home/deerjelen/guit/TST000000.hed")
+
+
+    model.set_let(let)
+    model.set_ctx(ctx)
+    model2.projection_selector.plane = "Sagittal"
+    model2.set_ctx(ctx)
+    model2.set_dose(dos)
+    # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
+    # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
+
+
+    widget = ViewCanvasView()
+
+    cont = ViewCanvasCont(model, widget)
+    # cont.plot_ctx()
+    cont.update_viewcanvas()
+
+    widget.show()
+
+    app.exec_()
+
+
+test2()
