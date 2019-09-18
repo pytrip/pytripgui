@@ -16,13 +16,14 @@ class ViewCanvasCont(object):
         self._setup_ui_callbacks()
 
     def _setup_ui_callbacks(self):
-        # plotter
-        self._ui.plotter.set_button_press_callback(self.on_click)
-        self._ui.plotter.set_scroll_event_callback(self.on_mouse_wheel)
-        # ui
+        self._ui.set_plotter_click_callback(self.on_click)
+        self._ui.set_plotter_wheel_callback(self.on_mouse_wheel)
         self._ui.set_transversal_callback(self.set_transversal_view)
         self._ui.set_sagittal_callback(self.set_sagittal_view)
         self._ui.set_coronal_callback(self.set_coronal_view)
+        self._ui.set_let_filter_callback(self.set_let_filter)
+        self._ui.set_dos_filter_callback(self.set_dos_filter)
+        self._ui.set_none_filter_callback(self.set_none_filter)
 
     def set_transversal_view(self):
         self._model.projection_selector.plane = "Transversal"
@@ -39,6 +40,20 @@ class ViewCanvasCont(object):
         self.clear_view()
         self.update_viewcanvas()
 
+    def set_let_filter(self):
+        self._model.display_filter = "LET"
+        self._ui.clear()
+        self.update_viewcanvas()
+
+    def set_dos_filter(self):
+        self._model.display_filter = "DOS"
+        self._ui.clear()
+        self.update_viewcanvas()
+
+    def set_none_filter(self):
+        self._model.display_filter = "NONE"
+        self._ui.clear()
+        self.update_viewcanvas()
 
     def on_click(self, event):
         # TODO - add popup menu if needed
@@ -55,30 +70,35 @@ class ViewCanvasCont(object):
         self.update_viewcanvas()
 
     def clear_view(self):
-        self._ui.plotter.clear()
+        self._ui.clear()
 
     def update_viewcanvas(self):
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
-            self._ui.plotter.plot_ctx(self._model.ctx)
+            self._ui.plot_ctx(self._model.ctx)
+
+        if self._model.dose:
+            if (self._model.display_filter == "") | \
+                    (self._model.display_filter == "DOS"):
+                self._model.display_filter = "DOS"
+                self._model.dose.prepare_data_to_plot()
+                self._ui.plot_dos(self._model.dose)
+
+        if self._model.let:
+            if (self._model.display_filter == "") | \
+                    (self._model.display_filter == "LET"):
+                self._model.display_filter = "LET"
+                self._model.let.prepare_data_to_plot()
+                self._ui.plot_let(self._model.let)
 
         # if self._model.vdx:
         #     Vdx.plot(self)
-
-        if self._model.dose:
-            self._model.dose.prepare_data_to_plot()
-            self._ui.plotter.plot_dos(self._model.dose)
-
-        if self._model.let:
-            self._model.let.prepare_data_to_plot()
-            self._ui.plotter.plot_let(self._model.let)
-
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
 
-        self._ui.plotter.draw()
+        self._ui.draw()
 
     def plot_bg(self):
         import numpy as np
         chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        self._ui.plotter.plot_bg(chessboard_data)
+        self._ui.plot_bg(chessboard_data)

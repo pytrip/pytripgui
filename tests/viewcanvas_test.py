@@ -61,24 +61,17 @@ def open_voxelplan(smodel, ctx_path):
 def test1():
     app = QApplication(sys.argv)
 
-
-
-    # dos = MainModel()
     model = PlotModel()
     model2 = PlotModel()
-
-    dos = DosContainer().import_from_file("/home/deerjelen/guit/TST000000.phys.dos")
-    let = LetContainer().import_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
 
     ctx = pt.CtxCube()
     ctx.read("/home/deerjelen/guit/TST000000.hed")
 
-
-    model.set_let(let)
+    model.import_dose_from_file("/home/deerjelen/guit/TST000000.phys.dos")
+    model.import_let_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
     model.set_ctx(ctx)
     model2.projection_selector.plane = "Sagittal"
     model2.set_ctx(ctx)
-    model2.set_dose(dos)
     # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
     # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
 
@@ -96,8 +89,6 @@ def test1():
 def test2():
     app = QApplication(sys.argv)
 
-
-
     # dos = MainModel()
     model = PlotModel()
     model2 = PlotModel()
@@ -108,8 +99,8 @@ def test2():
     ctx = pt.CtxCube()
     ctx.read("/home/deerjelen/guit/TST000000.hed")
 
-
     model.set_let(let)
+    model.set_dose(dos)
     model.set_ctx(ctx)
     model2.projection_selector.plane = "Sagittal"
     model2.set_ctx(ctx)
@@ -117,11 +108,8 @@ def test2():
     # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
     # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
 
-
     widget = ViewCanvasView()
-
     cont = ViewCanvasCont(model, widget)
-    # cont.plot_ctx()
     cont.update_viewcanvas()
 
     widget.show()

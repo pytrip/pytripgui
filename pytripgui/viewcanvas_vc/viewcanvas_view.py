@@ -12,23 +12,58 @@ logger = logging.getLogger(__name__)
 
 class ViewCanvasView:
     def __init__(self):
-        self.ui = UiViewCanvas()
-        self.plotter = ViewCanvasWidget()
+        self._ui = UiViewCanvas()
+        self._plotter = ViewCanvasWidget()
 
-        self.ui.vc_layout.addWidget(self.plotter)
+        self._ui.vc_layout.addWidget(self._plotter)
 
     def show(self):
-        self.ui.show()
+        self._ui.show()
 
     def set_transversal_callback(self, fun):
-        self.ui.transversal_pushButton.clicked.connect(fun)
+        self._ui.transversal_pushButton.clicked.connect(fun)
 
     def set_sagittal_callback(self, fun):
-        self.ui.sagittal_pushButton.clicked.connect(fun)
+        self._ui.sagittal_pushButton.clicked.connect(fun)
 
     def set_coronal_callback(self, fun):
-        self.ui.coronal_pushButton.clicked.connect(fun)
+        self._ui.coronal_pushButton.clicked.connect(fun)
 
+    def set_let_filter_callback(self, fun):
+        self._ui.letFilter_pushButton.clicked.connect(fun)
+
+    def set_dos_filter_callback(self, fun):
+        self._ui.dosFilter_pushButton.clicked.connect(fun)
+
+    def set_none_filter_callback(self, fun):
+        self._ui.noneFilter_pushButton.clicked.connect(fun)
+
+    def set_plotter_click_callback(self, fun):
+        self._plotter.set_button_press_callback(fun)
+
+    def set_plotter_wheel_callback(self, fun):
+        self._plotter.set_scroll_event_callback(fun)
+
+    def plot_let(self, data):
+        self._plotter.plot_let(data)
+
+    def plot_dos(self, data):
+        self._plotter.plot_dos(data)
+
+    def plot_ctx(self, data):
+        self._plotter.plot_ctx(data)
+
+    def plot_bg(self, data):
+        self._plotter.plot_bg(data)
+
+    def draw(self):
+        self._plotter.draw()
+
+    def clear(self):
+        self.display_filter = ""
+        self._plotter.remove_dos()
+        self._plotter.remove_let()
+        self._plotter.remove_ctx()
 
 class ViewCanvasWidget(FigureCanvas):
     """
@@ -103,11 +138,6 @@ class ViewCanvasWidget(FigureCanvas):
             interpolation='nearest',
             extent=extent,
             zorder=0)
-
-    def clear(self):
-        self.remove_dos()
-        self.remove_let()
-        self.remove_ctx()
 
     def remove_dos(self):
         if self.axim_dos:

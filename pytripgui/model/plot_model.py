@@ -2,6 +2,8 @@ from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
 
+import pytrip as pt
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -65,6 +67,7 @@ class PlotModel(object):
         self.plot_vois = True  # whether all vois are plotted at all
 
         self.projection_selector = ProjectionSelector()
+        self.display_filter = ""
         self.dose = None
         self.let = None
         self.ctx = None
@@ -76,14 +79,26 @@ class PlotModel(object):
         self.cube = None
         self.slice_pos_mm = 0.0
 
-    def set_dose(self, dose):
-        self.dose = Dos(self.projection_selector)
-        self.dose.cube = dose
+    def set_ctx(self, ctx):
+        self.ctx = Ctx(self.projection_selector)
+        self.ctx.cube = ctx
+
+    def import_let_from_file(self, path):
+        logger.debug("Open LetCube {:s}".format(path))
+        cube = pt.LetCube()
+        cube.read(path)
+        self.set_let(cube)
 
     def set_let(self, let):
         self.let = Let(self.projection_selector)
         self.let.cube = let
 
-    def set_ctx(self, ctx):
-        self.ctx = Ctx(self.projection_selector)
-        self.ctx.cube = ctx
+    def import_dose_from_file(self, path):
+        logger.debug("Open DosCube {:s}".format(path))
+        cube = pt.DosCube()
+        cube.read(path)
+        self.set_dose(cube)
+
+    def set_dose(self, dose):
+        self.dose = Dos(self.projection_selector)
+        self.dose.cube = dose
