@@ -71,6 +71,7 @@ class ViewCanvasView:
         self._plotter.remove_let()
         self._plotter.remove_ctx()
 
+
 class ViewCanvasWidget(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
