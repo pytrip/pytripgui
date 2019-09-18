@@ -181,12 +181,12 @@ class MainController(object):
         model.ctx = ctx
         self.model.one_plot.set_ctx(ctx)
 
-        # Point to center of slices for default plotting
-        pm.xslice = int(ctx.dimx * 0.5)
-        pm.yslice = int(ctx.dimy * 0.5)
-        pm.zslice = int(ctx.dimz * 0.5)
-        # TODO: we assume transversal view as start. fixme.
-        pm.slice_pos_idx = int(ctx.dimz * 0.5)
+        # # Point to center of slices for default plotting
+        # pm.xslice = int(ctx.dimx * 0.5)
+        # pm.yslice = int(ctx.dimy * 0.5)
+        # pm.zslice = int(ctx.dimz * 0.5)
+        # # TODO: we assume transversal view as start. fixme.
+        # pm.slice_pos_idx = int(ctx.dimz * 0.5)
 
         # show file basename in window title
         self.app.setWindowTitle("PyTRiPGUI - {}".format(ctx.basename))
@@ -207,14 +207,14 @@ class MainController(object):
 
             # update model
             model.vdx = vdx
-            pm.vdx = vdx
+            # pm.vdx = vdx
 
             # enable all VOIs to be plotted
-            for voi in vdx.vois:
-                pm.vois.append(voi)
+            # for voi in vdx.vois:
+            #     pm.vois.append(voi)
 
         # add cube to the treeviews
-        self.tree.update_tree()
+        # self.tree.update_tree()
 
         # update the canvas
         self.plot.update_viewcanvas()
