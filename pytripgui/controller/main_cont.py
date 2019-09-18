@@ -1,14 +1,13 @@
-import logging
 import os
 import pytrip as pt
 
 from pytripgui.controller.tree_cont import TreeController
-from pytripgui.controller.plot_cont import PlotController
+from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh
-# from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -21,7 +20,7 @@ class MainController(object):
         self.model = app.model  # Q: mark private? _model
         self.app = app  # not sure if this is correct. May controller use App?
 
-        self.plot = PlotController(self.model, app.view.ui)  # ViewCanvas for CTX, VDX and DOS
+        self.plot = ViewCanvasCont(self.model.one_plot, app.view.ui.one_viewcanvas)  # ViewCanvas for CTX, VDX and DOS
         self.tree = TreeController(self.model, app.view.ui, self)  # TODO: get rid of self here
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
         self.lvh = Lvh(self.model, self.app.view)   # DVH plot
@@ -172,7 +171,6 @@ class MainController(object):
         """
 
         model = self.model    # local object of plot_model
-        pm = self.model.plot  # local object of plot_model
 
         # Get the CTX cubes first
         logger.debug("Open CTX {:s}".format(ctx_path))
@@ -181,7 +179,7 @@ class MainController(object):
 
         # update model
         model.ctx = ctx
-        pm.ctx = ctx
+        self.model.one_plot.set_ctx(ctx)
 
         # Point to center of slices for default plotting
         pm.xslice = int(ctx.dimx * 0.5)

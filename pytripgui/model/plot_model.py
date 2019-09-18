@@ -85,7 +85,7 @@ class PlotModel(object):
 
     def import_let_from_file(self, path):
         logger.debug("Open LetCube {:s}".format(path))
-        cube = pt.LetCube()
+        cube = pt.LETCube()
         cube.read(path)
         self.set_let(cube)
 

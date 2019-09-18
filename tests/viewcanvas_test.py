@@ -2,10 +2,8 @@ import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWidgets import QDialog
 
-from pytripgui.model.plot_model import PlotModel
 
-from pytripgui.model.dos_container import DosContainer
-from pytripgui.model.let_container import LetContainer
+from pytripgui.model.plot_model import PlotModel
 
 from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
@@ -75,16 +73,17 @@ def test1():
     # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
     # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
 
-    widget = UiViewCanvas()
-    view = ViewCanvasView()
-    widget.vc_layout.addWidget(view)
-    cont = ViewCanvasCont(model, view)
+    widget = QDialog()
+    view = ViewCanvasView(widget)
+    # widget.vc_layout.addWidget(view)
+    # cont = ViewCanvasCont(model, view)
     # cont.plot_ctx()
     # cont.update_viewcanvas()
 
     widget.show()
 
     app.exec_()
+
 
 def test2():
     app = QApplication(sys.argv)
@@ -93,8 +92,6 @@ def test2():
     model = PlotModel()
     model2 = PlotModel()
 
-    dos = DosContainer().import_from_file("/home/deerjelen/guit/TST000000.phys.dos")
-    let = LetContainer().import_from_file("/home/deerjelen/guit/TST000000.dosemlet.hed")
 
     ctx = pt.CtxCube()
     ctx.read("/home/deerjelen/guit/TST000000.hed")
@@ -108,13 +105,13 @@ def test2():
     # dos.plot.let = dos.let_container.import_from_file("/home/deerjelen/guit/TST000000.dosemlet.dos")
     # open_voxelplan(dos, "/home/deerjelen/guit/z/TST000000.hed")
 
-    widget = ViewCanvasView()
-    cont = ViewCanvasCont(model, widget)
-    cont.update_viewcanvas()
+    widget = QDialog()
+    #cont = ViewCanvasCont(model, widget)
+    #cont.update_viewcanvas()
 
     widget.show()
 
     app.exec_()
 
 
-test2()
+test1()

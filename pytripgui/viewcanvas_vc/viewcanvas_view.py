@@ -11,11 +11,17 @@ logger = logging.getLogger(__name__)
 
 
 class ViewCanvasView:
-    def __init__(self):
-        self._ui = UiViewCanvas()
+    def __init__(self, parent=None):
+        self._ui = UiViewCanvas(parent)
         self._plotter = ViewCanvasWidget()
 
         self._ui.vc_layout.addWidget(self._plotter)
+
+        self._ui.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self._ui.updateGeometry()
+
+    def widget(self):
+        return self._ui
 
     def show(self):
         self._ui.show()

@@ -1,7 +1,7 @@
 import logging
 
-from pytripgui.model.plot_model import PlotModel
 from pytripgui.model.config_model import Trip98ConfigModel
+from pytripgui.model.plot_model import PlotModel
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class MainModel(object):
         self.trip_config = Trip98ConfigModel()
 
         # attach submodels
-        self.plot = PlotModel()
+        self.one_plot = PlotModel()
         self.kernels = []  # placeholder for KernelModels
 
         self.settings = SettingsModel(self)

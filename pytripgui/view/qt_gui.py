@@ -40,7 +40,7 @@ class UiMainWindow(QtWidgets.QMainWindow):
 
 
 class UiViewCanvas(QtWidgets.QWidget):
-    def __init__(self):
-        super(UiViewCanvas, self).__init__()
+    def __init__(self, parent=None):
+        super(UiViewCanvas, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'viewcanvas.ui')
         uic.loadUi(ui_path, self)
