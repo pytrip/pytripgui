@@ -60,12 +60,10 @@ class ViewCanvasCont(object):
         pass
 
     def on_mouse_wheel(self, event):
-        pm = self._model  # plot model
-
         if event.button == "up":
-            pm.projection_selector.next_slice()
+            self._model.projection_selector.next_slice()
         else:
-            pm.projection_selector.prev_slice()
+            self._model.projection_selector.prev_slice()
 
         self.update_viewcanvas()
 
@@ -91,6 +89,7 @@ class ViewCanvasCont(object):
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
+        self._ui.set_position(self._model.projection_selector.position())
         # if self._model.vdx:
         #     Vdx.plot(self)
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators

@@ -43,6 +43,14 @@ class ProjectionSelector:
         elif self.plane == "Coronal":
             return data.cube[-1:0:-1, self.current_z_slice, -1:0:-1]
 
+    def position(self):
+        if self.plane == "Transversal":
+            return self.current_x_slice
+        if self.plane == "Sagittal":
+            return self.current_y_slice
+        if self.plane == "Coronal":
+            return self.current_z_slice
+
 
 class PlotModel(object):
     def __init__(self):

@@ -50,6 +50,9 @@ class ViewCanvasView:
     def set_plotter_wheel_callback(self, fun):
         self._plotter.set_scroll_event_callback(fun)
 
+    def set_position(self, position):
+        self._ui.position_label.setText("Position: " + str(position))
+
     def plot_let(self, data):
         self._plotter.plot_let(data)
 
