@@ -1,15 +1,13 @@
 import logging
 
-from pytripgui.model.plot_model import PlotModel
 from pytripgui.model.config_model import Trip98ConfigModel
-from pytripgui.model.let_container import LetContainer
-from pytripgui.model.dos_container import DosContainer
+from pytripgui.model.plot_model import PlotModel
 
 logger = logging.getLogger(__name__)
 
 
 class MainModel(object):
-    def __init__(self, app):
+    def __init__(self, app=None):
 
         from pytrip import __version__ as _pytrip_version
         from pytripgui import __version__ as _pytripgui_version
@@ -22,8 +20,6 @@ class MainModel(object):
         self.ctx = None  # Only one CTX is allowed
         self.vdx = None  # Only one VDX is allowed
         self.plans = []
-        self.dos_container = DosContainer()
-        self.let_container = LetContainer()
 
         # paths
         self.dicom_path = "."
@@ -32,7 +28,7 @@ class MainModel(object):
         self.trip_config = Trip98ConfigModel()
 
         # attach submodels
-        self.plot = PlotModel()
+        self.one_plot = PlotModel()
         self.kernels = []  # placeholder for KernelModels
 
         self.settings = SettingsModel(self)

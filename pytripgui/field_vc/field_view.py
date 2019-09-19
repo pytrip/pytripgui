@@ -6,8 +6,6 @@ logger = logging.getLogger(__name__)
 
 
 class FieldQtView(object):
-    """
-    """
     def __init__(self):
         self.ui = UiFieldDialog()
 

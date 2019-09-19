@@ -1,7 +1,7 @@
 from pytripgui.view.qt_gui import UiMainWindow
-from PyQt5 import QtWidgets
-from pytripgui.view.plot_viewcanvas import ViewCanvas
 from pytripgui.view.plot_volhist import VolHist
+
+from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 
 import logging
 logger = logging.getLogger(__name__)
@@ -13,22 +13,13 @@ class MainView(object):
     """
 
     def __init__(self):
-        """
-        """
-
         self.ui = UiMainWindow()
 
         # attach canvas for 2D plots
-        self.ui.vc = ViewCanvas(parent=self.ui.tab_view)
+        self.ui.one_viewcanvas = ViewCanvasView()
+        self.ui.tab_Vlayout.addWidget(self.ui.one_viewcanvas.widget())
+
         self.ui.dvh = VolHist(parent=self.ui.tab_dvh)
         self.ui.lvh = VolHist(parent=self.ui.tab_lvh)
 
         self.ui.setWindowTitle("PyTRiPGUI")
-
-        # TODO_move this to proper place
-        # create context menu
-        self.ui.popMenu = QtWidgets.QMenu()
-        self.ui.popMenu.addAction(QtWidgets.QAction('test0'))
-        self.ui.popMenu.addAction(QtWidgets.QAction('test1'))
-        self.ui.popMenu.addSeparator()
-        self.ui.popMenu.addAction(QtWidgets.QAction('test2'))
