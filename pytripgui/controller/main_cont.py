@@ -1,7 +1,7 @@
 import os
 import pytrip as pt
 
-from pytripgui.controller.tree_cont import TreeController
+from pytripgui.treewidget_vc.tree_cont_old import TreeController
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh

@@ -1,22 +1,15 @@
-import logging
-# from functools import partial
-
-# from PyQt5 import QtCore
-# from PyQt5 import QtGui
-# from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
-# from PyQt5.QtWidgets import QMenu
 from PyQt5.QtWidgets import QTreeWidgetItem
-from pytripgui.controller.tree_cont_aux import DosCollection
-from pytripgui.controller.tree_cont_aux import LetCollection
-from pytripgui.controller.tree_cont_aux import PlanCollection
-# from tree_cont_aux import FieldCollection
+from pytripgui.treewidget_vc.tree_cont_aux import DosCollection
+from pytripgui.treewidget_vc.tree_cont_aux import LetCollection
+from pytripgui.treewidget_vc.tree_cont_aux import PlanCollection
 
 import pytrip as pt
 import pytrip.tripexecuter as pte
 
-from pytripgui.controller.tree_menu_cont import TreeMenuController
+from pytripgui.treewidget_vc.tree_menu_cont import TreeMenuController
 
+import logging
 logger = logging.getLogger(__name__)
 
 

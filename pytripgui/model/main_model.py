@@ -1,8 +1,7 @@
-import logging
-
 from pytripgui.model.config_model import Trip98ConfigModel
 from pytripgui.model.plot_model import PlotModel
 
+import logging
 logger = logging.getLogger(__name__)
 
 
@@ -16,10 +15,6 @@ class MainModel(object):
         self._pytripgui_version = _pytripgui_version
 
         self._update_funce = []
-
-        self.ctx = None  # Only one CTX is allowed
-        self.vdx = None  # Only one VDX is allowed
-        self.plans = []
 
         # paths
         self.dicom_path = "."
