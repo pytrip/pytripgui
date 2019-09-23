@@ -19,11 +19,10 @@ class Patient:
         self.ctx = None
         self.vdx = None
 
-        self.plans = None
-        self.simulation = None
+        self.plans = []
+        self.simulation = []
 
         self.tree_model = PatientTreeModel()
-
 
     def open_ctx(self, path):
         ctx = pt.CtxCube()
@@ -37,3 +36,6 @@ class Patient:
         self.vdx = vdx
         if self.name != vdx.basename:
             logger.error("CTX | VDX patient name not match")
+
+    def add_new_plan(self):
+        self.plans.append("zzz")
