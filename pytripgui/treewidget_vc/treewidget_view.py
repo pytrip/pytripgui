@@ -63,7 +63,3 @@ class TreeWidgetView:
             patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
 
             self.context_menu_callback(patient_clicked_content, clicked_item_content, pos)
-
-    def clear(self):
-        pass
-        # self._ui.clear()

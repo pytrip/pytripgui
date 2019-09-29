@@ -16,12 +16,11 @@ class TreeWidgetController:
         self._view.set_custom_context_menu(self._context_menu.custom_context_menu_callback)
 
     def synchronize(self):
-        self._view.clear()
         for patient in self._patients:
             self.add_patient_tree(patient)
-            self.add_or_exchange_ctx(patient)
-            self.add_or_exchange_vdx(patient)
-            self.add_or_exchange_plans(patient)
+            self.synchronize_ctx(patient)
+            self.synchronize_vdx(patient)
+            self.synchronize_plans(patient)
 
             # if patient.plans:
             #     self._view.add_plans_to_patient(patient, patient.plans)
@@ -35,9 +34,8 @@ class TreeWidgetController:
         if patient.tree_model.patient_tree is None:
             patient_tree = self._view.add_tree(patient, patient.name)
             patient.tree_model.patient_tree = patient_tree
-        return patient.tree_model.patient_tree
 
-    def add_or_exchange_ctx(self, patient):
+    def synchronize_ctx(self, patient):
         item = patient.ctx
         item_name = "ctx: " + item.basename
         item_tree = patient.tree_model.ctx_tree
@@ -52,7 +50,7 @@ class TreeWidgetController:
             else:
                 self._view.exchange_data_in_sub_item(item_tree, item, item_name)
 
-    def add_or_exchange_vdx(self, patient):
+    def synchronize_vdx(self, patient):
         item = patient.vdx
         item_name = "vdx: " + item.basename
         item_tree = patient.tree_model.vdx_tree
@@ -67,7 +65,7 @@ class TreeWidgetController:
             else:
                 self._view.exchange_data_in_sub_item(item_tree, item, item_name)
 
-    def add_or_exchange_plans(self, patient):
+    def synchronize_plans(self, patient):
         item = patient.plans
         item_name = "Plans:"
         item_tree = patient.tree_model.plans_tree
@@ -90,7 +88,16 @@ class TreeWidgetController:
     def add_plan(self, patient, plan):
         plans_tree = patient.tree_model.plans_tree
 
-        self._view.add_sub_item(
+        plan_tree = self._view.add_sub_item(
             plans_tree,
             plan,
             plan.basename)
+
+        for field in plan.fields:
+            self.add_field_to_plan_tree(plan_tree, field)
+
+    def add_field_to_plan_tree(self, plan_tree, field):
+        self._view.add_sub_item(
+            plan_tree,
+            field,
+            field.basename)

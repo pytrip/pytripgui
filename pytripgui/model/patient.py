@@ -4,6 +4,10 @@ from pytrip.tripexecuter import Plan
 from pytripgui.plan_vc import PlanQtView
 from pytripgui.plan_vc import PlanController
 
+from pytrip.tripexecuter import Field
+from pytripgui.field_vc import FieldQtView
+from pytripgui.field_vc import FieldController
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -45,7 +49,6 @@ class Patient:
     def add_new_plan(self):
         logger.debug("add_new_plan() {}".format(None))
 
-        # selected_plan = self._node_obj
         plan = Plan()
         plan.basename = self.ctx.basename
         view = PlanQtView()
@@ -58,3 +61,37 @@ class Patient:
 
         if controller.user_clicked_save:
             self.plans.append(plan)
+
+    def edit_plan(self, plan):
+        logger.debug("edit_plan() {}".format(None))
+
+        view = PlanQtView()
+
+        controller = PlanController(plan, view, self.global_kernels, self.vdx.vois)
+        controller.set_view_from_model()
+        view.show()
+
+    def add_new_field(self, field):
+        logger.debug("add_field_new() {}".format(None))
+
+        new_field = Field()
+        view = FieldQtView()
+        default_kernel = self.global_kernels[0]  # TODO select default kernel
+        new_field.kernel = default_kernel
+
+        controller = FieldController(new_field, view, self.global_kernels)
+        controller.set_view_from_model()
+        view.show()
+
+        if controller.user_clicked_save:
+            new_field.basename = "Field_{}".format(new_field.number)  # TODO it not generate unique numbers
+            field.fields.append(new_field)
+
+    def edit_field(self, field):
+        logger.debug("edit_field() {}".format(None))
+
+        view = FieldQtView()
+
+        controller = FieldController(field, view, self.global_kernels)
+        controller.set_view_from_model()
+        view.show()
