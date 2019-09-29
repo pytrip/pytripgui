@@ -9,52 +9,61 @@ class TreeWidgetView:
     def __init__(self, ui):
         self._ui = ui
         self.clicked_callback = None
+        self.context_menu_callback = None
 
-    def add_new_patient(self, patient):
-        patient_tree = QTreeWidgetItem([patient.name])
-        patient_tree.setData(0, Qt.UserRole, patient)
+    def add_tree(self, item, name):
+        item_tree = QTreeWidgetItem([name])
+        item_tree.setData(0, Qt.UserRole, item)
 
-        patient.tree_model.patient_tree = patient_tree
-        self._ui.addTopLevelItem(patient_tree)
-        self._ui.expandItem(patient_tree)
-        return patient_tree
+        self._ui.addTopLevelItem(item_tree)
+        self._ui.expandItem(item_tree)
 
-    @staticmethod
-    def add_ctx_to_patient(patient, ctx):
-        ctx_hook = QTreeWidgetItem(["ctx: " + ctx.basename])
-        ctx_hook.setData(0, Qt.UserRole, ctx)
-        patient.tree_model.patient_tree.addChild(ctx_hook)
-        patient.tree_model.ctx_tree = ctx_hook
+        return item_tree
 
     @staticmethod
-    def add_vdx_to_patient(patient, vdx):
-        vdx_hook = QTreeWidgetItem(["vdx: " + vdx.basename])
-        vdx_hook.setData(0, Qt.UserRole, vdx)
-        patient.tree_model.patient_tree.addChild(vdx_hook)
-        patient.tree_model.vdx_tree = vdx_hook
+    def add_sub_item(tree, item, name):
+        item_hook = QTreeWidgetItem([name])
+        item_hook.setData(0, Qt.UserRole, item)
+        tree.addChild(item_hook)
+        return item_hook
 
     @staticmethod
-    def add_plans_to_patient(patient, plans):
-        plans_hook = QTreeWidgetItem(["Plans:"])
-        plans_hook.setData(0, Qt.UserRole, plans)
-        patient.tree_model.plans_tree = plans_hook
-        patient.tree_model.patient_tree.addChild(plans_hook)
+    def clear_tree(tree):
+        tree.takeChildren()
 
-        for plan in plans:
-            plan_hook = QTreeWidgetItem(["plan"])
-            plan_hook.setData(0, Qt.UserRole, plan)
-            patient.tree_model.plans_tree.addChild(plan_hook)
+    @staticmethod
+    def exchange_data_in_sub_item(sub_item, item, name):
+        sub_item.setData(0, Qt.UserRole, item)
+        sub_item.setText(0, name)
 
     def set_header_label(self, label):
         self._ui.setHeaderLabels([label])
-
-    def clear(self):
-        self._ui.clear()
 
     def set_item_clicked_callback(self, fun):
         self.clicked_callback = fun
         self._ui.itemClicked.connect(self._internal_item_clicked_callback)
 
-    def _internal_item_clicked_callback(self, item, pos):
-        item_clicked = item.data(0, Qt.UserRole)
-        self.clicked_callback(item_clicked, 1)
+    def _internal_item_clicked_callback(self, item_clicked, pos):
+        clicked_item_content = item_clicked.data(0, Qt.UserRole)
+        self.clicked_callback(clicked_item_content, 1)
+
+    def set_custom_context_menu(self, fun):
+        self.context_menu_callback = fun
+        self._ui.setContextMenuPolicy(Qt.CustomContextMenu)
+        self._ui.customContextMenuRequested.connect(self._internal_context_menu_callback)
+
+    def _internal_context_menu_callback(self, pos):
+        item_clicked = self._ui.selectedItems()
+        if item_clicked:
+            clicked_item_content = item_clicked[0].data(0, Qt.UserRole)
+
+            patient_clicked = item_clicked[0]
+            while patient_clicked.parent():
+                patient_clicked = patient_clicked.parent()
+            patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
+
+            self.context_menu_callback(patient_clicked_content, clicked_item_content, pos)
+
+    def clear(self):
+        pass
+        # self._ui.clear()
