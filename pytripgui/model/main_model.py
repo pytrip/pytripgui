@@ -1,5 +1,4 @@
 from pytripgui.model.config_model import Trip98ConfigModel
-from pytripgui.model.plot_model import PlotModel
 
 import logging
 logger = logging.getLogger(__name__)
@@ -19,13 +18,12 @@ class MainModel(object):
         self.trip_config = Trip98ConfigModel()
         self.kernels = []  # placeholder for KernelModels
 
-        # attach submodels
-        self.one_plot = PlotModel()
-
         self.patients = list()
         self.current_patient = None
-
         self.patient_tree_cont = None
+
+        self.one_plot_model = None
+        self.pne_plot_cont = None
 
         self.settings = SettingsModel(self)
 

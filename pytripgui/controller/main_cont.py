@@ -2,7 +2,6 @@ import os
 import pytrip as pt
 
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
-from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.controller.dvh import Dvh
 from pytripgui.controller.lvh import Lvh
 
@@ -20,7 +19,7 @@ class MainController(object):
         self.app = app  # not sure if this is correct. May controller use App?
 
         self.plot = ViewCanvasCont(self.model.one_plot, app.view.ui.one_viewcanvas)  # ViewCanvas for CTX, VDX and DOS
-        self.tree = TreeController(self.model, app.view.ui, self)  # TODO: get rid of self here
+
         self.dvh = Dvh(self.model, self.app.view)   # DVH plot
         self.lvh = Lvh(self.model, self.app.view)   # DVH plot
 

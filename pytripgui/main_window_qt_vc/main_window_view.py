@@ -1,6 +1,7 @@
 from pytripgui.view.qt_gui import UiMainWindow
 
 from pytripgui.treewidget_vc.treewidget_view import TreeWidgetView
+from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -20,6 +21,11 @@ class MainWindowQtView(object):
 
     def get_patient_tree_view(self):
         return TreeWidgetView(self.ui.patient_treeWidget)
+
+    def get_viewcanvas_view(self):
+        one_viewcanvas = ViewCanvasView()
+        self.ui.tab_Vlayout.addWidget(one_viewcanvas.widget())
+        return one_viewcanvas
 
     def browse_file_path(self, name, extension, path=None):
         """
@@ -43,3 +49,11 @@ class MainWindowQtView(object):
     @open_voxelplan_callback.setter
     def open_voxelplan_callback(self, callback):
         self.ui.actionOpen_Voxelplan.triggered.connect(callback)
+
+    @property
+    def open_kernels_configurator_callback(self):
+        return None
+
+    @open_voxelplan_callback.setter
+    def open_kernels_configurator_callback(self, callback):
+        self.ui.actionBeam_Kernels.triggered.connect(callback)

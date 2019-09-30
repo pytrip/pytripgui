@@ -2,8 +2,6 @@ from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
 
-import pytrip as pt
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -128,22 +126,10 @@ class PlotModel(object):
         self.ctx.cube = ctx
         self.projection_selector.load_slices_count(ctx)
 
-    def import_let_from_file(self, path):
-        logger.debug("Open LetCube {:s}".format(path))
-        cube = pt.LETCube()
-        cube.read(path)
-        self.set_let(cube)
-
     def set_let(self, let):
         self.let = Let(self.projection_selector)
         self.let.cube = let
         self.projection_selector.load_slices_count(let)
-
-    def import_dose_from_file(self, path):
-        logger.debug("Open DosCube {:s}".format(path))
-        cube = pt.DosCube()
-        cube.read(path)
-        self.set_dose(cube)
 
     def set_dose(self, dose):
         self.dose = Dos(self.projection_selector)

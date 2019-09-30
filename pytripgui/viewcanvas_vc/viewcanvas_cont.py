@@ -101,3 +101,9 @@ class ViewCanvasCont(object):
         import numpy as np
         chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
         self._ui.plot_bg(chessboard_data)
+
+    def set_patient(self, patient):
+        if patient.ctx:
+            self._model.set_ctx(patient.ctx)
+
+        self.update_viewcanvas()
