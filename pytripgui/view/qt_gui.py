@@ -37,6 +37,7 @@ class UiMainWindow(QtWidgets.QMainWindow):
         super(UiMainWindow, self).__init__()
         ui_path = os.path.join(current_directory, 'main_window.ui')
         uic.loadUi(ui_path, self)
+        self.setWindowTitle("PyTRiPGUI")
 
 
 class UiViewCanvas(QtWidgets.QWidget):
