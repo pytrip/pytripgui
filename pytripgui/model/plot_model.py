@@ -46,9 +46,9 @@ class ProjectionSelector:
         self.max_S_depth = data.dimy - 1
         self.max_C_depth = data.dimx - 1
 
-        self.current_T_slice = int(self.max_T_depth / 2)
-        self.current_S_slice = int(self.max_S_depth / 2)
-        self.current_C_slice = int(self.max_C_depth / 2)
+        self.current_T_slice = self.max_T_depth // 2
+        self.current_S_slice = self.max_S_depth // 2
+        self.current_C_slice = self.max_C_depth // 2
 
     @property
     def position(self):

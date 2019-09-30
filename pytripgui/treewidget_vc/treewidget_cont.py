@@ -111,7 +111,3 @@ class TreeWidgetController:
             plan_tree,
             field,
             field.basename)
-
-    def add_new_patient(self):
-        from pytripgui.model.patient import Patient
-        self._patients.append(Patient())
