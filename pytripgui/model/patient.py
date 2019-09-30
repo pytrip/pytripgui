@@ -8,7 +8,6 @@ from pytrip.tripexecuter import Field
 from pytripgui.field_vc import FieldQtView
 from pytripgui.field_vc import FieldController
 
-from pytripgui.model.plot_model import PlotModel
 
 import logging
 logger = logging.getLogger(__name__)

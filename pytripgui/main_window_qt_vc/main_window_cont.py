@@ -143,7 +143,6 @@ class MainWindowController(object):
         plan.hlut_path = self.model.trip_config.hlut_path
 
         import pytrip.tripexecuter as pte
-        import os
         te = pte.Execute(patient.ctx, patient.vdx)
         te.trip_bin_path = os.path.join(self.model.trip_config.trip_path, 'TRiP98')
 
