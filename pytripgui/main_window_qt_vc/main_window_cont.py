@@ -7,10 +7,9 @@ from pytripgui.model.patient import Patient
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.model.plot_model import PlotModel
 
+from pytripgui.messages import InfoMessages
 import logging
 logger = logging.getLogger(__name__)
-
-from pytripgui.messages import InfoMessages
 
 
 class MainWindowController(object):

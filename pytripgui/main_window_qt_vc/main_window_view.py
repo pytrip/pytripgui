@@ -43,35 +43,40 @@ class MainWindowQtView(object):
         QMessageBox.information(self.ui, name, content)
 
     @property
-    def open_voxelplan_callback(self): return None
+    def open_voxelplan_callback(self):
+        return None
 
     @open_voxelplan_callback.setter
     def open_voxelplan_callback(self, callback):
         self.ui.actionOpen_Voxelplan.triggered.connect(callback)
 
     @property
-    def open_kernels_configurator_callback(self): return None
+    def open_kernels_configurator_callback(self):
+        return None
 
     @open_kernels_configurator_callback.setter
     def open_kernels_configurator_callback(self, callback):
         self.ui.actionBeam_Kernels.triggered.connect(callback)
 
     @property
-    def add_new_plan_callback(self): return None
+    def add_new_plan_callback(self):
+        return None
 
     @add_new_plan_callback.setter
     def add_new_plan_callback(self, callback):
         self.ui.actionNew_Plan.triggered.connect(callback)
 
     @property
-    def about_callback(self): return None
+    def about_callback(self):
+        return None
 
     @about_callback.setter
     def about_callback(self, callback):
         self.ui.actionAbout.triggered.connect(callback)
 
     @property
-    def trip_config_callback(self): return None
+    def trip_config_callback(self):
+        return None
 
     @trip_config_callback.setter
     def trip_config_callback(self, callback):
