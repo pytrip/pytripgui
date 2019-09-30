@@ -45,7 +45,13 @@ class TreeWidgetView:
 
     def _internal_item_clicked_callback(self, item_clicked, pos):
         clicked_item_content = item_clicked.data(0, Qt.UserRole)
-        self.clicked_callback(clicked_item_content, 1)
+
+        patient_clicked = item_clicked
+        while patient_clicked.parent():
+            patient_clicked = patient_clicked.parent()
+        patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
+
+        self.clicked_callback(patient_clicked_content, clicked_item_content)
 
     def set_custom_context_menu(self, fun):
         self.context_menu_callback = fun

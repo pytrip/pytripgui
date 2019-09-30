@@ -9,8 +9,6 @@ class TreeWidgetContextMenu:
     def __init__(self, cont):
         self._ui = cont._view._ui
         self._cont = cont
-        self._clicked_patient = None
-        self._clicked_item = None
 
     def custom_context_menu_callback(self, patient, item, pos):
         self._clicked_patient = patient

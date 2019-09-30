@@ -12,7 +12,7 @@ class TreeWidgetController:
 
         self.synchronize()
         self.synchronize()
-        self._view.set_item_clicked_callback(self.non)
+        self._view.set_item_clicked_callback(self._clicked_item_callback)
         self._view.set_custom_context_menu(self._context_menu.custom_context_menu_callback)
 
     def synchronize(self):
@@ -27,8 +27,8 @@ class TreeWidgetController:
             #
             # self._model.patient_tree = patient_tree
 
-    def non(self, xd, zz):
-        pass
+    def _clicked_item_callback(self, clicked_patient, clicked_item):
+        self._view.set_header_label("Patient: " + clicked_patient.name)
 
     def add_patient_tree(self, patient):
         if patient.tree_model.patient_tree is None:
