@@ -17,6 +17,9 @@ class TreeWidgetView:
 
         self._ui.addTopLevelItem(item_tree)
         self._ui.expandItem(item_tree)
+        if not self._ui.selectedItems():
+            item_tree.setSelected(True)
+            self.clicked_callback(item, item)
 
         return item_tree
 
@@ -67,5 +70,8 @@ class TreeWidgetView:
             while patient_clicked.parent():
                 patient_clicked = patient_clicked.parent()
             patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
+        else:
+            clicked_item_content = None
+            patient_clicked_content = None
 
-            self.context_menu_callback(patient_clicked_content, clicked_item_content, pos)
+        self.context_menu_callback(patient_clicked_content, clicked_item_content, pos)

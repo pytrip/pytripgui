@@ -23,7 +23,7 @@ class PatientTreeModel:
 
 class Patient:
     def __init__(self, global_kernels):
-        self.name = ""
+        self.name = "Patient"
         self.ctx = None
         self.vdx = None
 

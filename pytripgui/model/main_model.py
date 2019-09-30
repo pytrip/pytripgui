@@ -16,15 +16,16 @@ class MainModel(object):
 
         self._update_funce = []
 
-        # paths
-        self.dicom_path = "."
-        self.voxelplan_path = "."
-
         self.trip_config = Trip98ConfigModel()
+        self.kernels = []  # placeholder for KernelModels
 
         # attach submodels
         self.one_plot = PlotModel()
-        self.kernels = []  # placeholder for KernelModels
+
+        self.patients = list()
+        self.current_patient = None
+
+        self.patient_tree_cont = None
 
         self.settings = SettingsModel(self)
 
@@ -69,8 +70,6 @@ class SettingsModel(object):
             a) _version is written to disk, but imported into Model when loading
             b) __internal_attribute__ are not passed between Model and SettingsModel
         """
-        self.dicom_path = model.dicom_path
-        self.voxelplan_path = model.voxelplan_path
         self.trip_config = model.trip_config
 
         self.kernels = model.kernels

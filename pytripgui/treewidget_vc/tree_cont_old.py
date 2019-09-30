@@ -1,8 +1,5 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTreeWidgetItem
-from pytripgui.treewidget_vc.tree_cont_aux import DosCollection
-from pytripgui.treewidget_vc.tree_cont_aux import LetCollection
-from pytripgui.treewidget_vc.tree_cont_aux import PlanCollection
 
 import pytrip as pt
 import pytrip.tripexecuter as pte

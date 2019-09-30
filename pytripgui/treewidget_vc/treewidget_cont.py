@@ -8,12 +8,15 @@ class TreeWidgetController:
     def __init__(self, model, view):
         self._patients = model
         self._view = view
-        self._context_menu = TreeWidgetContextMenu(self)
+        self.context_menu = TreeWidgetContextMenu(self)
 
         self.synchronize()
         self.synchronize()
+
         self._view.set_item_clicked_callback(self._clicked_item_callback)
-        self._view.set_custom_context_menu(self._context_menu.custom_context_menu_callback)
+        self.update_selected_item_callback = None
+
+        self._view.set_custom_context_menu(self.context_menu.custom_context_menu_callback)
 
     def synchronize(self):
         for patient in self._patients:
@@ -29,19 +32,26 @@ class TreeWidgetController:
 
     def _clicked_item_callback(self, clicked_patient, clicked_item):
         self._view.set_header_label("Patient: " + clicked_patient.name)
+        if self.update_selected_item_callback:
+            self.update_selected_item_callback(clicked_patient, clicked_item)
 
     def add_patient_tree(self, patient):
         if patient.tree_model.patient_tree is None:
             patient_tree = self._view.add_tree(patient, patient.name)
             patient.tree_model.patient_tree = patient_tree
+        else:
+            self._view.exchange_data_in_sub_item(
+                patient.tree_model.patient_tree,
+                patient,
+                patient.name)
 
     def synchronize_ctx(self, patient):
         item = patient.ctx
-        item_name = "ctx: " + item.basename
-        item_tree = patient.tree_model.ctx_tree
-        patient_tree = patient.tree_model.patient_tree
-
         if item:
+            item_name = "ctx: " + item.basename
+            item_tree = patient.tree_model.ctx_tree
+            patient_tree = patient.tree_model.patient_tree
+
             if item_tree is None:
                 patient.tree_model.ctx_tree = self._view.add_sub_item(
                     patient_tree,
@@ -52,11 +62,11 @@ class TreeWidgetController:
 
     def synchronize_vdx(self, patient):
         item = patient.vdx
-        item_name = "vdx: " + item.basename
-        item_tree = patient.tree_model.vdx_tree
-        patient_tree = patient.tree_model.patient_tree
-
         if item:
+            item_name = "vdx: " + item.basename
+            item_tree = patient.tree_model.vdx_tree
+            patient_tree = patient.tree_model.patient_tree
+
             if item_tree is None:
                 patient.tree_model.vdx_tree = self._view.add_sub_item(
                     patient_tree,
@@ -67,11 +77,11 @@ class TreeWidgetController:
 
     def synchronize_plans(self, patient):
         item = patient.plans
-        item_name = "Plans:"
-        item_tree = patient.tree_model.plans_tree
-        patient_tree = patient.tree_model.patient_tree
-
         if item:
+            item_name = "Plans:"
+            item_tree = patient.tree_model.plans_tree
+            patient_tree = patient.tree_model.patient_tree
+
             if item_tree is None:
                 patient.tree_model.plans_tree = self._view.add_sub_item(
                     patient_tree,
@@ -101,3 +111,7 @@ class TreeWidgetController:
             plan_tree,
             field,
             field.basename)
+
+    def add_new_patient(self):
+        from pytripgui.model.patient import Patient
+        self._patients.append(Patient())

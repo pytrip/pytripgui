@@ -1,19 +1,21 @@
 import sys
 import argparse
-import logging
 
 from PyQt5.QtWidgets import QApplication
-
-from pytripgui.view.main_view import MainView
+from pytripgui.main_window_qt_vc.main_window_view import MainWindowQtView
+from pytripgui.main_window_qt_vc.main_window_cont import MainWindowController
 from pytripgui.model.main_model import MainModel
-from pytripgui.controller.main_cont import MainController
 
+
+import logging
 logger = logging.getLogger(__name__)
 
 
 class AppWindow():
     def __init__(self):
-
+        from pytripgui.view.main_view import MainView
+        from pytripgui.model.main_model import MainModel
+        from pytripgui.controller.main_cont import MainController
         logger.debug("Setup view")
         self.view = MainView()
 
@@ -43,8 +45,6 @@ def main(args=sys.argv[1:]):
     from pytrip import __version__ as _ptv
     _vers = "PyTRiP98GUI {} using PyTRiP98 {}".format(_ptgv, _ptv)
 
-    app = QApplication(sys.argv)
-
     # setup parser
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbosity', action='count', help="increase output verbosity", default=0)
@@ -63,10 +63,15 @@ def main(args=sys.argv[1:]):
     else:
         logging.basicConfig()
 
-    w = AppWindow()
+    app = QApplication(sys.argv)
+    view = MainWindowQtView()
+    model = MainModel()
+    controller = MainWindowController(model, view)
+
     if args:
-        w.open_files(args)
-    w.view.ui.show()
+        controller.open_files(args)
+
+    view.show()
 
     return app.exec_()
 
