@@ -156,6 +156,9 @@
    <property name="text">
     <string>Preferences</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionOpen_Dicom">
    <property name="text">
