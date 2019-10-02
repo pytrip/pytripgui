@@ -1,13 +1,10 @@
-import pytrip as pt
-
-from pytrip.tripexecuter import Plan
 from pytripgui.plan_vc import PlanQtView
 from pytripgui.plan_vc import PlanController
 
-from pytrip.tripexecuter import Field
 from pytripgui.field_vc import FieldQtView
 from pytripgui.field_vc import FieldController
 
+from pytripgui.plan_executor.patient_model import PatientModel
 
 import logging
 logger = logging.getLogger(__name__)
@@ -22,36 +19,20 @@ class PatientTreeModel:
         self.simulations_tree = None
 
 
-class Patient:
+class PatientGui(PatientModel):
     def __init__(self, global_kernels):
-        self.name = "Patient"
-        self.ctx = None
-        self.vdx = None
+        PatientModel.__init__(self)
 
-        self.plans = []
-        self.simulation = []
         self.global_kernels = global_kernels
-
         self.tree_model = PatientTreeModel()
 
-    def open_ctx(self, path):
-        ctx = pt.CtxCube()
-        ctx.read(path)
-        self.ctx = ctx
-        self.name = ctx.basename
-
-    def open_vdx(self, path):
-        vdx = pt.VdxCube(self.ctx)
-        vdx.read(path)
-        self.vdx = vdx
-        if self.name != vdx.basename:
-            logger.error("CTX | VDX patient name not match")
-
-    def add_new_plan(self):
+    def add_new_plan(self, name=None):
         logger.debug("add_new_plan() {}".format(None))
 
-        plan = Plan()
-        plan.basename = self.ctx.basename
+        plan = PatientModel.create_new_plan()
+        plan.basename = name
+        if plan.basename is None:
+            plan.basename = self.name
         view = PlanQtView()
         default_kernel = self.global_kernels[0]  # TODO select default kernel
         plan.kernel = default_kernel
@@ -72,10 +53,10 @@ class Patient:
         controller.set_view_from_model()
         view.show()
 
-    def add_new_field(self, field):
+    def add_new_field(self, plan):
         logger.debug("add_field_new() {}".format(None))
 
-        new_field = Field()
+        new_field = PatientModel.create_new_field()
         view = FieldQtView()
         default_kernel = self.global_kernels[0]  # TODO select default kernel
         new_field.kernel = default_kernel
@@ -86,7 +67,7 @@ class Patient:
 
         if controller.user_clicked_save:
             new_field.basename = "Field_{}".format(new_field.number)  # TODO it not generate unique numbers
-            field.fields.append(new_field)
+            plan.fields.append(new_field)
 
     def edit_field(self, field):
         logger.debug("edit_field() {}".format(None))

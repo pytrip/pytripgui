@@ -1,4 +1,6 @@
 from pytripgui.view.qt_gui import UiMainWindow
+from pytripgui.config_vc import ConfigQtView
+from pytripgui.kernel_vc import KernelQtView
 
 from pytripgui.treewidget_vc.treewidget_view import TreeWidgetView
 from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
@@ -26,6 +28,14 @@ class MainWindowQtView(object):
         one_viewcanvas = ViewCanvasView()
         self.ui.tab_Vlayout.addWidget(one_viewcanvas.widget())
         return one_viewcanvas
+
+    @staticmethod
+    def get_trip_config_view():
+        return ConfigQtView()
+
+    @staticmethod
+    def get_kernel_config_view():
+        return KernelQtView()
 
     def browse_file_path(self, name, extension, path=None):
         """
