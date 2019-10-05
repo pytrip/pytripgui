@@ -22,7 +22,6 @@ class PlanExecutor:
     def execute(self, patient, plan):
         plan.working_dir = self.trip_config.wdir_path
 
-        current_field = plan.fields[0]
         plan.projectile = plan.kernel.projectile.iupac
         plan.projectile_a = plan.kernel.projectile.a
         plan.rifi = plan.kernel.rifi_thickness
