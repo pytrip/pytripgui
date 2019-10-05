@@ -68,7 +68,7 @@ class SettingsModel(object):
             a) _version is written to disk, but imported into Model when loading
             b) __internal_attribute__ are not passed between Model and SettingsModel
         """
-        #self.trip_config = model.trip_config
+        # self.trip_config = model.trip_config
         self.executor = model.executor
 
         self.kernels = model.kernels
