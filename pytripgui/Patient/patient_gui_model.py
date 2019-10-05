@@ -4,6 +4,7 @@ from pytripgui.plan_vc import PlanController
 from pytripgui.field_vc import FieldQtView
 from pytripgui.field_vc import FieldController
 
+from pytripgui.model.plot_model import PlotModel
 from pytripgui.plan_executor.patient_model import PatientModel
 
 import logging
@@ -25,6 +26,7 @@ class PatientGui(PatientModel):
 
         self.global_kernels = global_kernels
         self.tree_model = PatientTreeModel()
+        self.plot_model = PlotModel()
 
     def add_new_plan(self, name=None):
         logger.debug("add_new_plan() {}".format(None))

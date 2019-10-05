@@ -5,7 +5,6 @@ from pytripgui.treewidget_vc.treewidget_cont import TreeWidgetController
 from pytripgui.Patient.patient_gui_model import PatientGui
 
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
-from pytripgui.model.plot_model import PlotModel
 
 from pytripgui.messages import InfoMessages
 import logging
@@ -18,17 +17,6 @@ class MainWindowController(object):
         self.view = view
 
         self._initialize()
-
-        # debug
-        patient = self.on_add_new_patient()
-        self.model.patient_tree_cont.synchronize()
-
-        filename = "/home/deerjelen/guit/TST000000"
-        patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
-
-        self.model.patient_tree_cont.synchronize()
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
 
     def open_files(self, args):
         pass
@@ -44,9 +32,8 @@ class MainWindowController(object):
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
 
-        # view canvas
-        self.model.one_plot_model = PlotModel()
-        self.model.one_plot_cont = ViewCanvasCont(self.model.one_plot_model, self.view.get_viewcanvas_view())
+        self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
+        self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
 
         # patients tree module
         patient_tree_view = self.view.get_patient_tree_view()
@@ -60,7 +47,8 @@ class MainWindowController(object):
 
     def on_selected_item(self, patient, item):
         self.model.current_patient = patient
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
+
+        self.model.one_plot_cont.set_patient(patient)
 
     def on_add_new_patient(self):
         new_patient = PatientGui(self.model.kernels)
@@ -144,8 +132,19 @@ class MainWindowController(object):
             self.view.show_info(message[0], message[1])
             return
 
+        if self.model.executor.check_config() != 0:
+            message = InfoMessages["configureTrip"]
+            self.view.show_info(message[0], message[1])
+            return
+
+        if plan.kernel.sis_path == "":
+            message = InfoMessages["kernelSisPath"]
+            self.view.show_info(message[0], message[1])
+            return
+
         results = self.model.executor.execute(patient, plan)
         patient.simulation_results.append(results)
+        self.model.one_plot_cont.set_patient(self.model.current_patient)
 
     def on_about(self):
         message = InfoMessages["about"]

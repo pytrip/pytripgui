@@ -11,7 +11,6 @@ class TreeWidgetController:
         self.context_menu = TreeWidgetContextMenu(self)
 
         self.synchronize()
-        self.synchronize()
 
         self._view.set_item_clicked_callback(self._clicked_item_callback)
         self.update_selected_item_callback = None
@@ -24,11 +23,7 @@ class TreeWidgetController:
             self.synchronize_ctx(patient)
             self.synchronize_vdx(patient)
             self.synchronize_plans(patient)
-
-            # if patient.plans:
-            #     self._view.add_plans_to_patient(patient, patient.plans)
-            #
-            # self._model.patient_tree = patient_tree
+            self.synchronize_simulation_results(patient)
 
     def _clicked_item_callback(self, clicked_patient, clicked_item):
         self._view.set_header_label("Patient: " + clicked_patient.name)
@@ -111,3 +106,53 @@ class TreeWidgetController:
             plan_tree,
             field,
             field.basename)
+
+    def synchronize_simulation_results(self, patient):
+        item = patient.simulation_results
+        if item:
+            item_name = "Simulation results:"
+            item_tree = patient.tree_model.simulations_tree
+            patient_tree = patient.tree_model.patient_tree
+
+            if item_tree is None:
+                patient.tree_model.simulations_tree = self._view.add_sub_item(
+                    patient_tree,
+                    item,
+                    item_name)
+            else:
+                self._view.exchange_data_in_sub_item(item_tree, item, item_name)
+
+            self._view.clear_tree(patient.tree_model.simulations_tree)
+
+            for simulation in patient.simulation_results:
+                self.add_simulation_results(patient, simulation)
+
+    def add_simulation_results(self, patient, simulation):
+        simulations_tree = patient.tree_model.simulations_tree
+
+        # Add current simulation
+        current_simulation_tree = self._view.add_sub_item(
+            simulations_tree,
+            simulation,
+            simulation.name)
+
+        # Add old plan snapshot to simulation
+        self._view.add_sub_item(
+            current_simulation_tree,
+            simulation.plan_snapshot,
+            "Plan snapshot: " + simulation.name)
+
+        if simulation.dos:
+            self._view.add_sub_item(
+                current_simulation_tree,
+                simulation.dos,
+                "Dos")
+
+        if simulation.let:
+            self._view.add_sub_item(
+                current_simulation_tree,
+                simulation.let,
+                "Let")
+
+        # for field in plan.fields:
+        #     self.add_field_to_plan_tree(plan_tree, field)

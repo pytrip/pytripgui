@@ -103,7 +103,16 @@ class ViewCanvasCont(object):
         self._ui.plot_bg(chessboard_data)
 
     def set_patient(self, patient):
+        self._model = patient.plot_model
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
+
+        if patient.simulation_results:
+            if patient.simulation_results[0].dos:
+                self._model.set_dose(patient.simulation_results[0].dos)
+
+        if patient.simulation_results:
+            if patient.simulation_results[0].let:
+                self._model.set_let(patient.simulation_results[0].let)
 
         self.update_viewcanvas()

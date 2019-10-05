@@ -7,8 +7,9 @@ logger = logging.getLogger(__name__)
 
 class SimulationResults:
     def __init__(self, plan):
+        self.name = plan.basename
         self.plan_snapshot = plan
-        self.dos = None
+        self.dose = None
         self.let = None
         self.dvh = None
         self.lvh = None
