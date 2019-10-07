@@ -1,6 +1,7 @@
+import logging
+
 from pytripgui.treewidget_vc.treewidget_context_menu import TreeWidgetContextMenu
 
-import logging
 logger = logging.getLogger(__name__)
 
 

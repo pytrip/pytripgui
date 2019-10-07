@@ -1,13 +1,13 @@
 import sys
 import argparse
+import logging
 
 from PyQt5.QtWidgets import QApplication
+
 from pytripgui.main_window_qt_vc.main_window_view import MainWindowQtView
 from pytripgui.main_window_qt_vc.main_window_cont import MainWindowController
 from pytripgui.model.main_model import MainModel
 
-
-import logging
 logger = logging.getLogger(__name__)
 
 

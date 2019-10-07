@@ -1,12 +1,13 @@
+import logging
+
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
-from pytripgui.view.qt_gui import UiViewCanvas
-
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
-import logging
+from pytripgui.view.qt_gui import UiViewCanvas
+
 logger = logging.getLogger(__name__)
 
 

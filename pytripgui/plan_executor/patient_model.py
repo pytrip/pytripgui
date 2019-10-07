@@ -1,8 +1,9 @@
+import logging
+
 import pytrip as pt
 from pytrip.tripexecuter import Plan
 from pytrip.tripexecuter import Field
 
-import logging
 logger = logging.getLogger(__name__)
 
 

@@ -1,13 +1,12 @@
-from pytripgui.controller.settings_cont import SettingsController
 import os
+import logging
 
+from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.treewidget_vc.treewidget_cont import TreeWidgetController
 from pytripgui.Patient.patient_gui_model import PatientGui
-
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
-
 from pytripgui.messages import InfoMessages
-import logging
+
 logger = logging.getLogger(__name__)
 
 

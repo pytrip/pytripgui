@@ -1,7 +1,8 @@
-import pytrip as pt
-
 import os
 import logging
+
+import pytrip as pt
+
 logger = logging.getLogger(__name__)
 
 

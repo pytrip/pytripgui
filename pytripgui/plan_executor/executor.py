@@ -1,9 +1,10 @@
+import os
+import logging
+
 from pytripgui.model.config_model import Trip98ConfigModel
 import pytrip.tripexecuter as pte
 from pytripgui.plan_executor.simulation_results import SimulationResults
 
-import os
-import logging
 logger = logging.getLogger(__name__)
 
 

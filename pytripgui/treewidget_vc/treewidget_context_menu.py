@@ -1,7 +1,8 @@
+import logging
+
 from PyQt5.QtWidgets import QMenu
 import pytrip.tripexecuter as pte
 
-import logging
 logger = logging.getLogger(__name__)
 
 

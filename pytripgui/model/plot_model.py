@@ -1,8 +1,9 @@
+import logging
+
 from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -12,9 +13,9 @@ class ProjectionSelector:
         self.current_S_slice = 0
         self.current_C_slice = 0
 
-        self.max_T_depth = 0
-        self.max_S_depth = 0
-        self.max_C_depth = 0
+        self.transversal_depth = 0
+        self.sagittal_depth = 0
+        self.coronal_depth = 0
 
         # "Transversal" (xy)
         # "Sagittal" (yz)
@@ -22,16 +23,10 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        if self.position < self._max_position():
-            self.position += 1
-        else:
-            self.position = 0
+        self.position = (self.position + 1) % self._max_position()
 
     def prev_slice(self):
-        if self.position != 0:
-            self.position -= 1
-        else:
-            self.position = self._max_position()
+        self.position = (self.position - 1) % self._max_position()
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -42,13 +37,13 @@ class ProjectionSelector:
             return data.cube[-1:0:-1, self.position, -1:0:-1]
 
     def load_slices_count(self, data):
-        self.max_T_depth = data.dimz - 1
-        self.max_S_depth = data.dimy - 1
-        self.max_C_depth = data.dimx - 1
+        self.transversal_depth = data.dimz
+        self.sagittal_depth = data.dimy
+        self.coronal_depth = data.dimx
 
-        self.current_T_slice = self.max_T_depth // 2
-        self.current_S_slice = self.max_S_depth // 2
-        self.current_C_slice = self.max_C_depth // 2
+        self.current_T_slice = self.transversal_depth // 2
+        self.current_S_slice = self.sagittal_depth // 2
+        self.current_C_slice = self.coronal_depth // 2
 
     @property
     def position(self):
@@ -79,11 +74,11 @@ class ProjectionSelector:
 
     def _max_position(self):
         if self.plane == "Transversal":
-            return self.max_T_depth
+            return self.transversal_depth
         if self.plane == "Sagittal":
-            return self.max_S_depth
+            return self.sagittal_depth
         if self.plane == "Coronal":
-            return self.max_C_depth
+            return self.coronal_depth
 
 
 class PlotModel(object):

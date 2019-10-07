@@ -1,13 +1,12 @@
+import logging
+
 from pytripgui.plan_vc import PlanQtView
 from pytripgui.plan_vc import PlanController
-
 from pytripgui.field_vc import FieldQtView
 from pytripgui.field_vc import FieldController
-
 from pytripgui.model.plot_model import PlotModel
 from pytripgui.plan_executor.patient_model import PatientModel
 
-import logging
 logger = logging.getLogger(__name__)
 
 

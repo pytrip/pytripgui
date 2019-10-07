@@ -1,13 +1,13 @@
-from pytripgui.view.qt_gui import UiMainWindow
-from pytripgui.config_vc import ConfigQtView
-from pytripgui.kernel_vc import KernelQtView
-
-from pytripgui.treewidget_vc.treewidget_view import TreeWidgetView
-from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
+import logging
 
 from PyQt5.QtWidgets import QFileDialog
 
-import logging
+from pytripgui.view.qt_gui import UiMainWindow
+from pytripgui.config_vc import ConfigQtView
+from pytripgui.kernel_vc import KernelQtView
+from pytripgui.treewidget_vc.treewidget_view import TreeWidgetView
+from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
+
 logger = logging.getLogger(__name__)
 
 

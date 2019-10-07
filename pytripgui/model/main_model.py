@@ -1,6 +1,7 @@
+import logging
+
 from pytripgui.plan_executor.executor import PlanExecutor
 
-import logging
 logger = logging.getLogger(__name__)
 
 

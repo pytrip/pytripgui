@@ -1,7 +1,8 @@
+import logging
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTreeWidgetItem
 
-import logging
 logger = logging.getLogger(__name__)
 
 
