@@ -23,18 +23,18 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.position = (self.position + 1) % self._max_position()
+        self.slice_number = (self.slice_number + 1) % self._max_position()
 
     def prev_slice(self):
-        self.position = (self.position - 1) % self._max_position()
+        self.slice_number = (self.slice_number - 1) % self._max_position()
 
     def get_projection(self, data):
         if self.plane == "Transversal":
-            return data.cube[self.position]
+            return data.cube[self.slice_number]
         elif self.plane == "Sagittal":
-            return data.cube[-1:0:-1, -1:0:-1, self.position]
+            return data.cube[-1:0:-1, -1:0:-1, self.slice_number]
         elif self.plane == "Coronal":
-            return data.cube[-1:0:-1, self.position, -1:0:-1]
+            return data.cube[-1:0:-1, self.slice_number, -1:0:-1]
 
     def load_slices_count(self, data):
         self.transversal_depth = data.dimz
@@ -55,7 +55,7 @@ class ProjectionSelector:
             return self.current_C_slice
 
     @position.getter
-    def position(self):
+    def slice_number(self):
         if self.plane == "Transversal":
             return self.current_T_slice
         if self.plane == "Sagittal":
@@ -63,8 +63,8 @@ class ProjectionSelector:
         if self.plane == "Coronal":
             return self.current_C_slice
 
-    @position.setter
-    def position(self, position):
+    @slice_number.setter
+    def slice_number(self, position):
         if self.plane == "Transversal":
             self.current_T_slice = position
         if self.plane == "Sagittal":

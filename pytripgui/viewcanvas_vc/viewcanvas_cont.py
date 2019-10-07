@@ -89,7 +89,7 @@ class ViewCanvasCont(object):
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-        self._ui.set_position(self._model.projection_selector.position)
+        self._ui.set_position(self._model.projection_selector.slice_number)
         # if self._model.vdx:
         #     Vdx.plot(self)
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
