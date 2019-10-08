@@ -54,7 +54,7 @@ class ProjectionSelector:
         if self.plane == "Coronal":
             return self.current_C_slice
 
-    @position.getter
+    @current_slice_no.getter
     def current_slice_no(self):
         if self.plane == "Transversal":
             return self.current_T_slice
