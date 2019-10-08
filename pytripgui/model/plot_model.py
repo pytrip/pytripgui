@@ -46,7 +46,7 @@ class ProjectionSelector:
         self.current_C_slice = self.coronal_depth // 2
 
     @property
-    def position(self):
+    def current_slice_no(self):
         if self.plane == "Transversal":
             return self.current_T_slice
         if self.plane == "Sagittal":
