@@ -36,7 +36,7 @@ class TreeWidgetView:
         tree.takeChildren()
 
     @staticmethod
-    def exchange_data_in_sub_item(sub_item, item, name):
+    def set_data_in_sub_item(sub_item, item, name):
         sub_item.setData(0, Qt.UserRole, item)
         sub_item.setText(0, name)
 

@@ -9,13 +9,13 @@ logger = logging.getLogger(__name__)
 
 class ProjectionSelector:
     def __init__(self):
-        self.current_T_slice = 0
-        self.current_S_slice = 0
-        self.current_C_slice = 0
+        self._transversal_slice_no = 0
+        self._sagittal_slice_no = 0
+        self._coronal_slice_no = 0
 
-        self.transversal_depth = 0
-        self.sagittal_depth = 0
-        self.coronal_depth = 0
+        self._transversal_last_slice_no = 0
+        self._sagittal_last_slice_no = 0
+        self._coronal_last_slice_no = 0
 
         # "Transversal" (xy)
         # "Sagittal" (yz)
@@ -23,10 +23,10 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no + 1) % self._last_slice_no
+        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no - 1) % self._last_slice_no
+        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -37,49 +37,49 @@ class ProjectionSelector:
             return data.cube[-1:0:-1, self.current_slice_no, -1:0:-1]
 
     def load_slices_count(self, data):
-        self.transversal_depth = data.dimz
-        self.sagittal_depth = data.dimy
-        self.coronal_depth = data.dimx
+        self._transversal_last_slice_no = data.dimz
+        self._sagittal_last_slice_no = data.dimy
+        self._coronal_last_slice_no = data.dimx
 
-        self.current_T_slice = self.transversal_depth // 2
-        self.current_S_slice = self.sagittal_depth // 2
-        self.current_C_slice = self.coronal_depth // 2
+        self._transversal_slice_no = self._transversal_last_slice_no // 2
+        self._sagittal_slice_no = self._sagittal_last_slice_no // 2
+        self._coronal_slice_no = self._coronal_last_slice_no // 2
 
     @property
     def current_slice_no(self):
         if self.plane == "Transversal":
-            return self.current_T_slice
+            return self._transversal_slice_no
         if self.plane == "Sagittal":
-            return self.current_S_slice
+            return self._sagittal_slice_no
         if self.plane == "Coronal":
-            return self.current_C_slice
+            return self._coronal_slice_no
 
     @current_slice_no.getter
     def current_slice_no(self):
         if self.plane == "Transversal":
-            return self.current_T_slice
+            return self._transversal_slice_no
         if self.plane == "Sagittal":
-            return self.current_S_slice
+            return self._sagittal_slice_no
         if self.plane == "Coronal":
-            return self.current_C_slice
+            return self._coronal_slice_no
 
     @current_slice_no.setter
     def current_slice_no(self, position):
         if self.plane == "Transversal":
-            self.current_T_slice = position
+            self._transversal_slice_no = position
         if self.plane == "Sagittal":
-            self.current_S_slice = position
+            self._sagittal_slice_no = position
         if self.plane == "Coronal":
-            self.current_C_slice = position
+            self._coronal_slice_no = position
 
     @property
-    def _last_slice_no(self):
+    def last_slice_no(self):
         if self.plane == "Transversal":
-            return self.transversal_depth
+            return self._transversal_last_slice_no
         if self.plane == "Sagittal":
-            return self.sagittal_depth
+            return self._sagittal_last_slice_no
         if self.plane == "Coronal":
-            return self.coronal_depth
+            return self._coronal_last_slice_no
 
 
 class PlotModel(object):

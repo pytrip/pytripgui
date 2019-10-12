@@ -36,7 +36,7 @@ class TreeWidgetController:
             patient_tree = self._view.add_tree(patient, patient.name)
             patient.tree_model.patient_tree = patient_tree
         else:
-            self._view.exchange_data_in_sub_item(
+            self._view.set_data_in_sub_item(
                 patient.tree_model.patient_tree,
                 patient,
                 patient.name)
@@ -54,7 +54,7 @@ class TreeWidgetController:
                     item,
                     item_name)
             else:
-                self._view.exchange_data_in_sub_item(item_tree, item, item_name)
+                self._view.set_data_in_sub_item(item_tree, item, item_name)
 
     def synchronize_vdx(self, patient):
         item = patient.vdx
@@ -69,7 +69,7 @@ class TreeWidgetController:
                     item,
                     item_name)
             else:
-                self._view.exchange_data_in_sub_item(item_tree, item, item_name)
+                self._view.set_data_in_sub_item(item_tree, item, item_name)
 
     def synchronize_plans(self, patient):
         item = patient.plans
@@ -84,7 +84,7 @@ class TreeWidgetController:
                     item,
                     item_name)
             else:
-                self._view.exchange_data_in_sub_item(item_tree, item, item_name)
+                self._view.set_data_in_sub_item(item_tree, item, item_name)
 
             self._view.clear_tree(patient.tree_model.plans_tree)
 
@@ -121,7 +121,7 @@ class TreeWidgetController:
                     item,
                     item_name)
             else:
-                self._view.exchange_data_in_sub_item(item_tree, item, item_name)
+                self._view.set_data_in_sub_item(item_tree, item, item_name)
 
             self._view.clear_tree(patient.tree_model.simulations_tree)
 
