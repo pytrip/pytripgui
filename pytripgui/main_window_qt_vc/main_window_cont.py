@@ -92,7 +92,7 @@ class MainWindowController(object):
         self.model.current_patient.add_new_plan()
         self.model.patient_tree_cont.synchronize()
 
-    def on_kernels_configuraotr(self):
+    def on_kernels_configurator(self):
         """
         Kernel dialog opened from window->settings->kernel
         """
@@ -136,7 +136,7 @@ class MainWindowController(object):
             self.view.show_info(message[0], message[1])
             return
 
-        if plan.kernel.sis_path == "":
+        if not plan.kernel.sis_path:
             message = InfoMessages["kernelSisPath"]
             self.view.show_info(message[0], message[1])
             return

@@ -13,7 +13,7 @@ class PlanExecutor:
         self.trip_config = Trip98ConfigModel()
 
     def check_config(self):
-        # TODO replace with
+        # TODO replace with function that actually runs trip, and collect returned errors
         if self.trip_config.wdir_path == "":
             return -1
         if self.trip_config.trip_path == "":
