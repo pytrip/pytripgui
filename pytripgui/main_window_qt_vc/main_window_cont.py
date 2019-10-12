@@ -11,17 +11,29 @@ logger = logging.getLogger(__name__)
 
 
 class MainWindowController(object):
+    """
+    TODO: some description here
+    """
     def __init__(self, model, view):
+        """
+        TODO: some description here
+        """
         self.model = model
         self.view = view
 
         self._initialize()
 
     def open_files(self, args):
+        """
+        TODO: some description here
+        """
         pass
         # raise Exception("Unimplemented")  # TODO
 
     def _initialize(self):
+        """
+        TODO: some description here
+        """
         self.settings = SettingsController(self.model)
 
         # main window callbacks
@@ -45,16 +57,25 @@ class MainWindowController(object):
         self.model.patient_tree_cont.context_menu.execute_plan_callback = self.on_execute_plan
 
     def on_selected_item(self, patient, item):
+        """
+        TODO: some description here
+        """
         self.model.current_patient = patient
 
         self.model.one_plot_cont.set_patient(patient)
 
     def on_add_new_patient(self):
+        """
+        TODO: some description here
+        """
         new_patient = PatientGui(self.model.kernels)
         self.model.patients.append(new_patient)
         return new_patient
 
     def on_open_voxelplan(self):
+        """
+        TODO: some description here
+        """
         path = self.view.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         filename, extension = os.path.splitext(path)
 
@@ -74,6 +95,9 @@ class MainWindowController(object):
         self.model.one_plot_cont.set_patient(self.model.current_patient)
 
     def on_add_new_plan(self):
+        """
+        TODO: some description here
+        """
         if not self.model.current_patient:
             message = InfoMessages["addNewPatient"]
             self.view.show_info(message[0], message[1])
@@ -126,6 +150,9 @@ class MainWindowController(object):
             self.settings.save()
 
     def on_execute_plan(self, patient, plan):
+        """
+        TODO: some description here
+        """
         if not plan.fields:
             message = InfoMessages["addOneField"]
             self.view.show_info(message[0], message[1])
@@ -146,5 +173,8 @@ class MainWindowController(object):
         self.model.one_plot_cont.set_patient(self.model.current_patient)
 
     def on_about(self):
+        """
+        Callback to display the "about" box.
+        """
         message = InfoMessages["about"]
         self.view.show_info(message[0], message[1])
