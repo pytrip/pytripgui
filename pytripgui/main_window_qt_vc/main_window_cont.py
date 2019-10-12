@@ -26,7 +26,7 @@ class MainWindowController(object):
 
         # main window callbacks
         self.view.open_voxelplan_callback = self.on_open_voxelplan
-        self.view.open_kernels_configurator_callback = self.on_kernels_configuraotr
+        self.view.open_kernels_configurator_callback = self.on_kernels_configurator
         self.view.add_new_plan_callback = self.on_add_new_plan
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
