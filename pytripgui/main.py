@@ -4,46 +4,17 @@ import logging
 
 from PyQt5.QtWidgets import QApplication
 
-from pytripgui.view.main_view import MainView
+from pytripgui.main_window_qt_vc.main_window_view import MainWindowQtView
+from pytripgui.main_window_qt_vc.main_window_cont import MainWindowController
 from pytripgui.model.main_model import MainModel
-from pytripgui.controller.main_cont import MainController
 
 logger = logging.getLogger(__name__)
-
-
-class AppWindow():
-    def __init__(self):
-
-        logger.debug("Setup view")
-        self.view = MainView()
-
-        logger.debug("Setup model")
-        self.view.ui.model = MainModel(self)    # TODO: remove that 'hack'
-        self.view.ui.view = self.view           # TODO: remove that 'hack'
-
-        logger.debug("Setup controller")
-        self.ctrl = MainController(self.view.ui)
-
-    def show(self):
-        self.view.ui.show()
-
-    def open_files(self, args):
-        """
-        """
-        if args.ctx:
-            self.ctrl.open_voxelplan(args.ctx)
-        if args.dos:
-            self.ctrl.import_dos(args.dos)
-        if args.let:
-            self.ctrl.import_let(args.let)
 
 
 def main(args=sys.argv[1:]):
     from pytripgui import __version__ as _ptgv
     from pytrip import __version__ as _ptv
     _vers = "PyTRiP98GUI {} using PyTRiP98 {}".format(_ptgv, _ptv)
-
-    app = QApplication(sys.argv)
 
     # setup parser
     parser = argparse.ArgumentParser()
@@ -63,10 +34,15 @@ def main(args=sys.argv[1:]):
     else:
         logging.basicConfig()
 
-    w = AppWindow()
+    app = QApplication(sys.argv)
+    view = MainWindowQtView()
+    model = MainModel()
+    controller = MainWindowController(model, view)
+
     if args:
-        w.open_files(args)
-    w.view.ui.show()
+        controller.open_files(args)
+
+    view.show()
 
     return app.exec_()
 

@@ -1,5 +1,6 @@
-from PyQt5 import QtWidgets, uic
 import os
+
+from PyQt5 import QtWidgets, uic
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -37,6 +38,7 @@ class UiMainWindow(QtWidgets.QMainWindow):
         super(UiMainWindow, self).__init__()
         ui_path = os.path.join(current_directory, 'main_window.ui')
         uic.loadUi(ui_path, self)
+        self.setWindowTitle("PyTRiPGUI")
 
 
 class UiViewCanvas(QtWidgets.QWidget):

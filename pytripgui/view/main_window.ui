@@ -16,7 +16,13 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTreeWidget" name="treeWidget">
+     <widget class="QTreeWidget" name="patient_treeWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <column>
        <property name="text">
         <string>(no data loaded)</string>
@@ -155,6 +161,9 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionOpen_Dicom">

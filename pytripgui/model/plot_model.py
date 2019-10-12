@@ -1,18 +1,21 @@
+import logging
+
 from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
 
-import pytrip as pt
-
-import logging
 logger = logging.getLogger(__name__)
 
 
 class ProjectionSelector:
     def __init__(self):
-        self.current_x_slice = 50
-        self.current_y_slice = 125
-        self.current_z_slice = 125
+        self._transversal_slice_no = 0
+        self._sagittal_slice_no = 0
+        self._coronal_slice_no = 0
+
+        self._transversal_last_slice_no = 0
+        self._sagittal_last_slice_no = 0
+        self._coronal_last_slice_no = 0
 
         # "Transversal" (xy)
         # "Sagittal" (yz)
@@ -20,28 +23,63 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        if self.plane == "Transversal":
-            self.current_x_slice += 1
-        if self.plane == "Sagittal":
-            self.current_y_slice += 1
-        if self.plane == "Coronal":
-            self.current_z_slice += 1
+        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
 
     def prev_slice(self):
-        if self.plane == "Transversal":
-            self.current_x_slice -= 1
-        if self.plane == "Sagittal":
-            self.current_y_slice -= 1
-        if self.plane == "Coronal":
-            self.current_z_slice -= 1
+        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
-            return data.cube[self.current_x_slice]
+            return data.cube[self.current_slice_no]
         elif self.plane == "Sagittal":
-            return data.cube[-1:0:-1, -1:0:-1, self.current_y_slice]
+            return data.cube[-1:0:-1, -1:0:-1, self.current_slice_no]
         elif self.plane == "Coronal":
-            return data.cube[-1:0:-1, self.current_z_slice, -1:0:-1]
+            return data.cube[-1:0:-1, self.current_slice_no, -1:0:-1]
+
+    def load_slices_count(self, data):
+        self._transversal_last_slice_no = data.dimz
+        self._sagittal_last_slice_no = data.dimy
+        self._coronal_last_slice_no = data.dimx
+
+        self._transversal_slice_no = self._transversal_last_slice_no // 2
+        self._sagittal_slice_no = self._sagittal_last_slice_no // 2
+        self._coronal_slice_no = self._coronal_last_slice_no // 2
+
+    @property
+    def current_slice_no(self):
+        if self.plane == "Transversal":
+            return self._transversal_slice_no
+        if self.plane == "Sagittal":
+            return self._sagittal_slice_no
+        if self.plane == "Coronal":
+            return self._coronal_slice_no
+
+    @current_slice_no.getter
+    def current_slice_no(self):
+        if self.plane == "Transversal":
+            return self._transversal_slice_no
+        if self.plane == "Sagittal":
+            return self._sagittal_slice_no
+        if self.plane == "Coronal":
+            return self._coronal_slice_no
+
+    @current_slice_no.setter
+    def current_slice_no(self, position):
+        if self.plane == "Transversal":
+            self._transversal_slice_no = position
+        if self.plane == "Sagittal":
+            self._sagittal_slice_no = position
+        if self.plane == "Coronal":
+            self._coronal_slice_no = position
+
+    @property
+    def last_slice_no(self):
+        if self.plane == "Transversal":
+            return self._transversal_last_slice_no
+        if self.plane == "Sagittal":
+            return self._sagittal_last_slice_no
+        if self.plane == "Coronal":
+            return self._coronal_last_slice_no
 
 
 class PlotModel(object):
@@ -82,23 +120,14 @@ class PlotModel(object):
     def set_ctx(self, ctx):
         self.ctx = Ctx(self.projection_selector)
         self.ctx.cube = ctx
-
-    def import_let_from_file(self, path):
-        logger.debug("Open LetCube {:s}".format(path))
-        cube = pt.LETCube()
-        cube.read(path)
-        self.set_let(cube)
+        self.projection_selector.load_slices_count(ctx)
 
     def set_let(self, let):
         self.let = Let(self.projection_selector)
         self.let.cube = let
-
-    def import_dose_from_file(self, path):
-        logger.debug("Open DosCube {:s}".format(path))
-        cube = pt.DosCube()
-        cube.read(path)
-        self.set_dose(cube)
+        self.projection_selector.load_slices_count(let)
 
     def set_dose(self, dose):
         self.dose = Dos(self.projection_selector)
         self.dose.cube = dose
+        self.projection_selector.load_slices_count(dose)

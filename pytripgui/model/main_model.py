@@ -1,7 +1,6 @@
 import logging
 
-from pytripgui.model.config_model import Trip98ConfigModel
-from pytripgui.model.plot_model import PlotModel
+from pytripgui.plan_executor.executor import PlanExecutor
 
 logger = logging.getLogger(__name__)
 
@@ -17,19 +16,15 @@ class MainModel(object):
 
         self._update_funce = []
 
-        self.ctx = None  # Only one CTX is allowed
-        self.vdx = None  # Only one VDX is allowed
-        self.plans = []
-
-        # paths
-        self.dicom_path = "."
-        self.voxelplan_path = "."
-
-        self.trip_config = Trip98ConfigModel()
-
-        # attach submodels
-        self.one_plot = PlotModel()
+        self.executor = PlanExecutor()
         self.kernels = []  # placeholder for KernelModels
+
+        self.patients = []
+        self.current_patient = None
+        self.patient_tree_cont = None
+
+        self.one_plot_model = None
+        self.pne_plot_cont = None
 
         self.settings = SettingsModel(self)
 
@@ -74,9 +69,8 @@ class SettingsModel(object):
             a) _version is written to disk, but imported into Model when loading
             b) __internal_attribute__ are not passed between Model and SettingsModel
         """
-        self.dicom_path = model.dicom_path
-        self.voxelplan_path = model.voxelplan_path
-        self.trip_config = model.trip_config
+        # self.trip_config = model.trip_config
+        self.executor = model.executor
 
         self.kernels = model.kernels
 

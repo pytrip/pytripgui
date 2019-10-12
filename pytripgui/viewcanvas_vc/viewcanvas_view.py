@@ -1,12 +1,13 @@
+import logging
+
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
-from pytripgui.view.qt_gui import UiViewCanvas
-
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
-import logging
+from pytripgui.view.qt_gui import UiViewCanvas
+
 logger = logging.getLogger(__name__)
 
 
@@ -49,6 +50,9 @@ class ViewCanvasView:
 
     def set_plotter_wheel_callback(self, fun):
         self._plotter.set_scroll_event_callback(fun)
+
+    def set_position(self, position):
+        self._ui.position_label.setText("Position: " + str(position))
 
     def plot_let(self, data):
         self._plotter.plot_let(data)
