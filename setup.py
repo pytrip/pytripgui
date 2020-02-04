@@ -59,7 +59,7 @@ setuptools.setup(
     ],
     entry_points={
         'console_scripts': [
-            'pytripgui=pytripgui.main:start',
+            'pytripgui=pytripgui.main:main',
         ],
     }
 )
