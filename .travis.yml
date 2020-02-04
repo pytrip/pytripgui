@@ -53,7 +53,7 @@ matrix:
 install:
   - sudo apt-get update
   - sudo apt-get install xfonts-cyrillic -y # TODO should be move to apt addons
-  - pip install --binary PyQt5 -r requirements.txt
+  - pip install --only-binary PyQt5 -r requirements.txt
   - pip install -r tests/requirements-test.txt
 
 
