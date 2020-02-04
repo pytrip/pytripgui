@@ -50,11 +50,14 @@ matrix:
           env: TOXENV=py37
 
 
-script:
+install:
   - sudo apt-get update
   - sudo apt-get install xfonts-cyrillic -y # TODO should be move to apt addons
-  - pip install -binary PyQt5 -r requirements.txt --upgrade
-  - pip install -r tests/requirements-test.txt --upgrade
+  - pip install -binary PyQt5 -r requirements.txt
+  - pip install -r tests/requirements-test.txt
+
+
+script:
   - tox --recreate --notest && tox
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
 
