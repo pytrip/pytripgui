@@ -2,10 +2,9 @@
 
 language: python
 
-# travis-ci runs by default on ancient Ubuntu 12.04 (precise)
-# following options will give us Ubuntu 14.04 (trusty)
+# travis-ci runs by default Ubuntu 16.04 (xenial)
 sudo: true
-dist: trusty
+dist: xenial
 
 # testing pyqt5 apps require X server
 addons:
