@@ -50,12 +50,13 @@ setuptools.setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
     ],
     package_data={'pytripgui': ['res/*', 'view/*.ui']},
     install_requires=[
-        'pytrip98', 'PyQt5'
+        'pytrip98>=2.5.6', 'PyQt5<5.10'
     ],
     entry_points={
         'console_scripts': [
