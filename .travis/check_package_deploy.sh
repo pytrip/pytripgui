@@ -12,6 +12,10 @@ set -o pipefail # Return value of a pipeline as the value of the last command to
 # make bdist universal package
 pip install wheel
 
+# install latest version of numpy assuming it will be consistent with numpy used to built pytrip98
+# TODO - this should be fixed
+pip install numpy -U
+
 # first call to version method would generate VERSION  file
 PYTHONPATH=. python pytripgui/main.py --version
 python setup.py bdist_wheel
