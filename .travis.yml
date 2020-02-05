@@ -2,8 +2,9 @@
 
 language: python
 
+os: linux
+
 # travis-ci runs by default Ubuntu 16.04 (xenial)
-sudo: false
 dist: xenial
 
 # testing pyqt5 apps require X server
@@ -18,7 +19,7 @@ addons:
     - dbus-x11
     - xfonts-cyrillic
 
-matrix:
+jobs:
     include:
         - os: linux
           python: 3.7
@@ -50,16 +51,17 @@ script:
   - tox --recreate --notest && tox
   - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/check_package_deploy.sh; fi
 
+
 deploy:
- - provider: pypi # upload pip package to pypi https://docs.travis-ci.com/user/deployment/pypi/
-    user: __token__
-    distributions: sdist bdist_wheel
-    skip_cleanup: true
-    skip_upload_docs: true
-    skip_existing: true
-    password:
+ provider: pypi # upload pip package to pypi https://docs.travis-ci.com/user/deployment/pypi/
+ username: "__token__"
+ password:
       secure: "bzkLilL3/6sgCIqJtlbdUKQbzNteBXkjzkjkRoSfslqgnYH7aqRQeyjSlzMhuJPnH8AQ5UkDiA+hd/h+YYHizHcwYRzy5URkDcwICGjPv8InqwrV54IJq+fD1HmkKxTNMdk/LFWy1utioEvUKKY5QvVc4sswv2M8tHnga6h60KPHoEe4OHxJazXMKgr/28vLxfd4kk9W9gYcx6fm7VbUEPkGG/W9oFIREF33V99jPAalS+soetD1BGIhHEPVaviGdOVszoMT9skOZ+7CDXGGOUZyGJNHZjZOHQhoOFULG1wWQivbSmwvSG0rLTrnxrOR1yT99EOPY3FMNHpgQzsYA/mCDNje5ZXQDrcHWDmkGeKplA8JwPOZQg0bdMhn8WWAXUcfsVtud6HoYSyZoFHoGNLdp17HzP9gY//uFrtY36/z/k/TynnCQnukanZODXL7CXHW4wQBtuu6/JEpzU5F3o6mOVXZ6uVucJK6p1ZcszDwXqriR2e5LWsyJh3po1XNnplQIioTzjwje7zLjt176+aLj2B2v8/I1C3AuVPK33ZFiI/QiPvNpbcwGOy4PiIwUxDSX2d4i8104ytOmsav2kfu95Ef42rlTrQW5nrdaa0jgdTvLzTi3eyQM+4oLCMZtmFBo5VoFswN0zH6nHkz6RbmeAR05U6XlLq1RxRZqE0="
-    on:
-      repo: DataMedSci/pymchelper
-      tags: true
-      condition: $TOXENV == "packaging" && "$TRAVIS_TEST_RESULT" == "0"
+distributions: "sdist bdist_wheel"
+skip_cleanup: true
+skip_upload_docs: true
+skip_existing: true
+on:
+  repo: DataMedSci/pymchelper
+  tags: true
+  condition: $TOXENV == "packaging" && "$TRAVIS_TEST_RESULT" == "0"
