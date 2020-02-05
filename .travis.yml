@@ -18,12 +18,6 @@ addons:
     - dbus-x11
     - xfonts-cyrillic
 
-env:
-  global:
-    - PYPIUSER=grzanka
-    #  pypi secured password (PYPIPASS variable), you need to update it to your own if you want to use it
-    - secure: "SMZG9NowpZXGR0uNh5FvTRNO/rafNlj5smen8GK77tgYP8AiCjoXxzl5EXhO8WRd/6Zf1vMtSan8p0fif/8LCr7hncZ8SZ/rKNnf1EOKa0Wam7TVxwVaeMnThDyZNOuV5/3/NDEg/ro194Z7kKHGPAaE8GycaGxAmXG8EbCIVw8uYu3DHDstpewWveGusKqPFOUORUHtfEdpINMizY/Ady34BDRRC7UHU67eWGx3wa1g5WXBr34LKQTHY8nzWI6W04z55gQhHWytrJbp947/JvMItSEOd3s09KPv36K4nezbMrpnWmhSxtP9JDhZI2eLO3bjQHWRnoYNBG2DN/6VC0C+eUsZ81Pi17JEUBlyyjfx0iFCbi5ssvjXwDaqbaCFIeoMh+TEiQFjIYBX8GgIg/+b9lWUaxGxTdx/mdE8MJOufX3G3df8eXklil2D89R0SfkHqxunbheBp4POXP2w3b7LbKv4NV5pgPSWx1h8Hv60ODQyEcF658EA23sV7W2SAKc/Pt+WQ9fVuP/1ZWFHZN3ACd03pqHI0HLzrIufLE3aww1dKpiZKL1v7Irvai9RbCugEYYX5BzoBF/DTwYDJuH8OFf1H+nNT8oO+LbnYgkZ7POrKQ+8SAuZRIYg708bh5EmDaiS04D2CaBpRV9rfiQwhvHnWY35c6G2BXbGsgU="
-
 matrix:
     include:
         - os: linux
@@ -54,5 +48,17 @@ install:
 
 script:
   - tox --recreate --notest && tox
-  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/deploy_package.sh "$TARGET" $PRECMD; fi
+  - if [[ "$TRAVIS_TEST_RESULT" == "0" ]] && [[ $TOXENV == "packaging" ]]; then .travis/check_package_deploy.sh; fi
 
+deploy:
+ - provider: pypi # upload pip package to pypi https://docs.travis-ci.com/user/deployment/pypi/
+    user: grzanka
+    distributions: sdist bdist_wheel
+    skip_cleanup: true
+    skip_upload_docs: true
+    password:
+      secure: kmwue5PN2Yi+JpdGQs+/pnoRvNsmjnvbLCHSZWJBrR5A+DPR6/E4bs5r9RZxSlBT5tOtpf+Fekbk3jNwN9p+Dr5tBaDG2GdVbqo/vMsmw0MguZUK34+RFrC0v38ovwRY69O6owEVYZeu2YZgq6PZT20n/OSsQn+Ep7YBYCVjLnG+k49JcfBgMEX/p0aVTcFz2gicrrxlvcyiKW7EMSjSrpgmj1XjEw5l2NCOoXyEtTiIBfGruw9X0aN78jq1eX4E893NfY4zk2sK6pMDq0B3SagsOeufGnMtVjYxct34vRQlNtBonh7GZHOh95NPTFT5Md5HY0vibOKv8/MjzRjLQrlRxoMjm3lZflAwKYldE5GSbpZQPxx3X7DIGZY2Lo1DcGoxx6c8BiHaVhBi7ardMg84ItwSQtTcw1XTPXStYhNQwe9lqoFhfHKD2pfsSs2BGbzUeE6TsXKQrCs9c0lNaE2guuwTqUxWEIv4MC4svqGmLjTRyQDyyIh6fiBCIPlOGHs2XlMixiy+sRUXyr5YYILOTu8WNdA/UgqOAXkTvgzPomWVIFpZvS3lFASho4yW2iNUcrrWQHoEJiIODwOQWhqY4NpVRzfft07zFEiIWXXWZ8bNbGgztUtXiotv2YH5nwQgl38jMeCEX1qQz16NGGOS23ubbxpAbUE/8Ia5Ca0=
+    on:
+      repo: DataMedSci/pymchelper
+      tags: true
+      condition: $TOXENV == "packaging" && "$TRAVIS_TEST_RESULT" == "0"
