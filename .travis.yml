@@ -4,7 +4,7 @@ language: python
 
 # travis-ci runs by default Ubuntu 16.04 (xenial)
 sudo: false
-dist: bionic
+dist: xenial
 
 # testing pyqt5 apps require X server
 addons:

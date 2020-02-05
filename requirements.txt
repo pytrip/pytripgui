@@ -1,2 +1,2 @@
 pytrip98>=2.5.6
-PyQt5
+PyQt5<5.10
