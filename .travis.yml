@@ -3,18 +3,20 @@
 language: python
 
 # travis-ci runs by default Ubuntu 16.04 (xenial)
-sudo: true
+sudo: false
 dist: xenial
 
 # testing pyqt5 apps require X server
 addons:
   apt:
+    update: true
     packages:
     - xvfb
     - xfonts-100dpi
     - xfonts-75dpi
     - xorg
     - dbus-x11
+    - xfonts-cyrillic
 
 env:
   global:
@@ -25,7 +27,7 @@ env:
 matrix:
     include:
         - os: linux
-          python: 3.6
+          python: 3.7
           env: TOXENV=packaging
         - os: linux
           python: 3.5
@@ -34,24 +36,24 @@ matrix:
           python: 3.6
           env: TOXENV=py36
         - os: linux
-          python: 3.6-dev
-          env: TOXENV=py36
-        - os: linux
-          python: nightly
+          python: 3.7
           env: TOXENV=py37
         - os: linux
-          python: 3.6
+          python: 3.8
+          env: TOXENV=py38
+        - os: linux
+          python: 3.7
           env: TOXENV=coverage
-#    uncomment and adjust if you want to allow some failures
-    allow_failures:
-        - os: linux
-          python: nightly
-          env: TOXENV=py37
+##    uncomment and adjust if you want to allow some failures
+#    allow_failures:
+#        - os: linux
+#          python: nightly
+#          env: TOXENV=py37
 
 
 script:
-  - sudo apt-get update
-  - sudo apt-get install xfonts-cyrillic -y # TODO should be move to apt addons
+#  - sudo apt-get update
+#  - sudo apt-get install  -y # TODO should be move to apt addons
   - pip install -r requirements.txt --upgrade
   - pip install -r tests/requirements-test.txt --upgrade
   - tox --recreate --notest && tox
