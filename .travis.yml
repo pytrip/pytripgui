@@ -35,7 +35,7 @@ matrix:
         - os: linux
           python: 3.7
           env: TOXENV=coverage
-##    uncomment and adjust if you want to allow some failures
+##   uncomment and adjust if you want to allow some failures
     allow_failures:
         - os: linux
           python: 3.8
@@ -52,12 +52,13 @@ script:
 
 deploy:
  - provider: pypi # upload pip package to pypi https://docs.travis-ci.com/user/deployment/pypi/
-    user: grzanka
+    user: __token__
     distributions: sdist bdist_wheel
     skip_cleanup: true
     skip_upload_docs: true
+    skip_existing: true
     password:
-      secure: kmwue5PN2Yi+JpdGQs+/pnoRvNsmjnvbLCHSZWJBrR5A+DPR6/E4bs5r9RZxSlBT5tOtpf+Fekbk3jNwN9p+Dr5tBaDG2GdVbqo/vMsmw0MguZUK34+RFrC0v38ovwRY69O6owEVYZeu2YZgq6PZT20n/OSsQn+Ep7YBYCVjLnG+k49JcfBgMEX/p0aVTcFz2gicrrxlvcyiKW7EMSjSrpgmj1XjEw5l2NCOoXyEtTiIBfGruw9X0aN78jq1eX4E893NfY4zk2sK6pMDq0B3SagsOeufGnMtVjYxct34vRQlNtBonh7GZHOh95NPTFT5Md5HY0vibOKv8/MjzRjLQrlRxoMjm3lZflAwKYldE5GSbpZQPxx3X7DIGZY2Lo1DcGoxx6c8BiHaVhBi7ardMg84ItwSQtTcw1XTPXStYhNQwe9lqoFhfHKD2pfsSs2BGbzUeE6TsXKQrCs9c0lNaE2guuwTqUxWEIv4MC4svqGmLjTRyQDyyIh6fiBCIPlOGHs2XlMixiy+sRUXyr5YYILOTu8WNdA/UgqOAXkTvgzPomWVIFpZvS3lFASho4yW2iNUcrrWQHoEJiIODwOQWhqY4NpVRzfft07zFEiIWXXWZ8bNbGgztUtXiotv2YH5nwQgl38jMeCEX1qQz16NGGOS23ubbxpAbUE/8Ia5Ca0=
+      secure: "bzkLilL3/6sgCIqJtlbdUKQbzNteBXkjzkjkRoSfslqgnYH7aqRQeyjSlzMhuJPnH8AQ5UkDiA+hd/h+YYHizHcwYRzy5URkDcwICGjPv8InqwrV54IJq+fD1HmkKxTNMdk/LFWy1utioEvUKKY5QvVc4sswv2M8tHnga6h60KPHoEe4OHxJazXMKgr/28vLxfd4kk9W9gYcx6fm7VbUEPkGG/W9oFIREF33V99jPAalS+soetD1BGIhHEPVaviGdOVszoMT9skOZ+7CDXGGOUZyGJNHZjZOHQhoOFULG1wWQivbSmwvSG0rLTrnxrOR1yT99EOPY3FMNHpgQzsYA/mCDNje5ZXQDrcHWDmkGeKplA8JwPOZQg0bdMhn8WWAXUcfsVtud6HoYSyZoFHoGNLdp17HzP9gY//uFrtY36/z/k/TynnCQnukanZODXL7CXHW4wQBtuu6/JEpzU5F3o6mOVXZ6uVucJK6p1ZcszDwXqriR2e5LWsyJh3po1XNnplQIioTzjwje7zLjt176+aLj2B2v8/I1C3AuVPK33ZFiI/QiPvNpbcwGOy4PiIwUxDSX2d4i8104ytOmsav2kfu95Ef42rlTrQW5nrdaa0jgdTvLzTi3eyQM+4oLCMZtmFBo5VoFswN0zH6nHkz6RbmeAR05U6XlLq1RxRZqE0="
     on:
       repo: DataMedSci/pymchelper
       tags: true
