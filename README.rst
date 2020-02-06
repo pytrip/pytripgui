@@ -1,5 +1,5 @@
-WHAT IS THIS ?
-==============
+Overview
+========
 
 **pytripgui** is graphical user interface (GUI) built around TRiP98 planning system and pytrip package.
 It is capable of visualising patient CT data, dose and LET overlays.
@@ -15,30 +15,31 @@ Quick installation guide
 
 We recommend that you run a recent Linux distribution. A recent Ubuntu version or Debian Stable/Testing should work,
 or any rolling release (archLinux, openSUSE tumbleweed). In this case, be sure you have **python**
-and **python-pip** installed.
-As a baseline we recommend running python3, but pytripgui will be maintained for python2 as long as possible.
-To get them on Debian or Ubuntu, type being logged in as normal user::
+and **pythpip** installed.
 
-    $ sudo apt-get install python-pip
+As a baseline we recommend running python version at least 3.5.
+To get them and install system-wide on Debian or Ubuntu, type being logged in as normal user::
 
-Next step is to install required packages::
+   $ sudo pip install python3-pip
 
-    $ sudo apt-get install python-pyqt5-dev
-
-To automatically download and install the pytripgui, type::
+To automatically download and install the pytripgui system-wide, type::
 
     $ sudo pip install pytrip98gui
 
 NOTE: the pip package is named **pytrip98gui**, while the name of project is **pytripgui**.
 
-This command will automatically download and install pytripgui for all users in your system.
-
 Start it by calling::
 
     $ pytripgui
 
-pytripgui currently works in Linux with Python 2.7 and Python 3.7.
-Windows support is planned.
+pytripgui currently works in Linux with Python 3.5-3.7. Windows is partially supported.
+
+
+pytripgui dedicated to python2 users is not supported anymore, if you really know what to do,
+then try installing it with::
+
+    $ sudo pip install "pytrip98gui<1.0"
+
 
 
 More documentation

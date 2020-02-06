@@ -1,9 +1,9 @@
-===============================
+=========
 pytripgui
-===============================
+=========
 
 .. image:: https://img.shields.io/pypi/v/pytripgui.svg
-        :target: https://pypi.python.org/pypi/pytripgui
+        :target: https://pypi.python.org/pypi/pytrip98gui
 .. image:: https://img.shields.io/travis/pytrip/pytripgui.svg
         :target: https://travis-ci.org/pytrip/pytripgui
 
@@ -79,7 +79,6 @@ Latest unstable version, directly GIT repository, using::
 To unistall, simply use::
 
     pip uninstall pytrip98gui
-
 
 Running pytripgui
 =================
