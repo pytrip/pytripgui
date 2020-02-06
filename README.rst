@@ -1,5 +1,5 @@
-WHAT IS THIS ?
-==============
+Overview
+========
 
 **pytripgui** is graphical user interface (GUI) built around TRiP98 planning system and pytrip package.
 It is capable of visualising patient CT data, dose and LET overlays.
