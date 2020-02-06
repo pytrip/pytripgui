@@ -70,7 +70,7 @@ test_script:
 # install missing dependencies
   - pip install appdirs tornado packaging
 # generate installer
-  - python setup.py  # needed to generate VERSION file
+  - python setup.py -V # trick needed to generate VERSION file
   - pyinstaller main.spec
   - iscc win10_innosetup.iss
 
