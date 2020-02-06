@@ -1,2 +1,2 @@
-pytrip98>=2.5.6
+pytrip98~=2.5  # use versions compatible with 2.5 (2.5 and later from 2.x series, but not 3.x and later)
 PyQt5<5.10
