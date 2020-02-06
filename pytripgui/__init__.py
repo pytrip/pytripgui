@@ -6,7 +6,7 @@ try:
     init_location = spec.origin  # location of __init__.py file (the one you see now) in the filesystem
     version_file = os.path.join(os.path.dirname(init_location), 'VERSION')  # VERSION should sit next to __init__.py in the directory structure
     with open(version_file, 'r') as f:
-        __version__ = f.readline(1)
+        __version__ = f.readline()  # read first line of the file
 except FileNotFoundError:
     from pytripgui.version import git_version
     __version__ = git_version()
