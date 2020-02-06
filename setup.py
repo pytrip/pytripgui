@@ -9,6 +9,10 @@ def write_version_py(filename='VERSION'):
 
     GIT_REVISION = git_version()
     a = open(filename, 'w')
+    print("Writing a file", filename)
+    import os
+    print("CWD", os.getcwd())
+    print("current file is in", __file__)
     try:
         a.write(cnt % {'version': GIT_REVISION})
     finally:
