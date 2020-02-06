@@ -54,7 +54,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
     ],
-    package_data={'pytripgui': ['res/*', 'view/*.ui']},
+    package_data={'pytripgui': ['res/*', 'view/*.ui', 'VERSION']},
     install_requires=[
         'pytrip98>=2.5.6', 'PyQt5<5.10'
     ],
