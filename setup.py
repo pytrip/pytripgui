@@ -1,16 +1,16 @@
+import os
 import setuptools
 
 from pytripgui.version import git_version
 
 
-def write_version_py(filename='VERSION'):
+def write_version_py(filename=os.path.join('pytripgui', 'VERSION')):
     cnt = """%(version)s
 """
 
     GIT_REVISION = git_version()
     a = open(filename, 'w')
     print("Writing a file", filename)
-    import os
     print("CWD", os.getcwd())
     print("current file is in", __file__)
     try:
