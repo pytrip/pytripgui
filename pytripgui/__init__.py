@@ -10,9 +10,9 @@ init_location = spec.origin
 version_file = os.path.join(os.path.dirname(init_location), 'VERSION')
 
 try:
-    # read first line of the file
+    # read first line of the file (removing newline character)
     with open(version_file, 'r') as f:
-        __version__ = f.readline()
+        __version__ = f.readline().strip()
 except FileNotFoundError:
     # backup solution - read the version from git
     from pytripgui.version import git_version
