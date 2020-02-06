@@ -48,7 +48,7 @@ nissfile.close()
 a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
              binaries=[],
-             datas=[ ('pytripgui/res/*', 'res', 'pytripgui/VERSION' )],
+             datas=[ ('pytripgui/res/*', 'res'), ('pytripgui/VERSION', '.' ), ('pytripgui/view/*.ui', 'view')],
              hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
              hookspath=[],
              runtime_hooks=[],
