@@ -45,13 +45,10 @@ nissfile = codecs.open(filename, 'wb', "utf-8")
 nissfile.writelines(iss)
 nissfile.close()
 
-with open('pytripgui\__init__.py', "a") as fd:
-    fd.write("\n__version__ = \'{:s}\'".format(version))
-
 a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
              binaries=[],
-             datas=[ ('pytripgui/res/*', 'res' )],
+             datas=[ ('pytripgui/res/*', 'res'), ('pytripgui/VERSION', '.' ), ('pytripgui/view/*.ui', 'view')],
              hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
              hookspath=[],
              runtime_hooks=[],
