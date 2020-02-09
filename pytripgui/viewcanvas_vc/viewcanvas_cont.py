@@ -108,8 +108,8 @@ class ViewCanvasCont(object):
             self._model.set_ctx(patient.ctx)
 
         if patient.simulation_results:
-            if patient.simulation_results[0].dos:
-                self._model.set_dose(patient.simulation_results[0].dos)
+            if patient.simulation_results[0].dose:
+                self._model.set_dose(patient.simulation_results[0].dose)
 
         if patient.simulation_results:
             if patient.simulation_results[0].let:

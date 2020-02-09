@@ -22,14 +22,6 @@ class PlanExecutor:
 
     def execute(self, patient, plan):
         plan.working_dir = self.trip_config.wdir_path
-
-        plan.projectile = plan.kernel.projectile.iupac
-        plan.projectile_a = plan.kernel.projectile.a
-        plan.rifi = plan.kernel.rifi_thickness
-        plan.ddd_dir = plan.kernel.ddd_path
-        plan.spc_dir = plan.kernel.spc_path
-        plan.sis_path = plan.kernel.sis_path
-
         plan.dedx_path = self.trip_config.dedx_path
         plan.hlut_path = self.trip_config.hlut_path
 
