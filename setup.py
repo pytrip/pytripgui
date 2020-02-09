@@ -57,7 +57,7 @@ setuptools.setup(
     ],
     package_data={'pytripgui': ['res/*', 'view/*.ui', 'VERSION']},
     install_requires=[
-        'pytrip98~=2.5', 'PyQt5<5.10'
+        'pytrip98~=3.0', 'PyQt5<5.10'
     ],
     entry_points={
         'console_scripts': [
