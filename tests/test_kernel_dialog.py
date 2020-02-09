@@ -12,11 +12,11 @@ logging.basicConfig(level=logging.DEBUG)
 kernels = []
 # Kernel 1
 ker = KernelModel()
-ker.projectile = Projectile("H")
+ker.projectile = Projectile("C")
 kernels.append(ker)
 # Kernel 2
 ker = KernelModel()
-ker.projectile = Projectile("C")
+ker.projectile = Projectile("H")
 kernels.append(ker)
 
 
@@ -37,7 +37,7 @@ def test_basics(qtbot):
     assert view.projectile_symbol == kernels[current_kernel_index].projectile.iupac
 
     # setting new name
-    new_kernel_name = "Carbon"
+    new_kernel_name = "Proton"
     view.kernel_name = new_kernel_name
 
     # clicking "OK"
