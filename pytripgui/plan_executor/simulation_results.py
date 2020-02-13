@@ -27,7 +27,7 @@ class SimulationResults:
         logger.debug("Open DosCube {:s}".format(dos_path))
         dos = pt.DosCube()
         dos.read(dos_path)
-        self.dos = dos
+        self.dose = dos
 
     def import_let(self, let_path):
         logger.debug("Open LETCube {:s}".format(let_path))

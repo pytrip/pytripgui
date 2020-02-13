@@ -59,7 +59,7 @@ class PlanController(object):
         self.model.voi_target = self.view.get_selected_target_roi()
         self.model.vois_oar = self.view.get_all_checked_oar_as_list()
 
-        self.model.kernel = self.view.get_selected_krenel()
+        self.model.default_kernel = self.view.get_selected_krenel()
         self.model.target_dose = self.view.target_dose
         self.model.target_dose_percent = self.view.relative_target_dose
 

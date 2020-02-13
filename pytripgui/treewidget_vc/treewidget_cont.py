@@ -143,10 +143,10 @@ class TreeWidgetController:
             simulation.plan_snapshot,
             "Plan snapshot: " + simulation.name)
 
-        if simulation.dos:
+        if simulation.dose:
             self._view.add_sub_item(
                 current_simulation_tree,
-                simulation.dos,
+                simulation.dose,
                 "Dos")
 
         if simulation.let:

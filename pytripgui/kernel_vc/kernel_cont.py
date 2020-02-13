@@ -56,7 +56,7 @@ class KernelController(object):
 
     def set_view_from_model(self):
         # projectile symbols should be setup before setup any kernel
-        sorted_projectile = [y[0] for y in sorted(Projectile._projectile_defaults.items(), key=lambda x: x[1][0])]
+        sorted_projectile = [y[0] for y in sorted(Projectile.projectile_defaults.items(), key=lambda x: x[1][0])]
         self.view.setup_all_available_projectile_symbols(sorted_projectile)
         if not self.kernels:
             self._new_beam_kernel()
