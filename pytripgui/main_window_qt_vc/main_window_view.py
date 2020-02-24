@@ -22,7 +22,7 @@ class MainWindowQtView(object):
         self.ui.close()
 
     def get_patient_tree_view(self):
-        return TreeWidgetView(self.ui.patient_treeWidget)
+        return TreeWidgetView(self.ui.patient_treeView)
 
     def get_viewcanvas_view(self):
         one_viewcanvas = ViewCanvasView()

@@ -1,8 +1,6 @@
 import logging
 
 import pytrip as pt
-from pytrip.tripexecuter import Plan
-from pytrip.tripexecuter import Field
 
 logger = logging.getLogger(__name__)
 
@@ -28,11 +26,3 @@ class PatientModel:
         self.vdx = vdx
         if self.name != vdx.basename:
             logger.error("CTX | VDX patient name not match")
-
-    @staticmethod
-    def create_new_plan():
-        return Plan()
-
-    @staticmethod
-    def create_new_field():
-        return Field()

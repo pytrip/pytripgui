@@ -11,12 +11,12 @@ class TreeWidgetController:
         self._view = view
         self.context_menu = TreeWidgetContextMenu(self)
 
-        self.synchronize()
-
-        self._view.set_item_clicked_callback(self._clicked_item_callback)
-        self.update_selected_item_callback = None
-
-        self._view.set_custom_context_menu(self.context_menu.custom_context_menu_callback)
+        # self.synchronize()
+        #
+        # self._view.set_item_clicked_callback(self._clicked_item_callback)
+        # self.update_selected_item_callback = None
+        #
+        # self._view.set_custom_context_menu(self.context_menu.custom_context_menu_callback)
 
     def synchronize(self):
         for patient in self._patients:

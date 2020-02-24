@@ -45,7 +45,7 @@ class TreeWidgetView:
 
     def set_item_clicked_callback(self, fun):
         self.clicked_callback = fun
-        self._ui.itemClicked.connect(self._internal_item_clicked_callback)
+        # self._ui.itemClicked.connect(self._internal_item_clicked_callback) # todo
 
     def _internal_item_clicked_callback(self, item_clicked, pos):
         clicked_item_content = item_clicked.data(0, Qt.UserRole)
