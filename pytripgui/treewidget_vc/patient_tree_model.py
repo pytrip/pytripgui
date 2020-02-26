@@ -1,8 +1,12 @@
 from enum import Enum
 import logging
+import gc
 
 from PyQt5.QtCore import QVariant, QModelIndex, Qt
 from PyQt5.QtCore import QAbstractItemModel
+
+from pytripgui.plan_executor.patient_model import PatientModel
+from pytrip.tripexecuter.plan import Plan
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +16,7 @@ class PatientItemType(Enum):
     PATIENT = 1
     PLAN = 2
     FIELD = 3
+    OTHER = -1
 
 
 class PatientItem:
@@ -22,19 +27,34 @@ class PatientItem:
 
         if parent is None:
             self._item_type = PatientItemType.ROOT
+        elif isinstance(self._data, PatientModel):
+            self._item_type = PatientItemType.PATIENT
+        elif isinstance(self._data, Plan):
+            self._item_type = PatientItemType.PLAN
+        else:
+            self._item_type = PatientItemType.OTHER
 
     def row_count(self):
         return len(self._data)
 
     def has_children(self):
-        if self._item_type == PatientItemType.ROOT:
-            return len(self._data) > 0
+        try:
+            if self._item_type == PatientItemType.ROOT:
+                return len(self._data) > 0
+            elif self._item_type == PatientItemType.PATIENT:
+                return len(self._data.plans) > 0
+            return False
+
+        except:
+            pass
 
     def has_index(self, p_int):
         if self._item_type == PatientItemType.ROOT:
-            if p_int < len(self._data):
-                return True
-        return False
+            return p_int < len(self._data)
+        elif self._item_type == PatientItemType.PATIENT:
+            return p_int < len(self._data.plans)
+        else:
+            return False
 
     def row(self):
         if self._parent_item:
@@ -42,6 +62,8 @@ class PatientItem:
         return 0
 
     def index(self, p_int, p_int_1, obj):
+        gc.disable()
+
         if not self.has_index(p_int) or \
                 p_int_1 != 0:   # only one column is supported
             return QModelIndex()
@@ -50,6 +72,12 @@ class PatientItem:
             patient_item = PatientItem(self._data[p_int], self)
             patient_item._internal_pointer = patient_item
             index = obj.createIndex(p_int, p_int_1, patient_item)
+            return index
+
+        elif self._item_type == PatientItemType.PATIENT:
+            patient_item_1 = PatientItem(self._data.plans[p_int], self)
+            patient_item_1._internal_pointer = patient_item_1
+            index = obj.createIndex(p_int, p_int_1, patient_item_1)
             return index
 
         return QModelIndex()
@@ -64,10 +92,15 @@ class PatientItem:
 
     @property
     def name(self):
-        if isinstance(self._data, list):
+        if self._item_type == PatientItemType.ROOT:
             return "Patient list"
-        else:
+        elif self._item_type == PatientItemType.PATIENT:
             return self._data.name
+        elif self._item_type == PatientItemType.PLAN:
+            return self._data.basename
+
+        else:
+            return "Unsupported by code"
 
 
 class PatientTreeModel(QAbstractItemModel):
@@ -76,13 +109,16 @@ class PatientTreeModel(QAbstractItemModel):
         self._root_item = PatientItem(patient_list)
 
     def headerData(self, p_int, Qt_Orientation, role=None):
+        if p_int > 0:
+            return QVariant()
+
         if role == Qt.DisplayRole:
             return QVariant("Patients: ")
+
         return QVariant()
 
     def columnCount(self, parent=None, *args, **kwargs):
-        logger.debug("columnCount()")
-        return 1
+        return 1    # Only one column is supported
 
     def rowCount(self, parent=None, *args, **kwargs):
         logger.debug("rowCount()")
@@ -93,7 +129,7 @@ class PatientTreeModel(QAbstractItemModel):
         if not parent.isValid():
             return self._root_item.has_children()
 
-        return False
+        return parent.internalPointer().has_children()
 
     def index(self, p_int, p_int_1, parent=None, *args, **kwargs):
         logger.debug("index() {} {}".format(p_int, p_int_1))
@@ -107,7 +143,7 @@ class PatientTreeModel(QAbstractItemModel):
             print("Create patient")
             return self._root_item.index(p_int, p_int_1, self)
 
-        return self.parent.index(p_int, p_int_1, self)
+        return parent.internalPointer().index(p_int, p_int_1, self)
 
     def hasIndex(self, p_int, p_int_1, parent=None, *args, **kwargs):
         logger.debug("hasIndex()")
@@ -118,7 +154,9 @@ class PatientTreeModel(QAbstractItemModel):
         return self._root_item.has_index(p_int)
 
     def data(self, q_model_index, role=None):
-        logger.debug("data()")
+        internal_pointer = q_model_index.internalPointer()
+        if internal_pointer._item_type == PatientItemType.PLAN:
+            pass
 
         if role == Qt.DisplayRole:
             return q_model_index.internalPointer().name
@@ -126,24 +164,19 @@ class PatientTreeModel(QAbstractItemModel):
         if role == Qt.UserRole:
             return "user"
 
-    def parent(self, q_model_index=None):
+    def parent(self, q_child_item=None):
         logger.debug("parent()")
-        if self._root_item == q_model_index:
+        if q_child_item.isValid():
             logger.debug("q_model_index is invalid")
             return QModelIndex()
 
-        return QModelIndex()
-    #
-    #     if q_model_index.internalPointer() is None:
-    #         return QModelIndex()
-    #
-    #     print("Hello")
-    #     internal = q_model_index.internalPointer()
-    #     print(internal)
-    #     parent_item = internal.parent()
-    #
-    #     print("world")
-    #     if parent_item == self._root_item:
-    #         return QModelIndex()
-    #     print("Return")
-    #     return self.createIndex(parent_item.row(), 0, parent_item)
+        if q_child_item.internalPointer() is None:
+            return QModelIndex()
+
+        child_item = q_child_item.internalPointer()
+        parent_item = child_item.parent()
+
+        if parent_item == self._root_item:
+            return QModelIndex()
+
+        return self.createIndex(parent_item.row(), 0, parent_item)
