@@ -2,7 +2,7 @@ import os
 import logging
 
 from pytripgui.controller.settings_cont import SettingsController
-from pytripgui.treewidget_vc.treewidget_cont import TreeWidgetController
+from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.Patient.patient_gui_model import PatientGui
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
@@ -49,7 +49,7 @@ class MainWindowController(object):
         # patients tree module
         patient_tree_view = self.view.get_patient_tree_view()
         # patients tree module callbacks
-        self.model.patient_tree_cont = TreeWidgetController(self.model.patients, patient_tree_view)
+        self.model.patient_tree_cont = TreeController(self.model.patients, patient_tree_view)
         self.model.patient_tree_cont.update_selected_item_callback = self.on_selected_item
         self.model.patient_tree_cont.context_menu.new_patient_callback = self.on_add_new_patient
         self.model.patient_tree_cont.context_menu.open_voxelplan_callback = self.on_open_voxelplan
