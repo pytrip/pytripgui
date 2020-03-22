@@ -58,7 +58,7 @@ class PatientTreeModel(QAbstractItemModel):
         if not parent.isValid():
             return True
 
-        return self._root_item.has_index(p_int)
+        return parent.internalPointer().has_index(p_int)
 
     def data(self, q_model_index, role=None):
         if role == Qt.DisplayRole:

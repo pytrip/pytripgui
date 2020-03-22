@@ -9,7 +9,7 @@ from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.tree_vc.TreeModel import PatientTreeModel
 from pytripgui.tree_vc.TreeItems import PatientList
 from pytripgui.tree_vc.TreeItems import PatientItem
-
+from pytripgui.tree_vc.TreeItems import PlanItem
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -21,8 +21,14 @@ widget = QDockWidget()
 mainWindow = UiMainWindow()
 
 
+pat1 = PatientItem()
+pat1.add_child(PlanItem())
+pat1.add_child(PlanItem())
+pat1.add_child(PlanItem())
+pat1.add_child(PlanItem())
+
 patient_list = PatientList()
-patient_list.add_child(PatientItem())
+patient_list.add_child(pat1)
 
 treeView = TreeView()
 widget.setWidget(treeView)

@@ -62,12 +62,34 @@ class PatientItem(NodeMixin):
         if parent and not isinstance(parent, PatientList):
             raise Exception("FieldItems can only be added to PlanItem")
 
+    def __repr__(self):
+        return self.data.name
+
+    def add_child(self, child):
+        if isinstance(child, PlanItem):
+            self.children += tuple([child])
+        else:
+            raise Exception("PatientItem can only be added to PatientList")
+
+    def has_index(self, p_int):
+        return p_int < len(self.children)
+
     # For qt TreeView
     def has_children(self):
         return len(self.children) > 0
 
-    def __repr__(self):
-        return self.data.name
+    def row_count(self):
+        return len(self.children)
+
+    def index(self, p_int, p_int_1, obj):
+        from PyQt5.QtCore import QModelIndex
+
+        if not self.has_index(p_int) or \
+                p_int_1 != 0:   # only one column is supported
+            return QModelIndex()
+
+        index = obj.createIndex(p_int, p_int_1, self.children[p_int])
+        return index
 
 
 class PlanItem(NodeMixin):
@@ -84,6 +106,13 @@ class PlanItem(NodeMixin):
 
         if parent and not isinstance(parent, PatientItem):
             raise Exception("Only FieldItems can be added to PlanItem")
+
+    def __repr__(self):
+        return "PLAN"
+
+    # For qt TreeView
+    def has_children(self):
+        return len(self.children) > 0
 
 
 class FieldItem(NodeMixin):
