@@ -10,39 +10,29 @@ class TreeView(QTreeView):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.clicked_callback = None
-        self.context_menu_callback = None
+        self.selected_patient = None
+        self.selected_item = None
 
-    def set_item_clicked_callback(self, fun):
-        self.clicked_callback = fun
-        # self._ui.itemClicked.connect(self._internal_item_clicked_callback)  # todo
+        self.context_menu = None
 
-    def _internal_item_clicked_callback(self, item_clicked, pos):
-        clicked_item_content = item_clicked.data(0, Qt.UserRole)
-
-        patient_clicked = item_clicked
-        while patient_clicked.parent():
-            patient_clicked = patient_clicked.parent()
-        patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
-
-        self.clicked_callback(patient_clicked_content, clicked_item_content)
-
-    def set_custom_context_menu(self, fun):
-        self.context_menu_callback = fun
+    def set_custom_context_menu(self, context_menu):
+        self.context_menu = context_menu
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self._internal_context_menu_callback)
 
     def _internal_context_menu_callback(self, pos):
-        # item_clicked = self._ui.selectedItems()
-        # if item_clicked:
-        #     clicked_item_content = item_clicked[0].data(0, Qt.UserRole)
-        #
-        #     patient_clicked = item_clicked[0]
-        #     while patient_clicked.parent():
-        #         patient_clicked = patient_clicked.parent()
-        #     patient_clicked_content = patient_clicked.data(0, Qt.UserRole)
-        # else:
-        clicked_item_content = None
-        patient_clicked_content = None
+        self._update_selected_item()
+        self.context_menu.callback(self.selected_item, pos)
 
-        self.context_menu_callback(patient_clicked_content, clicked_item_content, pos)
+    def _update_selected_item(self):
+        selected_item = self.selectedIndexes()
+
+        if selected_item:
+            self.selected_item = selected_item[0].internalPointer()
+
+            patient_clicked = selected_item[0]
+            while patient_clicked.parent().parent().isValid():
+                patient_clicked = patient_clicked.parent()
+
+            self.selected_patient = patient_clicked.internalPointer()
+

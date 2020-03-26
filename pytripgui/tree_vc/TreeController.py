@@ -3,27 +3,38 @@ import logging
 from pytripgui.tree_vc.TreeContextMenu import TreeContextMenu
 
 from pytripgui.tree_vc.TreeItems import PatientItem
+from pytripgui.tree_vc.TreeItems import PlanItem
+
+from pytripgui.plan_vc import PlanQtView
+from pytripgui.plan_vc import PlanController
 
 logger = logging.getLogger(__name__)
 
 
 class TreeController:
-    def __init__(self, model, view):
+    def __init__(self, model, view, kernel_list=None):
         self._tree_model = model
         self._view = view
-        self.context_menu = TreeContextMenu(view, self)
+        self._kernel_list = kernel_list
 
-        self._view.set_item_clicked_callback(self._clicked_item_callback)
-        self.update_selected_item_callback = None
-
-        self._view.set_custom_context_menu(self.context_menu.custom_context_menu_callback)
-
-    def _clicked_item_callback(self, clicked_patient, clicked_item):
-        self._view.set_header_label("Patient: " + clicked_patient.name)
-        if self.update_selected_item_callback:
-            self.update_selected_item_callback(clicked_patient, clicked_item)
+        self._view.set_custom_context_menu(TreeContextMenu(view, self))
 
     def add_new_patient(self):
-        print("############################################################")
-        self._tree_model._root_item.add_child(PatientItem())
-        self._tree_model.invalidate()
+        patient = PatientItem()
+        self._tree_model.add_patient(patient)
+
+        logger.debug("add_new_plan() {}".format(None))
+
+    def add_new_plan(self):
+        plan = PlanItem()
+
+        view = PlanQtView()
+        plan.data.kernel = None
+        controller = PlanController(plan.data, view, self._kernel_list, [])
+        controller.set_view_from_model()
+        view.show()
+
+        if controller.user_clicked_save:
+            self.plans.append(plan)
+
+        self._view.selected_patient.add_child(plan)

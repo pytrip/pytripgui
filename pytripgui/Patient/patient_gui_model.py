@@ -10,40 +10,15 @@ from pytripgui.plan_executor.patient_model import PatientModel
 logger = logging.getLogger(__name__)
 
 
-class PatientTreeModel:
-    def __init__(self):
-        self.patient_tree = None
-        self.ctx_tree = None
-        self.vdx_tree = None
-        self.plans_tree = None
-        self.simulations_tree = None
-
-
 class PatientGui(PatientModel):
     def __init__(self, global_kernels):
         PatientModel.__init__(self)
 
         self.global_kernels = global_kernels
-        self.tree_model = PatientTreeModel()
         self.plot_model = PlotModel()
 
     def add_new_plan(self, name=None):
-        logger.debug("add_new_plan() {}".format(None))
-
-        plan = PatientModel.create_new_plan()
-        plan.basename = name
-        if plan.basename is None:
-            plan.basename = self.name
-        view = PlanQtView()
-        default_kernel = self.global_kernels[0]  # TODO select default kernel
-        plan.kernel = default_kernel
-
-        controller = PlanController(plan, view, self.global_kernels, self.vdx.vois)
-        controller.set_view_from_model()
-        view.show()
-
-        if controller.user_clicked_save:
-            self.plans.append(plan)
+        pass
 
     def edit_plan(self, plan):
         logger.debug("edit_plan() {}".format(None))

@@ -82,6 +82,8 @@ class PlanController(object):
         self._set_correct_target_roi_view()
 
     def _fill_view_with_rois(self):
+        if not self.vois:
+            return
         for voi in self.vois:
             self.view.add_target_roi_with_name(voi, voi.name)
 
@@ -94,6 +96,8 @@ class PlanController(object):
         self._mark_specified_oars_as_checked()
 
     def _fill_view_with_oars(self):
+        if not self.vois:
+            return
         for voi in self.vois:
             self.view.add_oar_with_name(voi, voi.name)
 
@@ -102,12 +106,9 @@ class PlanController(object):
             self.view.set_oar_as_checked(oar)
 
     def _setup_kernels(self):
-        kernel_exception = "You should first setup kernels with: Settings -> beam kernels"
-        try:
-            if len(self.kernels) == 0:
-                raise Exception(kernel_exception)
-        except TypeError:
-            raise Exception(kernel_exception)
+        if not self.kernels:
+            logger.error("You should first setup kernels with: Settings -> beam kernels")
+            return
 
         for kernel in self.kernels:
             self.view.add_kernel_with_name(kernel, kernel.name)

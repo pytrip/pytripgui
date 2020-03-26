@@ -1,11 +1,16 @@
 import os
 import logging
 
+from PyQt5.QtWidgets import QDockWidget
+from PyQt5.QtCore import Qt
+
 from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.Patient.patient_gui_model import PatientGui
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
+
+from pytripgui.tree_vc.TreeView import TreeView
 
 logger = logging.getLogger(__name__)
 
@@ -47,14 +52,18 @@ class MainWindowController(object):
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
 
         # patients tree module
-        patient_tree_view = self.view.get_patient_tree_view()
-        # patients tree module callbacks
-        self.model.patient_tree_cont = TreeController(self.model.patients, patient_tree_view)
-        self.model.patient_tree_cont.update_selected_item_callback = self.on_selected_item
-        self.model.patient_tree_cont.context_menu.new_patient_callback = self.on_add_new_patient
-        self.model.patient_tree_cont.context_menu.open_voxelplan_callback = self.on_open_voxelplan
-        self.model.patient_tree_cont.context_menu.add_new_plan_callback = self.on_add_new_plan
-        self.model.patient_tree_cont.context_menu.execute_plan_callback = self.on_execute_plan
+        patient_tree_view = TreeView()
+        patient_tree_view.setModel(self.model.patient_tree_model)
+        self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, patient_tree_view)
+
+        widget = QDockWidget()
+        widget.setWidget(patient_tree_view)
+        self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
+
+        # self.model.patient_tree_cont.context_menu.new_patient_callback = self.on_add_new_patient
+        # self.model.patient_tree_cont.context_menu.open_voxelplan_callback = self.on_open_voxelplan
+        # self.model.patient_tree_cont.context_menu.add_new_plan_callback = self.on_add_new_plan
+        # self.model.patient_tree_cont.context_menu.execute_plan_callback = self.on_execute_plan
 
     def on_selected_item(self, patient, item):
         """
