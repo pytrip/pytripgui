@@ -4,7 +4,7 @@ import logging
 from pytripgui.plan_executor.patient_model import PatientModel
 from pytrip.tripexecuter.plan import Plan
 from pytrip.tripexecuter.field import Field
-from pytrip.tripexecuter.field import KernelModel
+from pytrip.tripexecuter.kernel import KernelModel
 
 logger = logging.getLogger(__name__)
 
@@ -55,12 +55,16 @@ class PatientList(TreeItem):
     def __repr__(self):
         return self.name
 
-    def add_child(self, child):
+    def add_child(self, child=None):
         """
         With this method You add item to tree.
-        Remember to nat add one child more than once.
+        Remember to not add same child more than once.
         :param child: Child to add
         """
+        if child is None:
+            self.children += tuple([PatientItem()])
+            return
+
         if isinstance(child, PatientItem):
             self.children += tuple([child])
         else:
@@ -81,12 +85,16 @@ class PatientItem(TreeItem):
     def __repr__(self):
         return self.data.name
 
-    def add_child(self, child):
+    def add_child(self, child=None):
         """
         With this method You add item to tree.
-        Remember to nat add one child more than once.
+        Remember to not add same child more than once.
         :param child: Child to add
         """
+        if child is None:
+            self.children += tuple([PlanItem()])
+            return
+
         if isinstance(child, PlanItem):
             self.children += tuple([child])
         else:
@@ -141,7 +149,7 @@ class FieldItem(TreeItem):
 
     def clone(self):
         """
-        :return: New item which contains same data. Parent is not copied
+        :return: New item which contains same data. Only parent is not copied
         """
         tmp = FieldItem()
         tmp.data = self.data
@@ -166,7 +174,7 @@ class KernelItem(TreeItem):
 
     def clone(self):
         """
-        :return: New item which contains same data. Parent is not copied
+        :return: New item which contains same data. Only parent item is not copied
         """
         tmp = KernelItem()
         tmp.data = self.data

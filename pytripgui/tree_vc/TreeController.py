@@ -1,7 +1,5 @@
 import logging
 
-from pytripgui.tree_vc.TreeContextMenu import TreeContextMenu
-
 from pytripgui.tree_vc.TreeItems import PatientItem
 from pytripgui.tree_vc.TreeItems import PlanItem
 
@@ -15,9 +13,11 @@ class TreeController:
     def __init__(self, model, view, kernel_list=None):
         self._tree_model = model
         self._view = view
+        self._view.add_child_callback = self.add_new_item
         self._kernel_list = kernel_list
 
-        self._view.set_custom_context_menu(TreeContextMenu(view, self))
+    def add_new_item(self, parent=None):
+        self._tree_model.insertRows(0, 1, parent)
 
     def add_new_patient(self):
         patient = PatientItem()
