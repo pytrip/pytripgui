@@ -62,11 +62,11 @@ class PatientList(TreeItem):
         :param child: Child to add
         """
         if child is None:
-            self.children += tuple([PatientItem()])
+            self.children += (PatientItem(),)
             return
 
         if isinstance(child, PatientItem):
-            self.children += tuple([child])
+            self.children += (child,)
         else:
             raise Exception("Only PatientItem can be added as child")
 
@@ -92,11 +92,11 @@ class PatientItem(TreeItem):
         :param child: Child to add
         """
         if child is None:
-            self.children += tuple([PlanItem()])
+            self.children += (PlanItem(),)
             return
 
         if isinstance(child, PlanItem):
-            self.children += tuple([child])
+            self.children += (child,)
         else:
             raise Exception("Only PlanItem can be added as child")
 
