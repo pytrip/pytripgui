@@ -19,8 +19,8 @@ class MainModel(object):
         self.kernels = []  # placeholder for KernelModels
 
         self.patient_tree_model = PatientTreeModel([])
-        self.current_patient = None
         self.patient_tree_cont = None
+        self.patient_tree_view = None
 
         self.one_plot_model = None
         self.pne_plot_cont = None

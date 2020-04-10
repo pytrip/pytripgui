@@ -17,17 +17,7 @@ class PatientGui(PatientModel):
         self.global_kernels = global_kernels
         self.plot_model = PlotModel()
 
-    def add_new_plan(self, name=None):
-        pass
 
-    def edit_plan(self, plan):
-        logger.debug("edit_plan() {}".format(None))
-
-        view = PlanQtView()
-
-        controller = PlanController(plan, view, self.global_kernels, self.vdx.vois)
-        controller.set_view_from_model()
-        view.show()
 
     def add_new_field(self, plan):
         logger.debug("add_field_new() {}".format(None))
