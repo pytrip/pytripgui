@@ -30,9 +30,10 @@ class FieldController(object):
         return len(self.model.isocenter) == 3
 
     def _setup_kernels(self):
-        kernels = self.kernels
+        if not self.kernels:
+            return
 
-        for kernel in kernels:
+        for kernel in self.kernels:
             self.view.add_kernel_with_name(kernel, kernel.name)
 
         self.view.select_kernel_view_to_this(self.model.kernel)
