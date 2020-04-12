@@ -10,9 +10,9 @@ from pytripgui.Patient.patient_gui_model import PatientGui
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
 
-from pytripgui.tree_vc.TreeItems import PatientItem
-
 from pytripgui.tree_vc.TreeView import TreeView
+
+from pytripgui.main_window_qt_vc.edit_item_gui import edit_item_callback
 
 logger = logging.getLogger(__name__)
 
@@ -57,22 +57,16 @@ class MainWindowController(object):
         self.model.patient_tree_view = TreeView()
         self.model.patient_tree_view.setModel(self.model.patient_tree_model)
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
-        self.model.patient_tree_cont.add_child_callback = self.on_tree_add_new_item
+        self.model.patient_tree_cont.edit_item_callback = edit_item_callback
 
         widget = QDockWidget()
-        widget.setWidget(self.model.patient_tree_view )
+        widget.setWidget(self.model.patient_tree_view)
         self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
         # self.model.patient_tree_cont.context_menu.new_patient_callback = self.on_add_new_patient
         # self.model.patient_tree_cont.context_menu.open_voxelplan_callback = self.on_open_voxelplan
         # self.model.patient_tree_cont.context_menu.add_new_plan_callback = self.on_add_new_plan
         # self.model.patient_tree_cont.context_menu.execute_plan_callback = self.on_execute_plan
-
-    def on_tree_add_new_item(self, parent):
-        print(parent)
-        if isinstance(parent, PatientItem):
-            return self.on_add_new_plan(parent.data)
-        return True
 
     def on_selected_item(self, patient, item):
         """

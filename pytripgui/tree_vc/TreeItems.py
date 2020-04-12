@@ -10,8 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 class TreeItem(NodeMixin):
-    def __init__(self):
+    def __init__(self, child_class):
         super().__init__()
+        self.child_class = child_class
+        AssertionError(issubclass(child_class, TreeItem))
 
     # For qt TreeView
     def has_index(self, p_int):
@@ -42,120 +44,73 @@ class TreeItem(NodeMixin):
         else:
             return self.parent.children.index(self)
 
+    # Managing types
+    def create_child(self):
+        return self.child_class()
+
+    def add_child(self, child=None):
+        """
+        With this method You add item to tree.
+        Remember to not add one child multiple times.
+        :param child: Child to add
+        """
+        if child is None:
+            self.children += (self.create_child(),)
+            return
+
+        if isinstance(child, self.child_class):
+            self.children += (child,)
+        else:
+            raise Exception("Only PatientItem can be added as child")
+
 
 class PatientList(TreeItem):
     """
     Root item in TreeModel
     """
     def __init__(self, name="PatientList"):
-        super().__init__()
+        super().__init__(PatientItem)
         self.name = name
         self.parent = None
 
     def __repr__(self):
         return self.name
 
-    def add_child(self, child=None):
-        """
-        With this method You add item to tree.
-        Remember to not add same child more than once.
-        :param child: Child to add
-        """
-        if child is None:
-            self.children += (PatientItem(),)
-            return
-
-        if isinstance(child, PatientItem):
-            self.children += (child,)
-        else:
-            raise Exception("Only PatientItem can be added as child")
-
 
 class PatientItem(TreeItem):
-    def __init__(self, parent=None):
-        super().__init__()
+    def __init__(self):
+        super().__init__(PlanItem)
 
         self.data = PatientModel()
 
-        if parent and not isinstance(parent, PatientList):
-            raise Exception("Only PatientList can be parent of PatientItem")
-        else:
-            self.parent = parent
-
     def __repr__(self):
-        return self.data.name
-
-    def add_child(self, child=None):
-        """
-        With this method You add item to tree.
-        Remember to not add same child more than once.
-        :param child: Child to add
-        """
-        if child is None:
-            self.children += (PlanItem(),)
-            return
-
-        if isinstance(child, PlanItem):
-            self.children += (child,)
-        else:
-            raise Exception("Only PlanItem can be added as child")
+        if self.data.name:
+            return self.data.name
+        return "No named patient"
 
 
 class PlanItem(TreeItem):
-    def __init__(self, parent=None):
-        super().__init__()
+    def __init__(self):
+        super().__init__(FieldItem)
 
         self.data = Plan()
 
-        if parent and not isinstance(parent, PatientItem):
-            raise Exception("Only PatientItem can be parent of PlanItem")
-        else:
-            self.parent = parent
-
     def __repr__(self):
-        return self.data.basename
-
-    def add_cloned_child(self, child):
-        """
-        Uses child.clone() method to put clone of child onto tree
-        :param child: Data to put into tree
-        :return:
-        """
-        if isinstance(child, FieldItem):
-            self.children += tuple([child.clone()])
-        else:
-            raise Exception("Only FieldItem can be added as child")
+        if self.data.basename:
+            return self.data.basename
+        return "No named plan"
 
 
 class FieldItem(TreeItem):
-    def __init__(self, data=Field(), parent=None):
-        super().__init__()
+    def __init__(self):
+        super().__init__(KernelItem)
 
-        self.data = data
-
-        if parent and not isinstance(parent, PlanItem):
-            raise Exception("Only PlanItem can be parent of FieldItem")
-        else:
-            self.parent = parent
+        self.data = Field()
 
     def __repr__(self):
-        return self.data.basename
-
-    def add_cloned_child(self, child):
-        if isinstance(child, KernelItem):
-            self.children += tuple([child.clone()])
-        else:
-            raise Exception("Only KernelItem can be added as child")
-
-    def clone(self):
-        """
-        :return: New item which contains same data. Only parent is not copied
-        """
-        tmp = FieldItem()
-        tmp.data = self.data
-        for child in self.children:
-            tmp.add_cloned_child(child)
-        return tmp
+        if self.data.basename:
+            return self.data.basename
+        return "No named field"
 
 
 class KernelItem(TreeItem):
@@ -170,7 +125,9 @@ class KernelItem(TreeItem):
             self.parent = parent
 
     def __repr__(self):
-        return self.data.basename
+        if self.data.name:
+            return self.data.name
+        return "No named kernel"
 
     def clone(self):
         """

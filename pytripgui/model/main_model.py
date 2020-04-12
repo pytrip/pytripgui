@@ -18,7 +18,7 @@ class MainModel(object):
         self.executor = PlanExecutor()
         self.kernels = []  # placeholder for KernelModels
 
-        self.patient_tree_model = PatientTreeModel([])
+        self.patient_tree_model = PatientTreeModel()
         self.patient_tree_cont = None
         self.patient_tree_view = None
 
