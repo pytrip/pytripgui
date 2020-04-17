@@ -58,6 +58,7 @@ class MainWindowController(object):
         self.model.patient_tree_view.setModel(self.model.patient_tree_model)
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
         self.model.patient_tree_cont.edit_item_callback = edit_item_callback
+        self.model.patient_tree_cont.open_voxelplan_callback = self.on_open_voxelplan
 
         widget = QDockWidget()
         widget.setWidget(self.model.patient_tree_view)
@@ -84,7 +85,7 @@ class MainWindowController(object):
         self.model.patients.append(new_patient)
         return new_patient
 
-    def on_open_voxelplan(self):
+    def on_open_voxelplan(self, patient_item):
         """
         TODO: some description here
         """
@@ -94,17 +95,11 @@ class MainWindowController(object):
         if filename == "":
             return
 
-        if self.model.current_patient:
-            patient = self.model.current_patient
-        else:
-            patient = self.on_add_new_patient()
-            self.model.patient_tree_cont.synchronize()
-
+        patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
-        self.model.patient_tree_cont.synchronize()
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
+        self.model.one_plot_cont.set_patient(patient)
 
     def on_add_new_plan(self, patient):
         """

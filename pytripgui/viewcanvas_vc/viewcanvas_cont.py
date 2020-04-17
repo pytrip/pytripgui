@@ -1,4 +1,7 @@
 import logging
+
+from pytripgui.model.plot_model import PlotModel
+
 logger = logging.getLogger(__name__)
 
 
@@ -103,7 +106,7 @@ class ViewCanvasCont(object):
         self._ui.plot_bg(chessboard_data)
 
     def set_patient(self, patient):
-        self._model = patient.plot_model
+        self._model = PlotModel()
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
 

@@ -45,6 +45,7 @@ class TreeView(QTreeView):
         if self.selected_item is None:
             popup_menu.addAction("Add new Patient", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PatientItem):
+            popup_menu.addAction("Open Voxelplan", self.internal_events.on_open_voxelplan)
             popup_menu.addAction("Add new Plan", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PlanItem):
             popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
