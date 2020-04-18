@@ -113,7 +113,7 @@ class PlanController(object):
         for kernel in self.kernels:
             self.view.add_kernel_with_name(kernel, kernel.name)
 
-        self.view.select_kernel_view_to_this(self.model.kernel)
+        self.view.select_kernel_view_to_this(self.model.default_kernel)
 
     def _setup_optimization_metod(self):
         opt_methods = self.model.opt_methods
