@@ -84,4 +84,4 @@ class TreeView(QTreeView):
             while patient_clicked.parent().parent().isValid():
                 patient_clicked = patient_clicked.parent()
 
-            self.selected_patient = patient_clicked
+            self.selected_item_patient = patient_clicked.internalPointer()
