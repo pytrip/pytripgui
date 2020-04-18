@@ -170,5 +170,6 @@ class FieldQtView(object):
     def select_kernel_view_to_this(self, kernel):
         index_of_kernel = self.ui.kernel_comboBox.findData(kernel, Qt.UserRole)
         if index_of_kernel == -1:
-            raise Exception("Given kernel wasn't found on the list")
+            logger.warning("Given kernel wasn't found on the list")
+            return
         self.ui.kernel_comboBox.setCurrentIndex(index_of_kernel)
