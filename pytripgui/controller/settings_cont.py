@@ -30,7 +30,10 @@ class SettingsController:
         self.pkl_path = os.path.join(self.get_user_directory(), self.default_filename)
         logger.debug("New setup config parser based on {:s}".format(self.pkl_path))
 
-        self.load()
+        try:
+            self.load()
+        except ModuleNotFoundError:
+            logger.error("Cannot load settings")
 
     def load(self):
         """
