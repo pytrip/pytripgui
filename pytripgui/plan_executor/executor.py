@@ -1,7 +1,7 @@
 import os
 import logging
 
-from pytripgui.model.config_model import Trip98ConfigModel
+from pytripgui.plan_executor.trip_config import Trip98ConfigModel
 import pytrip.tripexecuter as pte
 from pytripgui.plan_executor.simulation_results import SimulationResults
 
