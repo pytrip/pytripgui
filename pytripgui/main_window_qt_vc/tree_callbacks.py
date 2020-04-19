@@ -27,7 +27,11 @@ class TreeCallback:
     def edit_plan(self, item, patient):
         logger.debug("edit_plan()".format())
 
-        view = PlanQtView(self.parent_gui)
+        if not patient.data.vdx:
+            self.parent_gui.show_info(*InfoMessages["loadCtxVdx"])
+            return False
+
+        view = PlanQtView(self.parent_gui.ui)
 
         controller = PlanController(item.data, view, self.kernels, patient.data.vdx.vois)
         controller.set_view_from_model()
