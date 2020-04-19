@@ -56,9 +56,11 @@ class MainWindowController(object):
         self.model.patient_tree_view = TreeView()
         self.model.patient_tree_view.setModel(self.model.patient_tree_model)
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
-        self.tree_callback = TreeCallback(self.model.kernels, self.view.ui)
+
+        self.tree_callback = TreeCallback(self.model.kernels, self.view)
         self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
         self.model.patient_tree_cont.open_voxelplan_callback = self.on_open_voxelplan
+        self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
 
         widget = QDockWidget()
         widget.setWidget(self.model.patient_tree_view)

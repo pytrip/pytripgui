@@ -21,13 +21,14 @@ class TreeView(QTreeView):
         self.selected_item_patient = None   # patient to which selected_item belongs
 
         """
-        Those events should only be subscribed only by TreeController
+        Those events should only be subscribed by TreeController
         """
         self.internal_events = Events((
             'on_add_child',
             'on_edit_selected_item',
             'on_open_voxelplan',
-            'on_open_dicom'
+            'on_open_dicom',
+            'on_execute'
         ))
 
         self._init_q_tree_view()
@@ -48,6 +49,8 @@ class TreeView(QTreeView):
             popup_menu.addAction("Open Voxelplan", self.internal_events.on_open_voxelplan)
             popup_menu.addAction("Add new Plan", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PlanItem):
+            popup_menu.addAction("Execute", self.internal_events.on_execute)
+            popup_menu.addSeparator()
             popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
             popup_menu.addSeparator()
             popup_menu.addAction("Edit selected Plan", self.internal_events.on_edit_selected_item)

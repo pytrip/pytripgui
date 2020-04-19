@@ -49,3 +49,6 @@ class TreeCallback:
         view.show()
 
         return controller.user_clicked_save
+
+    def execute_plan(self, plan, patient):
+        print(RenderTree(patient))
