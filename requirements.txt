@@ -1,2 +1,4 @@
 pytrip98~=3.0  # use versions compatible with 3.0 (3.0 and later from 3.x series)
 PyQt5<5.10
+anytree~=2.8
+Events~=0.3
