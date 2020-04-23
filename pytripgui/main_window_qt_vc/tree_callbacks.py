@@ -9,15 +9,15 @@ from pytripgui.tree_vc.TreeItems import FieldItem
 
 from pytripgui.messages import InfoMessages
 
-from anytree import RenderTree
+import os
 
 import logging
 logger = logging.getLogger(__name__)
 
 
 class TreeCallback:
-    def __init__(self, global_kernels, executor=None, parent_gui=None):
-        self.kernels = global_kernels
+    def __init__(self, global_data, executor=None, parent_gui=None):
+        self.global_data = global_data
         self.parent_gui = parent_gui
         self.executor = executor
 
@@ -40,7 +40,7 @@ class TreeCallback:
 
         view = PlanQtView(self.parent_gui.ui)
 
-        controller = PlanController(item.data, view, self.kernels, patient.data.vdx.vois)
+        controller = PlanController(item.data, view, self.global_data.kernels, patient.data.vdx.vois)
         controller.set_view_from_model()
         view.show()
 
@@ -52,14 +52,29 @@ class TreeCallback:
         view = FieldQtView()
 
         item.data.basename = "field"
-        controller = FieldController(item.data, view, self.kernels)
+        controller = FieldController(item.data, view, self.global_data.kernels)
         controller.set_view_from_model()
         view.show()
 
         return controller.user_clicked_save
 
     def execute_plan(self, plan, patient):
-        print(RenderTree(plan))
-        plan.data.fields.append(plan.children[0].data)
-        print(plan.data)
+        if plan.children:
+            plan.data.fields.append(plan.children[0].data)
+        else:
+            self.parent_gui.show_info(*InfoMessages["addOneField"])
+            return
         self.executor.execute(patient.data, plan.data)
+
+    def open_voxelplan_callback(self, patient_item):
+        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
+        filename, extension = os.path.splitext(path)
+
+        if filename == "":
+            return
+
+        patient = patient_item.data
+        patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
+        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
+
+        self.global_data.one_plot_cont.set_patient(patient)

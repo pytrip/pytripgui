@@ -15,8 +15,6 @@ class TreeView(QTreeView):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.selected_q_item = QModelIndex()
-
         self.selected_item = None
         self.selected_item_patient = None   # patient to which selected_item belongs
 
@@ -30,6 +28,11 @@ class TreeView(QTreeView):
             'on_open_dicom',
             'on_execute'
         ))
+
+        """
+        This field should be only used by TreeController
+        """
+        self.selected_q_item = QModelIndex()
 
         self._init_q_tree_view()
 
@@ -49,11 +52,11 @@ class TreeView(QTreeView):
             popup_menu.addAction("Open Voxelplan", self.internal_events.on_open_voxelplan)
             popup_menu.addAction("Add new Plan", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PlanItem):
-            popup_menu.addAction("Execute", self.internal_events.on_execute)
-            popup_menu.addSeparator()
             popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
             popup_menu.addSeparator()
-            popup_menu.addAction("Edit selected Plan", self.internal_events.on_edit_selected_item)
+            popup_menu.addAction("Execute", self.internal_events.on_execute)
+            popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
+
         elif isinstance(self.selected_item, FieldItem):
             popup_menu.addAction("Edit selected Field", self.internal_events.on_edit_selected_item)
         else:

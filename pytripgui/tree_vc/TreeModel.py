@@ -100,16 +100,17 @@ class PatientTreeModel(QAbstractItemModel):
         parent_item = child_item.parent
         return self.createIndex(parent_item.row(), 0, parent_item)
 
-    def insertRows(self, row, count, parent, child=None):
+    def insertRows(self, row, count, parent=None, child=None):
         if row != 0:
             raise Exception("You can only append new element to the end")
         if count != 1:
             raise Exception("Only one row at one time")
 
-        if not parent.isValid():
-            parent_item = self._root_item
-        else:
+        if parent and parent.isValid():
             parent_item = parent.internalPointer()
+        else:
+            parent_item = self._root_item
+            parent = QModelIndex()
 
         row_count = parent_item.row_count()
         self.beginInsertRows(parent, row_count, row_count + count - 1)

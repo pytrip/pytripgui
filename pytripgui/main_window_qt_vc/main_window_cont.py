@@ -13,6 +13,8 @@ from pytripgui.tree_vc.TreeView import TreeView
 
 from pytripgui.main_window_qt_vc.tree_callbacks import TreeCallback
 
+from pytripgui.tree_vc.TreeItems import PatientItem
+
 logger = logging.getLogger(__name__)
 
 
@@ -57,9 +59,9 @@ class MainWindowController(object):
         self.model.patient_tree_view.setModel(self.model.patient_tree_model)
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
 
-        self.tree_callback = TreeCallback(self.model.kernels, self.model.executor, self.view)
+        self.tree_callback = TreeCallback(self.model, self.model.executor, self.view)
         self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
-        self.model.patient_tree_cont.open_voxelplan_callback = self.on_open_voxelplan
+        self.model.patient_tree_cont.open_voxelplan_callback = self.tree_callback.open_voxelplan_callback
         self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
 
         widget = QDockWidget()
@@ -83,7 +85,13 @@ class MainWindowController(object):
         if filename == "":
             return
 
-        patient = patient_item.data
+        if self.model.patient_tree_view.selected_item_patient:
+            patient = self.model.patient_tree_view.selected_item_patient
+        else:
+            new_patient_item = PatientItem()
+            self.model.patient_tree_model.insertRows(0, 1, None, new_patient_item)
+            patient = new_patient_item.data
+
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
