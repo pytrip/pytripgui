@@ -49,7 +49,7 @@ class TreeCallback:
     def edit_field(self, item):
         logger.debug("edit_field()".format())
 
-        view = FieldQtView()
+        view = FieldQtView(self.parent_gui.ui)
 
         item.data.basename = "field"
         controller = FieldController(item.data, view, self.global_data.kernels)
