@@ -9,6 +9,7 @@ class TreeController:
         edit_item_callback is called when user wants to add new, or edit existing item: edit_item(item_to_edit)
         Callback function should return False if user canceled operation, or True if approved
         """
+        self.new_item_callback = None
         self.edit_item_callback = None
         self.open_voxelplan_callback = None
         self.execute_plan_callback = None
@@ -22,16 +23,12 @@ class TreeController:
         self._view.internal_events.on_execute += self._execute_callback
 
     def _add_new_item_callback(self):
-        child = None
-        save_data = True
+        new_item = None
+        if self.new_item_callback:
+            new_item = self.new_item_callback(self._view.selected_item)
 
-        if self._view.selected_item:
-            child = self._view.selected_item.child_class()
-            if self.edit_item_callback:
-                save_data = self.edit_item_callback(child, self._view.selected_item)
-
-        if save_data:
-            self._tree_model.insertRows(0, 1, self._view.selected_q_item, child)
+        if new_item:
+            self._tree_model.insertRows(0, 1, self._view.selected_q_item, new_item)
 
     def _edit_selected_item_callback(self):
         self.edit_item_callback(self._view.selected_item, self._view.selected_item_patient)

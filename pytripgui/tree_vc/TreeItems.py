@@ -10,10 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class TreeItem(NodeMixin):
-    def __init__(self, child_class):
+    def __init__(self):
         super().__init__()
-        self.child_class = child_class
-        AssertionError(issubclass(child_class, TreeItem))
 
     # For qt TreeView
     def has_index(self, p_int):
@@ -41,24 +39,13 @@ class TreeItem(NodeMixin):
         else:
             return self.parent.children.index(self)
 
-    # Managing types
-    def create_child(self):
-        return self.child_class()
-
-    def add_child(self, child=None):
+    def add_child(self, child):
         """
         With this method You add item to tree.
         Remember to not add one child multiple times.
         :param child: Child to add
         """
-        if child is None:
-            self.children += (self.create_child(),)
-            return
-
-        if isinstance(child, self.child_class):
-            self.children += (child,)
-        else:
-            raise Exception("Only PatientItem can be added as child")
+        self.children += (child,)
 
 
 class PatientList(TreeItem):
@@ -66,7 +53,7 @@ class PatientList(TreeItem):
     Root item in TreeModel
     """
     def __init__(self, name="PatientList"):
-        super().__init__(PatientItem)
+        super().__init__()
         self.name = name
         self.parent = None
 
@@ -76,7 +63,7 @@ class PatientList(TreeItem):
 
 class PatientItem(TreeItem):
     def __init__(self):
-        super().__init__(PlanItem)
+        super().__init__()
 
         self.data = PatientModel()
 
@@ -88,7 +75,7 @@ class PatientItem(TreeItem):
 
 class PlanItem(TreeItem):
     def __init__(self):
-        super().__init__(FieldItem)
+        super().__init__()
 
         self.data = Plan()
 
@@ -100,7 +87,7 @@ class PlanItem(TreeItem):
 
 class FieldItem(TreeItem):
     def __init__(self):
-        super().__init__(KernelItem)
+        super().__init__()
 
         self.data = Field()
 

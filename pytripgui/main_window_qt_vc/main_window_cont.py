@@ -60,6 +60,7 @@ class MainWindowController(object):
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
 
         self.tree_callback = TreeCallback(self.model, self.model.executor, self.view)
+        self.model.patient_tree_cont.new_item_callback = self.tree_callback.new_item_callback
         self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
         self.model.patient_tree_cont.open_voxelplan_callback = self.tree_callback.open_voxelplan_callback
         self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
@@ -75,7 +76,7 @@ class MainWindowController(object):
         self.model.current_patient = patient
         self.model.one_plot_cont.set_patient(patient)
 
-    def on_open_voxelplan(self, patient_item):
+    def on_open_voxelplan(self):
         """
         TODO: some description here
         """

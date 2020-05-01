@@ -9,12 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class PatientTreeModel(QAbstractItemModel):
-    def __init__(self, patient_list=None, parent=None):
-        super().__init__(parent)
-        if patient_list:
-            self._root_item = patient_list
-        else:
-            self._root_item = PatientList()
+    def __init__(self):
+        super().__init__(None)
+        self._root_item = PatientList()
 
     def headerData(self, p_int, qt_orientation, role=None):
         if p_int > 0:
@@ -57,7 +54,7 @@ class PatientTreeModel(QAbstractItemModel):
         if not parent.isValid():
             return self._create_index(self._root_item, p_int, p_int_1)
         else:
-            return self._create_index(parent.inernalPointer(), p_int, p_int_1)
+            return self._create_index(parent.internalPointer(), p_int, p_int_1)
 
     def hasIndex(self, p_int, p_int_1, parent=None, *args, **kwargs):
         if p_int_1 != 0:

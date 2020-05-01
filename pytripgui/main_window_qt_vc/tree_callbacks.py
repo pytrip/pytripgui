@@ -21,13 +21,23 @@ class TreeCallback:
         self.parent_gui = parent_gui
         self.executor = executor
 
+    def new_item_callback(self, parent):
+        if parent is None:
+            return PatientItem()
+        elif isinstance(parent, PatientItem):
+            return self.edit_plan(PlanItem(), parent)
+        elif isinstance(parent, PlanItem):
+            return self.edit_field(FieldItem())
+        else:
+            return None
+
     def edit_item_callback(self, item, patient):
         if isinstance(item, PatientItem):
-            return True
+            return
         elif isinstance(item, PlanItem):
-            return self.edit_plan(item, patient)
+            self.edit_plan(item, patient)
         elif isinstance(item, FieldItem):
-            return self.edit_field(item)
+            self.edit_field(item)
 
     def edit_plan(self, item, patient):
         logger.debug("edit_plan()".format())
@@ -44,7 +54,9 @@ class TreeCallback:
         controller.set_view_from_model()
         view.show()
 
-        return controller.user_clicked_save
+        if controller.user_clicked_save:
+            return item
+        return None
 
     def edit_field(self, item):
         logger.debug("edit_field()".format())
@@ -56,7 +68,9 @@ class TreeCallback:
         controller.set_view_from_model()
         view.show()
 
-        return controller.user_clicked_save
+        if controller.user_clicked_save:
+            return item
+        return None
 
     def execute_plan(self, plan, patient):
         if plan.children:

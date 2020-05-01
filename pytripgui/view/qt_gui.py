@@ -13,8 +13,8 @@ class UiTripConfig(QtWidgets.QDialog):
 
 
 class UiFieldDialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiFieldDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(UiFieldDialog, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'field.ui')
         uic.loadUi(ui_path, self)
 
