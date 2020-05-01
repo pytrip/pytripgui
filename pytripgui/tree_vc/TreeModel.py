@@ -55,12 +55,9 @@ class PatientTreeModel(QAbstractItemModel):
             return QModelIndex()
 
         if not parent.isValid():
-            logger.debug("index() returns: {}".format("root"))
-            return self._root_item.index(p_int, p_int_1, self)
+            return self._create_index(self._root_item, p_int, p_int_1)
         else:
-            name = parent.internalPointer().__repr__()
-            logger.debug("index() returns: {}".format("root"))
-            return parent.internalPointer().index(p_int, p_int_1, self)
+            return self._create_index(parent.inernalPointer(), p_int, p_int_1)
 
     def hasIndex(self, p_int, p_int_1, parent=None, *args, **kwargs):
         if p_int_1 != 0:
@@ -75,12 +72,19 @@ class PatientTreeModel(QAbstractItemModel):
             logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(name, p_int, p_int_1, has_index))
             return has_index
 
+    def _create_index(self, parent, p_int, p_int_1):
+        name = parent.__repr__()
+        logger.debug("_create_index() returns: {}".format(name))
+
+        selected_item = parent.index(p_int, p_int_1)
+        if selected_item:
+            return self.createIndex(p_int, p_int_1, selected_item)
+        else:
+            return QModelIndex()
+
     def data(self, q_model_index, role=None):
         if role == Qt.DisplayRole:
             return q_model_index.internalPointer().__repr__()
-
-        # if role == Qt.UserRole:
-        #     return "user"
 
     def parent(self, q_child_item=None):
         if not q_child_item.isValid():

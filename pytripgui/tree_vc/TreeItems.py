@@ -25,15 +25,12 @@ class TreeItem(NodeMixin):
     def row_count(self):
         return len(self.children)
 
-    def index(self, p_int, p_int_1, obj):
-        from PyQt5.QtCore import QModelIndex
-
+    def index(self, p_int, p_int_1):
         if not self.has_index(p_int) or \
                 p_int_1 != 0:   # only one column is supported
-            return QModelIndex()
+            return None
 
-        index = obj.createIndex(p_int, p_int_1, self.children[p_int])
-        return index
+        return self.children[p_int]
 
     def row(self):
         """
