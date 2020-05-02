@@ -108,3 +108,11 @@ class TreeCallback:
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
         self.global_data.one_plot_cont.set_patient(patient)
+
+    def one_click_callback(self, top_item, item):
+        if isinstance(top_item, SimulationResultItem):
+            self.global_data.one_plot_cont.set_simulation_results(top_item.data)
+        elif isinstance(top_item, PatientItem):
+            self.global_data.one_plot_cont.set_patient(top_item.data)
+
+        return item

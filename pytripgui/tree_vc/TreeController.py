@@ -13,6 +13,7 @@ class TreeController:
         self.edit_item_callback = None
         self.open_voxelplan_callback = None
         self.execute_plan_callback = None
+        self.one_click_callback = None
 
         # internal
         self._tree_model = model
@@ -21,6 +22,7 @@ class TreeController:
         self._view.internal_events.on_edit_selected_item += self._edit_selected_item_callback
         self._view.internal_events.on_open_voxelplan += self._open_voxelplan_callback
         self._view.internal_events.on_execute += self._execute_callback
+        self._view.internal_events.on_click += self._on_click_callback
 
     def _add_new_item_callback(self):
         new_item = None
@@ -43,3 +45,6 @@ class TreeController:
 
         if sim_results:
             self._tree_model.insertRows(0, 1, None, sim_results)
+
+    def _on_click_callback(self):
+        self.one_click_callback(self._view.selected_item_patient, self._view.selected_item)

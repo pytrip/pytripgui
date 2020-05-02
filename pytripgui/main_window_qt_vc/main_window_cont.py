@@ -64,6 +64,7 @@ class MainWindowController(object):
         self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
         self.model.patient_tree_cont.open_voxelplan_callback = self.tree_callback.open_voxelplan_callback
         self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
+        self.model.patient_tree_cont.one_click_callback = self.tree_callback.one_click_callback
 
         widget = QDockWidget()
         widget.setWidget(self.model.patient_tree_view)

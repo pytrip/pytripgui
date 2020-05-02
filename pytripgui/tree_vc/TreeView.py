@@ -26,7 +26,8 @@ class TreeView(QTreeView):
             'on_edit_selected_item',
             'on_open_voxelplan',
             'on_open_dicom',
-            'on_execute'
+            'on_execute',
+            'on_click'
         ))
 
         """
@@ -91,3 +92,6 @@ class TreeView(QTreeView):
                 patient_clicked = patient_clicked.parent()
 
             self.selected_item_patient = patient_clicked.internalPointer()
+
+        if q_index:
+            self.internal_events.on_click()
