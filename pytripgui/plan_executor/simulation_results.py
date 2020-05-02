@@ -34,3 +34,6 @@ class SimulationResults:
         let = pt.LETCube()
         let.read(let_path)
         self.let = let
+
+    def __str__(self):
+        return "Sim: " + self.name

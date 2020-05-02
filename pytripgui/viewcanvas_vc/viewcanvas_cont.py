@@ -110,12 +110,15 @@ class ViewCanvasCont(object):
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
 
-        if patient.simulation_results:
-            if patient.simulation_results[0].dose:
-                self._model.set_dose(patient.simulation_results[0].dose)
+        self.update_viewcanvas()
 
-        if patient.simulation_results:
-            if patient.simulation_results[0].let:
-                self._model.set_let(patient.simulation_results[0].let)
+    def set_simulation_results(self, simulation_results):
+        if simulation_results:
+            if simulation_results.dose:
+                self._model.set_dose(simulation_results.dose)
+
+        if simulation_results:
+            if simulation_results.let:
+                self._model.set_let(simulation_results.let)
 
         self.update_viewcanvas()

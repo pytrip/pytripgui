@@ -37,4 +37,9 @@ class TreeController:
         self.open_voxelplan_callback(self._view.selected_item)
 
     def _execute_callback(self):
-        self.execute_plan_callback(self._view.selected_item, self._view.selected_item_patient)
+        sim_results = None
+        if self.execute_plan_callback:
+            sim_results = self.execute_plan_callback(self._view.selected_item, self._view.selected_item_patient)
+
+        if sim_results:
+            self._tree_model.insertRows(0, 1, None, sim_results)

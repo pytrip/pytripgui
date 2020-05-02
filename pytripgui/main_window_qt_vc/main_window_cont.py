@@ -86,12 +86,9 @@ class MainWindowController(object):
         if filename == "":
             return
 
-        if self.model.patient_tree_view.selected_item_patient:
-            patient = self.model.patient_tree_view.selected_item_patient
-        else:
-            new_patient_item = PatientItem()
-            self.model.patient_tree_model.insertRows(0, 1, None, new_patient_item)
-            patient = new_patient_item.data
+        new_patient_item = PatientItem()
+        self.model.patient_tree_model.insertRows(0, 1, None, new_patient_item)
+        patient = new_patient_item.data
 
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions

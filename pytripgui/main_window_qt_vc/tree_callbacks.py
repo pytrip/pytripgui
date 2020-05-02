@@ -6,11 +6,11 @@ from pytripgui.field_vc.field_cont import FieldController
 from pytripgui.tree_vc.TreeItems import PatientItem
 from pytripgui.tree_vc.TreeItems import PlanItem
 from pytripgui.tree_vc.TreeItems import FieldItem
+from pytripgui.tree_vc.TreeItems import SimulationResultItem
 
 from pytripgui.messages import InfoMessages
 
 import os
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -78,7 +78,23 @@ class TreeCallback:
         else:
             self.parent_gui.show_info(*InfoMessages["addOneField"])
             return
-        self.executor.execute(patient.data, plan.data)
+
+        item = SimulationResultItem()
+        item.data = self.executor.execute(patient.data, plan.data)
+
+        if item.data.dose:
+            dose_item = SimulationResultItem()
+            dose_item.data = item.data.dose
+            item.add_child(dose_item)
+
+        if item.data.let:
+            let_item = SimulationResultItem()
+            let_item.data = item.data.let
+            item.add_child(let_item)
+
+        self.global_data.one_plot_cont.set_simulation_results(item.data)
+
+        return item
 
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")

@@ -12,7 +12,6 @@ class PatientModel:
         self.vdx = None
 
         self.plans = []
-        self.simulation_results = []
 
     def open_ctx(self, path):
         ctx = pt.CtxCube()
