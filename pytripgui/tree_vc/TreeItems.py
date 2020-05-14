@@ -2,7 +2,6 @@ from anytree import NodeMixin
 import logging
 
 from pytripgui.plan_executor.patient_model import PatientModel
-from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytrip.tripexecuter.plan import Plan
 from pytrip.tripexecuter.field import Field
 from pytrip.tripexecuter.kernel import KernelModel
