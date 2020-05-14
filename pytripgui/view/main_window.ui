@@ -104,6 +104,9 @@
      <string>File</string>
     </property>
     <widget class="QMenu" name="menuNew">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>New</string>
      </property>
@@ -111,6 +114,9 @@
      <addaction name="actionROI"/>
     </widget>
     <widget class="QMenu" name="menuImport">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Import</string>
      </property>
@@ -156,26 +162,41 @@
    </property>
   </action>
   <action name="actionOpen_Dicom">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Open DICOM</string>
    </property>
   </action>
   <action name="actionCT_Cube">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>CT Cube</string>
    </property>
   </action>
   <action name="actionROI">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>ROI</string>
    </property>
   </action>
   <action name="actionSave_Project">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save Project</string>
    </property>
   </action>
   <action name="actionOpen_Project">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Open Project</string>
    </property>
@@ -191,6 +212,9 @@
    </property>
   </action>
   <action name="actionConsole">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Console</string>
    </property>
@@ -201,16 +225,25 @@
    </property>
   </action>
   <action name="actionDoseCube">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>DoseCube</string>
    </property>
   </action>
   <action name="actionLETCube">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>LETCube</string>
    </property>
   </action>
   <action name="action_exec">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Plan (.exec)</string>
    </property>
@@ -221,26 +254,41 @@
    </property>
   </action>
   <action name="actionEdit_Plan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Edit Plan</string>
    </property>
   </action>
   <action name="actionDelete_Plan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Delete Plan</string>
    </property>
   </action>
   <action name="actionExport_Dicom">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export DICOM</string>
    </property>
   </action>
   <action name="actionExport_Voxelplan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export VOXELPLAN</string>
    </property>
   </action>
   <action name="actionExport_Plan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Export Plan</string>
    </property>
