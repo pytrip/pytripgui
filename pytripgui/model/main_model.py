@@ -1,12 +1,13 @@
 import logging
 
 from pytripgui.plan_executor.executor import PlanExecutor
+from pytripgui.tree_vc.TreeModel import PatientTreeModel
 
 logger = logging.getLogger(__name__)
 
 
 class MainModel(object):
-    def __init__(self, app=None):
+    def __init__(self):
 
         from pytrip import __version__ as _pytrip_version
         from pytripgui import __version__ as _pytripgui_version
@@ -14,40 +15,17 @@ class MainModel(object):
         self._pytrip_version = _pytrip_version
         self._pytripgui_version = _pytripgui_version
 
-        self._update_funce = []
-
         self.executor = PlanExecutor()
         self.kernels = []  # placeholder for KernelModels
 
-        self.patients = []
-        self.current_patient = None
+        self.patient_tree_model = PatientTreeModel()
         self.patient_tree_cont = None
+        self.patient_tree_view = None
 
         self.one_plot_model = None
         self.pne_plot_cont = None
 
         self.settings = SettingsModel(self)
-
-    def subscribe_update_func(self, func):
-        """
-        Subscribe a view method for updating
-        """
-        if func not in self._update_funcs:
-            self._update_funcs.append(func)
-
-    def unsubscribe_update_func(self, func):
-        """
-        Unsubscribe a view method for updating
-        """
-        if func in self._update_funcs:
-            self._update_funcs.remove(func)
-
-    def announce_update(self):
-        """
-        Update registered view methods
-        """
-        for func in self._update_funcs:
-            func()
 
 
 class SettingsModel(object):

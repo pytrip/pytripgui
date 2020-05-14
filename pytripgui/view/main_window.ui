@@ -16,21 +16,6 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <widget class="QTreeWidget" name="patient_treeWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Maximum" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <column>
-       <property name="text">
-        <string>(no data loaded)</string>
-       </property>
-      </column>
-     </widget>
-    </item>
-    <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -80,9 +65,40 @@
      <x>0</x>
      <y>0</y>
      <width>942</width>
-     <height>22</height>
+     <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionConsole"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionTRiP98_Config"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="actionBeam_Kernels"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuPlan">
+    <property name="title">
+     <string>Plan</string>
+    </property>
+    <addaction name="actionNew_Plan"/>
+    <addaction name="actionEdit_Plan"/>
+    <addaction name="separator"/>
+    <addaction name="actionExport_Plan"/>
+    <addaction name="separator"/>
+    <addaction name="actionDelete_Plan"/>
+   </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
@@ -115,44 +131,17 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>Tools</string>
-    </property>
-    <addaction name="actionConsole"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="actionTRiP98_Config"/>
-    <addaction name="actionPreferences"/>
-    <addaction name="actionBeam_Kernels"/>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
-   <widget class="QMenu" name="menuPlan">
-    <property name="title">
-     <string>Plan</string>
-    </property>
-    <addaction name="actionNew_Plan"/>
-    <addaction name="actionEdit_Plan"/>
-    <addaction name="separator"/>
-    <addaction name="actionExport_Plan"/>
-    <addaction name="separator"/>
-    <addaction name="actionDelete_Plan"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPlan"/>
    <addaction name="menuTools"/>
    <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="Run" stdset="0">
+    <bool>true</bool>
+   </property>
+  </widget>
   <action name="actionOpen_Voxelplan">
    <property name="text">
     <string>Open VOXELPLAN</string>
@@ -259,6 +248,33 @@
   <action name="actionBeam_Kernels">
    <property name="text">
     <string>Beam Kernels</string>
+   </property>
+  </action>
+  <action name="actionExecutePlan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>run.png</normaloff>run.png</iconset>
+   </property>
+   <property name="text">
+    <string>Execute</string>
+   </property>
+   <property name="toolTip">
+    <string>Execute selected plan</string>
+   </property>
+   <property name="statusTip">
+    <string>Execute selected plan</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
+   <property name="priority">
+    <enum>QAction::HighPriority</enum>
    </property>
   </action>
  </widget>

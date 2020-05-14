@@ -1,4 +1,7 @@
 import logging
+
+from pytripgui.model.plot_model import PlotModel
+
 logger = logging.getLogger(__name__)
 
 
@@ -103,16 +106,19 @@ class ViewCanvasCont(object):
         self._ui.plot_bg(chessboard_data)
 
     def set_patient(self, patient):
-        self._model = patient.plot_model
+        self._model = PlotModel()
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
 
-        if patient.simulation_results:
-            if patient.simulation_results[0].dose:
-                self._model.set_dose(patient.simulation_results[0].dose)
+        self.update_viewcanvas()
 
-        if patient.simulation_results:
-            if patient.simulation_results[0].let:
-                self._model.set_let(patient.simulation_results[0].let)
+    def set_simulation_results(self, simulation_results):
+        if simulation_results:
+            if simulation_results.dose:
+                self._model.set_dose(simulation_results.dose)
+
+        if simulation_results:
+            if simulation_results.let:
+                self._model.set_let(simulation_results.let)
 
         self.update_viewcanvas()

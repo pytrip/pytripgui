@@ -1,9 +1,10 @@
 # find specification of the pytripgui module
-import importlib
+from importlib import util
 import os
 
 # get location of __init__.py file (the one you see now) in the filesystem
-spec = importlib.util.find_spec('pytripgui')
+
+spec = util.find_spec('pytripgui')
 init_location = spec.origin
 
 # VERSION should sit next to __init__.py in the directory structure

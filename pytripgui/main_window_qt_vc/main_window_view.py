@@ -5,7 +5,6 @@ from PyQt5.QtWidgets import QFileDialog
 from pytripgui.view.qt_gui import UiMainWindow
 from pytripgui.config_vc import ConfigQtView
 from pytripgui.kernel_vc import KernelQtView
-from pytripgui.treewidget_vc.treewidget_view import TreeWidgetView
 from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 
 logger = logging.getLogger(__name__)
@@ -20,9 +19,6 @@ class MainWindowQtView(object):
 
     def exit(self):
         self.ui.close()
-
-    def get_patient_tree_view(self):
-        return TreeWidgetView(self.ui.patient_treeWidget)
 
     def get_viewcanvas_view(self):
         one_viewcanvas = ViewCanvasView()

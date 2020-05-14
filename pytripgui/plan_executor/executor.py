@@ -1,7 +1,8 @@
 import os
+import copy
 import logging
 
-from pytripgui.model.config_model import Trip98ConfigModel
+from pytripgui.plan_executor.trip_config import Trip98ConfigModel
 import pytrip.tripexecuter as pte
 from pytripgui.plan_executor.simulation_results import SimulationResults
 
@@ -21,6 +22,8 @@ class PlanExecutor:
         return 0
 
     def execute(self, patient, plan):
+        plan = copy.deepcopy(plan)
+
         plan.working_dir = self.trip_config.wdir_path
         plan.dedx_path = self.trip_config.dedx_path
         plan.hlut_path = self.trip_config.hlut_path

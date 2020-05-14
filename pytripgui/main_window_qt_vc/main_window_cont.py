@@ -1,11 +1,19 @@
 import os
 import logging
 
+from PyQt5.QtWidgets import QDockWidget
+from PyQt5.QtCore import Qt
+
 from pytripgui.controller.settings_cont import SettingsController
-from pytripgui.treewidget_vc.treewidget_cont import TreeWidgetController
-from pytripgui.Patient.patient_gui_model import PatientGui
+from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
+
+from pytripgui.tree_vc.TreeView import TreeView
+
+from pytripgui.main_window_qt_vc.tree_callbacks import TreeCallback
+
+from pytripgui.tree_vc.TreeItems import PatientItem
 
 logger = logging.getLogger(__name__)
 
@@ -47,30 +55,27 @@ class MainWindowController(object):
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
 
         # patients tree module
-        patient_tree_view = self.view.get_patient_tree_view()
-        # patients tree module callbacks
-        self.model.patient_tree_cont = TreeWidgetController(self.model.patients, patient_tree_view)
-        self.model.patient_tree_cont.update_selected_item_callback = self.on_selected_item
-        self.model.patient_tree_cont.context_menu.new_patient_callback = self.on_add_new_patient
-        self.model.patient_tree_cont.context_menu.open_voxelplan_callback = self.on_open_voxelplan
-        self.model.patient_tree_cont.context_menu.add_new_plan_callback = self.on_add_new_plan
-        self.model.patient_tree_cont.context_menu.execute_plan_callback = self.on_execute_plan
+        self.model.patient_tree_view = TreeView()
+        self.model.patient_tree_view.setModel(self.model.patient_tree_model)
+        self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
+
+        self.tree_callback = TreeCallback(self.model, self.model.executor, self.view)
+        self.model.patient_tree_cont.new_item_callback = self.tree_callback.new_item_callback
+        self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
+        self.model.patient_tree_cont.open_voxelplan_callback = self.tree_callback.open_voxelplan_callback
+        self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
+        self.model.patient_tree_cont.one_click_callback = self.tree_callback.one_click_callback
+
+        widget = QDockWidget()
+        widget.setWidget(self.model.patient_tree_view)
+        self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
     def on_selected_item(self, patient, item):
         """
         TODO: some description here
         """
         self.model.current_patient = patient
-
         self.model.one_plot_cont.set_patient(patient)
-
-    def on_add_new_patient(self):
-        """
-        TODO: some description here
-        """
-        new_patient = PatientGui(self.model.kernels)
-        self.model.patients.append(new_patient)
-        return new_patient
 
     def on_open_voxelplan(self):
         """
@@ -82,36 +87,26 @@ class MainWindowController(object):
         if filename == "":
             return
 
-        if self.model.current_patient:
-            patient = self.model.current_patient
-        else:
-            patient = self.on_add_new_patient()
-            self.model.patient_tree_cont.synchronize()
+        new_patient_item = PatientItem()
+        self.model.patient_tree_model.insertRows(0, 1, None, new_patient_item)
+        patient = new_patient_item.data
 
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
-        self.model.patient_tree_cont.synchronize()
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
+        self.model.one_plot_cont.set_patient(patient)
 
-    def on_add_new_plan(self):
+    def on_add_new_plan(self, patient):
         """
         TODO: some description here
         """
-        if not self.model.current_patient:
-            message = InfoMessages["addNewPatient"]
-            self.view.show_info(message[0], message[1])
-            return
-
-        if not self.model.current_patient.ctx or not self.model.current_patient.vdx:
-            message = InfoMessages["loadCtxVdx"]
-            self.view.show_info(message[0], message[1])
-            return
+        if not patient.ctx or not patient.vdx:
+            self.view.show_info(*InfoMessages["loadCtxVdx"])
+            return False
 
         if not self.model.kernels:
-            message = InfoMessages["configureKernelList"]
-            self.view.show_info(message[0], message[1])
-            return
+            self.view.show_info(*InfoMessages["configureKernelList"])
+            return False
 
         self.model.current_patient.add_new_plan()
         self.model.patient_tree_cont.synchronize()
@@ -154,18 +149,15 @@ class MainWindowController(object):
         TODO: some description here
         """
         if not plan.fields:
-            message = InfoMessages["addOneField"]
-            self.view.show_info(message[0], message[1])
+            self.view.show_info(*InfoMessages["addOneField"])
             return
 
         if self.model.executor.check_config() != 0:
-            message = InfoMessages["configureTrip"]
-            self.view.show_info(message[0], message[1])
+            self.view.show_info(*InfoMessages["configureTrip"])
             return
 
         if not plan.kernel.sis_path:
-            message = InfoMessages["kernelSisPath"]
-            self.view.show_info(message[0], message[1])
+            self.view.show_info(*InfoMessages["kernelSisPath"])
             return
 
         results = self.model.executor.execute(patient, plan)
@@ -176,5 +168,4 @@ class MainWindowController(object):
         """
         Callback to display the "about" box.
         """
-        message = InfoMessages["about"]
-        self.view.show_info(message[0], message[1])
+        self.view.show_info(*InfoMessages["about"])

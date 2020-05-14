@@ -13,8 +13,8 @@ class UiTripConfig(QtWidgets.QDialog):
 
 
 class UiFieldDialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiFieldDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(UiFieldDialog, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'field.ui')
         uic.loadUi(ui_path, self)
 
@@ -27,8 +27,8 @@ class UiKernelDialog(QtWidgets.QDialog):
 
 
 class UiPlanDialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiPlanDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(UiPlanDialog, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'plan.ui')
         uic.loadUi(ui_path, self)
 
