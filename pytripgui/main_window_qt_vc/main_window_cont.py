@@ -50,6 +50,7 @@ class MainWindowController(object):
         self.view.add_new_plan_callback = self.on_add_new_plan
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
+        self.view.exit_callback = self.on_exit
 
         self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
@@ -169,3 +170,7 @@ class MainWindowController(object):
         Callback to display the "about" box.
         """
         self.view.show_info(*InfoMessages["about"])
+
+    @staticmethod
+    def on_exit():
+        exit()

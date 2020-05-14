@@ -87,3 +87,11 @@ class MainWindowQtView(object):
     @trip_config_callback.setter
     def trip_config_callback(self, callback):
         self.ui.actionTRiP98_Config.triggered.connect(callback)
+
+    @property
+    def exit_callback(self):
+        return None
+
+    @exit_callback.setter
+    def exit_callback(self, callback):
+        self.ui.actionExit.triggered.connect(callback)
