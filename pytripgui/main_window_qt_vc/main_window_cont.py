@@ -71,13 +71,6 @@ class MainWindowController(object):
         widget.setWidget(self.model.patient_tree_view)
         self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
-    def on_selected_item(self, patient, item):
-        """
-        TODO: some description here
-        """
-        self.model.current_patient = patient
-        self.model.one_plot_cont.set_patient(patient)
-
     def on_open_voxelplan(self):
         """
         TODO: some description here
