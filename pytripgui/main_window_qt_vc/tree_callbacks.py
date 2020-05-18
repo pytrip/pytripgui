@@ -111,7 +111,6 @@ class TreeCallback:
         return True
 
     def one_click_callback(self, top_item, item):
-        print("clicked")
         if isinstance(top_item, SimulationResultItem):
             self.global_data.one_plot_cont.set_simulation_results(top_item.data)
         elif isinstance(top_item, PatientItem):
