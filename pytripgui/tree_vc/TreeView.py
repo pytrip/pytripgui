@@ -2,6 +2,7 @@ import logging
 from events import Events
 
 from PyQt5.QtCore import Qt, QPoint, QModelIndex
+from PyQt5.QtCore import QRect, QItemSelectionModel
 from PyQt5.QtWidgets import QTreeView, QMenu
 
 from pytripgui.tree_vc.TreeItems import PatientItem
@@ -36,6 +37,18 @@ class TreeView(QTreeView):
         self.selected_q_item = QModelIndex()
 
         self._init_q_tree_view()
+
+    def select_element(self, index):
+        """
+        This method selects item of given index in tree
+        :param index: index of item to select
+        :return:
+        """
+        selected_items = QRect(0, index, 0, 1)
+        self.setSelection(selected_items, QItemSelectionModel.SelectCurrent)
+        self._update_selected_item()
+        self.internal_events.on_click()
+        return True
 
     def _init_q_tree_view(self):
         self.setContextMenuPolicy(Qt.CustomContextMenu)

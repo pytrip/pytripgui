@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 class TreeCallback:
     def __init__(self, global_data, executor=None, parent_gui=None):
         self.global_data = global_data
-        self.parent_gui = parent_gui
         self.executor = executor
+        self.parent_gui = parent_gui
 
     def new_item_callback(self, parent):
         if parent is None:
@@ -101,18 +101,17 @@ class TreeCallback:
         filename, extension = os.path.splitext(path)
 
         if filename == "":
-            return
+            return False
 
         patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
         self.global_data.one_plot_cont.set_patient(patient)
+        return True
 
     def one_click_callback(self, top_item, item):
         if isinstance(top_item, SimulationResultItem):
             self.global_data.one_plot_cont.set_simulation_results(top_item.data)
         elif isinstance(top_item, PatientItem):
             self.global_data.one_plot_cont.set_patient(top_item.data)
-
-        return item

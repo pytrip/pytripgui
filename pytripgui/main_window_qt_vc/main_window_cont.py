@@ -1,4 +1,3 @@
-import os
 import logging
 
 from PyQt5.QtWidgets import QDockWidget
@@ -71,46 +70,23 @@ class MainWindowController(object):
         widget.setWidget(self.model.patient_tree_view)
         self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
-    def on_selected_item(self, patient, item):
-        """
-        TODO: some description here
-        """
-        self.model.current_patient = patient
-        self.model.one_plot_cont.set_patient(patient)
-
     def on_open_voxelplan(self):
-        """
-        TODO: some description here
-        """
-        path = self.view.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, extension = os.path.splitext(path)
+        patient = self.model.patient_tree_view.selected_item_patient
 
-        if filename == "":
+        if not patient:
+            patient = PatientItem()
+            if self.tree_callback.open_voxelplan_callback(patient):
+                self.model.patient_tree_cont.add_new_item(None, patient)
+        else:
+            self.tree_callback.open_voxelplan_callback(patient)
+
+    def on_add_new_plan(self):
+        selected_patient = self.model.patient_tree_view.selected_item_patient
+        if not selected_patient:
+            self.view.show_info(*InfoMessages["addNewPatient"])
             return
-
-        new_patient_item = PatientItem()
-        self.model.patient_tree_model.insertRows(0, 1, None, new_patient_item)
-        patient = new_patient_item.data
-
-        patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
-
-        self.model.one_plot_cont.set_patient(patient)
-
-    def on_add_new_plan(self, patient):
-        """
-        TODO: some description here
-        """
-        if not patient.ctx or not patient.vdx:
-            self.view.show_info(*InfoMessages["loadCtxVdx"])
-            return False
-
-        if not self.model.kernels:
-            self.view.show_info(*InfoMessages["configureKernelList"])
-            return False
-
-        self.model.current_patient.add_new_plan()
-        self.model.patient_tree_cont.synchronize()
+        plan = self.tree_callback.new_item_callback(selected_patient)
+        self.model.patient_tree_cont.add_new_item(selected_patient, plan)
 
     def on_kernels_configurator(self):
         """

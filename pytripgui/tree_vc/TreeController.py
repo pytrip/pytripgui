@@ -29,8 +29,13 @@ class TreeController:
         if self.new_item_callback:
             new_item = self.new_item_callback(self._view.selected_item)
 
-        if new_item:
-            self._tree_model.insertRows(0, 1, self._view.selected_q_item, new_item)
+        self.add_new_item(self._view.selected_item, new_item)
+
+    def add_new_item(self, parent_item, item):
+        if item:
+            self._tree_model.insertRows(0, 1, parent_item, item)
+            if not self._view.selected_item_patient:
+                self._view.select_element(0)
 
     def _edit_selected_item_callback(self):
         self.edit_item_callback(self._view.selected_item, self._view.selected_item_patient)
