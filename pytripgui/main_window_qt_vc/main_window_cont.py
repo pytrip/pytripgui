@@ -7,6 +7,7 @@ from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
+from pytripgui.view.qt_gui import UiAddPatient
 
 from pytripgui.tree_vc.TreeView import TreeView
 
@@ -50,6 +51,7 @@ class MainWindowController(object):
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
         self.view.exit_callback = self.on_exit
+        self.view.action_add_patient = self.on_add_patinet
 
         self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
@@ -71,14 +73,9 @@ class MainWindowController(object):
         self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
     def on_open_voxelplan(self):
-        patient = self.model.patient_tree_view.selected_item_patient
-
-        if not patient:
-            patient = PatientItem()
-            if self.tree_callback.open_voxelplan_callback(patient):
-                self.model.patient_tree_cont.add_new_item(None, patient)
-        else:
-            self.tree_callback.open_voxelplan_callback(patient)
+        patient = PatientItem()
+        if self.tree_callback.open_voxelplan_callback(patient):
+            self.model.patient_tree_cont.add_new_item(None, patient)
 
     def on_add_new_plan(self):
         selected_patient = self.model.patient_tree_view.selected_item_patient
@@ -150,3 +147,13 @@ class MainWindowController(object):
     @staticmethod
     def on_exit():
         exit()
+
+    def on_add_patinet(self):
+        dialog = UiAddPatient(self.view.ui)
+        dialog.on_create_empty = self.add_empty_patient
+        dialog.on_open_voxelplan = self.on_open_voxelplan
+        dialog.show()
+
+    def add_empty_patient(self):
+        patient = PatientItem()
+        self.model.patient_tree_cont.add_new_item(None, patient)

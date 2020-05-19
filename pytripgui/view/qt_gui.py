@@ -46,3 +46,44 @@ class UiViewCanvas(QtWidgets.QWidget):
         super(UiViewCanvas, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'viewcanvas.ui')
         uic.loadUi(ui_path, self)
+
+
+class UiAddPatient(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(UiAddPatient, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'add_patient.ui')
+        uic.loadUi(ui_path, self)
+
+        self._create_empty_callback = None
+        self._open_voxelplan_callback = None
+
+        self.accept_buttonBox.rejected.connect(self.reject)
+
+    def show(self):
+        self.exec_()
+
+    @property
+    def on_create_empty(self):
+        return None
+
+    @on_create_empty.setter
+    def on_create_empty(self, callback):
+        self._create_empty_callback = callback
+        self.createEmpty_pushButton.clicked.connect(self._create_empty_internal_callback)
+
+    def _create_empty_internal_callback(self):
+        self._create_empty_callback()
+        self.reject()
+
+    @property
+    def on_open_voxelplan(self):
+        return None
+
+    @on_open_voxelplan.setter
+    def on_open_voxelplan(self, callback):
+        self._open_voxelplan_callback = callback
+        self.openVoxelplan_pushButton.clicked.connect(self._on_open_voxelplan_internal_callback)
+
+    def _on_open_voxelplan_internal_callback(self):
+        self._open_voxelplan_callback()
+        self.reject()

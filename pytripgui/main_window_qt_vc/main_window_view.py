@@ -95,3 +95,11 @@ class MainWindowQtView(object):
     @exit_callback.setter
     def exit_callback(self, callback):
         self.ui.actionExit.triggered.connect(callback)
+
+    @property
+    def action_add_patient(self):
+        return None
+
+    @action_add_patient.setter
+    def action_add_patient(self, callback):
+        self.ui.actionAdd_Patient.triggered.connect(callback)
