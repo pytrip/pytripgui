@@ -1,3 +1,6 @@
+numpy<1.16  ; python_version < '3.5'  # numpy 1.16 and 1.17 subsequently dropped support for python < 3.5 (see https://docs.scipy.org/doc/numpy/release.html#numpy-1-17-0-release-notes)
+numpy<1.19  ; python_version >= '3.5' and python_version < '3.6'  # numpy 1.19 dropped support for python 3.5 (see https://pypi.org/project/numpy/1.19.0rc1/#files)
+numpy; python_version >= '3.6' # latest numpy version for new python versions
 pytrip98~=3.0  # use versions compatible with 3.0 (3.0 and later from 3.x series)
 PyQt5<5.10
 anytree~=2.8
