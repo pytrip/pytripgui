@@ -149,6 +149,9 @@
    </property>
   </widget>
   <widget class="QToolBar" name="toolBar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -162,6 +165,8 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAdd_Patient"/>
+   <addaction name="actionNew_Plan"/>
+   <addaction name="actionCreate_field"/>
   </widget>
   <action name="actionOpen_Voxelplan">
    <property name="text">
@@ -264,8 +269,15 @@
    </property>
   </action>
   <action name="actionNew_Plan">
+   <property name="icon">
+    <iconset>
+     <normaloff>../res/create_plan.png</normaloff>../res/create_plan.png</iconset>
+   </property>
    <property name="text">
-    <string>New Plan</string>
+    <string>Create plan</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new plan</string>
    </property>
   </action>
   <action name="actionEdit_Plan">
@@ -350,6 +362,21 @@
    </property>
    <property name="toolTip">
     <string>Add patient</string>
+   </property>
+  </action>
+  <action name="actionCreate_field">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../res/create_field.png</normaloff>../res/create_field.png</iconset>
+   </property>
+   <property name="text">
+    <string>Create field</string>
+   </property>
+   <property name="toolTip">
+    <string>Create new field</string>
    </property>
   </action>
  </widget>
