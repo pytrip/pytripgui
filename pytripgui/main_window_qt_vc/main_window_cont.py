@@ -120,26 +120,6 @@ class MainWindowController(object):
         if controller.user_clicked_save:
             self.settings.save()
 
-    def on_execute_plan(self, patient, plan):
-        """
-        TODO: some description here
-        """
-        if not plan.fields:
-            self.view.show_info(*InfoMessages["addOneField"])
-            return
-
-        if self.model.executor.check_config() != 0:
-            self.view.show_info(*InfoMessages["configureTrip"])
-            return
-
-        if not plan.kernel.sis_path:
-            self.view.show_info(*InfoMessages["kernelSisPath"])
-            return
-
-        results = self.model.executor.execute(patient, plan)
-        patient.simulation_results.append(results)
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
-
     def on_about(self):
         """
         Callback to display the "about" box.
