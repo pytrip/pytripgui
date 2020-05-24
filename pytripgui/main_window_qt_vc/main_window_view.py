@@ -103,3 +103,14 @@ class MainWindowQtView(object):
     @action_add_patient.setter
     def action_add_patient(self, callback):
         self.ui.actionAdd_Patient.triggered.connect(callback)
+
+    @property
+    def action_create_field(self):
+        return None
+
+    @action_create_field.setter
+    def action_create_field(self, callback):
+        self.ui.actionCreate_field.triggered.connect(callback)
+
+    def action_create_field_set_enable(self, enabled):
+        self.ui.actionCreate_field.setEnabled(enabled)

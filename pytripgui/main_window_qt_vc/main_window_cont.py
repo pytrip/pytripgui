@@ -14,6 +14,7 @@ from pytripgui.tree_vc.TreeView import TreeView
 from pytripgui.main_window_qt_vc.tree_callbacks import TreeCallback
 
 from pytripgui.tree_vc.TreeItems import PatientItem
+from pytripgui.tree_vc.TreeItems import FieldItem
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,7 @@ class MainWindowController(object):
         self.view.trip_config_callback = self.on_trip98_config
         self.view.exit_callback = self.on_exit
         self.view.action_add_patient = self.on_add_patinet
+        self.view.action_create_field = self.on_create_field
 
         self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
@@ -157,3 +159,8 @@ class MainWindowController(object):
     def add_empty_patient(self):
         patient = PatientItem()
         self.model.patient_tree_cont.add_new_item(None, patient)
+
+    def on_create_field(self):
+        field = FieldItem()
+        selected_plan = self.model.patient_tree_view.selected_item
+        self.model.patient_tree_cont.add_new_item(selected_plan, field)
