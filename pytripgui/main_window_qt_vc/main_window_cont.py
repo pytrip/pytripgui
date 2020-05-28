@@ -142,5 +142,7 @@ class MainWindowController(object):
 
     def on_create_field(self):
         field = FieldItem()
-        selected_plan = self.model.patient_tree_view.selected_item
-        self.model.patient_tree_cont.add_new_item(selected_plan, field)
+        save_field = self.tree_callback.edit_field(field)
+        if save_field:
+            selected_plan = self.model.patient_tree_view.selected_item
+            self.model.patient_tree_cont.add_new_item(selected_plan, field)
