@@ -7,12 +7,14 @@ from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
+from pytripgui.view.qt_gui import UiAddPatient
 
 from pytripgui.tree_vc.TreeView import TreeView
 
 from pytripgui.main_window_qt_vc.tree_callbacks import TreeCallback
 
 from pytripgui.tree_vc.TreeItems import PatientItem
+from pytripgui.tree_vc.TreeItems import FieldItem
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +52,8 @@ class MainWindowController(object):
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
         self.view.exit_callback = self.on_exit
+        self.view.action_add_patient = self.on_add_patient
+        self.view.action_create_field = self.on_create_field
 
         self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
         self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
@@ -71,14 +75,9 @@ class MainWindowController(object):
         self.view.ui.addDockWidget(Qt.LeftDockWidgetArea, widget)
 
     def on_open_voxelplan(self):
-        patient = self.model.patient_tree_view.selected_item_patient
-
-        if not patient:
-            patient = PatientItem()
-            if self.tree_callback.open_voxelplan_callback(patient):
-                self.model.patient_tree_cont.add_new_item(None, patient)
-        else:
-            self.tree_callback.open_voxelplan_callback(patient)
+        patient = PatientItem()
+        if self.tree_callback.open_voxelplan_callback(patient):
+            self.model.patient_tree_cont.add_new_item(None, patient)
 
     def on_add_new_plan(self):
         selected_patient = self.model.patient_tree_view.selected_item_patient
@@ -121,26 +120,6 @@ class MainWindowController(object):
         if controller.user_clicked_save:
             self.settings.save()
 
-    def on_execute_plan(self, patient, plan):
-        """
-        TODO: some description here
-        """
-        if not plan.fields:
-            self.view.show_info(*InfoMessages["addOneField"])
-            return
-
-        if self.model.executor.check_config() != 0:
-            self.view.show_info(*InfoMessages["configureTrip"])
-            return
-
-        if not plan.kernel.sis_path:
-            self.view.show_info(*InfoMessages["kernelSisPath"])
-            return
-
-        results = self.model.executor.execute(patient, plan)
-        patient.simulation_results.append(results)
-        self.model.one_plot_cont.set_patient(self.model.current_patient)
-
     def on_about(self):
         """
         Callback to display the "about" box.
@@ -150,3 +129,20 @@ class MainWindowController(object):
     @staticmethod
     def on_exit():
         exit()
+
+    def on_add_patient(self):
+        dialog = UiAddPatient(self.view.ui)
+        dialog.on_create_empty = self.add_empty_patient
+        dialog.on_open_voxelplan = self.on_open_voxelplan
+        dialog.show()
+
+    def add_empty_patient(self):
+        patient = PatientItem()
+        self.model.patient_tree_cont.add_new_item(None, patient)
+
+    def on_create_field(self):
+        field = FieldItem()
+        save_field = self.tree_callback.edit_field(field)
+        if save_field:
+            selected_plan = self.model.patient_tree_view.selected_item
+            self.model.patient_tree_cont.add_new_item(selected_plan, field)
