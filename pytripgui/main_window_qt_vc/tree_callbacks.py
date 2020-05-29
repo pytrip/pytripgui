@@ -112,10 +112,12 @@ class TreeCallback:
 
     def one_click_callback(self, top_item, item):
         self.parent_gui.action_create_field_set_enable(False)
+        self.parent_gui.action_create_plan_set_enable(False)
 
         if isinstance(top_item, SimulationResultItem):
             self.global_data.one_plot_cont.set_simulation_results(top_item.data)
         elif isinstance(top_item, PatientItem):
+            self.parent_gui.action_create_plan_set_enable(True)
             self.global_data.one_plot_cont.set_patient(top_item.data)
 
         if isinstance(item, PlanItem):

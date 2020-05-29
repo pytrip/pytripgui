@@ -114,3 +114,6 @@ class MainWindowQtView(object):
 
     def action_create_field_set_enable(self, enabled):
         self.ui.actionCreate_field.setEnabled(enabled)
+
+    def action_create_plan_set_enable(self, enabled):
+        self.ui.actionNew_Plan.setEnabled(enabled)

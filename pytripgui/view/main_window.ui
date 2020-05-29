@@ -269,6 +269,9 @@
    </property>
   </action>
   <action name="actionNew_Plan">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset>
      <normaloff>../res/create_plan.png</normaloff>../res/create_plan.png</iconset>
