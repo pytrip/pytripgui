@@ -52,7 +52,7 @@ class MainWindowController(object):
         self.view.about_callback = self.on_about
         self.view.trip_config_callback = self.on_trip98_config
         self.view.exit_callback = self.on_exit
-        self.view.action_add_patient = self.on_add_patinet
+        self.view.action_add_patient = self.on_add_patient
         self.view.action_create_field = self.on_create_field
 
         self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
@@ -130,7 +130,7 @@ class MainWindowController(object):
     def on_exit():
         exit()
 
-    def on_add_patinet(self):
+    def on_add_patient(self):
         dialog = UiAddPatient(self.view.ui)
         dialog.on_create_empty = self.add_empty_patient
         dialog.on_open_voxelplan = self.on_open_voxelplan
