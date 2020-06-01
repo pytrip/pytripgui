@@ -69,7 +69,7 @@ class PatientItem(TreeItem):
 
     def __repr__(self):
         if self.data.name:
-            return self.data.name
+            return "Patient: " + self.data.name
         return "No named patient"
 
 
@@ -91,11 +91,19 @@ class PlanItem(TreeItem):
         super().__init__()
 
         self.data = Plan()
+        self.field_counter = 1
 
     def __repr__(self):
         if self.data.basename:
-            return self.data.basename
+            return "Plan: " + self.data.basename
         return "No named plan"
+
+    def add_child(self, child):
+        super().add_child(child)
+
+        if isinstance(child, FieldItem):
+            child.data.number = self.field_counter
+            self.field_counter = self.field_counter + 1
 
 
 class FieldItem(TreeItem):
@@ -105,9 +113,7 @@ class FieldItem(TreeItem):
         self.data = Field()
 
     def __repr__(self):
-        if self.data.basename:
-            return self.data.basename
-        return "No named field"
+        return "Field: " + str(self.data.number)
 
 
 class KernelItem(TreeItem):
