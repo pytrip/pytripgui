@@ -21,12 +21,6 @@ class ViewCanvasCont(object):
     def _setup_ui_callbacks(self):
         self._ui.set_plotter_click_callback(self.on_click)
         self._ui.set_plotter_wheel_callback(self.on_mouse_wheel)
-        self._ui.set_transversal_callback(self.set_transversal_view)
-        self._ui.set_sagittal_callback(self.set_sagittal_view)
-        self._ui.set_coronal_callback(self.set_coronal_view)
-        self._ui.set_let_filter_callback(self.set_let_filter)
-        self._ui.set_dos_filter_callback(self.set_dos_filter)
-        self._ui.set_none_filter_callback(self.set_none_filter)
 
     def set_transversal_view(self):
         self._model.projection_selector.plane = "Transversal"
@@ -70,6 +64,10 @@ class ViewCanvasCont(object):
 
         self.update_viewcanvas()
 
+    def set_current_slice_no(self, slice_no):
+        self._model.projection_selector.current_slice_no = slice_no
+        self.update_viewcanvas()
+
     def clear_view(self):
         self._ui.clear()
 
@@ -92,7 +90,8 @@ class ViewCanvasCont(object):
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-        self._ui.set_position(self._model.projection_selector.current_slice_no)
+        self._ui.set_slider_position(self._model.projection_selector.current_slice_no,
+                                     self._model.projection_selector.last_slice_no)
         # if self._model.vdx:
         #     Vdx.plot(self)
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
@@ -110,6 +109,7 @@ class ViewCanvasCont(object):
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
 
+        self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_viewcanvas()
 
     def set_simulation_results(self, simulation_results):

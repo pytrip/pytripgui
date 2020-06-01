@@ -27,23 +27,8 @@ class ViewCanvasView:
     def show(self):
         self._ui.show()
 
-    def set_transversal_callback(self, fun):
-        self._ui.transversal_pushButton.clicked.connect(fun)
-
-    def set_sagittal_callback(self, fun):
-        self._ui.sagittal_pushButton.clicked.connect(fun)
-
-    def set_coronal_callback(self, fun):
-        self._ui.coronal_pushButton.clicked.connect(fun)
-
-    def set_let_filter_callback(self, fun):
-        self._ui.letFilter_pushButton.clicked.connect(fun)
-
-    def set_dos_filter_callback(self, fun):
-        self._ui.dosFilter_pushButton.clicked.connect(fun)
-
-    def set_none_filter_callback(self, fun):
-        self._ui.noneFilter_pushButton.clicked.connect(fun)
+    def perspective_callback(self):
+        pass
 
     def set_plotter_click_callback(self, fun):
         self._plotter.set_button_press_callback(fun)
@@ -51,8 +36,15 @@ class ViewCanvasView:
     def set_plotter_wheel_callback(self, fun):
         self._plotter.set_scroll_event_callback(fun)
 
-    def set_position(self, position):
-        self._ui.position_label.setText("Position: " + str(position))
+    def set_slider_position(self, position, max_position):
+        self._ui.position_slider.setRange(0, max_position-1)
+        self._ui.position_slider.setValue(position)
+
+    def set_position_changed_callback(self, callback):
+        self._ui.position_slider.sliderMoved.connect(callback)
+
+    def set_perspective_enable(self, enabled):
+        pass
 
     def plot_let(self, data):
         self._plotter.plot_let(data)
