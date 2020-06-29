@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TreeCallback:
+class AppCallback:
     def __init__(self, global_data, executor=None, parent_gui=None):
         self.global_data = global_data
         self.executor = executor

@@ -11,7 +11,7 @@ from pytripgui.view.qt_gui import UiAddPatient
 
 from pytripgui.tree_vc.TreeView import TreeView
 
-from pytripgui.main_window_qt_vc.tree_callbacks import TreeCallback
+from pytripgui.main_window_qt_vc.app_callbacks import AppCallback
 
 from pytripgui.tree_vc.TreeItems import PatientItem
 from pytripgui.tree_vc.TreeItems import FieldItem
@@ -63,12 +63,12 @@ class MainWindowController(object):
         self.model.patient_tree_view.setModel(self.model.patient_tree_model)
         self.model.patient_tree_cont = TreeController(self.model.patient_tree_model, self.model.patient_tree_view)
 
-        self.tree_callback = TreeCallback(self.model, self.model.executor, self.view)
-        self.model.patient_tree_cont.new_item_callback = self.tree_callback.new_item_callback
-        self.model.patient_tree_cont.edit_item_callback = self.tree_callback.edit_item_callback
-        self.model.patient_tree_cont.open_voxelplan_callback = self.tree_callback.open_voxelplan_callback
-        self.model.patient_tree_cont.execute_plan_callback = self.tree_callback.execute_plan
-        self.model.patient_tree_cont.one_click_callback = self.tree_callback.one_click_callback
+        self.app_callback = AppCallback(self.model, self.model.executor, self.view)
+        self.model.patient_tree_cont.new_item_callback = self.app_callback.new_item_callback
+        self.model.patient_tree_cont.edit_item_callback = self.app_callback.edit_item_callback
+        self.model.patient_tree_cont.open_voxelplan_callback = self.app_callback.open_voxelplan_callback
+        self.model.patient_tree_cont.execute_plan_callback = self.app_callback.execute_plan
+        self.model.patient_tree_cont.one_click_callback = self.app_callback.one_click_callback
 
         widget = QDockWidget()
         widget.setWidget(self.model.patient_tree_view)
@@ -76,7 +76,7 @@ class MainWindowController(object):
 
     def on_open_voxelplan(self):
         patient = PatientItem()
-        if self.tree_callback.open_voxelplan_callback(patient):
+        if self.app_callback.open_voxelplan_callback(patient):
             self.model.patient_tree_cont.add_new_item(None, patient)
 
     def on_add_new_plan(self):
@@ -84,7 +84,7 @@ class MainWindowController(object):
         if not selected_patient:
             self.view.show_info(*InfoMessages["addNewPatient"])
             return
-        plan = self.tree_callback.new_item_callback(selected_patient)
+        plan = self.app_callback.new_item_callback(selected_patient)
         self.model.patient_tree_cont.add_new_item(selected_patient, plan)
 
     def on_kernels_configurator(self):
@@ -142,7 +142,7 @@ class MainWindowController(object):
 
     def on_create_field(self):
         field = FieldItem()
-        save_field = self.tree_callback.edit_field(field)
+        save_field = self.app_callback.edit_field(field)
         if save_field:
             selected_plan = self.model.patient_tree_view.selected_item
             self.model.patient_tree_cont.add_new_item(selected_plan, field)
