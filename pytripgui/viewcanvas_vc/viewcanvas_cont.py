@@ -18,38 +18,30 @@ class ViewCanvasCont(object):
 
         self._setup_ui_callbacks()
 
+        self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
+
+    def _perspective_has_changed_callback(self):
+        self._model.projection_selector.plane = self._ui.perspective
+        self.clear_view()
+        self.update_viewcanvas()
+
     def _setup_ui_callbacks(self):
         self._ui.set_plotter_click_callback(self.on_click)
         self._ui.set_plotter_wheel_callback(self.on_mouse_wheel)
 
-    def set_transversal_view(self):
-        self._model.projection_selector.plane = "Transversal"
-        self.clear_view()
-        self.update_viewcanvas()
-
-    def set_sagittal_view(self):
-        self._model.projection_selector.plane = "Sagittal"
-        self.clear_view()
-        self.update_viewcanvas()
-
-    def set_coronal_view(self):
-        self._model.projection_selector.plane = "Coronal"
-        self.clear_view()
-        self.update_viewcanvas()
-
     def set_let_filter(self):
         self._model.display_filter = "LET"
-        self._ui.clear()
+        self.clear_view()
         self.update_viewcanvas()
 
     def set_dos_filter(self):
         self._model.display_filter = "DOS"
-        self._ui.clear()
+        self.clear_view()
         self.update_viewcanvas()
 
     def set_none_filter(self):
         self._model.display_filter = "NONE"
-        self._ui.clear()
+        self.clear_view()
         self.update_viewcanvas()
 
     def on_click(self, event):
@@ -90,8 +82,9 @@ class ViewCanvasCont(object):
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-        self._ui.set_slider_position(self._model.projection_selector.current_slice_no,
-                                     self._model.projection_selector.last_slice_no)
+        self._ui.max_position = self._model.projection_selector.last_slice_no
+        self._ui.position = self._model.projection_selector.current_slice_no
+        self._ui.perspective = self._model.projection_selector.plane
         # if self._model.vdx:
         #     Vdx.plot(self)
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators

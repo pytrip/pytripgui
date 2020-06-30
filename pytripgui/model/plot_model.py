@@ -110,9 +110,6 @@ class PlotModel(object):
         self.let = None
         self.ctx = None
 
-        # Plan specific
-        self.plan = None  # Placeholder for plan to be plotted
-
         # These are used by getters and setters, must come after the other values are initialized.
         self.cube = None
         self.slice_pos_mm = 0.0

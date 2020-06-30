@@ -1,4 +1,5 @@
 import logging
+from events import Events
 
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
@@ -13,6 +14,12 @@ logger = logging.getLogger(__name__)
 
 class ViewCanvasView:
     def __init__(self, parent=None):
+        self.internal_events = Events((
+            'on_perspective_change',
+            'on_display_filter_change',
+            'on_change_slice_position'
+        ))
+
         self._ui = UiViewCanvas(parent)
         self._plotter = ViewCanvasWidget()
 
@@ -21,14 +28,16 @@ class ViewCanvasView:
         self._ui.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self._ui.updateGeometry()
 
+        self._internal_events_setup()
+
+    def _internal_events_setup(self):
+        self._ui.perspective_comboBox.currentIndexChanged.connect(lambda index: self.internal_events.on_perspective_change())
+
     def widget(self):
         return self._ui
 
     def show(self):
         self._ui.show()
-
-    def perspective_callback(self):
-        pass
 
     def set_plotter_click_callback(self, fun):
         self._plotter.set_button_press_callback(fun)
@@ -36,15 +45,36 @@ class ViewCanvasView:
     def set_plotter_wheel_callback(self, fun):
         self._plotter.set_scroll_event_callback(fun)
 
-    def set_slider_position(self, position, max_position):
-        self._ui.position_slider.setRange(0, max_position-1)
+    @property
+    def max_position(self):
+        return self._ui.position_slider.maximum()
+
+    @max_position.setter
+    def max_position(self, max_position):
+        self._ui.position_slider.setMaximum(max_position - 1)
+
+    @property
+    def position(self):
+        return self._ui.position_slider.value()
+
+    @position.setter
+    def position(self, position):
         self._ui.position_slider.setValue(position)
+
+    @property
+    def perspective(self):
+        return self._ui.perspective_comboBox.currentText()
+
+    @perspective.setter
+    def perspective(self, perspective):
+        index_of_element = self._ui.perspective_comboBox.findText(perspective, QtCore.Qt.MatchFixedString)
+        if  index_of_element == -1:
+            raise Exception("Cannot find given perspective to select")
+        else:
+            self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
 
     def set_position_changed_callback(self, callback):
         self._ui.position_slider.sliderMoved.connect(callback)
-
-    def set_perspective_enable(self, enabled):
-        pass
 
     def plot_let(self, data):
         self._plotter.plot_let(data)
@@ -54,6 +84,7 @@ class ViewCanvasView:
 
     def plot_ctx(self, data):
         self._plotter.plot_ctx(data)
+        self._enable_perspective_selector()
 
     def plot_bg(self, data):
         self._plotter.plot_bg(data)
@@ -62,10 +93,12 @@ class ViewCanvasView:
         self._plotter.draw()
 
     def clear(self):
-        self.display_filter = ""
         self._plotter.remove_dos()
         self._plotter.remove_let()
         self._plotter.remove_ctx()
+
+    def _enable_perspective_selector(self):
+        self._ui.perspective_comboBox.setEnabled(True)
 
 
 class ViewCanvasWidget(FigureCanvas):

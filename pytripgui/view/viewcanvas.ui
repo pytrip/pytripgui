@@ -61,17 +61,17 @@
          </property>
          <item>
           <property name="text">
-           <string>transversal</string>
+           <string>Transversal</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>sagittal</string>
+           <string>Sagittal</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>coronal</string>
+           <string>Coronal</string>
           </property>
          </item>
         </widget>
