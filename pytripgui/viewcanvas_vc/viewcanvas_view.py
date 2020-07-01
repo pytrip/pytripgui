@@ -31,7 +31,13 @@ class ViewCanvasView:
         self._internal_events_setup()
 
     def _internal_events_setup(self):
-        self._ui.perspective_comboBox.currentIndexChanged.connect(lambda index: self.internal_events.on_perspective_change())
+        self._ui.perspective_comboBox.currentIndexChanged.connect(
+            lambda index: self.internal_events.on_perspective_change()
+        )
+
+        self._ui.Dose_radioButton.released.connect(self.internal_events.on_display_filter_change)
+        self._ui.LET_radioButton.released.connect(self.internal_events.on_display_filter_change)
+        self._ui.None_radioButton.released.connect(self.internal_events.on_display_filter_change)
 
     def widget(self):
         return self._ui
@@ -72,6 +78,35 @@ class ViewCanvasView:
             raise Exception("Cannot find given perspective to select")
         else:
             self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
+
+    @property
+    def display_filter(self):
+        if self._ui.Dose_radioButton.isChecked():
+            return "DOS"
+        elif self._ui.LET_radioButton.isChecked():
+            return "LET"
+        else:
+            return "None"
+
+    @display_filter.setter
+    def display_filter(self, display_filter):
+        if display_filter == "DOS":
+            self._ui.Dose_radioButton.setChecked(True)
+        elif display_filter == "LET":
+            self._ui.LET_radioButton.setChecked(True)
+        else:
+            self._ui.None_radioButton.setChecked(True)
+
+    def enable_let(self):
+        self._ui.LET_radioButton.setEnabled(True)
+
+    def enable_dose(self):
+        self._ui.Dose_radioButton.setEnabled(True)
+
+    def reset_radiobuttons(self):
+        self._ui.LET_radioButton.setEnabled(False)
+        self._ui.Dose_radioButton.setEnabled(False)
+        self._ui.None_radioButton.setChecked(True)
 
     def set_position_changed_callback(self, callback):
         self._ui.position_slider.sliderMoved.connect(callback)
