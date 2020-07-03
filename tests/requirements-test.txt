@@ -5,9 +5,3 @@ pytest-cov
 pytest-qt
 pytest-xvfb
 tox
-# pyvirtualdisplay package (needed by pytest-xvfb for GUI testing) introduced dependency
-# on fcntl which is causing compatibility problems on Windows
-# https://github.com/ponty/PyVirtualDisplay/commit/5c92b6e56d52be6a50c2c6942ab14287ceb14737
-# thus for Windows we decide to use older version
-pyvirtualdisplay<0.2.3; os_name == 'nt'
-pyvirtualdisplay<1.0 ; os_name != 'nt'  # it looks version 1.0 creates some problems, see #307
