@@ -1,7 +1,6 @@
 import logging
 
 from pytripgui.plan_executor.executor import PlanExecutor
-from pytripgui.tree_vc.TreeModel import PatientTreeModel
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +16,6 @@ class MainModel(object):
 
         self.executor = PlanExecutor()
         self.kernels = []  # placeholder for KernelModels
-
-        self.patient_tree_model = PatientTreeModel()
-        self.patient_tree_cont = None
-        self.patient_tree_view = None
 
         self.one_plot_model = None
         self.pne_plot_cont = None
