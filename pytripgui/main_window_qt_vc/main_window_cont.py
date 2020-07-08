@@ -1,13 +1,11 @@
 import logging
 
 from pytripgui.controller.settings_cont import SettingsController
-from pytripgui.tree_vc.TreeController import TreeController
 from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
 from pytripgui.view.qt_gui import UiAddPatient
 
 from pytripgui.app_logic.patient_tree import PatientTree
-
 from pytripgui.app_logic.app_callbacks import AppCallback
 
 from pytripgui.tree_vc.TreeItems import PatientItem
