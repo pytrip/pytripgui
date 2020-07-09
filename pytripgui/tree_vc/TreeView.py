@@ -2,7 +2,6 @@ import logging
 from events import Events
 
 from PyQt5.QtCore import Qt, QPoint, QModelIndex
-from PyQt5.QtCore import QRect, QItemSelectionModel
 from PyQt5.QtWidgets import QTreeView, QMenu
 
 from pytripgui.tree_vc.TreeItems import PatientItem
