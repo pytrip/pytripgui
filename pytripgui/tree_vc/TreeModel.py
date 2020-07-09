@@ -3,15 +3,14 @@ import logging
 from PyQt5.QtCore import QVariant, QModelIndex, Qt
 from PyQt5.QtCore import QAbstractItemModel
 
-from pytripgui.tree_vc.TreeItems import PatientList
-
 logger = logging.getLogger(__name__)
 
 
-class PatientTreeModel(QAbstractItemModel):
-    def __init__(self):
+class TreeModel(QAbstractItemModel):
+    def __init__(self, root_item):
         super().__init__(None)
-        self._root_item = PatientList()
+
+        self._root_item = root_item
 
     def headerData(self, p_int, qt_orientation, role=None):
         if p_int > 0:
