@@ -101,20 +101,17 @@ class TreeModel(QAbstractItemModel):
         return self.createIndex(parent_item.row(), 0, parent_item)
 
     def insertRows(self, row, count, parent_item=None, child=None):
-        if row != 0:
-            raise Exception("You can only append new element to the end")
         if count != 1:
             raise Exception("Only one row at one time")
 
         if parent_item:
-            row = parent_item.row()
-            parent = self.createIndex(row, 0, parent_item)
+            parent = self.createIndex(parent_item.row(), 0, parent_item)
         else:
             parent_item = self._root_item
             parent = QModelIndex()
 
-        row_count = parent_item.row_count()
-        self.beginInsertRows(parent, row_count, row_count + count - 1)
+        self.beginInsertRows(parent, row, row + count - 1)
         parent_item.add_child(child)
         self.endInsertRows()
-        return True
+
+        return self.createIndex(child.row(), 0, child)
