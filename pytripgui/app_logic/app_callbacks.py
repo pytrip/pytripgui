@@ -122,3 +122,5 @@ class AppCallback:
 
         if isinstance(item, PlanItem):
             self.parent_gui.action_create_field_set_enable(True)
+        elif isinstance(item, FieldItem):
+            self.parent_gui.action_create_field_set_enable(True)

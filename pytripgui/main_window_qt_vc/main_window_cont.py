@@ -8,8 +8,7 @@ from pytripgui.view.qt_gui import UiAddPatient
 from pytripgui.app_logic.patient_tree import PatientTree
 from pytripgui.app_logic.app_callbacks import AppCallback
 
-from pytripgui.tree_vc.TreeItems import PatientItem
-from pytripgui.tree_vc.TreeItems import FieldItem
+from pytripgui.tree_vc.TreeItems import PatientItem, PlanItem, FieldItem
 
 logger = logging.getLogger(__name__)
 
@@ -130,5 +129,9 @@ class MainWindowController(object):
         field = FieldItem()
         save_field = self.app_callback.edit_field(field)
         if save_field:
-            selected_plan = self.patient_tree.selected_item()
+            selected_item = self.patient_tree.selected_item()
+            if isinstance(selected_item, PlanItem):
+                selected_plan = selected_item
+            elif isinstance(selected_item, FieldItem):
+                selected_plan = selected_item.parent
             self.patient_tree.add_new_item(selected_plan, field)
