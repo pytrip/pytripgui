@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import QTreeView, QMenu
 from pytripgui.tree_vc.TreeItems import PatientItem
 from pytripgui.tree_vc.TreeItems import PlanItem
 from pytripgui.tree_vc.TreeItems import FieldItem
+from pytripgui.tree_vc.TreeItems import SimulationResultItem
+
+from pytripgui.plan_executor.simulation_results import SimulationResults
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +30,7 @@ class TreeView(QTreeView):
             'on_open_voxelplan',
             'on_open_dicom',
             'on_execute',
+            'on_export_cube',
             'on_click'
         ))
 
@@ -67,9 +71,12 @@ class TreeView(QTreeView):
             popup_menu.addSeparator()
             popup_menu.addAction("Execute", self.internal_events.on_execute)
             popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
-
         elif isinstance(self.selected_item, FieldItem):
             popup_menu.addAction("Edit selected Field", self.internal_events.on_edit_selected_item)
+        elif isinstance(self.selected_item, SimulationResultItem):
+            if isinstance(self.selected_item.data, SimulationResults):
+                return
+            popup_menu.addAction("Export cube", self.internal_events.on_export_cube)
         else:
             return
 
