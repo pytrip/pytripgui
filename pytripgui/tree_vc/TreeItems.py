@@ -107,9 +107,7 @@ class PlanItem(TreeItem):
 
     @property
     def data(self):
-        self._data.fields = []
-        for child in self.children:
-            self._data.fields.append(child.data)
+        self._data.fields = [child.data for child in self.children]
         return self._data
 
     @data.setter
