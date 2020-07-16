@@ -73,9 +73,7 @@ class AppCallback:
         return None
 
     def execute_plan(self, plan, patient):
-        if plan.children:
-            plan.data.fields.append(plan.children[0].data)
-        else:
+        if not plan.data.fields:
             self.parent_gui.show_info(*InfoMessages["addOneField"])
             return
 

@@ -90,7 +90,7 @@ class PlanItem(TreeItem):
     def __init__(self):
         super().__init__()
 
-        self.data = Plan()
+        self._data = Plan()
         self.field_counter = 1
 
     def __repr__(self):
@@ -104,6 +104,15 @@ class PlanItem(TreeItem):
         if isinstance(child, FieldItem):
             child.data.number = self.field_counter
             self.field_counter = self.field_counter + 1
+
+    @property
+    def data(self):
+        self._data.fields = [child.data for child in self.children]
+        return self._data
+
+    @data.setter
+    def data(self, data):
+        self._data = data
 
 
 class FieldItem(TreeItem):
