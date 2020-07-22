@@ -54,7 +54,7 @@ class MainWindowController(object):
 
         self.app_callback = AppCallback(self.model, self.model.executor, self.view)
 
-        self.patient_tree = PatientTree()
+        self.patient_tree = PatientTree(self.view)
         self.patient_tree.app_callback(self.app_callback)
 
         self.patient_tree.show(self.view.ui)
