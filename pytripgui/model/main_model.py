@@ -17,8 +17,7 @@ class MainModel(object):
         self.executor = PlanExecutor()
         self.kernels = []  # placeholder for KernelModels
 
-        self.one_plot_model = None
-        self.pne_plot_cont = None
+        self.viewcanvases = None
 
         self.settings = SettingsModel(self)
 

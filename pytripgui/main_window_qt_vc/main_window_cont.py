@@ -1,7 +1,6 @@
 import logging
 
 from pytripgui.controller.settings_cont import SettingsController
-from pytripgui.viewcanvas_vc.viewcanvas_cont import ViewCanvasCont
 from pytripgui.messages import InfoMessages
 from pytripgui.view.qt_gui import UiAddPatient
 
@@ -48,9 +47,6 @@ class MainWindowController(object):
         self.view.exit_callback = self.on_exit
         self.view.action_add_patient = self.on_add_patient
         self.view.action_create_field = self.on_create_field
-
-        self.view.one_viewcanvas_view = self.view.get_viewcanvas_view()
-        self.model.one_plot_cont = ViewCanvasCont(None, self.view.one_viewcanvas_view)
 
         self.app_callback = AppCallback(self.model, self.model.executor, self.view)
 
