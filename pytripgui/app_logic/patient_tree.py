@@ -13,12 +13,15 @@ logger = logging.getLogger(__name__)
 
 
 class PatientTree:
-    def __init__(self):
+    def __init__(self, gui):
+        self._gui = gui
         self.patient_tree_model = TreeModel(PatientList())
         self.patient_tree_view = TreeView()
 
         self.patient_tree_view.setModel(self.patient_tree_model)
         self.patient_tree_cont = TreeController(self.patient_tree_model, self.patient_tree_view)
+
+        self.patient_tree_view.internal_events.on_export_cube = self._export_cube_callback
 
     def show(self, parent_view):
         widget = QDockWidget()
@@ -40,3 +43,10 @@ class PatientTree:
 
     def selected_item(self):
         return self.patient_tree_view.selected_item
+
+    def _export_cube_callback(self):
+        item = self.selected_item()
+        path = self._gui.browse_folder_path("Select path for Cube")
+        if path:
+            path += item.data.basename
+            item.data.write(path)

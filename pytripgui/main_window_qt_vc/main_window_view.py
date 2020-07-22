@@ -1,4 +1,5 @@
 import logging
+import os
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -43,6 +44,18 @@ class MainWindowQtView(object):
             path,
             extension)
         return selected_file[0]
+
+    def browse_folder_path(self, name, path=None):
+        """
+        :return full file path, or empty string
+        """
+        dialog = QFileDialog(self.ui, name, path)
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setOptions(QFileDialog.ShowDirsOnly)
+        dialog.exec_()
+
+        selected_path = os.path.join(dialog.directory().path(), '')
+        return selected_path
 
     def show_info(self, name, content):
         from PyQt5.QtWidgets import QMessageBox
