@@ -7,15 +7,17 @@ logger = logging.getLogger(__name__)
 
 
 class SimulationResults:
-    def __init__(self, patient, plan):
-        self.name = plan.basename
+    def __init__(self, patient):
         self.patient = patient
-        self.plan = plan
+        self.name = ""
+        self.plan = None
         self.dose = None
         self.let = None
         self.dvh = None
         self.lvh = None
 
+    def import_results(self, plan):
+        self.name = plan.basename
         if plan.want_phys_dose:
             dos_path = os.path.join(plan.working_dir, plan.basename + '.phys.dos')
             self._import_dos(dos_path)
