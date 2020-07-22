@@ -30,7 +30,7 @@ class TreeView(QTreeView):
             'on_open_voxelplan',
             'on_open_dicom',
             'on_execute',
-            'on_export_cube',
+            'on_export_voxelplan',
             'on_click'
         ))
 
@@ -76,7 +76,7 @@ class TreeView(QTreeView):
         elif isinstance(self.selected_item, SimulationResultItem):
             if isinstance(self.selected_item.data, SimulationResults):
                 return
-            popup_menu.addAction("Export cube", self.internal_events.on_export_cube)
+            popup_menu.addAction("Export Voxelplan", self.internal_events.on_export_voxelplan)
         else:
             return
 
