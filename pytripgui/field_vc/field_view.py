@@ -1,5 +1,4 @@
 from pytripgui.view.qt_gui import UiFieldDialog
-from PyQt5.QtCore import Qt
 
 import logging
 logger = logging.getLogger(__name__)
