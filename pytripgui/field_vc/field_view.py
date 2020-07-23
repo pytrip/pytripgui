@@ -1,5 +1,4 @@
 from pytripgui.view.qt_gui import UiFieldDialog
-from PyQt5.QtCore import Qt
 
 import logging
 logger = logging.getLogger(__name__)
@@ -155,21 +154,3 @@ class FieldQtView(object):
     @depth_steps.setter
     def depth_steps(self, zsteps):
         self.ui.depthStep_doubleSpinBox.setValue(zsteps)
-
-    @property
-    def selected_kernel(self):
-        return self.ui.kernel_comboBox.currentData()
-
-    @selected_kernel.getter
-    def selected_kernel(self):
-        return self.ui.kernel_comboBox.currentData()
-
-    def add_kernel_with_name(self, kernel, kernel_name):
-        self.ui.kernel_comboBox.addItem(kernel_name, kernel)
-
-    def select_kernel_view_to_this(self, kernel):
-        index_of_kernel = self.ui.kernel_comboBox.findData(kernel, Qt.UserRole)
-        if index_of_kernel == -1:
-            logger.warning("Given kernel wasn't found on the list")
-            return
-        self.ui.kernel_comboBox.setCurrentIndex(index_of_kernel)

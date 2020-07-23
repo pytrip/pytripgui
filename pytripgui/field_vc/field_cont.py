@@ -24,19 +24,9 @@ class FieldController(object):
         self.view.dose_extension = self.model.dose_extension
         self.view.contour_extension = self.model.contour_extension
         self.view.depth_steps = self.model.zsteps
-        self._setup_kernels()
 
     def _is_isocenter_manually(self):
         return len(self.model.isocenter) == 3
-
-    def _setup_kernels(self):
-        if not self.kernels:
-            return
-
-        for kernel in self.kernels:
-            self.view.add_kernel_with_name(kernel, kernel.name)
-
-        self.view.select_kernel_view_to_this(self.model.kernel)
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)
@@ -63,4 +53,3 @@ class FieldController(object):
         self.model.dose_extension = self.view.dose_extension
         self.model.contour_extension = self.view.contour_extension
         self.model.zsteps = self.view.depth_steps
-        self.model.kernel = self.view.selected_kernel
