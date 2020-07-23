@@ -15,47 +15,27 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
+     <layout class="QHBoxLayout" name="main_layout">
+      <property name="spacing">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="tab_view">
-       <attribute name="title">
-        <string>View</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout" name="tab_Vlayout"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tab_dvh">
-       <attribute name="title">
-        <string>DVH</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tab_lvh">
-       <attribute name="title">
-        <string>LVH</string>
-       </attribute>
-      </widget>
-     </widget>
+     </layout>
     </item>
    </layout>
   </widget>

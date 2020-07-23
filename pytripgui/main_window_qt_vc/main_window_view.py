@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import QFileDialog
 from pytripgui.view.qt_gui import UiMainWindow
 from pytripgui.config_vc import ConfigQtView
 from pytripgui.kernel_vc import KernelQtView
-from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +20,8 @@ class MainWindowQtView(object):
     def exit(self):
         self.ui.close()
 
-    def get_viewcanvas_view(self):
-        one_viewcanvas = ViewCanvasView()
-        self.ui.tab_Vlayout.addWidget(one_viewcanvas.widget())
-        return one_viewcanvas
+    def add_widget(self, widget):
+        self.ui.main_layout.addWidget(widget)
 
     @staticmethod
     def get_trip_config_view():

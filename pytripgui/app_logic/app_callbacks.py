@@ -2,6 +2,7 @@ from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
 from pytripgui.field_vc.field_cont import FieldController
+from pytripgui.app_logic.viewcanvas import ViewCanvases
 
 from pytripgui.tree_vc.TreeItems import PatientItem
 from pytripgui.tree_vc.TreeItems import PlanItem
@@ -90,7 +91,7 @@ class AppCallback:
             let_item.data = item.data.let
             item.add_child(let_item)
 
-        self.global_data.one_plot_cont.set_simulation_results(item.data)
+        self.global_data.viewcanvases.set_simulation_results(item.data)
 
         return item
 
@@ -105,7 +106,11 @@ class AppCallback:
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
 
-        self.global_data.one_plot_cont.set_patient(patient)
+        if not self.global_data.viewcanvases:
+            self.global_data.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.global_data.viewcanvases.widget())
+
+        self.global_data.viewcanvases.set_patient(patient)
         return True
 
     def one_click_callback(self, top_item, item):
@@ -113,10 +118,10 @@ class AppCallback:
         self.parent_gui.action_create_plan_set_enable(False)
 
         if isinstance(top_item, SimulationResultItem):
-            self.global_data.one_plot_cont.set_simulation_results(top_item.data)
+            self.global_data.viewcanvases.set_simulation_results(top_item.data)
         elif isinstance(top_item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
-            self.global_data.one_plot_cont.set_patient(top_item.data)
+            self.global_data.viewcanvases.set_patient(top_item.data)
 
         if isinstance(item, PlanItem):
             self.parent_gui.action_create_field_set_enable(True)
