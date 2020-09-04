@@ -19,6 +19,7 @@ addons:
     - xorg
     - dbus-x11
     - xfonts-cyrillic
+    - libxkbcommon-x11-0
 
 jobs:
     include:
