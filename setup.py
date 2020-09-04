@@ -1,5 +1,6 @@
 import os
 import setuptools
+import sys
 
 from pytripgui.version import git_version
 
@@ -21,6 +22,18 @@ write_version_py()
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
+
+# install_requires is list of dependencies needed by pip when running `pip install`
+install_requires = [
+    'pytrip98~=3.0',
+    'anytree~=2.8',
+    'Events~=0.3'
+]
+if sys.version_info[0] == 3 and sys.version_info[1] < 8:
+    install_requires += ["PyQt5<5.10"]
+else:
+    install_requires += ["PyQt5"]
+
 
 setuptools.setup(
     name='pytrip98gui',
@@ -54,11 +67,10 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
+        'Programming Language :: Python :: 3.8'
     ],
     package_data={'pytripgui': ['res/*', 'view/*.ui', 'VERSION']},
-    install_requires=[
-        'pytrip98~=3.0', 'PyQt5<5.10', 'anytree~=2.8', 'Events~=0.3'
-    ],
+    install_requires=install_requires,
     entry_points={
         'console_scripts': [
             'pytripgui=pytripgui.main:main',
