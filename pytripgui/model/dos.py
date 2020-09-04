@@ -1,7 +1,18 @@
+from enum import Enum
+
 import numpy as np
 
 import logging
 logger = logging.getLogger(__name__)
+
+
+class DoseAxisType(Enum):
+    """
+    Different type of dose scaling
+    """
+    auto = 0
+    rel = 1
+    abs = 2
 
 
 class Dos(object):
@@ -10,7 +21,7 @@ class Dos(object):
 
         self.cube = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
         self.data_to_plot = None
-        self.dose_axis = "auto"
+        self.dose_axis = DoseAxisType.auto
 
         self.dos_scale = None
         self.min_dose = 0
@@ -25,15 +36,16 @@ class Dos(object):
         self.dos_scale = self._get_proposed_scale()
         self._set_aspect()
 
-        if self.dos_scale == "abs":
+        factor = None
+        if self.dos_scale == DoseAxisType.abs:
             factor = 1000 / self.cube.target_dose
-        if self.dos_scale == "rel":
+        if self.dos_scale == DoseAxisType.rel:
             factor = 10
 
-        if not self.dos_scale and self.dos_scale != self.dos_scale:
-            self.max_dose = np.amax(self.cube.cube) / factor
-        elif not self.dos_scale:
-            self.max_dose = np.amax(self.cube.cube) / factor
+        if factor is not None:
+            self.max_dose = np.amax(self.cube.cube) / float(factor)
+        else:
+            self.max_dose = np.amax(self.cube.cube)
 
         dos_data = self.projection_selector.get_projection(self.cube)
 
@@ -42,9 +54,9 @@ class Dos(object):
 
     def _get_proposed_scale(self):
         if self.cube.target_dose <= 0:
-            return "rel"
-        elif self.dose_axis == "auto" and self.cube.target_dose != 0.0:
-            return "abs"
+            return DoseAxisType.rel
+        elif self.dose_axis == DoseAxisType.auto and self.cube.target_dose != 0.0:
+            return DoseAxisType.abs
         else:
             return self.dose_axis
 
