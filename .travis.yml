@@ -46,6 +46,8 @@ jobs:
 #          env: TOXENV=py38
 
 install:
+  - pip install pip --upgrade
+  - pip -V
   - pip install --only-binary PyQt5 -r requirements.txt
   - pip install -r tests/requirements-test.txt
 
