@@ -219,7 +219,7 @@ class ViewCanvasWidget(FigureCanvas):
             self.dose_bar = None
 
     def plot_dos(self, dos):
-        if not self.axim_dos:
+        if not self.axim_dos and dos.max_dose > dos.min_dose:
             self.axim_dos = self.axes.imshow(
                 dos.data_to_plot,
                 cmap=self.colormap_dose,

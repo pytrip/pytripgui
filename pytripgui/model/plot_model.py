@@ -1,5 +1,7 @@
 import logging
 
+from numpy import unravel_index
+
 from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
@@ -128,3 +130,8 @@ class PlotModel(object):
         self.dose = Dos(self.projection_selector)
         self.dose.cube = dose
         self.projection_selector.load_slices_count(dose)
+
+        max_item_index = unravel_index(dose.cube.argmax(), dose.cube.shape)
+        self.projection_selector._transversal_slice_no = max_item_index[0]
+        self.projection_selector._sagittal_slice_no = max_item_index[2]
+        self.projection_selector._coronal_slice_no = max_item_index[1]
