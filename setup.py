@@ -1,6 +1,5 @@
 import os
 import setuptools
-import sys
 
 from pytripgui.version import git_version
 
