@@ -1,6 +1,5 @@
 import os
 import setuptools
-import sys
 
 from pytripgui.version import git_version
 
@@ -27,13 +26,10 @@ with open('README.rst') as readme_file:
 install_requires = [
     'pytrip98~=3.0',
     'anytree~=2.8',
-    'Events~=0.3'
+    'Events~=0.3',
+    "PyQt5<5.10 ; python_version<'3.8'",
+    "PyQt5>=5.15 ; python_version>='3.8'",
 ]
-if sys.version_info[0] == 3 and sys.version_info[1] < 8:
-    install_requires += ["PyQt5<5.10"]
-else:
-    install_requires += ["PyQt5"]
-
 
 setuptools.setup(
     name='pytrip98gui',
