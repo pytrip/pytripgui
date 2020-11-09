@@ -10,6 +10,7 @@ from pytripgui.tree_vc.TreeItems import FieldItem
 from pytripgui.tree_vc.TreeItems import SimulationResultItem
 
 from pytripgui.messages import InfoMessages
+from pytripgui.app_logic.chars import Charts
 
 import os
 import logging
@@ -21,6 +22,7 @@ class AppCallback:
         self.global_data = global_data
         self.executor = executor
         self.parent_gui = parent_gui
+        self.chart = Charts(self.parent_gui)
 
     def new_item_callback(self, parent):
         if parent is None:
@@ -92,6 +94,7 @@ class AppCallback:
             item.add_child(let_item)
 
         self.global_data.viewcanvases.set_simulation_results(item.data)
+        self.chart.set_simulation_result(item.data)
 
         return item
 
@@ -119,6 +122,7 @@ class AppCallback:
 
         if isinstance(top_item, SimulationResultItem):
             self.global_data.viewcanvases.set_simulation_results(top_item.data)
+            self.chart.set_simulation_result(top_item.data)
         elif isinstance(top_item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.global_data.viewcanvases.set_patient(top_item.data)
