@@ -3,3 +3,4 @@ PyQt5>=5.15  ; python_version >= '3.8'
 PyQt5<5.10 ; python_version < '3.8'
 anytree~=2.8
 Events~=0.3
+PyQtChart~=5
