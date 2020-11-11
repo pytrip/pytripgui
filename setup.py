@@ -29,7 +29,8 @@ install_requires = [
     'Events~=0.3',
     "PyQt5<5.10 ; python_version<'3.8'",
     "PyQt5>=5.15 ; python_version>='3.8'",
-    "PyQtChart~=5.15",
+    "PyQtChart<5.10 ; python_version<'3.8'",
+    "PyQtChart>=5.15 ; python_version>='3.8'",
 ]
 
 setuptools.setup(
