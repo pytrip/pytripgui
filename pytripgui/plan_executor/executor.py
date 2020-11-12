@@ -37,7 +37,6 @@ class PlanExecutor:
             logger.error("TRiP98 executer: Runtime error")
             exit(-1)
 
-        results = SimulationResults(patient)
-        results.import_results(plan)
+        results = SimulationResults(patient, plan)
 
         return results
