@@ -33,9 +33,7 @@ class ChartWidget:
         series = QLineSeries()
         series.setName(name)
 
-        let_chart = np.vstack((x, y)).T
-
-        for x, y in let_chart:
+        for x, y in zip(x, y):
             series.append(x, y)
 
         self.model.addSeries(series)
