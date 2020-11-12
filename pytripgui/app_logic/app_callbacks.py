@@ -10,7 +10,7 @@ from pytripgui.tree_vc.TreeItems import FieldItem
 from pytripgui.tree_vc.TreeItems import SimulationResultItem
 
 from pytripgui.messages import InfoMessages
-from pytripgui.app_logic.chars import Charts
+from pytripgui.app_logic.charts import Charts
 
 import os
 import logging

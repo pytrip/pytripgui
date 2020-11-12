@@ -27,11 +27,11 @@ class ChartWidget:
     def title(self, title):
         self.model.setTitle(title)
 
-    def add_series(self, x, y, name):
+    def add_series(self, x_list, y_list, name):
         series = QLineSeries()
         series.setName(name)
 
-        for x, y in zip(x, y):
+        for x, y in zip(x_list, y_list):
             series.append(x, y)
 
         self.model.addSeries(series)

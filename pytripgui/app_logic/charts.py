@@ -19,9 +19,8 @@ class Charts:
             widget.title = histogram_name
 
             histogram = simulation_result.volume_histograms[histogram_name]
-            for organ_name in histogram:
-                organ_vh = histogram[organ_name]
-                widget.add_series(organ_vh.x, organ_vh.y, organ_name)
+            for name, value in histogram.items():
+                widget.add_series(value.x, value.y, name)
 
             self._charts.append(widget)
 
