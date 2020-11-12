@@ -1,5 +1,3 @@
-import numpy as np
-
 from PyQt5.QtChart import QChart, QChartView, QLineSeries
 from PyQt5.QtGui import QPainter
 from PyQt5.QtCore import Qt
