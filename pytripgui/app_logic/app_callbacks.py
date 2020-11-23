@@ -129,10 +129,6 @@ class AppCallback:
             self.global_data.viewcanvases = ViewCanvases()
             self.parent_gui.add_widget(self.global_data.viewcanvases.widget())
 
-        if not self.global_data.viewcanvases:
-            self.global_data.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.global_data.viewcanvases.widget())
-
         self.global_data.viewcanvases.set_patient(patient)
         return True
 
