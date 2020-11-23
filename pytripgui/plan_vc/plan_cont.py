@@ -78,18 +78,11 @@ class PlanController(object):
         self.model.want_rst = self.view.raster_scan_file
 
     def _setup_target_roi(self):
-        self._fill_view_with_rois()
-        self._set_correct_target_roi_view()
-
-    def _fill_view_with_rois(self):
         if not self.vois:
             return
         for voi in self.vois:
-            self.view.add_target_roi_with_name(voi, voi.name)
-
-    def _set_correct_target_roi_view(self):
-        if self.model.voi_target is not None:
-            self.view.select_target_roi_to_this(self.model.voi_target)
+            checked = self.model.voi_target == voi
+            self.view.add_target_roi_with_name(voi, voi.name, checked)
 
     def _setup_oar(self):
         self._fill_view_with_oars()

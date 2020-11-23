@@ -1,6 +1,6 @@
 from pytripgui.view.qt_gui import UiPlanDialog
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTreeWidgetItem
+from PyQt5.QtWidgets import QTreeWidgetItem, QListWidgetItem, QRadioButton
 
 import logging
 logger = logging.getLogger(__name__)
@@ -61,17 +61,25 @@ class PlanQtView(object):
     def uuid(self, uuid):
         self.ui.uuid_lineEdit.setText(uuid)
 
-    def add_target_roi_with_name(self, target, target_name):
-        self.ui.targetROI_comboBox.addItem(target_name, target)
+    def add_target_roi_with_name(self, target, target_name, checked=False):
+        target_item = QRadioButton()
+        target_item.setText(target_name)
+        if checked:
+            target_item.setChecked(Qt.Checked)
 
-    def select_target_roi_to_this(self, target):
-        index_of_target = self.ui.targetROI_comboBox.findData(target, Qt.UserRole)
-        if index_of_target == -1:
-            raise Exception("Given target roi wasn't found on the list")
-        self.ui.targetROI_comboBox.setCurrentIndex(index_of_target)
+        item = QListWidgetItem(self.ui.targetROI_listWidget)
+        item.setData(Qt.UserRole, target)
+
+        self.ui.targetROI_listWidget.setItemWidget(item, target_item)
 
     def get_selected_target_roi(self):
-        return self.ui.targetROI_comboBox.currentData()
+        item_count = self.ui.targetROI_listWidget.count()
+        print(item_count)
+        for i in range(item_count):
+            item = self.ui.targetROI_listWidget.item(i)
+            target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(item)
+            if target_q_radio_button.isChecked():
+                return item.data(Qt.UserRole)
 
     def add_oar_with_name(self, voi, voi_name):
         oar_item = QTreeWidgetItem()
