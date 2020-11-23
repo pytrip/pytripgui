@@ -47,6 +47,7 @@ class MainWindowController(object):
         self.view.exit_callback = self.on_exit
         self.view.action_add_patient = self.on_add_patient
         self.view.action_create_field = self.on_create_field
+        self.view.action_execute_plan = self.on_execute_selected_plan
 
         self.app_callback = AppCallback(self.model, self.model.executor, self.view)
 
@@ -54,6 +55,24 @@ class MainWindowController(object):
         self.patient_tree.app_callback(self.app_callback)
 
         self.patient_tree.show(self.view.ui)
+
+    def on_execute_selected_plan(self):
+        item = self.patient_tree.selected_item()
+        if isinstance(item, FieldItem):
+            plan = item.parent
+        else:
+            plan = item
+
+        if isinstance(plan, PlanItem):
+            sim_results = self.app_callback.execute_plan(
+                plan,
+                self.patient_tree.selected_item_patient()
+            )
+            if sim_results:
+                self.patient_tree.add_new_item(None, sim_results)
+
+        else:
+            raise TypeError("You should select Field or Plan")
 
     def on_open_voxelplan(self):
         patient = PatientItem()

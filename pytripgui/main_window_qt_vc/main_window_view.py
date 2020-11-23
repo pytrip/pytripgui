@@ -122,8 +122,19 @@ class MainWindowQtView(object):
     def action_create_field(self, callback):
         self.ui.actionCreate_field.triggered.connect(callback)
 
+    @property
+    def action_execute_plan(self):
+        return None
+
+    @action_execute_plan.setter
+    def action_execute_plan(self, callback):
+        self.ui.actionExecute_Plan.triggered.connect(callback)
+
     def action_create_field_set_enable(self, enabled):
         self.ui.actionCreate_field.setEnabled(enabled)
 
     def action_create_plan_set_enable(self, enabled):
         self.ui.actionNew_Plan.setEnabled(enabled)
+
+    def action_execute_plan_set_enable(self, enabled):
+        self.ui.actionExecute_Plan.setEnabled(enabled)

@@ -119,6 +119,7 @@ class AppCallback:
     def one_click_callback(self, top_item, item):
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
+        self.parent_gui.action_execute_plan_set_enable(False)
 
         if isinstance(top_item, SimulationResultItem):
             self.global_data.viewcanvases.set_simulation_results(top_item.data)
@@ -129,5 +130,20 @@ class AppCallback:
 
         if isinstance(item, PlanItem):
             self.parent_gui.action_create_field_set_enable(True)
+            if self.is_executable(item):
+                self.parent_gui.action_execute_plan_set_enable(True)
+
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_field_set_enable(True)
+            if self.is_executable(item):
+                self.parent_gui.action_execute_plan_set_enable(True)
+
+    @staticmethod
+    def is_executable(item):
+        if isinstance(item, PlanItem):
+            if item.has_children():
+                return True
+        elif isinstance(item, FieldItem):
+            return True
+
+        return False
