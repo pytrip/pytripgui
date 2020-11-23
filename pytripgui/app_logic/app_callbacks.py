@@ -117,13 +117,13 @@ class AppCallback:
         return True
 
     def open_dicom_callback(self, patient_item):
-        dirname = self.parent_gui.browse_folder_path("Open DICOM folder")
+        dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
 
-        if not dirname:
+        if not dir_name:
             return False
 
         patient = patient_item.data
-        patient.open_dicom(dirname)  # Todo catch exceptions
+        patient.open_dicom(dir_name)  # Todo catch exceptions
 
         if not self.global_data.viewcanvases:
             self.global_data.viewcanvases = ViewCanvases()
