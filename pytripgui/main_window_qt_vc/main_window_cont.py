@@ -40,6 +40,7 @@ class MainWindowController(object):
 
         # main window callbacks
         self.view.open_voxelplan_callback = self.on_open_voxelplan
+        self.view.open_dicom_callback = self.on_open_dicom
         self.view.open_kernels_configurator_callback = self.on_kernels_configurator
         self.view.add_new_plan_callback = self.on_add_new_plan
         self.view.about_callback = self.on_about
@@ -77,6 +78,11 @@ class MainWindowController(object):
     def on_open_voxelplan(self):
         patient = PatientItem()
         if self.app_callback.open_voxelplan_callback(patient):
+            self.patient_tree.add_new_item(None, patient)
+
+    def on_open_dicom(self):
+        patient = PatientItem()
+        if self.app_callback.open_dicom_callback(patient):
             self.patient_tree.add_new_item(None, patient)
 
     def on_add_new_plan(self):
@@ -134,6 +140,7 @@ class MainWindowController(object):
         dialog = UiAddPatient(self.view.ui)
         dialog.on_create_empty = self.add_empty_patient
         dialog.on_open_voxelplan = self.on_open_voxelplan
+        dialog.on_open_dicom = self.on_open_dicom
         dialog.show()
 
     def add_empty_patient(self):

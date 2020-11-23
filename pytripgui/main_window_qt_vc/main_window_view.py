@@ -50,9 +50,10 @@ class MainWindowQtView(object):
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setOptions(QFileDialog.ShowDirsOnly)
         dialog.exec_()
-
         selected_path = os.path.join(dialog.directory().path(), '')
-        return selected_path
+        if dialog.result() == QFileDialog.Accepted:
+            return selected_path
+        return ""
 
     def show_info(self, name, content):
         from PyQt5.QtWidgets import QMessageBox
@@ -65,6 +66,14 @@ class MainWindowQtView(object):
     @open_voxelplan_callback.setter
     def open_voxelplan_callback(self, callback):
         self.ui.actionOpen_Voxelplan.triggered.connect(callback)
+
+    @property
+    def open_dicom_callback(self):
+        return None
+
+    @open_dicom_callback.setter
+    def open_dicom_callback(self, callback):
+        self.ui.actionOpen_Dicom.triggered.connect(callback)
 
     @property
     def open_kernels_configurator_callback(self):
