@@ -116,6 +116,26 @@ class AppCallback:
         self.global_data.viewcanvases.set_patient(patient)
         return True
 
+    def open_dicom_callback(self, patient_item):
+        dirname = self.parent_gui.browse_folder_path("Open DICOM folder")
+
+        if not dirname:
+            return False
+
+        patient = patient_item.data
+        patient.open_dicom(dirname)  # Todo catch exceptions
+
+        if not self.global_data.viewcanvases:
+            self.global_data.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.global_data.viewcanvases.widget())
+
+        if not self.global_data.viewcanvases:
+            self.global_data.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.global_data.viewcanvases.widget())
+
+        self.global_data.viewcanvases.set_patient(patient)
+        return True
+
     def one_click_callback(self, top_item, item):
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)

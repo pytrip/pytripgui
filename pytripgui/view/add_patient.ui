@@ -49,7 +49,7 @@
    <item>
     <widget class="QPushButton" name="openDicom_pushButton">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="text">
       <string>Open Dicom</string>

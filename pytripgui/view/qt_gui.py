@@ -56,6 +56,7 @@ class UiAddPatient(QtWidgets.QDialog):
 
         self._create_empty_callback = None
         self._open_voxelplan_callback = None
+        self._open_dicom_callback = None
 
         self.accept_buttonBox.rejected.connect(self.reject)
 
@@ -86,4 +87,17 @@ class UiAddPatient(QtWidgets.QDialog):
 
     def _on_open_voxelplan_internal_callback(self):
         self._open_voxelplan_callback()
+        self.reject()
+
+    @property
+    def on_open_dicom(self):
+        return None
+
+    @on_open_dicom.setter
+    def on_open_dicom(self, callback):
+        self._open_dicom_callback = callback
+        self.openDicom_pushButton.clicked.connect(self._on_open_dicom_internal_callback)
+
+    def _on_open_dicom_internal_callback(self):
+        self._open_dicom_callback()
         self.reject()
