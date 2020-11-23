@@ -64,10 +64,13 @@ class MainWindowController(object):
             plan = item
 
         if isinstance(plan, PlanItem):
-            self.app_callback.execute_plan(
+            sim_results = self.app_callback.execute_plan(
                 plan,
                 self.patient_tree.selected_item_patient()
             )
+            if sim_results:
+                self.patient_tree.add_new_item(None, sim_results)
+
         else:
             raise TypeError("You should select Field or Plan")
 
