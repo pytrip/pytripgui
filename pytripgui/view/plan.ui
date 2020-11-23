@@ -152,22 +152,7 @@
         <widget class="QListWidget" name="targetROI_listWidget"/>
        </item>
        <item row="1" column="1">
-        <widget class="QTreeWidget" name="OAR_treeWidget">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <attribute name="headerVisible">
-          <bool>false</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string notr="true">1</string>
-          </property>
-         </column>
-        </widget>
+        <widget class="QListWidget" name="OAR_listWidget"/>
        </item>
       </layout>
      </widget>

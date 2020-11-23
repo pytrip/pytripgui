@@ -74,7 +74,6 @@ class PlanQtView(object):
 
     def get_selected_target_roi(self):
         item_count = self.ui.targetROI_listWidget.count()
-        print(item_count)
         for i in range(item_count):
             item = self.ui.targetROI_listWidget.item(i)
             target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(item)
@@ -82,27 +81,27 @@ class PlanQtView(object):
                 return item.data(Qt.UserRole)
 
     def add_oar_with_name(self, voi, voi_name):
-        oar_item = QTreeWidgetItem()
-        oar_item.setText(0, voi_name)
-        oar_item.setData(0, Qt.UserRole, voi)
-        oar_item.setCheckState(0, Qt.Unchecked)
+        oar_item = QListWidgetItem()
+        oar_item.setText(voi_name)
+        oar_item.setData(Qt.UserRole, voi)
+        oar_item.setCheckState(Qt.Unchecked)
 
-        self.ui.OAR_treeWidget.addTopLevelItem(oar_item)
+        self.ui.OAR_listWidget.addItem(oar_item)
 
     def set_oar_as_checked(self, voi):
-        oar_list = self.ui.OAR_treeWidget.findItems(voi.name, Qt.MatchExactly)
+        oar_list = self.ui.OAR_listWidget.findItems(voi.name, Qt.MatchExactly)
         found_oar_to_check = oar_list.pop()
-        found_oar_to_check.setCheckState(0, Qt.Checked)
+        found_oar_to_check.setCheckState(Qt.Checked)
 
     def get_all_checked_oar_as_list(self):
-        oar_widget = self.ui.OAR_treeWidget
-        voi_count = oar_widget.topLevelItemCount()
+        oar_widget = self.ui.OAR_listWidget
+        voi_count = oar_widget.count()
 
         checked_oars = []
         for i in range(voi_count):
-            oar = oar_widget.topLevelItem(i)
-            if oar.checkState(0):
-                checked_oars.append(oar.data(0, Qt.UserRole))
+            oar = oar_widget.item(i)
+            if oar.checkState():
+                checked_oars.append(oar.data(Qt.UserRole))
 
         return checked_oars
 
