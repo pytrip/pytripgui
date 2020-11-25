@@ -1,7 +1,8 @@
 import logging
-logger = logging.getLogger(__name__)
 
 from pytripgui.messages import InfoMessages
+
+logger = logging.getLogger(__name__)
 
 
 class PlanController(object):
