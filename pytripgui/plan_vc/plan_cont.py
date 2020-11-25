@@ -1,6 +1,8 @@
 import logging
 logger = logging.getLogger(__name__)
 
+from pytripgui.messages import InfoMessages
+
 
 class PlanController(object):
     def __init__(self, model, view, kernels, patient_vois):
@@ -45,6 +47,9 @@ class PlanController(object):
         self.view.set_cancel_callback(self._exit)
 
     def _save_and_exit(self):
+        if not self.view.get_selected_target_roi():
+            self.view.show_info(*InfoMessages['noTargetRoiSelected'])
+            return
         self.set_model_from_view()
         self.user_clicked_save = True
         self.view.exit()

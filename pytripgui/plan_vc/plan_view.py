@@ -1,6 +1,6 @@
 from pytripgui.view.qt_gui import UiPlanDialog
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTreeWidgetItem, QListWidgetItem, QRadioButton
+from PyQt5.QtWidgets import QListWidgetItem, QRadioButton, QMessageBox
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,6 +24,9 @@ class PlanQtView(object):
 
     def set_cancel_callback(self, fun):
         self.ui.accept_buttonBox.rejected.connect(fun)
+
+    def show_info(self, name, content):
+        QMessageBox.information(self.ui, name, content)
 
     @property
     def basename(self):    # start
