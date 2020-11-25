@@ -76,9 +76,7 @@ class PlanQtView(object):
         self.ui.targetROI_listWidget.setItemWidget(item, target_item)
 
     def get_selected_target_roi(self):
-        item_count = self.ui.targetROI_listWidget.count()
-        for i in range(item_count):
-            item = self.ui.targetROI_listWidget.item(i)
+        for item in self.ui.targetROI_listWidget.findItems("", Qt.MatchRegExp):
             target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(item)
             if target_q_radio_button.isChecked():
                 return item.data(Qt.UserRole)
