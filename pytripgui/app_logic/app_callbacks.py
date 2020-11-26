@@ -93,9 +93,6 @@ class AppCallback:
             let_item.data = item.data.let
             item.add_child(let_item)
 
-        self.global_data.viewcanvases.set_simulation_results(item.data)
-        self.chart.set_simulation_result(item.data)
-
         return item
 
     def open_voxelplan_callback(self, patient_item):

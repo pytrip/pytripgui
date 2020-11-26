@@ -1,6 +1,6 @@
 from pytripgui.view.qt_gui import UiPlanDialog
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTreeWidgetItem
+from PyQt5.QtWidgets import QListWidgetItem, QRadioButton, QMessageBox
 
 import logging
 logger = logging.getLogger(__name__)
@@ -24,6 +24,9 @@ class PlanQtView(object):
 
     def set_cancel_callback(self, fun):
         self.ui.accept_buttonBox.rejected.connect(fun)
+
+    def show_info(self, name, content):
+        QMessageBox.information(self.ui, name, content)
 
     @property
     def basename(self):    # start
@@ -61,40 +64,45 @@ class PlanQtView(object):
     def uuid(self, uuid):
         self.ui.uuid_lineEdit.setText(uuid)
 
-    def add_target_roi_with_name(self, target, target_name):
-        self.ui.targetROI_comboBox.addItem(target_name, target)
+    def add_target_roi_with_name(self, target, target_name, checked=False):
+        target_item = QRadioButton()
+        target_item.setText(target_name)
+        if checked:
+            target_item.setChecked(Qt.Checked)
 
-    def select_target_roi_to_this(self, target):
-        index_of_target = self.ui.targetROI_comboBox.findData(target, Qt.UserRole)
-        if index_of_target == -1:
-            raise Exception("Given target roi wasn't found on the list")
-        self.ui.targetROI_comboBox.setCurrentIndex(index_of_target)
+        item = QListWidgetItem(self.ui.targetROI_listWidget)
+        item.setData(Qt.UserRole, target)
+
+        self.ui.targetROI_listWidget.setItemWidget(item, target_item)
 
     def get_selected_target_roi(self):
-        return self.ui.targetROI_comboBox.currentData()
+        for item in self.ui.targetROI_listWidget.findItems("", Qt.MatchRegExp):
+            target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(item)
+            if target_q_radio_button.isChecked():
+                return item.data(Qt.UserRole)
 
     def add_oar_with_name(self, voi, voi_name):
-        oar_item = QTreeWidgetItem()
-        oar_item.setText(0, voi_name)
-        oar_item.setData(0, Qt.UserRole, voi)
-        oar_item.setCheckState(0, Qt.Unchecked)
+        oar_item = QListWidgetItem()
+        oar_item.setText(voi_name)
+        oar_item.setData(Qt.UserRole, voi)
+        oar_item.setCheckState(Qt.Unchecked)
 
-        self.ui.OAR_treeWidget.addTopLevelItem(oar_item)
+        self.ui.OAR_listWidget.addItem(oar_item)
 
     def set_oar_as_checked(self, voi):
-        oar_list = self.ui.OAR_treeWidget.findItems(voi.name, Qt.MatchExactly)
+        oar_list = self.ui.OAR_listWidget.findItems(voi.name, Qt.MatchExactly)
         found_oar_to_check = oar_list.pop()
-        found_oar_to_check.setCheckState(0, Qt.Checked)
+        found_oar_to_check.setCheckState(Qt.Checked)
 
     def get_all_checked_oar_as_list(self):
-        oar_widget = self.ui.OAR_treeWidget
-        voi_count = oar_widget.topLevelItemCount()
+        oar_widget = self.ui.OAR_listWidget
+        voi_count = oar_widget.count()
 
         checked_oars = []
         for i in range(voi_count):
-            oar = oar_widget.topLevelItem(i)
-            if oar.checkState(0):
-                checked_oars.append(oar.data(0, Qt.UserRole))
+            oar = oar_widget.item(i)
+            if oar.checkState():
+                checked_oars.append(oar.data(Qt.UserRole))
 
         return checked_oars
 

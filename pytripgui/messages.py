@@ -32,7 +32,10 @@ InfoMessages_en = {
         "Before continue, you should configure Trip98 paths in Settings/Trip98 Config"],
     "kernelSisPath": [
         "Given kernel has no sis path",
-        "Kernel selected by plan has no valid sis path"]
+        "Kernel selected by plan has no valid sis path"],
+    "noTargetRoiSelected": [
+        "No target ROI selected",
+        "Please select TargetROI in 'Target' tab"]
 }
 
 InfoMessages = InfoMessages_en
