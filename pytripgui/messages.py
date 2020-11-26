@@ -35,7 +35,7 @@ InfoMessages_en = {
         "Kernel selected by plan has no valid sis path"],
     "noTargetRoiSelected": [
         "No target ROI selected",
-        "Please select at least one TargetROI in 'Target' tab"]
+        "Please select one TargetROI in 'Target' tab"]
 }
 
 InfoMessages = InfoMessages_en
