@@ -32,7 +32,7 @@ class PatientTree:
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback
         self.patient_tree_cont.edit_item_callback = app_callback.edit_item_callback
         self.patient_tree_cont.open_voxelplan_callback = app_callback.open_voxelplan_callback
-        self.patient_tree_cont.execute_plan_callback = app_callback.execute_plan
+        self.patient_tree_cont.execute_plan_callback = app_callback.on_execute_selected_plan
         self.patient_tree_cont.one_click_callback = app_callback.one_click_callback
 
     def add_new_item(self, parent_item, item):

@@ -18,6 +18,8 @@ class MainModel(object):
         self.kernels = []  # placeholder for KernelModels
 
         self.viewcanvases = None
+        self.patient_tree = None
+        self.settings = None
 
         self.settings = SettingsModel(self)
 
