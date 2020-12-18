@@ -50,7 +50,7 @@ class MainWindowController(object):
         self.view.action_create_field = self.on_create_field
         self.view.action_execute_plan = self.on_execute_selected_plan
 
-        self.app_callback = AppCallback(self.model, self.model.executor, self.view)
+        self.app_callback = AppCallback(self.model, self.view)
 
         self.patient_tree = PatientTree(self.view)
         self.patient_tree.app_callback(self.app_callback)
@@ -119,7 +119,7 @@ class MainWindowController(object):
 
         view = self.view.get_trip_config_view()
 
-        controller = ConfigController(self.model.executor.trip_config, view)
+        controller = ConfigController(self.model.trip_config, view)
         controller.set_view_from_model()
         view.show()
 

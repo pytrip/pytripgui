@@ -12,15 +12,16 @@ from pytripgui.tree_vc.TreeItems import SimulationResultItem
 from pytripgui.messages import InfoMessages
 from pytripgui.app_logic.charts import Charts
 
+from pytripgui.plan_executor.executor import PlanExecutor
+
 import os
 import logging
 logger = logging.getLogger(__name__)
 
 
 class AppCallback:
-    def __init__(self, global_data, executor=None, parent_gui=None):
+    def __init__(self, global_data, parent_gui=None):
         self.global_data = global_data
-        self.executor = executor
         self.parent_gui = parent_gui
         self.chart = Charts(self.parent_gui)
 
@@ -80,8 +81,10 @@ class AppCallback:
             self.parent_gui.show_info(*InfoMessages["addOneField"])
             return
 
+        plan_executor = PlanExecutor(self.global_data.trip_config)
+
         item = SimulationResultItem()
-        item.data = self.executor.execute(patient.data, plan.data)
+        item.data = plan_executor.execute(patient.data, plan.data)
 
         if item.data.dose:
             dose_item = SimulationResultItem()
