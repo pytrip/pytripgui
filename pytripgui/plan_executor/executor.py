@@ -9,8 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class PlanExecutor:
-    def __init__(self, trip_config):
+    def __init__(self, trip_config, listener=None):
         self.trip_config = trip_config
+        self.listener = listener
 
     def check_config(self):
         # TODO replace with function that actually runs trip, and collect returned errors
@@ -29,6 +30,8 @@ class PlanExecutor:
 
         te = pte.Execute(patient.ctx, patient.vdx)
         te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+        if self.listener:
+            te.add_log_listener(self.listener)
 
         try:
             te.execute(plan)

@@ -10,24 +10,13 @@ from pytripgui.tree_vc.TreeItems import SimulationResultItem
 from pytripgui.messages import InfoMessages
 from pytripgui.app_logic.charts import Charts
 
-from pytripgui.plan_executor.executor import PlanExecutor
+from pytripgui.app_logic.gui_executor import GuiExecutor
 
 from pytripgui.view.qt_gui import UiAddPatient
 
 import os
 import logging
-import threading
 logger = logging.getLogger(__name__)
-
-
-class ThreadedExecutor(threading.Thread):
-    def __init__(self, te, plan):
-        super().__init__()
-        self.te = te
-        self.plan = plan
-
-    def run(self):
-        self.te.execute(self.plan)
 
 
 class AppCallback:
@@ -35,6 +24,7 @@ class AppCallback:
         self.app_model = app_model
         self.parent_gui = parent_gui
         self.chart = Charts(self.parent_gui)
+        self.exec_threads = list()
 
     def on_open_voxelplan(self):
         patient = PatientItem()
@@ -53,16 +43,21 @@ class AppCallback:
         else:
             plan = item
 
-        if isinstance(plan, PlanItem):
-            sim_results = self._execute_plan(
-                plan,
-                self.app_model.patient_tree.selected_item_patient()
-            )
-            if sim_results:
-                self.app_model.patient_tree.add_new_item(None, sim_results)
-
-        else:
+        if not isinstance(plan, PlanItem):
             raise TypeError("You should select Field or Plan")
+
+        patient = self.app_model.patient_tree.selected_item_patient()
+
+        executer = GuiExecutor(
+            self.app_model.trip_config, patient, plan, self._execute_finish_callback, self.parent_gui.ui)
+
+        executer.start()
+        executer.show()
+
+        self.exec_threads.append(executer)
+
+    def _execute_finish_callback(self, item):
+        self.app_model.patient_tree.add_new_item(None, item)
 
     def on_add_new_plan(self):
         selected_patient = self.app_model.patient_tree.selected_item_patient()
@@ -176,28 +171,6 @@ class AppCallback:
         if controller.user_clicked_save:
             return item
         return None
-
-    def _execute_plan(self, plan, patient):
-        if not plan.data.fields:
-            self.parent_gui.show_info(*InfoMessages["addOneField"])
-            return
-
-        plan_executor = PlanExecutor(self.app_model.trip_config)
-
-        item = SimulationResultItem()
-        item.data = plan_executor.execute(patient.data, plan.data)
-
-        if item.data.dose:
-            dose_item = SimulationResultItem()
-            dose_item.data = item.data.dose
-            item.add_child(dose_item)
-
-        if item.data.let:
-            let_item = SimulationResultItem()
-            let_item.data = item.data.let
-            item.add_child(let_item)
-
-        return item
 
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
