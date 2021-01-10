@@ -14,6 +14,7 @@ class GuiExecutor:
             return
 
         self.result_callback = result_callback
+        self.done = False   # True when object can be removed from memory
 
         self._gui_update_timer = QTimer()
         self._thread = ThreadedExecutor(plan, patient, trip_config)
@@ -28,6 +29,8 @@ class GuiExecutor:
             self._gui_update_timer.singleShot(10, self.update_gui)
         else:
             self._call_result_callback()
+            self._ui.enable_ok_button()
+            self.done = True
 
         while not self._thread.std_out_queue.empty():
             text = self._thread.std_out_queue.get(False)
