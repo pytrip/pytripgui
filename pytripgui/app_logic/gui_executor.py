@@ -29,7 +29,7 @@ class GuiExecutor:
         else:
             self._call_result_callback()
 
-        if not self._thread.std_out_queue.empty():
+        while not self._thread.std_out_queue.empty():
             text = self._thread.std_out_queue.get(False)
             self._ui.append_log(text)
 
