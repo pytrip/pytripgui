@@ -24,7 +24,6 @@ class AppCallback:
         self.app_model = app_model
         self.parent_gui = parent_gui
         self.chart = Charts(self.parent_gui)
-        self.exec_threads = list()
 
     def on_open_voxelplan(self):
         patient = PatientItem()
@@ -53,8 +52,6 @@ class AppCallback:
 
         executer.start()
         executer.show()
-
-        self.exec_threads.append(executer)
 
     def _execute_finish_callback(self, item):
         self.app_model.patient_tree.add_new_item(None, item)
