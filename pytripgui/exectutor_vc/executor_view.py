@@ -10,17 +10,17 @@ class ExecutorQtView(object):
         self._ui.show()
         self._ui.exec_()
 
-    def exit(self):
+    def _exit(self):
         self._ui.close()
 
-    def set_ok_callback(self, fun):
+    def _set_ok_callback(self, fun):
         self._ui.accept_ButtonBox.accepted.connect(fun)
 
-    def set_cancel_callback(self, fun):
-        self._ui.accept_ButtonBox.rejected.connect(fun)
-
     def _setup_internal_callbacks(self):
-        pass
+        self._set_ok_callback(self._exit)
 
     def append_log(self, text):
         self._ui.stdout_textBrowser.append(text)
+
+    def enable_ok_button(self):
+        self._ui.accept_ButtonBox.setEnabled(True)

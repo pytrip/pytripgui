@@ -43,8 +43,11 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="accept_ButtonBox">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
