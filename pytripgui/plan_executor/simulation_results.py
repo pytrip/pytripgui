@@ -14,7 +14,7 @@ class SimulationResults:
         self.plan = None
         self.dose = None
         self.let = None
-        self.volume_histograms = dict()
+        self.volume_histograms = {}
 
         self._import_results(plan)
 
@@ -45,14 +45,14 @@ class SimulationResults:
 
     def _compute_target_dvh(self):
         if self.dose:
-            dvh = dict()
+            dvh = {}
             target_name = self.plan.voi_target.name
             dvh[target_name] = volhist.VolHist(self.dose, self.patient.vdx.get_voi_by_name(target_name))
             self.volume_histograms['DVH'] = dvh
 
     def _compute_target_lvh(self):
         if self.let:
-            lvh = dict()
+            lvh = {}
             target_name = self.plan.voi_target.name
             lvh[target_name] = volhist.VolHist(self.let, self.patient.vdx.get_voi_by_name(target_name))
             self.volume_histograms['LVH'] = lvh

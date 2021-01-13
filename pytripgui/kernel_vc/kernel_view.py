@@ -204,7 +204,7 @@ class KernelQtView(object):
 
     def get_all_kernels(self):
         kernels_count = self.ui.beamKernel_comboBox.count()
-        kernels = list()
+        kernels = []
         for i in range(kernels_count):
             kernel = self.ui.beamKernel_comboBox.itemData(i, Qt.UserRole)
             kernels.append(kernel)

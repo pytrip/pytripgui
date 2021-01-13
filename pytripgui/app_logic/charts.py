@@ -8,11 +8,11 @@ class Charts:
     def __init__(self, parent_gui):
         self._parent_gui = parent_gui
 
-        self._charts = list()
-        self._dock_widgets = list()
+        self._charts = []
+        self._dock_widgets = []
 
     def set_simulation_result(self, simulation_result):
-        self._charts = list()
+        self._charts = []
 
         for histogram_name in simulation_result.volume_histograms:
             widget = ChartWidget()
@@ -28,7 +28,7 @@ class Charts:
 
     def _show(self):
         self._close_all()
-        self._dock_widgets = list()
+        self._dock_widgets = []
 
         for chart in self._charts:
             widget = QDockWidget()
