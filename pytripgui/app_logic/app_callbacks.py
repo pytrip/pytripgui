@@ -51,11 +51,11 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        executer = GuiExecutor(
+        executor = GuiExecutor(
             self.app_model.trip_config, patient, plan, self._execute_finish_callback, self.parent_gui.ui)
 
-        executer.start()
-        executer.show()
+        executor.start()
+        executor.show()
 
     def _execute_finish_callback(self, item):
         self.app_model.patient_tree.add_new_item(None, item)
