@@ -1,6 +1,6 @@
 import logging
 
-from pytripgui.plan_executor.executor import PlanExecutor
+from pytripgui.plan_executor.trip_config import Trip98ConfigModel
 
 logger = logging.getLogger(__name__)
 
@@ -14,10 +14,12 @@ class MainModel(object):
         self._pytrip_version = _pytrip_version
         self._pytripgui_version = _pytripgui_version
 
-        self.executor = PlanExecutor()
+        self.trip_config = Trip98ConfigModel()
         self.kernels = []  # placeholder for KernelModels
 
         self.viewcanvases = None
+        self.patient_tree = None
+        self.settings = None
 
         self.settings = SettingsModel(self)
 
@@ -41,8 +43,7 @@ class SettingsModel(object):
             a) _version is written to disk, but imported into Model when loading
             b) __internal_attribute__ are not passed between Model and SettingsModel
         """
-        # self.trip_config = model.trip_config
-        self.executor = model.executor
+        self.trip_config = model.trip_config
 
         self.kernels = model.kernels
 
