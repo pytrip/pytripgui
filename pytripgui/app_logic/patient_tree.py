@@ -19,7 +19,8 @@ class PatientTree:
         self.patient_tree_view = TreeView()
 
         self.patient_tree_view.setModel(self.patient_tree_model)
-        self.patient_tree_cont = TreeController(self.patient_tree_model, self.patient_tree_view)
+        self.patient_tree_cont = TreeController(self.patient_tree_model,
+                                                self.patient_tree_view)
 
         self.patient_tree_view.internal_events.on_export_voxelplan = self._export_cube_callback
 
