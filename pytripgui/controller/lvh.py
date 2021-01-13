@@ -9,7 +9,6 @@ class Lvh(object):
     """
     This class holds logic for plotting CTX stuff.
     """
-
     def __init__(self, model, view):
         """
         """

@@ -18,7 +18,8 @@ def git_version():
         env['LANGUAGE'] = 'C'
         env['LANG'] = 'C'
         env['LC_ALL'] = 'C'
-        out = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env).communicate()[0]
+        out = subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                               env=env).communicate()[0]
         return out
 
     try:
@@ -30,7 +31,8 @@ def git_version():
             if no_of_commits_since_last_tag == 0:
                 version = tag_name
             else:
-                version = '{}+rev{}'.format(tag_name, no_of_commits_since_last_tag)
+                version = '{}+rev{}'.format(tag_name,
+                                            no_of_commits_since_last_tag)
         else:
             version = "Unknown"
     except OSError:

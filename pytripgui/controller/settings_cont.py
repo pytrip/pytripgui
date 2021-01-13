@@ -27,8 +27,10 @@ class SettingsController:
         self.model = model
         # new settings handler here
 
-        self.pkl_path = os.path.join(self.get_user_directory(), self.default_filename)
-        logger.debug("New setup config parser based on {:s}".format(self.pkl_path))
+        self.pkl_path = os.path.join(self.get_user_directory(),
+                                     self.default_filename)
+        logger.debug("New setup config parser based on {:s}".format(
+            self.pkl_path))
 
         try:
             self.load()
@@ -41,7 +43,9 @@ class SettingsController:
         If file does not exist, exit silently.
         """
 
-        logger.debug("SettingsController.load() : loading settings from {}".format(self.pkl_path))
+        logger.debug(
+            "SettingsController.load() : loading settings from {}".format(
+                self.pkl_path))
 
         model = self.model
         pkl = self.pkl_path
@@ -57,7 +61,9 @@ class SettingsController:
                     if hasattr(model, _attr):
                         setattr(model, _attr, _value)
                     else:
-                        logger.warning("pytripgui.model has no attribute '{}'. It will not be set.".format(_attr))
+                        logger.warning(
+                            "pytripgui.model has no attribute '{}'. It will not be set."
+                            .format(_attr))
         else:
             logger.info("Settings file {} not found.".format(pkl))
 
@@ -79,7 +85,9 @@ class SettingsController:
         else:
             pkl = self.pkl_path
 
-        logger.debug("SettingsController.save() : saving settings to {}".format(self.pkl_path))
+        logger.debug(
+            "SettingsController.save() : saving settings to {}".format(
+                self.pkl_path))
 
         # sync model.settings attributes from model
         for _attr in dir(_ms):

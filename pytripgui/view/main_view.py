@@ -11,7 +11,6 @@ class MainView(object):
     """
     Viewer class for matplotlib 2D plotting widget
     """
-
     def __init__(self):
         self.ui = UiMainWindow()
 

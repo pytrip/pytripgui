@@ -36,7 +36,8 @@ class TestKernelDialog:
         # selecting kernel to edit
         current_kernel_index = 1
         view.ui.beamKernel_comboBox.setCurrentIndex(current_kernel_index)
-        assert view.projectile_symbol == TestKernelDialog.kernels[current_kernel_index].projectile.iupac
+        assert view.projectile_symbol == TestKernelDialog.kernels[
+            current_kernel_index].projectile.iupac
 
         # setting new name
         new_kernel_name = "Proton"
@@ -48,4 +49,5 @@ class TestKernelDialog:
         assert controller.user_clicked_save
 
         # checking if new name was saved
-        assert TestKernelDialog.kernels[current_kernel_index].name == new_kernel_name
+        assert TestKernelDialog.kernels[
+            current_kernel_index].name == new_kernel_name

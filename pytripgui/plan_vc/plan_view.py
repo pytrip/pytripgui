@@ -29,11 +29,11 @@ class PlanQtView(object):
         QMessageBox.information(self.ui, name, content)
 
     @property
-    def basename(self):    # start
+    def basename(self):  # start
         return self.ui.basename_lineEdit.text()
 
     @basename.getter
-    def basename(self):    # start
+    def basename(self):  # start
         return self.ui.basename_lineEdit.text()
 
     @basename.setter
@@ -77,7 +77,8 @@ class PlanQtView(object):
 
     def get_selected_target_roi(self):
         for item in self.ui.targetROI_listWidget.findItems("", Qt.MatchRegExp):
-            target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(item)
+            target_q_radio_button = self.ui.targetROI_listWidget.itemWidget(
+                item)
             if target_q_radio_button.isChecked():
                 return item.data(Qt.UserRole)
 
@@ -186,7 +187,8 @@ class PlanQtView(object):
         return self.ui.optiMethod_comboBox.currentData(Qt.UserRole)
 
     def select_opti_method_view_to_this(self, opti):
-        index_of_kernel = self.ui.optiMethod_comboBox.findData(opti, Qt.UserRole)
+        index_of_kernel = self.ui.optiMethod_comboBox.findData(
+            opti, Qt.UserRole)
         if index_of_kernel == -1:
             raise Exception("Given kernel wasn't found on the list")
         self.ui.optiMethod_comboBox.setCurrentIndex(index_of_kernel)
@@ -198,7 +200,8 @@ class PlanQtView(object):
         return self.ui.principle_comboBox.currentData(Qt.UserRole)
 
     def select_principle_view_to_this(self, principle):
-        index_of_principle = self.ui.principle_comboBox.findData(principle, Qt.UserRole)
+        index_of_principle = self.ui.principle_comboBox.findData(
+            principle, Qt.UserRole)
         if index_of_principle == -1:
             raise Exception("Given principle wasn't found on the list")
         self.ui.principle_comboBox.setCurrentIndex(index_of_principle)
@@ -210,7 +213,8 @@ class PlanQtView(object):
         return self.ui.doseAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_dose_algorithm_view_to_this(self, dose_alg):
-        index_of_dose_alg = self.ui.doseAlgorithm_comboBox.findData(dose_alg, Qt.UserRole)
+        index_of_dose_alg = self.ui.doseAlgorithm_comboBox.findData(
+            dose_alg, Qt.UserRole)
         if index_of_dose_alg == -1:
             raise Exception("Given dose algorithm wasn't found on the list")
         self.ui.doseAlgorithm_comboBox.setCurrentIndex(index_of_dose_alg)
@@ -222,9 +226,11 @@ class PlanQtView(object):
         return self.ui.bioAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_bio_algorithm_view_to_this(self, biol_alg):
-        index_of_biol_alg = self.ui.bioAlgorithm_comboBox.findData(biol_alg, Qt.UserRole)
+        index_of_biol_alg = self.ui.bioAlgorithm_comboBox.findData(
+            biol_alg, Qt.UserRole)
         if index_of_biol_alg == -1:
-            raise Exception("Given biological algorithm wasn't found on the list")
+            raise Exception(
+                "Given biological algorithm wasn't found on the list")
         self.ui.bioAlgorithm_comboBox.setCurrentIndex(index_of_biol_alg)
 
     def add_opti_algorithm_with_name(self, opti_alg, opti_alg_name):
@@ -234,9 +240,11 @@ class PlanQtView(object):
         return self.ui.optiAlgorithm_comboBox.currentData(Qt.UserRole)
 
     def select_opti_algorithm_view_to_this(self, opti_alg):
-        index_of_opti_alg = self.ui.optiAlgorithm_comboBox.findData(opti_alg, Qt.UserRole)
+        index_of_opti_alg = self.ui.optiAlgorithm_comboBox.findData(
+            opti_alg, Qt.UserRole)
         if index_of_opti_alg == -1:
-            raise Exception("Given optimization algorithm wasn't found on the list")
+            raise Exception(
+                "Given optimization algorithm wasn't found on the list")
         self.ui.optiAlgorithm_comboBox.setCurrentIndex(index_of_opti_alg)
 
     @property

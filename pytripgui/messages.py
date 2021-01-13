@@ -17,25 +17,30 @@ InfoMessages_en = {
     "about": ["PyTRiPGUI", about_txt_en],
     "addNewPatient": [
         "Add new Patient",
-        "Before continue, you should create or import Patient"],
+        "Before continue, you should create or import Patient"
+    ],
     "loadCtxVdx": [
         "Load CTX and VDX file",
-        "Before continue, you should have loaded CTX and VDX data"],
+        "Before continue, you should have loaded CTX and VDX data"
+    ],
     "addOneField": [
         "Add at least one field",
-        "Before continue, you should add at least one field to selected plan"],
+        "Before continue, you should add at least one field to selected plan"
+    ],
     "configureKernelList": [
         "Add at least one kernel",
-        "Before continue, you should add at least one kernel in Settings/Beam Kernel"],
+        "Before continue, you should add at least one kernel in Settings/Beam Kernel"
+    ],
     "configureTrip": [
         "Configure trip98 settings",
-        "Before continue, you should configure Trip98 paths in Settings/Trip98 Config"],
+        "Before continue, you should configure Trip98 paths in Settings/Trip98 Config"
+    ],
     "kernelSisPath": [
         "Given kernel has no sis path",
-        "Kernel selected by plan has no valid sis path"],
-    "noTargetRoiSelected": [
-        "No target ROI selected",
-        "Please select TargetROI in 'Target' tab"]
+        "Kernel selected by plan has no valid sis path"
+    ],
+    "noTargetRoiSelected":
+    ["No target ROI selected", "Please select TargetROI in 'Target' tab"]
 }
 
 InfoMessages = InfoMessages_en

@@ -35,11 +35,8 @@ class MainWindowQtView(object):
         """
         :return full file path, or empty string
         """
-        selected_file = QFileDialog.getOpenFileName(
-            self.ui,
-            name,
-            path,
-            extension)
+        selected_file = QFileDialog.getOpenFileName(self.ui, name, path,
+                                                    extension)
         return selected_file[0]
 
     def browse_folder_path(self, name, path=None):

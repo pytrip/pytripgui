@@ -106,7 +106,9 @@ class PlanController(object):
 
     def _setup_kernels(self):
         if not self.kernels:
-            logger.error("You should first setup kernels with: Settings -> beam kernels")
+            logger.error(
+                "You should first setup kernels with: Settings -> beam kernels"
+            )
             return
 
         for kernel in self.kernels:

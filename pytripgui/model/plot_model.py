@@ -25,10 +25,12 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no +
+                                 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no -
+                                 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -90,7 +92,8 @@ class PlotModel(object):
         # DVHPlot specific
         # TODO: these will be future pt.VolHist objects.
         # Here we shall only keep a list of those dvh's we want to plot.
-        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
+        self.dvhs = [
+        ]  # dose volume histograms, list of [x,y] ready for plotting
 
         # Idea is to attach the VolHist classes to the DosCube objects themselves.
         # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
@@ -99,11 +102,13 @@ class PlotModel(object):
         # LVHPlot specific
         # TODO: these will be future pt.VolHist objects.
         # Here we shall only keep a list of those dvh's we want to plot.
-        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
+        self.lvhs = [
+        ]  # let volume histograms, list of [x,y] ready for plotting
 
         # VDX specific
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        self.vois = [
+        ]  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
         self.plot_vois = True  # whether all vois are plotted at all
 
         self.projection_selector = ProjectionSelector()

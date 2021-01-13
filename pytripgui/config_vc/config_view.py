@@ -22,36 +22,28 @@ class ConfigQtView(object):
 
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.ui,
-            "Select working directory",
-            self.wdir_path,
+            self.ui, "Select working directory", self.wdir_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.wdir_path = selected_dir
 
     def _browse_trip_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.ui,
-            "Select trip executable directory",
-            self.trip_path,
+            self.ui, "Select trip executable directory", self.trip_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.trip_path = selected_dir
 
     def _browse_hlut_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.ui,
-            "Select HLUT",
-            self.hlut_path,
+            self.ui, "Select HLUT", self.hlut_path,
             "Hounsfield lookup table (*.hlut)")
         if selected_file[0] != "":
             self.hlut_path = selected_file[0]
 
     def _browse_dedx_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.ui,
-            "Select DEDX",
-            self.dedx_path,
+            self.ui, "Select DEDX", self.dedx_path,
             "Stopping power table (*.dedx)")
         if selected_file[0] != "":
             print(selected_file)

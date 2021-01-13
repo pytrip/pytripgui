@@ -53,7 +53,8 @@ class AppCallback:
 
         view = PlanQtView(self.parent_gui.ui)
 
-        controller = PlanController(item.data, view, self.global_data.kernels, patient.data.vdx.vois)
+        controller = PlanController(item.data, view, self.global_data.kernels,
+                                    patient.data.vdx.vois)
         controller.set_view_from_model()
         view.show()
 
@@ -96,7 +97,8 @@ class AppCallback:
         return item
 
     def open_voxelplan_callback(self, patient_item):
-        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
+        path = self.parent_gui.browse_file_path("Open Voxelpan",
+                                                "Voxelplan (*.hed)")
         filename, extension = os.path.splitext(path)
 
         if filename == "":

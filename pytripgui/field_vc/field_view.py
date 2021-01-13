@@ -24,11 +24,16 @@ class FieldQtView(object):
         self.ui.accept_ButtonBox.rejected.connect(fun)
 
     def _setup_internal_callbacks(self):
-        self.ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
-        self.ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
-        self.ui.gantry_pushButton_m90.clicked.connect(self._gantry_m90)  # -90 deg
-        self.ui.couch_pushButton_p90.clicked.connect(self._couch_p90)  # +90 deg
-        self.ui.couch_pushButton_m90.clicked.connect(self._couch_m90)  # -90 deg
+        self.ui.manualIsocenter_checkBox.stateChanged.connect(
+            self._isocenter_checkbox_callback)
+        self.ui.gantry_pushButton_p90.clicked.connect(
+            self._gantry_p90)  # +90 deg
+        self.ui.gantry_pushButton_m90.clicked.connect(
+            self._gantry_m90)  # -90 deg
+        self.ui.couch_pushButton_p90.clicked.connect(
+            self._couch_p90)  # +90 deg
+        self.ui.couch_pushButton_m90.clicked.connect(
+            self._couch_m90)  # -90 deg
 
     def _isocenter_checkbox_callback(self):
         checkbox_state = self.ui.manualIsocenter_checkBox.checkState()
@@ -74,9 +79,11 @@ class FieldQtView(object):
         return self.ui.manualIsocenter_checkBox.isChecked()
 
     def get_isocenter_value(self):
-        isocenter = [self.ui.isocenterX_doubleSpinBox.value(),
-                     self.ui.isocenterY_doubleSpinBox.value(),
-                     self.ui.isocenterZ_doubleSpinBox.value()]
+        isocenter = [
+            self.ui.isocenterX_doubleSpinBox.value(),
+            self.ui.isocenterY_doubleSpinBox.value(),
+            self.ui.isocenterZ_doubleSpinBox.value()
+        ]
         return isocenter
 
     def set_isocenter_state(self, state):
@@ -104,14 +111,18 @@ class FieldQtView(object):
 
     @property
     def raster_step(self):
-        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
-                       self.ui.rasterSpaceY_doubleSpinBox.value()]
+        raster_step = [
+            self.ui.rasterSpaceX_doubleSpinBox.value(),
+            self.ui.rasterSpaceY_doubleSpinBox.value()
+        ]
         return raster_step
 
     @raster_step.getter
     def raster_step(self):
-        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
-                       self.ui.rasterSpaceY_doubleSpinBox.value()]
+        raster_step = [
+            self.ui.rasterSpaceX_doubleSpinBox.value(),
+            self.ui.rasterSpaceY_doubleSpinBox.value()
+        ]
         return raster_step
 
     @raster_step.setter

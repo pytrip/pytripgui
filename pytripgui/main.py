@@ -18,7 +18,11 @@ def main(args=sys.argv[1:]):
 
     # setup parser
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--verbosity', action='count', help="increase output verbosity", default=0)
+    parser.add_argument('-v',
+                        '--verbosity',
+                        action='count',
+                        help="increase output verbosity",
+                        default=0)
     parser.add_argument('-V', '--version', action='version', version=_vers)
     parser.add_argument("--ctx", help="CtxCube", type=str, nargs='?')
     # parser.add_argument("--vdx", help="VdxCube", type=str, nargs='?')
