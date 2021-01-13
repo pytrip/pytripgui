@@ -8,6 +8,8 @@ from PyQt5.QtCore import QTimer
 
 
 class GuiExecutor:
+    GUI_UPDATE_RATE_MS = 10     # GUI update rate during trip98 execution [ms]
+
     def __init__(self, trip_config, patient, plan, result_callback, partnt_view):
         if not plan.data.fields:
             partnt_view.show_info(*InfoMessages["addOneField"])
@@ -26,7 +28,8 @@ class GuiExecutor:
 
     def update_gui(self):
         if self._thread.is_alive():
-            self._gui_update_timer.singleShot(10, self.update_gui)
+            # if thread is still alive, execute this function in GUI_UPDATE_RATE_MS
+            self._gui_update_timer.singleShot(GuiExecutor.GUI_UPDATE_RATE_MS, self.update_gui)
         else:
             self._call_result_callback()
             self._ui.enable_ok_button()
@@ -38,7 +41,8 @@ class GuiExecutor:
 
     def start(self):
         self._thread.start()
-        self._gui_update_timer.singleShot(10, self.update_gui)
+        # update gui in GUI_UPDATE_RATE_MS
+        self._gui_update_timer.singleShot(GuiExecutor.GUI_UPDATE_RATE_MS, self.update_gui)
 
     def _call_result_callback(self):
         if self._thread.item_queue.empty():
