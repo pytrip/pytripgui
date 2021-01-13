@@ -1,6 +1,5 @@
 import logging
 
-from pytripgui.controller.settings_cont import SettingsController
 from pytripgui.messages import InfoMessages
 
 from pytripgui.app_logic.patient_tree import PatientTree
@@ -34,8 +33,6 @@ class MainWindowController(object):
         TODO: some description here
         """
         self.app_callback = AppCallback(self.model, self.view)
-
-        self.model.settings = SettingsController(self.model)
 
         self.model.patient_tree = PatientTree(self.view)
         self.model.patient_tree.app_callback(self.app_callback)

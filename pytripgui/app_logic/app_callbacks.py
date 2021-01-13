@@ -14,6 +14,8 @@ from pytripgui.app_logic.gui_executor import GuiExecutor
 
 from pytripgui.view.qt_gui import UiAddPatient
 
+from pytripgui.controller.settings_cont import SettingsController
+
 import os
 import logging
 logger = logging.getLogger(__name__)
@@ -24,6 +26,8 @@ class AppCallback:
         self.app_model = app_model
         self.parent_gui = parent_gui
         self.chart = Charts(self.parent_gui)
+
+        self.settings = SettingsController(self.app_model)
 
     def on_open_voxelplan(self):
         patient = PatientItem()
@@ -77,7 +81,7 @@ class AppCallback:
         view.show()
 
         if controller.user_clicked_save:
-            self.app_model.settings.save()
+            self.settings.save()
 
     def on_trip98_config(self):
         """
@@ -94,7 +98,7 @@ class AppCallback:
         view.show()
 
         if controller.user_clicked_save:
-            self.app_model.settings.save()
+            self.settings.save()
 
     def on_add_patient(self):
         dialog = UiAddPatient(self.parent_gui.ui)
