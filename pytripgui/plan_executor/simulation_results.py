@@ -14,7 +14,7 @@ class SimulationResults:
         self.plan = None
         self.dose = None
         self.let = None
-        self.volume_histograms = dict()
+        self.volume_histograms = {}
 
         self._import_results(plan)
 
@@ -22,12 +22,14 @@ class SimulationResults:
         self.name = plan.basename
         self.plan = plan
         if plan.want_phys_dose:
-            dos_path = os.path.join(plan.working_dir, plan.basename + '.phys.dos')
+            dos_path = os.path.join(plan.working_dir,
+                                    plan.basename + '.phys.dos')
             self._import_dos(dos_path)
             self._compute_target_dvh()
 
         if plan.want_dlet:
-            let_path = os.path.join(plan.working_dir, plan.basename + '.dosemlet.dos')
+            let_path = os.path.join(plan.working_dir,
+                                    plan.basename + '.dosemlet.dos')
             self._import_let(let_path)
             self._compute_target_lvh()
 
@@ -45,16 +47,18 @@ class SimulationResults:
 
     def _compute_target_dvh(self):
         if self.dose:
-            dvh = dict()
+            dvh = {}
             target_name = self.plan.voi_target.name
-            dvh[target_name] = volhist.VolHist(self.dose, self.patient.vdx.get_voi_by_name(target_name))
+            dvh[target_name] = volhist.VolHist(
+                self.dose, self.patient.vdx.get_voi_by_name(target_name))
             self.volume_histograms['DVH'] = dvh
 
     def _compute_target_lvh(self):
         if self.let:
-            lvh = dict()
+            lvh = {}
             target_name = self.plan.voi_target.name
-            lvh[target_name] = volhist.VolHist(self.let, self.patient.vdx.get_voi_by_name(target_name))
+            lvh[target_name] = volhist.VolHist(
+                self.let, self.patient.vdx.get_voi_by_name(target_name))
             self.volume_histograms['LVH'] = lvh
 
     def __str__(self):
