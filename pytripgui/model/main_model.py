@@ -31,7 +31,6 @@ class SettingsModel(object):
     Model attribute names with leading _ are saved, but not loaded.
     Model attribute names with leading __ are not saved and not loaded.
     """
-
     def __init__(self, model):
         """
         This object is pickled upon save and unpickled upon load.
