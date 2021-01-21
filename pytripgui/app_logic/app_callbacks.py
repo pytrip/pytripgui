@@ -207,10 +207,13 @@ class AppCallback:
         self.app_model.viewcanvases.set_patient(patient)
         return True
 
-    def one_click_callback(self, top_item, item):
+    def one_click_callback(self):
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
+
+        item = self.app_model.patient_tree.selected_item()
+        top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
             self.app_model.viewcanvases.set_simulation_results(top_item.data)

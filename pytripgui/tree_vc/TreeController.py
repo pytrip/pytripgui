@@ -49,4 +49,4 @@ class TreeController:
             self.execute_plan_callback()
 
     def _on_click_callback(self):
-        self.one_click_callback(self._view.selected_item_patient, self._view.selected_item)
+        self.one_click_callback()
