@@ -46,7 +46,7 @@ class TreeItem(NodeMixin):
         Remember to not add one child multiple times.
         :param child: Child to add
         """
-        self.children += (child,)
+        self.children += (child, )
 
     def delete_child(self, child):
         """

@@ -41,11 +41,13 @@ class TreeController:
             last_row = 0
 
         if item:
-            new_q_item = self._tree_model.insertRows(last_row, 1, parent_item, item)
+            new_q_item = self._tree_model.insertRows(last_row, 1, parent_item,
+                                                     item)
             self._view.select_element(new_q_item)
 
     def _edit_selected_item_callback(self):
-        self.edit_item_callback(self._view.selected_item, self._view.selected_item_patient)
+        self.edit_item_callback(self._view.selected_item,
+                                self._view.selected_item_patient)
 
     def _open_voxelplan_callback(self):
         self.open_voxelplan_callback(self._view.selected_item)
