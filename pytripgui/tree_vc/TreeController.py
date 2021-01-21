@@ -21,8 +21,14 @@ class TreeController:
         self._view.internal_events.on_add_child += self._add_new_item_callback
         self._view.internal_events.on_edit_selected_item += self._edit_selected_item_callback
         self._view.internal_events.on_open_voxelplan += self._open_voxelplan_callback
+        self._view.internal_events.on_delete += self._delete_callback
         self._view.internal_events.on_execute += self._execute_callback
         self._view.internal_events.on_click += self._on_click_callback
+
+    def _delete_callback(self):
+        parent = self._view.selected_q_item.parent()
+        self._tree_model.delete_item(self._view.selected_q_item)
+        self._view.select_element(parent)
 
     def _add_new_item_callback(self):
         if self.new_item_callback:

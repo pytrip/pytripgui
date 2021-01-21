@@ -78,6 +78,15 @@ class TreeModel(QAbstractItemModel):
         else:
             return QModelIndex()
 
+    def delete_item(self, q_item):
+        parent = q_item.parent()
+        parent_item = parent.internalPointer()
+        row = q_item.row()
+
+        self.beginRemoveRows(parent, row, row)
+        parent_item.delete_child(q_item.internalPointer())
+        self.endRemoveRows()
+
     def data(self, q_model_index, role=None):
         if role == Qt.DisplayRole:
             return q_model_index.internalPointer().__repr__()
@@ -98,6 +107,9 @@ class TreeModel(QAbstractItemModel):
             return QModelIndex()
 
         parent_item = child_item.parent
+        if parent_item is None:
+            return QModelIndex()
+
         return self.createIndex(parent_item.row(), 0, parent_item)
 
     def insertRows(self, row, count, parent_item=None, child=None):
