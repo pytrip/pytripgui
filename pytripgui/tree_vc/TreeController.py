@@ -21,8 +21,14 @@ class TreeController:
         self._view.internal_events.on_add_child += self._add_new_item_callback
         self._view.internal_events.on_edit_selected_item += self._edit_selected_item_callback
         self._view.internal_events.on_open_voxelplan += self._open_voxelplan_callback
+        self._view.internal_events.on_delete += self._delete_callback
         self._view.internal_events.on_execute += self._execute_callback
         self._view.internal_events.on_click += self._on_click_callback
+
+    def _delete_callback(self):
+        parent = self._view.selected_q_item.parent()
+        self._tree_model.delete_item(self._view.selected_q_item)
+        self._view.select_element(parent)
 
     def _add_new_item_callback(self):
         if self.new_item_callback:
@@ -35,11 +41,13 @@ class TreeController:
             last_row = 0
 
         if item:
-            new_q_item = self._tree_model.insertRows(last_row, 1, parent_item, item)
+            new_q_item = self._tree_model.insertRows(last_row, 1, parent_item,
+                                                     item)
             self._view.select_element(new_q_item)
 
     def _edit_selected_item_callback(self):
-        self.edit_item_callback(self._view.selected_item, self._view.selected_item_patient)
+        self.edit_item_callback(self._view.selected_item,
+                                self._view.selected_item_patient)
 
     def _open_voxelplan_callback(self):
         self.open_voxelplan_callback(self._view.selected_item)
@@ -49,4 +57,4 @@ class TreeController:
             self.execute_plan_callback()
 
     def _on_click_callback(self):
-        self.one_click_callback(self._view.selected_item_patient, self._view.selected_item)
+        self.one_click_callback()

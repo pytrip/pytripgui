@@ -22,7 +22,7 @@ class TreeModel(QAbstractItemModel):
         return QVariant()
 
     def columnCount(self, parent=None, *args, **kwargs):
-        return 1    # Only one column is supported
+        return 1  # Only one column is supported
 
     def rowCount(self, parent=None, *args, **kwargs):
         if not parent.isValid():
@@ -40,7 +40,8 @@ class TreeModel(QAbstractItemModel):
         else:
             name = parent.internalPointer().__repr__()
             has_children = parent.internalPointer().has_children()
-            logger.debug("hasChildren() for: {} returns: {}".format(name, has_children))
+            logger.debug("hasChildren() for: {} returns: {}".format(
+                name, has_children))
             return has_children
 
     def index(self, p_int, p_int_1, parent=None, *args, **kwargs):
@@ -57,15 +58,17 @@ class TreeModel(QAbstractItemModel):
 
     def hasIndex(self, p_int, p_int_1, parent=None, *args, **kwargs):
         if p_int_1 != 0:
-            return False    # current implementation supports one column
+            return False  # current implementation supports one column
 
         if not parent.isValid():
-            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format("root", p_int, p_int_1, True))
+            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
+                "root", p_int, p_int_1, True))
             return True
         else:
             name = parent.internalPointer().__repr__()
             has_index = parent.internalPointer().has_index(p_int)
-            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(name, p_int, p_int_1, has_index))
+            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
+                name, p_int, p_int_1, has_index))
             return has_index
 
     def _create_index(self, parent, p_int, p_int_1):
@@ -77,6 +80,15 @@ class TreeModel(QAbstractItemModel):
             return self.createIndex(p_int, p_int_1, selected_item)
         else:
             return QModelIndex()
+
+    def delete_item(self, q_item):
+        parent = q_item.parent()
+        parent_item = parent.internalPointer()
+        row = q_item.row()
+
+        self.beginRemoveRows(parent, row, row)
+        parent_item.delete_child(q_item.internalPointer())
+        self.endRemoveRows()
 
     def data(self, q_model_index, role=None):
         if role == Qt.DisplayRole:
@@ -98,6 +110,9 @@ class TreeModel(QAbstractItemModel):
             return QModelIndex()
 
         parent_item = child_item.parent
+        if parent_item is None:
+            return QModelIndex()
+
         return self.createIndex(parent_item.row(), 0, parent_item)
 
     def insertRows(self, row, count, parent_item=None, child=None):

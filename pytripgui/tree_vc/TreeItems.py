@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 class TreeItem(NodeMixin):
     def __init__(self):
         super().__init__()
+        self.children = ()
 
     # For qt TreeView
     def has_index(self, p_int):
@@ -45,7 +46,16 @@ class TreeItem(NodeMixin):
         Remember to not add one child multiple times.
         :param child: Child to add
         """
-        self.children += (child,)
+        self.children += (child, )
+
+    def delete_child(self, child):
+        """
+        With this method You delete item from tree.
+        :param child: Child to add
+        """
+        children = list(self.children)
+        children.remove(child)
+        self.children = children
 
 
 class PatientList(TreeItem):
