@@ -58,8 +58,7 @@ class ConfigQtView(object):
             self.dedx_path = selected_file[0]
 
     def _disable_unimplemented(self):
-        self.ui.tripAccess_comboBox.setDisabled(True)
-        self.ui.remote_tab.setDisabled(True)
+#        self.ui.tripAccess_comboBox.setDisabled(True)
         self.ui.tab_test.setDisabled(True)
 
     def show(self):
