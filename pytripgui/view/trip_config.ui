@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>684</width>
-    <height>643</height>
+    <width>669</width>
+    <height>499</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,14 +38,14 @@
             <item>
              <widget class="QPushButton" name="add">
               <property name="text">
-               <string>PushButton</string>
+               <string>Add</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="remove">
               <property name="text">
-               <string>PushButton</string>
+               <string>Delete</string>
               </property>
              </widget>
             </item>
@@ -61,7 +61,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="2" column="0">
-           <widget class="QStackedWidget" name="stackedWidget_2">
+           <widget class="QStackedWidget" name="pathConfig_stackedWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -69,9 +69,9 @@
              </sizepolicy>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
-            <widget class="QWidget" name="stackedWidget_2Page1" native="true">
+            <widget class="QWidget" name="stackedWidget_local">
              <layout class="QFormLayout" name="formLayout_2">
               <property name="formAlignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -158,17 +158,17 @@
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="stackedWidget_2Page2" native="true">
+            <widget class="QWidget" name="stackedWidget_remote">
              <layout class="QFormLayout" name="formLayout_3">
               <item row="0" column="0">
-               <widget class="QLabel" name="serverip_label">
+               <widget class="QLabel" name="host_label">
                 <property name="text">
                  <string>Server IP/Hostname</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="serverip_lineEdit"/>
+               <widget class="QLineEdit" name="host_lineEdit"/>
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="username_label">
@@ -311,7 +311,7 @@
                 <enum>QLayout::SetMaximumSize</enum>
                </property>
                <item>
-                <widget class="QRadioButton" name="radioButton">
+                <widget class="QRadioButton" name="local_radioButton">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
                    <horstretch>0</horstretch>
@@ -327,7 +327,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QRadioButton" name="radioButton_2">
+                <widget class="QRadioButton" name="remote_radioButton">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
                    <horstretch>0</horstretch>

@@ -6,13 +6,15 @@ logger = logging.getLogger(__name__)
 
 
 class ConfigQtView(object):
+    stackedWidget_local_index = 0
+    stackedWidget_remote_index = 1
     """
     """
     def __init__(self):
         self.ui = UiTripConfig()
 
         self._setup_internal_callbacks()
-        self._disable_unimplemented()
+        self.ui.local_radioButton.clicked.emit()
 
     def _setup_internal_callbacks(self):
         self.ui.wdirPath_pushButton.clicked.connect(self._browse_wdir)
@@ -20,46 +22,41 @@ class ConfigQtView(object):
         self.ui.hlut_pushButton.clicked.connect(self._browse_hlut_path)
         self.ui.dedx_pushButton.clicked.connect(self._browse_dedx_path)
 
+        self.ui.local_radioButton.clicked.connect(self._on_local_radio_button_click)
+        self.ui.remote_radioButton.clicked.connect(self._on_remote_radio_button_click)
+
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.ui,
-            "Select working directory",
-            self.wdir_path,
+            self.ui,  "Select working directory", self.wdir_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.wdir_path = selected_dir
 
     def _browse_trip_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self.ui,
-            "Select trip executable directory",
-            self.trip_path,
+            self.ui, "Select trip executable directory", self.trip_path,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.trip_path = selected_dir
 
     def _browse_hlut_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.ui,
-            "Select HLUT",
-            self.hlut_path,
-            "Hounsfield lookup table (*.hlut)")
+            self.ui, "Select HLUT",  self.hlut_path, "Hounsfield lookup table (*.hlut)")
         if selected_file[0] != "":
             self.hlut_path = selected_file[0]
 
     def _browse_dedx_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self.ui,
-            "Select DEDX",
-            self.dedx_path,
-            "Stopping power table (*.dedx)")
+            self.ui, "Select DEDX",  self.dedx_path, "Stopping power table (*.dedx)")
         if selected_file[0] != "":
             print(selected_file)
             self.dedx_path = selected_file[0]
 
-    def _disable_unimplemented(self):
-#        self.ui.tripAccess_comboBox.setDisabled(True)
-        self.ui.tab_test.setDisabled(True)
+    def _on_local_radio_button_click(self):
+        self.ui.pathConfig_stackedWidget.setCurrentIndex(ConfigQtView.stackedWidget_local_index)
+
+    def _on_remote_radio_button_click(self):
+        self.ui.pathConfig_stackedWidget.setCurrentIndex(ConfigQtView.stackedWidget_remote_index)
 
     def show(self):
         self.ui.show()
@@ -78,19 +75,11 @@ class ConfigQtView(object):
     def wdir_path(self):
         return self.ui.wdirPath_lineEdit.text()
 
-    @wdir_path.getter
-    def wdir_path(self):
-        return self.ui.wdirPath_lineEdit.text()
-
     @wdir_path.setter
     def wdir_path(self, wdir_path):
         self.ui.wdirPath_lineEdit.setText(wdir_path)
 
     @property
-    def trip_path(self):
-        return self.ui.tripPath_lineEdit.text()
-
-    @trip_path.getter
     def trip_path(self):
         return self.ui.tripPath_lineEdit.text()
 
@@ -102,10 +91,6 @@ class ConfigQtView(object):
     def hlut_path(self):
         return self.ui.hlut_lineEdit.text()
 
-    @hlut_path.getter
-    def hlut_path(self):
-        return self.ui.hlut_lineEdit.text()
-
     @hlut_path.setter
     def hlut_path(self, hlut_path):
         self.ui.hlut_lineEdit.setText(hlut_path)
@@ -114,10 +99,14 @@ class ConfigQtView(object):
     def dedx_path(self):
         return self.ui.dedx_lineEdit.text()
 
-    @dedx_path.getter
-    def dedx_path(self):
-        return self.ui.dedx_lineEdit.text()
-
     @dedx_path.setter
     def dedx_path(self, dedx_path):
         self.ui.dedx_lineEdit.setText(dedx_path)
+
+    @property
+    def host_name(self):
+        return self.ui.host_lineEdit.text()
+
+    @host_name.setter
+    def host_name(self, host_name):
+        self.ui.host_lineEdit.setText(host_name)

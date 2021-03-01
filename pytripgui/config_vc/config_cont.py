@@ -26,9 +26,11 @@ class ConfigController(object):
         self.view.trip_path = self.model.trip_path
         self.view.hlut_path = self.model.hlut_path
         self.view.dedx_path = self.model.dedx_path
+        self.view.host_name = self.model.host_name
 
     def set_model_from_view(self):
         self.model.wdir_path = self.view.wdir_path
         self.model.trip_path = self.view.trip_path
         self.model.hlut_path = self.view.hlut_path
         self.model.dedx_path = self.view.dedx_path
+        self.model.host_name = self.view.host_name

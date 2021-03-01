@@ -91,15 +91,19 @@ class AppCallback:
         logger.debug("TRiP config menu()")
 
         from pytripgui.config_vc import ConfigController
-
+        from pytripgui.plan_executor.trip_config import Trip98ConfigModel
         view = self.parent_gui.get_trip_config_view()
 
-        controller = ConfigController(self.app_model.trip_config, view)
+        config = self.app_model.trip_config
+        # config = Trip98ConfigModel()
+        controller = ConfigController(config, view)
         controller.set_view_from_model()
         view.show()
 
         if controller.user_clicked_save:
             self.settings.save()
+
+        exit(0)
 
     def on_add_patient(self):
         dialog = UiAddPatient(self.parent_gui.ui)
