@@ -13,23 +13,21 @@ window = MainWindowQtView()
 window.show()
 
 model = MainModel()
-call = AppCallback(model, window)
-model.settings.trip_config = list()
 
 config = Trip98ConfigModel()
 config.remote_execution = True
 config.host_name = "Hostname"
-config.username = "user"
+config.user_name = "user"
 config.password = "pass"
-model.settings.trip_config.append(config)
+model.settings.trip_configs.append(config)
 
 config = Trip98ConfigModel()
 config.remote_execution = False
-config.host_name = "Hostname"
-config.username = "user"
-config.password = "pass"
-model.settings.trip_config.append(config)
+config.trip_path = "trip"
+config.wdir_path = "wdir"
+model.settings.trip_configs.append(config)
 
+call = AppCallback(model, window)
 
 call.on_trip98_config()
 
