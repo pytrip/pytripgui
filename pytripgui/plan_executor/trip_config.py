@@ -1,5 +1,6 @@
 class Trip98ConfigModel:
     def __init__(self):
+        self.name = ""
         self.remote_execution = False
         self.hlut_path = ""
         self.dedx_path = ""
@@ -10,5 +11,5 @@ class Trip98ConfigModel:
 
         # remote execution
         self.host_name = ""
-        self.username = ""
+        self.user_name = ""
         self.password = ""

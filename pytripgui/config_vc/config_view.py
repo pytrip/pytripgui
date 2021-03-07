@@ -1,3 +1,4 @@
+from pytripgui.view.qt_view_adapter import LineEdit, ComboBox
 from pytripgui.view.qt_gui import UiTripConfig
 from PyQt5.QtWidgets import QFileDialog
 
@@ -12,6 +13,13 @@ class ConfigQtView(object):
     """
     def __init__(self):
         self.ui = UiTripConfig()
+
+        self.name = LineEdit(self.ui.configName_lineEdit)
+        self.user_name = LineEdit(self.ui.username_lineEdit)
+        self.password = LineEdit(self.ui.password_lineEdit)
+        self.host_name = LineEdit(self.ui.host_lineEdit)
+
+        self.configs = ComboBox(self.ui.configs_comboBox)
 
         self._setup_internal_callbacks()
         self.ui.local_radioButton.clicked.emit()
@@ -72,6 +80,19 @@ class ConfigQtView(object):
         self.ui.accept_buttonBox.rejected.connect(fun)
 
     @property
+    def remote_execution(self):
+        return self.ui.remote_radioButton.isChecked()
+
+    @remote_execution.setter
+    def remote_execution(self, remote_execution):
+        if remote_execution:
+            self.ui.remote_radioButton.setChecked(remote_execution)
+            self.ui.remote_radioButton.clicked.emit()
+        else:
+            self.ui.local_radioButton.setChecked(remote_execution)
+            self.ui.local_radioButton.clicked.emit()
+
+    @property
     def wdir_path(self):
         return self.ui.wdirPath_lineEdit.text()
 
@@ -102,11 +123,3 @@ class ConfigQtView(object):
     @dedx_path.setter
     def dedx_path(self, dedx_path):
         self.ui.dedx_lineEdit.setText(dedx_path)
-
-    @property
-    def host_name(self):
-        return self.ui.host_lineEdit.text()
-
-    @host_name.setter
-    def host_name(self, host_name):
-        self.ui.host_lineEdit.setText(host_name)

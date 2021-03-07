@@ -14,13 +14,11 @@ class MainModel(object):
         self._pytrip_version = _pytrip_version
         self._pytripgui_version = _pytripgui_version
 
-        self.trip_config = Trip98ConfigModel()
+        self.trip_configs = []
         self.kernels = []  # placeholder for KernelModels
 
         self.viewcanvases = None
         self.patient_tree = None
-        self.settings = None
-
         self.settings = SettingsModel(self)
 
 
@@ -43,7 +41,7 @@ class SettingsModel(object):
             a) _version is written to disk, but imported into Model when loading
             b) __internal_attribute__ are not passed between Model and SettingsModel
         """
-        self.trip_config = model.trip_config
+        self.trip_configs = model.trip_configs
 
         self.kernels = model.kernels
 
