@@ -18,6 +18,10 @@ class ConfigQtView(object):
         self.user_name = LineEdit(self._ui.username_lineEdit)
         self.password = LineEdit(self._ui.password_lineEdit)
         self.host_name = LineEdit(self._ui.host_lineEdit)
+        self.dedx_path = LineEdit(self._ui.dedx_lineEdit)
+        self.hlut_path = LineEdit(self._ui.hlut_lineEdit)
+        self.wdir_path = LineEdit(self._ui.wdirPath_lineEdit)
+        self.trip_path = LineEdit(self._ui.tripPath_lineEdit)
 
         self.configs = ComboBox(self._ui.configs_comboBox)
 
@@ -35,30 +39,30 @@ class ConfigQtView(object):
 
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self._ui,  "Select working directory", self.wdir_path,
+            self._ui,  "Select working directory", self.wdir_path.text,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
-            self.wdir_path = selected_dir
+            self.wdir_path.text = selected_dir
 
     def _browse_trip_path(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self._ui, "Select trip executable directory", self.trip_path,
+            self._ui, "Select trip executable directory", self.trip_path.text,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
-            self.trip_path = selected_dir
+            self.trip_path.text = selected_dir
 
     def _browse_hlut_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select HLUT",  self.hlut_path, "Hounsfield lookup table (*.hlut)")
+            self._ui, "Select HLUT",  self.hlut_path.text, "Hounsfield lookup table (*.hlut)")
         if selected_file[0] != "":
-            self.hlut_path = selected_file[0]
+            self.hlut_path.text = selected_file[0]
 
     def _browse_dedx_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select DEDX",  self.dedx_path, "Stopping power table (*.dedx)")
+            self._ui, "Select DEDX",  self.dedx_path.text, "Stopping power table (*.dedx)")
         if selected_file[0] != "":
             print(selected_file)
-            self.dedx_path = selected_file[0]
+            self.dedx_path.text = selected_file[0]
 
     def _on_local_radio_button_click(self):
         self._ui.pathConfig_stackedWidget.setCurrentIndex(ConfigQtView.stackedWidget_local_index)
@@ -91,35 +95,3 @@ class ConfigQtView(object):
         else:
             self._ui.local_radioButton.setChecked(True)
             self._ui.local_radioButton.clicked.emit()
-
-    @property
-    def wdir_path(self):
-        return self._ui.wdirPath_lineEdit.text()
-
-    @wdir_path.setter
-    def wdir_path(self, wdir_path):
-        self._ui.wdirPath_lineEdit.setText(wdir_path)
-
-    @property
-    def trip_path(self):
-        return self._ui.tripPath_lineEdit.text()
-
-    @trip_path.setter
-    def trip_path(self, trip_path):
-        self._ui.tripPath_lineEdit.setText(trip_path)
-
-    @property
-    def hlut_path(self):
-        return self._ui.hlut_lineEdit.text()
-
-    @hlut_path.setter
-    def hlut_path(self, hlut_path):
-        self._ui.hlut_lineEdit.setText(hlut_path)
-
-    @property
-    def dedx_path(self):
-        return self._ui.dedx_lineEdit.text()
-
-    @dedx_path.setter
-    def dedx_path(self, dedx_path):
-        self._ui.dedx_lineEdit.setText(dedx_path)

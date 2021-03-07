@@ -41,10 +41,10 @@ class ConfigController(object):
     def _set_current_config(self, config):
         self.view.remote_execution = config.remote_execution
         self.view.name.text = config.name
-        self.view.wdir_path = config.wdir_path
-        self.view.trip_path = config.trip_path
-        self.view.hlut_path = config.hlut_path
-        self.view.dedx_path = config.dedx_path
+        self.view.wdir_path.text = config.wdir_path
+        self.view.trip_path.text = config.trip_path
+        self.view.hlut_path.text = config.hlut_path
+        self.view.dedx_path.text = config.dedx_path
         self.view.host_name.text = config.host_name
         self.view.user_name.text = config.user_name
         self.view.password.text = config.password
@@ -52,10 +52,10 @@ class ConfigController(object):
     def _set_model_from_view(self, config):
         config.remote_execution = self.view.remote_execution
         config.name = self.view.name.text
-        config.wdir_path = self.view.wdir_path
-        config.trip_path = self.view.trip_path
-        config.hlut_path = self.view.hlut_path
-        config.dedx_path = self.view.dedx_path
+        config.wdir_path = self.view.wdir_path.text
+        config.trip_path = self.view.trip_path.text
+        config.hlut_path = self.view.hlut_path.text
+        config.dedx_path = self.view.dedx_path.text
         config.host_name = self.view.host_name.text
         config.user_name = self.view.user_name.text
         config.password = self.view.password.text
