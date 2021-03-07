@@ -8,7 +8,6 @@ from pytripgui.plan_executor.trip_config import Trip98ConfigModel
 
 a = QApplication([])
 
-
 window = MainWindowQtView()
 window.show()
 

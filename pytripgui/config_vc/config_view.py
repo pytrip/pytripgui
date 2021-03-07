@@ -34,12 +34,14 @@ class ConfigQtView(object):
         self._ui.hlut_pushButton.clicked.connect(self._browse_hlut_path)
         self._ui.dedx_pushButton.clicked.connect(self._browse_dedx_path)
 
-        self._ui.local_radioButton.clicked.connect(self._on_local_radio_button_click)
-        self._ui.remote_radioButton.clicked.connect(self._on_remote_radio_button_click)
+        self._ui.local_radioButton.clicked.connect(
+            self._on_local_radio_button_click)
+        self._ui.remote_radioButton.clicked.connect(
+            self._on_remote_radio_button_click)
 
     def _browse_wdir(self):
         selected_dir = QFileDialog.getExistingDirectory(
-            self._ui,  "Select working directory", self.wdir_path.text,
+            self._ui, "Select working directory", self.wdir_path.text,
             QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.wdir_path.text = selected_dir
@@ -53,22 +55,26 @@ class ConfigQtView(object):
 
     def _browse_hlut_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select HLUT",  self.hlut_path.text, "Hounsfield lookup table (*.hlut)")
+            self._ui, "Select HLUT", self.hlut_path.text,
+            "Hounsfield lookup table (*.hlut)")
         if selected_file[0] != "":
             self.hlut_path.text = selected_file[0]
 
     def _browse_dedx_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select DEDX",  self.dedx_path.text, "Stopping power table (*.dedx)")
+            self._ui, "Select DEDX", self.dedx_path.text,
+            "Stopping power table (*.dedx)")
         if selected_file[0] != "":
             print(selected_file)
             self.dedx_path.text = selected_file[0]
 
     def _on_local_radio_button_click(self):
-        self._ui.pathConfig_stackedWidget.setCurrentIndex(ConfigQtView.stackedWidget_local_index)
+        self._ui.pathConfig_stackedWidget.setCurrentIndex(
+            ConfigQtView.stackedWidget_local_index)
 
     def _on_remote_radio_button_click(self):
-        self._ui.pathConfig_stackedWidget.setCurrentIndex(ConfigQtView.stackedWidget_remote_index)
+        self._ui.pathConfig_stackedWidget.setCurrentIndex(
+            ConfigQtView.stackedWidget_remote_index)
 
     def show(self):
         self._ui.show()
