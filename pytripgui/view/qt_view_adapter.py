@@ -43,5 +43,4 @@ class ComboBox:
             self._on_item_change_user_callback()
 
     def set_current_item_text(self, text):
-        print(text)
         self._ui.setItemText(self.current_index, text)
