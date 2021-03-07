@@ -1,10 +1,11 @@
+from copy import deepcopy
 import logging
 logger = logging.getLogger(__name__)
 
 
 class ConfigController(object):
     def __init__(self, model, view):
-        self.model = model
+        self.model = deepcopy(model)
         self.view = view
         self.user_clicked_save = False
         self._setup_ok_and_cancel_buttons_callbacks()
@@ -13,12 +14,15 @@ class ConfigController(object):
         self.view.set_ok_callback(self._save_and_exit)
         self.view.set_cancel_callback(self._exit)
 
+        self.view.name.emit_on_text_change(
+            lambda text: self.view.configs.set_current_item_text(text))
+
     def _save_and_exit(self):
-        self.set_model_from_view(self.model[0])
         self.user_clicked_save = True
-        self.view.exit()
+        self._exit()
 
     def _exit(self):
+        self._set_model_from_view(self.model[self.view.configs.current_index])
         self.view.exit()
 
     def set_view_from_model(self):
@@ -28,13 +32,13 @@ class ConfigController(object):
         self.view.configs.fill(self.model, lambda item: item.name)
         self.view.configs.emit_on_item_change(self._on_item_change_callback)
 
-        self.set_current_config(self.model[0])
+        self._set_current_config(self.model[0])
 
-    def _on_item_change_callback(self, current_index):
-        print(current_index)
-        # lambda current_index: self.set_current_config(self.model[current_index])
+    def _on_item_change_callback(self):
+        self._set_model_from_view(self.model[self.view.configs.last_index])
+        self._set_current_config(self.model[self.view.configs.current_index])
 
-    def set_current_config(self, config):
+    def _set_current_config(self, config):
         self.view.remote_execution = config.remote_execution
         self.view.name.text = config.name
         self.view.wdir_path = config.wdir_path
@@ -45,7 +49,7 @@ class ConfigController(object):
         self.view.user_name.text = config.user_name
         self.view.password.text = config.password
 
-    def set_model_from_view(self, config):
+    def _set_model_from_view(self, config):
         config.remote_execution = self.view.remote_execution
         config.name = self.view.name.text
         config.wdir_path = self.view.wdir_path

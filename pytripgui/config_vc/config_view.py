@@ -86,10 +86,10 @@ class ConfigQtView(object):
     @remote_execution.setter
     def remote_execution(self, remote_execution):
         if remote_execution:
-            self._ui.remote_radioButton.setChecked(remote_execution)
+            self._ui.remote_radioButton.setChecked(True)
             self._ui.remote_radioButton.clicked.emit()
         else:
-            self._ui.local_radioButton.setChecked(remote_execution)
+            self._ui.local_radioButton.setChecked(True)
             self._ui.local_radioButton.clicked.emit()
 
     @property
