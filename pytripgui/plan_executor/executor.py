@@ -36,7 +36,8 @@ class PlanExecutor:
             te.password = self.trip_config.password
             te.remote_base_dir = "/home/deerjelen/test"
         else:
-            te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+            te.trip_bin_path = os.path.join(self.trip_config.trip_path,
+                                            'TRiP98')
 
         if self.listener:
             te.add_log_listener(self.listener)

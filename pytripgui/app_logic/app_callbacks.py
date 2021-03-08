@@ -52,7 +52,8 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        trip_config = ExecuteConfigView(self.app_model.trip_configs, self.parent_gui.ui)
+        trip_config = ExecuteConfigView(self.app_model.trip_configs,
+                                        self.parent_gui.ui)
         trip_config.show()
         if not trip_config.config:
             return
