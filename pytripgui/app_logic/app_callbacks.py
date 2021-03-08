@@ -13,6 +13,7 @@ from pytripgui.app_logic.charts import Charts
 from pytripgui.app_logic.gui_executor import GuiExecutor
 
 from pytripgui.view.qt_gui import UiAddPatient
+from pytripgui.view.execute_config_view import ExecuteConfigView
 
 from pytripgui.controller.settings_cont import SettingsController
 
@@ -51,7 +52,12 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        executor = GuiExecutor(self.app_model.trip_configs[0], patient, plan,
+        trip_config = ExecuteConfigView(self.app_model.trip_configs, self.parent_gui.ui)
+        trip_config.show()
+        if not trip_config.config:
+            return
+
+        executor = GuiExecutor(trip_config.config, patient, plan,
                                self._execute_finish_callback,
                                self.parent_gui.ui)
 

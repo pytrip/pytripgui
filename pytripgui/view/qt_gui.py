@@ -26,6 +26,13 @@ class UiExecuteDialog(QtWidgets.QDialog):
         uic.loadUi(ui_path, self)
 
 
+class UiExecuteConfigDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(UiExecuteConfigDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'execute_config.ui')
+        uic.loadUi(ui_path, self)
+
+
 class UiKernelDialog(QtWidgets.QDialog):
     def __init__(self):
         super(UiKernelDialog, self).__init__()

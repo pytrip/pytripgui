@@ -44,3 +44,7 @@ class ComboBox:
 
     def set_current_item_text(self, text):
         self._ui.setItemText(self.current_index, text)
+
+    @property
+    def current_data(self):
+        return self._ui.currentData()

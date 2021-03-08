@@ -29,7 +29,15 @@ class PlanExecutor:
         plan.hlut_path = self.trip_config.hlut_path
 
         te = pte.Execute(patient.ctx, patient.vdx)
-        te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+        if self.trip_config.remote_execution:
+            te.remote = True
+            te.servername = self.trip_config.host_name
+            te.username = self.trip_config.user_name
+            te.password = self.trip_config.password
+            te.remote_base_dir = "/home/deerjelen/test"
+        else:
+            te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+
         if self.listener:
             te.add_log_listener(self.listener)
 
