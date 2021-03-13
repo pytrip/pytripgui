@@ -1,3 +1,5 @@
+from pytripgui.plan_executor.trip_config import Trip98ConfigModel
+
 from copy import deepcopy
 import logging
 logger = logging.getLogger(__name__)
@@ -9,6 +11,9 @@ class ConfigController(object):
         self.view = view
         self.user_clicked_save = False
         self._setup_ok_and_cancel_buttons_callbacks()
+
+        if not self.model:
+            self.model = [Trip98ConfigModel()]
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)

@@ -5,6 +5,7 @@ from pytripgui.model.main_model import MainModel
 from pytripgui.main_window_qt_vc.main_window_view import MainWindowQtView
 
 from pytripgui.plan_executor.trip_config import Trip98ConfigModel
+from pytripgui.view.execute_config_view import ExecuteConfigView
 
 a = QApplication([])
 
@@ -15,6 +16,7 @@ model = MainModel()
 
 config = Trip98ConfigModel()
 config.remote_execution = True
+config.name = "name1"
 config.host_name = "Hostname"
 config.user_name = "user"
 config.password = "pass"
@@ -22,12 +24,16 @@ model.settings.trip_configs.append(config)
 
 config = Trip98ConfigModel()
 config.remote_execution = False
+config.name = "name2"
 config.trip_path = "trip"
 config.wdir_path = "wdir"
 model.settings.trip_configs.append(config)
 
-call = AppCallback(model, window)
+trip = ExecuteConfigView(model.trip_configs, None)
+trip.show()
 
-call.on_trip98_config()
+#call = AppCallback(model, window)
+
+#call.on_trip98_config()
 
 exit(a.exec_())
