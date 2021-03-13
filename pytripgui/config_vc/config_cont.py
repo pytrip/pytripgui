@@ -22,7 +22,8 @@ class ConfigController(object):
         self._exit()
 
     def _exit(self):
-        self._set_model_from_view(self.model[self.view.configs.current_index])
+        if self.view.configs.count:
+            self._set_model_from_view(self.model[self.view.configs.current_index])
         self.view.exit()
 
     def set_view_from_model(self):

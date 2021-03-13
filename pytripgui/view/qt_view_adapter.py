@@ -48,3 +48,7 @@ class ComboBox:
     @property
     def current_data(self):
         return self._ui.currentData()
+
+    @property
+    def count(self):
+        return self._ui.count()
