@@ -13,3 +13,4 @@ class Trip98ConfigModel:
         self.host_name = ""
         self.user_name = ""
         self.password = ""
+        self.wdir_remote_path = ""

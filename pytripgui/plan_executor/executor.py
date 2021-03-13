@@ -34,7 +34,7 @@ class PlanExecutor:
             te.servername = self.trip_config.host_name
             te.username = self.trip_config.user_name
             te.password = self.trip_config.password
-            te.remote_base_dir = "/home/deerjelen/test"
+            te.remote_base_dir = self.trip_config.wdir_remote_path
         else:
             te.trip_bin_path = os.path.join(self.trip_config.trip_path,
                                             'TRiP98')

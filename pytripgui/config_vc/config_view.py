@@ -22,6 +22,7 @@ class ConfigQtView(object):
         self.hlut_path = LineEdit(self._ui.hlut_lineEdit)
         self.wdir_path = LineEdit(self._ui.wdirPath_lineEdit)
         self.trip_path = LineEdit(self._ui.tripPath_lineEdit)
+        self.wdir_remote_path = LineEdit(self._ui.wdirRemote_lineEdit)
 
         self.configs = ComboBox(self._ui.configs_comboBox)
 

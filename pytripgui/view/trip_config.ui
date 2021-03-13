@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>669</width>
-    <height>629</height>
+    <width>691</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -275,7 +275,7 @@
              </sizepolicy>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="stackedWidget_local">
              <layout class="QFormLayout" name="formLayout_2">
@@ -359,6 +359,16 @@
                  <enum>QLineEdit::Password</enum>
                 </property>
                </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="wdirRemote_label">
+                <property name="text">
+                 <string>Remote temp directory</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="wdirRemote_lineEdit"/>
               </item>
              </layout>
             </widget>

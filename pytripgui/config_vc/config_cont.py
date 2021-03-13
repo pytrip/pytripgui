@@ -48,6 +48,7 @@ class ConfigController(object):
         self.view.host_name.text = config.host_name
         self.view.user_name.text = config.user_name
         self.view.password.text = config.password
+        self.view.wdir_remote_path.text = config.wdir_remote_path
 
     def _set_model_from_view(self, config):
         config.remote_execution = self.view.remote_execution
@@ -59,3 +60,4 @@ class ConfigController(object):
         config.host_name = self.view.host_name.text
         config.user_name = self.view.user_name.text
         config.password = self.view.password.text
+        config.wdir_remote_path = self.view.wdir_remote_path.text
