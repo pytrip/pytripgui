@@ -19,6 +19,7 @@ from pytripgui.controller.settings_cont import SettingsController
 
 import os
 import logging
+
 logger = logging.getLogger(__name__)
 
 

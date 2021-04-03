@@ -2,6 +2,7 @@ from pytripgui.plan_executor.trip_config import Trip98ConfigModel
 from paramiko import ssh_exception
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,8 +22,10 @@ class ConfigController(object):
         self.view.set_ok_callback(self._save_and_exit)
         self.view.set_cancel_callback(self._exit)
 
-        self.view.add_button.emit_on_click(lambda: self.view.configs.append_element(Trip98ConfigModel(), ""))
-        self.view.remove_button.emit_on_click(self.view.configs.remove_current_item)
+        self.view.add_button.emit_on_click(
+            lambda: self.view.configs.append_element(Trip98ConfigModel(), ""))
+        self.view.remove_button.emit_on_click(
+            self.view.configs.remove_current_item)
 
     def _save_and_exit(self):
         self.user_clicked_save = True
@@ -87,8 +90,10 @@ class ConfigController(object):
             key_path = self.view.pkey_path.text
 
         try:
-            ssh.connect(hostname=self.view.host_name.text, username=self.view.user_name.text,
-                        password=self.view.password.text, key_filename=key_path)
+            ssh.connect(hostname=self.view.host_name.text,
+                        username=self.view.user_name.text,
+                        password=self.view.password.text,
+                        key_filename=key_path)
         except ssh_exception.AuthenticationException as e:
             self.view.info_box.show_error("Authentication", e.__str__())
         except FileNotFoundError as e:
@@ -101,7 +106,8 @@ class ConfigController(object):
             try:
                 sftp.stat(self.view.wdir_remote_path.text)
             except FileNotFoundError as e:
-                self.view.info_box.show_error("File not found", "Remote working directory doesn't exist")
+                self.view.info_box.show_error(
+                    "File not found", "Remote working directory doesn't exist")
             else:
                 self.view.info_box.show_info("SSH Connection", "Everything OK")
 

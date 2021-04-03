@@ -3,6 +3,7 @@ from pytripgui.view.qt_gui import UiTripConfig
 from PyQt5.QtWidgets import QFileDialog
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -85,8 +86,8 @@ class ConfigQtView(object):
 
     def _browse_pkey_path(self):
         selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select private key for SSH connection", self.pkey_path.text,
-            "Private key (*)")
+            self._ui, "Select private key for SSH connection",
+            self.pkey_path.text, "Private key (*)")
         if selected_file[0] != "":
             self.pkey_path.text = selected_file[0]
 
