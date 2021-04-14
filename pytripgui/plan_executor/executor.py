@@ -1,4 +1,3 @@
-import os
 import copy
 import logging
 
@@ -36,9 +35,9 @@ class PlanExecutor:
             te.password = self.trip_config.password
             print(self.trip_config.pkey_path)
             te.pkey_path = self.trip_config.pkey_path
-            te.remote_base_dir = self.trip_config.wdir_remote_path
+            te.remote_base_dir = self.trip_config.wdir_remote_path + '/'
 
-        te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+        te.trip_bin_path = self.trip_config.trip_path + '/' + 'TRiP98'
 
         if self.listener:
             te.add_log_listener(self.listener)
