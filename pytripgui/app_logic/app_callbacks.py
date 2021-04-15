@@ -13,11 +13,13 @@ from pytripgui.app_logic.charts import Charts
 from pytripgui.app_logic.gui_executor import GuiExecutor
 
 from pytripgui.view.qt_gui import UiAddPatient
+from pytripgui.view.execute_config_view import ExecuteConfigView
 
 from pytripgui.controller.settings_cont import SettingsController
 
 import os
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -51,7 +53,13 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        executor = GuiExecutor(self.app_model.trip_config, patient, plan,
+        trip_config = ExecuteConfigView(self.app_model.trip_configs,
+                                        self.parent_gui.ui)
+        trip_config.show()
+        if not trip_config.config:
+            return
+
+        executor = GuiExecutor(trip_config.config, patient, plan,
                                self._execute_finish_callback,
                                self.parent_gui.ui)
 
@@ -91,14 +99,15 @@ class AppCallback:
         logger.debug("TRiP config menu()")
 
         from pytripgui.config_vc import ConfigController
-
         view = self.parent_gui.get_trip_config_view()
 
-        controller = ConfigController(self.app_model.trip_config, view)
+        config = self.app_model.trip_configs
+        controller = ConfigController(config, view)
         controller.set_view_from_model()
         view.show()
 
         if controller.user_clicked_save:
+            self.app_model.trip_configs = controller.model
             self.settings.save()
 
     def on_add_patient(self):

@@ -1,4 +1,3 @@
-import os
 import copy
 import logging
 
@@ -29,14 +28,25 @@ class PlanExecutor:
         plan.hlut_path = self.trip_config.hlut_path
 
         te = pte.Execute(patient.ctx, patient.vdx)
-        te.trip_bin_path = os.path.join(self.trip_config.trip_path, 'TRiP98')
+        if self.trip_config.remote_execution:
+            te.remote = True
+            te.servername = self.trip_config.host_name
+            te.username = self.trip_config.user_name
+            te.password = self.trip_config.password
+            print(self.trip_config.pkey_path)
+            te.pkey_path = self.trip_config.pkey_path
+            te.remote_base_dir = self.trip_config.wdir_remote_path + '/'
+
+        te.trip_bin_path = self.trip_config.trip_path + '/' + 'TRiP98'
+
         if self.listener:
             te.add_log_listener(self.listener)
 
         try:
             te.execute(plan)
-        except RuntimeError:
-            logger.error("TRiP98 executer: Runtime error")
+        except BaseException as e:
+            self.listener.write(e.__str__())
+            logger.error(e.__str__())
             exit(-1)
 
         results = SimulationResults(patient, plan)

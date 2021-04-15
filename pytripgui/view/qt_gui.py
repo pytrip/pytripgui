@@ -26,6 +26,13 @@ class UiExecuteDialog(QtWidgets.QDialog):
         uic.loadUi(ui_path, self)
 
 
+class UiExecuteConfigDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(UiExecuteConfigDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'execute_config.ui')
+        uic.loadUi(ui_path, self)
+
+
 class UiKernelDialog(QtWidgets.QDialog):
     def __init__(self):
         super(UiKernelDialog, self).__init__()
@@ -77,7 +84,8 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_create_empty.setter
     def on_create_empty(self, callback):
         self._create_empty_callback = callback
-        self.createEmpty_pushButton.clicked.connect(self._create_empty_internal_callback)
+        self.createEmpty_pushButton.clicked.connect(
+            self._create_empty_internal_callback)
 
     def _create_empty_internal_callback(self):
         self._create_empty_callback()
@@ -90,7 +98,8 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_open_voxelplan.setter
     def on_open_voxelplan(self, callback):
         self._open_voxelplan_callback = callback
-        self.openVoxelplan_pushButton.clicked.connect(self._on_open_voxelplan_internal_callback)
+        self.openVoxelplan_pushButton.clicked.connect(
+            self._on_open_voxelplan_internal_callback)
 
     def _on_open_voxelplan_internal_callback(self):
         self._open_voxelplan_callback()
@@ -103,7 +112,8 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_open_dicom.setter
     def on_open_dicom(self, callback):
         self._open_dicom_callback = callback
-        self.openDicom_pushButton.clicked.connect(self._on_open_dicom_internal_callback)
+        self.openDicom_pushButton.clicked.connect(
+            self._on_open_dicom_internal_callback)
 
     def _on_open_dicom_internal_callback(self):
         self._open_dicom_callback()
