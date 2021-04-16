@@ -11,28 +11,26 @@ class Vdx(object):
     This class holds logic for plotting Vdx stuff.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, projection_selector):
+        self.projection_selector = projection_selector
+        self.vois = None
+        self.ctx = None
 
-    @staticmethod
-    def plot(plc):
+    def plot(self, plc):
         """
         Plots the VOIs.
         """
-        pm = plc._model.plot
-        ctx = plc._model.ctx
-        idx = plc._model.plot.zslice
 
         Vdx.clean_plot(plc)
 
-        if not pm.vois:
+        if not self.vois:
             # there is nothing to plot.
             return
 
-        for voi in pm.vois:
+        for voi in self.vois:
             logger.debug("plot() voi:{}".format(voi.name))
 
-            _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
+            _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(50 + 1))
             if _slice is None:
                 continue
 
@@ -40,8 +38,8 @@ class Vdx(object):
             # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
             # they will be transformed and put into <data>
             for _c in _slice.contours:
-                data = np.array(_c.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0])
-                Vdx.plane_points_idx([data], ctx, plc._model.plot.plane)  # this transforms the <data> array
+                data = np.array(_c.contour) - np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0])
+                Vdx.plane_points_idx([data], self.ctx)  # this transforms the <data> array
                 contour_color = np.array(voi.color) / 255.0
 
                 if _c.contour_closed:

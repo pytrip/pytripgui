@@ -5,6 +5,7 @@ from numpy import unravel_index
 from pytripgui.model.dos import Dos
 from pytripgui.model.let import Let
 from pytripgui.model.ctx import Ctx
+from pytripgui.model.vdx import Vdx
 
 logger = logging.getLogger(__name__)
 
@@ -135,3 +136,8 @@ class PlotModel(object):
         self.projection_selector._transversal_slice_no = max_item_index[0]
         self.projection_selector._sagittal_slice_no = max_item_index[2]
         self.projection_selector._coronal_slice_no = max_item_index[1]
+
+    def set_vdx(self, vois):
+        self.vdx = Vdx(self.projection_selector)
+        self.vdx.vois = vois
+        self.vdx.ctx = self.ctx.cube
