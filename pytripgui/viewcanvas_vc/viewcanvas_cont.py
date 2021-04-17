@@ -1,6 +1,6 @@
 import logging
 
-from pytripgui.model.plot_model import PlotModel
+from pytripgui.viewcanvas_vc.plot_model import PlotModel
 
 logger = logging.getLogger(__name__)
 

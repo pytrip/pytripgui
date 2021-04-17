@@ -2,10 +2,10 @@ import logging
 
 from numpy import unravel_index
 
-from pytripgui.model.dos import Dos
-from pytripgui.model.let import Let
-from pytripgui.model.ctx import Ctx
-from pytripgui.model.vdx import Vdx
+from pytripgui.viewcanvas_vc.objects.dos import Dos
+from pytripgui.viewcanvas_vc.objects.let import Let
+from pytripgui.viewcanvas_vc.objects.ctx import Ctx
+from pytripgui.viewcanvas_vc.objects.vdx import Vdx
 
 logger = logging.getLogger(__name__)
 
