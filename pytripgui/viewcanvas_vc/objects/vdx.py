@@ -20,9 +20,6 @@ class Vdx(object):
         """
         Plots the VOIs.
         """
-
-        Vdx.clean_plot(plc)
-
         if not self.vois:
             # there is nothing to plot.
             return
@@ -30,7 +27,13 @@ class Vdx(object):
         for voi in self.vois:
             logger.debug("plot() voi:{}".format(voi.name))
 
-            _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(50 + 1))
+            if self.projection_selector.plane == "Transversal":
+                _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(self.projection_selector.current_slice_no + 1))
+            elif self.projection_selector.plane == "Sagittal":
+                _slice = voi.get_2d_slice(voi.sagittal, self.projection_selector.current_slice_no)
+            elif self.projection_selector.plane == "Coronal":
+                _slice = voi.get_2d_slice(voi.coronal, self.projection_selector.current_slice_no)
+
             if _slice is None:
                 continue
 
@@ -115,16 +118,6 @@ class Vdx(object):
                       backgroundcolor=(0.0, 0.0, 0.0, 0.8),
                       zorder=20)  # zorder higher, so text is always above the lines
         plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
-
-    @staticmethod
-    def clean_plot(plc):
-        """
-        Scrub the plot for any lines and text.
-        """
-        while len(plc.axes.lines) > 0:
-            plc.axes.lines.pop(0)
-        while len(plc.axes.texts) > 0:
-            plc.axes.texts.pop(0)
 
     @staticmethod
     def plane_points_idx(points, ctx, plane="Transversal"):
