@@ -14,8 +14,6 @@ class ViewCanvasCont(object):
         self._model = model
         self._ui = ui
 
-        self.plot_bg()
-
         self._setup_ui_callbacks()
 
         self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
@@ -58,6 +56,7 @@ class ViewCanvasCont(object):
         self._ui.clear()
 
     def update_viewcanvas(self):
+        self.clear_view()
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
@@ -92,11 +91,6 @@ class ViewCanvasCont(object):
         #     ViewCanvasTextCont().plot(self)
 
         self._ui.draw()
-
-    def plot_bg(self):
-        import numpy as np
-        chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        self._ui.plot_bg(chessboard_data)
 
     def set_patient(self, patient):
         self._ui.clear()

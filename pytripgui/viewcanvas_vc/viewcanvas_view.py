@@ -128,9 +128,10 @@ class ViewCanvasView:
         self._plotter.draw()
 
     def clear(self):
+        self._plotter.remove_vois()
         self._plotter.remove_dos()
         self._plotter.remove_let()
-        self._plotter.remove_ctx()
+        # self._plotter.remove_ctx()
 
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
@@ -141,7 +142,7 @@ class ViewCanvasWidget(FigureCanvas):
     Viewer class for matplotlib 2D plotting widget
     """
 
-    def __init__(self, parent=None, width=4, height=4, dpi=110):
+    def __init__(self, parent=None, width=10, height=10, dpi=100):
         """
         Init canvas.
         """
@@ -173,7 +174,7 @@ class ViewCanvasWidget(FigureCanvas):
 
         # Figure
         self.figure = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.figure.add_subplot(111)
+        self.axes = self.figure.add_subplot(1, 1, 1)
 
         FigureCanvas.__init__(self, self.figure)
 
@@ -254,6 +255,12 @@ class ViewCanvasWidget(FigureCanvas):
         if self.let_bar:
             self.let_bar.ax.cla()
             self.let_bar = None
+
+    def remove_vois(self):
+        while len(self.axes.lines) > 0:
+            self.axes.lines.pop(0)
+        while len(self.axes.texts) > 0:
+            self.axes.texts.pop(0)
 
     def plot_let(self, data):
         if not self.axim_let:
