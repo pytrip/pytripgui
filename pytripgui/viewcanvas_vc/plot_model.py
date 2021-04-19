@@ -2,9 +2,10 @@ import logging
 
 from numpy import unravel_index
 
-from pytripgui.model.dos import Dos
-from pytripgui.model.let import Let
-from pytripgui.model.ctx import Ctx
+from pytripgui.viewcanvas_vc.objects.dos import Dos
+from pytripgui.viewcanvas_vc.objects.let import Let
+from pytripgui.viewcanvas_vc.objects.ctx import Ctx
+from pytripgui.viewcanvas_vc.objects.vdx import Vdx
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +26,12 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no +
+                                 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no -
+                                 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -90,7 +93,8 @@ class PlotModel(object):
         # DVHPlot specific
         # TODO: these will be future pt.VolHist objects.
         # Here we shall only keep a list of those dvh's we want to plot.
-        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
+        self.dvhs = [
+        ]  # dose volume histograms, list of [x,y] ready for plotting
 
         # Idea is to attach the VolHist classes to the DosCube objects themselves.
         # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
@@ -99,11 +103,13 @@ class PlotModel(object):
         # LVHPlot specific
         # TODO: these will be future pt.VolHist objects.
         # Here we shall only keep a list of those dvh's we want to plot.
-        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
+        self.lvhs = [
+        ]  # let volume histograms, list of [x,y] ready for plotting
 
         # VDX specific
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        self.vois = [
+        ]  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
         self.plot_vois = True  # whether all vois are plotted at all
 
         self.projection_selector = ProjectionSelector()
@@ -135,3 +141,8 @@ class PlotModel(object):
         self.projection_selector._transversal_slice_no = max_item_index[0]
         self.projection_selector._sagittal_slice_no = max_item_index[2]
         self.projection_selector._coronal_slice_no = max_item_index[1]
+
+    def set_vdx(self, vois):
+        self.vdx = Vdx(self.projection_selector)
+        self.vdx.vois = vois
+        self.vdx.ctx = self.ctx.cube
