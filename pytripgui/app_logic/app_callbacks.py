@@ -298,5 +298,3 @@ class AppCallback:
             return True
 
         return False
-
-
