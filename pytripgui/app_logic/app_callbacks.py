@@ -183,7 +183,7 @@ class AppCallback:
             return item
         return None
 
-    # 
+    #
     def open_empty_patient_callback(self, patient_item):
         patient = patient_item.data
         patient.init_with_empty_cube()
@@ -288,5 +288,3 @@ class AppCallback:
             return True
 
         return False
-
-
