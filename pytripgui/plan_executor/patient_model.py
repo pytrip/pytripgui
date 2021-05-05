@@ -43,7 +43,8 @@ class PatientModel:
             cube_params = [255, 100, 100, 100, 1, 5]
         value, dimx, dimy, dimz, pixel_size, slice_distance = cube_params
         cube = pt.Cube()
-        cube.create_empty_cube(value, dimx, dimy, dimz, pixel_size, slice_distance)
+        cube.create_empty_cube(value, dimx, dimy, dimz, pixel_size,
+                               slice_distance)
         self.ctx = pt.CtxCube(cube)
         self.ctx.basename = "arek"
         sphere_params = ["asia", [50, 50, 50], 5]
@@ -60,4 +61,3 @@ class PatientModel:
 
     def insert_empty_sphere(self, sphere_params):
         pass
-
