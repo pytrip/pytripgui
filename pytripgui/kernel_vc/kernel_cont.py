@@ -47,8 +47,8 @@ class KernelController:
         self._visible_kernel_config = new_kernel_config
 
     def _new_beam_kernel(self):
-        kernel = KernelModel("Kernel")
-        kernel.projectile = Projectile("H")
+        kernel = KernelModel(Projectile("H"), "Kernel")
+        # kernel.projectile = Projectile("H")
         self.view.add_kernel_with_name(kernel, kernel.name)
         self.view.select_recently_added_kernel()
 

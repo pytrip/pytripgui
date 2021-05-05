@@ -31,6 +31,11 @@ class AppCallback:
 
         self.settings = SettingsController(self.app_model)
 
+    def add_empty_patient(self):
+        patient = PatientItem()
+        if self.open_empty_patient_callback(patient):
+            self.app_model.patient_tree.add_new_item(None, patient)
+
     def on_open_voxelplan(self):
         patient = PatientItem()
         if self.open_voxelplan_callback(patient):
@@ -115,10 +120,6 @@ class AppCallback:
         dialog.on_open_dicom = self.on_open_dicom
         dialog.show()
 
-    def add_empty_patient(self):
-        patient = PatientItem()
-        self.app_model.patient_tree.add_new_item(None, patient)
-
     def on_create_field(self):
         field = FieldItem()
         save_field = self.edit_field(field)
@@ -181,6 +182,18 @@ class AppCallback:
         if controller.user_clicked_save:
             return item
         return None
+
+    # 
+    def open_empty_patient_callback(self, patient_item):
+        patient = patient_item.data
+        patient.init_with_empty_cube()
+
+        if not self.app_model.viewcanvases:
+            self.app_model.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
+
+        self.app_model.viewcanvases.set_patient(patient)
+        return True
 
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
@@ -275,3 +288,5 @@ class AppCallback:
             return True
 
         return False
+
+
