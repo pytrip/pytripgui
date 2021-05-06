@@ -43,7 +43,8 @@ class PatientModel:
             cube_params = [0, 100, 100, 100, 1, 1]
         Hounsfield_value, dimx, dimy, dimz, pixel_size, slice_distance = cube_params
         cube = pt.Cube()
-        cube.create_empty_cube(Hounsfield_value, dimx, dimy, dimz, pixel_size, slice_distance)
+        cube.create_empty_cube(Hounsfield_value, dimx, dimy, dimz, pixel_size,
+                               slice_distance)
         self.ctx = pt.CtxCube(cube)
         self.ctx.basename = "arek"
         sphere_params = ["asia", [50, 25, 50], 5]
