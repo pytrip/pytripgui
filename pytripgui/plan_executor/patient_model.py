@@ -57,4 +57,3 @@ class PatientModel:
 
     def insert_empty_sphere(self, sphere_params):
         pass
-
