@@ -10,7 +10,6 @@ class Vdx(object):
     """
     This class holds logic for plotting Vdx stuff.
     """
-
     def __init__(self, projection_selector):
         self.projection_selector = projection_selector
         self.vois = None
@@ -28,11 +27,15 @@ class Vdx(object):
             logger.debug("plot() voi:{}".format(voi.name))
 
             if self.projection_selector.plane == "Transversal":
-                _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(self.projection_selector.current_slice_no + 1))
+                _slice = voi.get_slice_at_pos(
+                    self.ctx.slice_to_z(
+                        self.projection_selector.current_slice_no + 1))
             elif self.projection_selector.plane == "Sagittal":
-                _slice = voi.get_2d_slice(voi.sagittal, self.projection_selector.current_slice_no)
+                _slice = voi.get_2d_slice(
+                    voi.sagittal, self.projection_selector.current_slice_no)
             elif self.projection_selector.plane == "Coronal":
-                _slice = voi.get_2d_slice(voi.coronal, self.projection_selector.current_slice_no)
+                _slice = voi.get_2d_slice(
+                    voi.coronal, self.projection_selector.current_slice_no)
 
             if _slice is None:
                 continue
@@ -41,8 +44,10 @@ class Vdx(object):
             # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
             # they will be transformed and put into <data>
             for _c in _slice.contours:
-                data = np.array(_c.contour) - np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0])
-                Vdx.plane_points_idx([data], self.ctx)  # this transforms the <data> array
+                data = np.array(_c.contour) - np.array(
+                    [self.ctx.xoffset, self.ctx.yoffset, 0.0])
+                Vdx.plane_points_idx(
+                    [data], self.ctx)  # this transforms the <data> array
                 contour_color = np.array(voi.color) / 255.0
 
                 if _c.contour_closed:
@@ -52,9 +57,13 @@ class Vdx(object):
 
                 # TODO: what are plotting here? in terms of mm or pixels?
                 if _c.number_of_points() == 1:
-                    Vdx._plot_poi(plc, xy[0, 0], xy[0, 1], contour_color, voi.name)
+                    Vdx._plot_poi(plc, xy[0, 0], xy[0, 1], contour_color,
+                                  voi.name)
                 else:
-                    plc.axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
+                    plc.axes.plot(xy[:, 0],
+                                  xy[:, 1],
+                                  color=contour_color,
+                                  zorder=15)
 
     @staticmethod
     def _plot_poi(plc, x, y, color='#00ff00', legend=''):
@@ -66,10 +75,12 @@ class Vdx(object):
 
         logger.debug("_plot_poi x,y {} {} mm".format(x, y))
 
-        bbox = plc.axes.get_window_extent().transformed(plc.figure.dpi_scale_trans.inverted())
+        bbox = plc.axes.get_window_extent().transformed(
+            plc.figure.dpi_scale_trans.inverted())
         width, height = bbox.width * plc.figure.dpi, bbox.height * plc.figure.dpi
         size = [width, height]
-        logger.debug("_plot_poi width,height: {} {} pixels".format(width, height))
+        logger.debug("_plot_poi width,height: {} {} pixels".format(
+            width, height))
 
         # size = plc.get_size()  # width and height in pixels
         width = (float(size[0]) / plc.zoom) * 100.0
@@ -105,18 +116,23 @@ class Vdx(object):
         bright_color = matplotlib.colors.hsv_to_rgb(_hsv)
 
         # plot a line (two segments) pointing to dot and underlining legend text
-        plc.axes.plot([x, x1, x2], [y, y1, y2], color=bright_color, linestyle=":", lw=1, zorder=15)
+        plc.axes.plot([x, x1, x2], [y, y1, y2],
+                      color=bright_color,
+                      linestyle=":",
+                      lw=1,
+                      zorder=15)
 
         # add the legend text
-        plc.axes.text(x1,
-                      y1 - 0.025 * height,
-                      legend,
-                      color=bright_color,
-                      va="top",
-                      fontsize=7,
-                      weight='semibold',
-                      backgroundcolor=(0.0, 0.0, 0.0, 0.8),
-                      zorder=20)  # zorder higher, so text is always above the lines
+        plc.axes.text(
+            x1,
+            y1 - 0.025 * height,
+            legend,
+            color=bright_color,
+            va="top",
+            fontsize=7,
+            weight='semibold',
+            backgroundcolor=(0.0, 0.0, 0.0, 0.8),
+            zorder=20)  # zorder higher, so text is always above the lines
         plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
 
     @staticmethod
@@ -140,8 +156,14 @@ class Vdx(object):
                 point[:, 0] *= ct_pixsize_inv
                 point[:, 1] *= ct_pixsize_inv
             elif plane == "Sagittal":
-                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+                point[:, 0] = (-point[:, 1] +
+                               ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
+                point[:,
+                      1] = (-point[:, 2] +
+                            ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
             elif plane == "Coronal":
-                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+                point[:, 0] = (-point[:, 0] +
+                               ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
+                point[:,
+                      1] = (-point[:, 2] +
+                            ctx.slice_distance * ctx.dimz) * ct_slicedist_inv

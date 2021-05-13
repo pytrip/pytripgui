@@ -1,4 +1,5 @@
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -7,7 +8,6 @@ class ViewCanvasTextCont(object):
     This class holds logic for plotting all various text decorators for the ViewCanvas plot.
     # TODO: find better name than "ViewCanvas" for this object.
     """
-
     def __init__(self):
         self.zoom = 100.0
         self.center = [50.0, 50.0]
@@ -19,7 +19,10 @@ class ViewCanvasTextCont(object):
         size = pm.slice_size
         width = (float(size[0]) / self.zoom) * 100.0
         height = (float(size[1]) / self.zoom) * 100.0
-        center = [float(size[0]) * self.center[0] / 100, float(size[1]) * self.center[1] / 100]
+        center = [
+            float(size[0]) * self.center[0] / 100,
+            float(size[1]) * self.center[1] / 100
+        ]
         offset = [center[0] - width / 2, center[1] - height / 2]
         return offset
 
@@ -64,7 +67,8 @@ class ViewCanvasTextCont(object):
         # text label on current slice# and position in mm
         axes.text(offset[0],
                   offset[1] + 3.0 / self.zoom * 100,
-                  "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) + "Slice Position: {:.1f} mm ".format(_slice_pos),
+                  "Slice #: {:d}/{:d}\n".format(idx + 1, _slices) +
+                  "Slice Position: {:.1f} mm ".format(_slice_pos),
                   color=pm.text_color,
                   va="top",
                   fontsize=8)
