@@ -88,24 +88,8 @@ class ProjectionSelector:
 class PlotModel(object):
     def __init__(self):
 
-        # DVHPlot specific
-        # TODO: these will be future pt.VolHist objects.
-        # Here we shall only keep a list of those dvh's we want to plot.
-        self.dvhs = []  # dose volume histograms, list of [x,y] ready for plotting
-
-        # Idea is to attach the VolHist classes to the DosCube objects themselves.
-        # The reason for this is, that each DVH will be unique for each DOS. There is only one Vdx loaded.
-        # Here in the plotmodel, we will then keep a list of links to those cubes which the user wants to have plotted.
-
-        # LVHPlot specific
-        # TODO: these will be future pt.VolHist objects.
-        # Here we shall only keep a list of those dvh's we want to plot.
-        self.lvhs = []  # let volume histograms, list of [x,y] ready for plotting
-
-        # VDX specific
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
-        self.plot_vois = True  # whether all vois are plotted at all
 
         self.projection_selector = ProjectionSelector()
         self.display_filter = ""
@@ -139,5 +123,6 @@ class PlotModel(object):
 
     def set_vdx(self, vois):
         self.vdx = Vdx(self.projection_selector)
-        self.vdx.vois = vois
+        self.vois = vois[4:6]
+        self.vdx.vois = self.vois
         self.vdx.ctx = self.ctx.cube

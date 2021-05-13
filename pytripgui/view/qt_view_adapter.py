@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
 
 
 class LineEdit:
@@ -89,10 +90,6 @@ class ComboBox:
     def last_data(self):
         return self._ui.itemData(self.last_index)
 
-    @property
-    def count(self):
-        return self._ui.count()
-
 
 class UserInfoBox:
     def __init__(self, parent_ui):
@@ -103,3 +100,21 @@ class UserInfoBox:
 
     def show_info(self, name, content):
         QMessageBox.information(self._parent_ui, name, content)
+
+
+class ListWidget:
+    def __init__(self, list_widget, checkable=False):
+        self._ui = list_widget
+        self._items = list()
+        self._checkable = checkable
+
+    def fill(self, items, lambda_names):
+        self._ui.clear()
+        self._items.clear()
+        for item in items:
+            q_item = QListWidgetItem(lambda_names(item))
+            q_item.setData(Qt.UserRole, item)
+            if self._checkable:
+                q_item.setCheckState(Qt.Unchecked)
+            self._items.append(q_item)
+            self._ui.addItem(q_item)

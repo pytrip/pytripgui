@@ -99,6 +99,9 @@ class ViewCanvasCont(object):
             self._model.set_ctx(patient.ctx)
             self._model.set_vdx(patient.vdx.vois)
 
+        if patient.vdx.vois:
+            self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_viewcanvas()
 

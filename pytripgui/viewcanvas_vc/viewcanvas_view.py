@@ -8,6 +8,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 from pytripgui.view.qt_gui import UiViewCanvas
+from pytripgui.view.qt_view_adapter import ListWidget
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,8 @@ class ViewCanvasView:
 
         self._ui = UiViewCanvas(parent)
         self._plotter = ViewCanvasWidget()
+
+        self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
 
         self._ui.vc_layout.addWidget(self._plotter)
 
