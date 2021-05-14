@@ -1,4 +1,5 @@
 from pytrip.cube import Cube
+from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube, create_sphere
 
 import logging
@@ -42,8 +43,12 @@ class EmptyPatientController(object):
             pixel_size=1,
             slice_distance=int(self.view.distanceBetweenSlices.text)
         )
-        self.model.ctx = cube
+        
+        self.model.ctx = CtxCube(cube)
+        self.model.ctx.basename = self.view.patientName.text
+
         vdxCube = VdxCube(self.model.ctx)
+        vdxCube.basename = self.view.patientName.text
 
         for row in range(self.view.organ_table.row_count()):
             voi = create_sphere(
