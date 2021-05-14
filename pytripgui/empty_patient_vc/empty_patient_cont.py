@@ -19,6 +19,7 @@ class EmptyPatientController(object):
     def __init__(self, model, view):
         self.model = model
         self.view = view
+
         self.is_cancelled = True
         self._setup_callbacks()
 
