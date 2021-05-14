@@ -35,6 +35,7 @@ class EmptyPatientController(object):
 
     def _set_model_from_view(self):
         cube = Cube()
+
         cube.create_empty_cube(
             value=0,
             dimx=int(self.view.width.text),
@@ -59,8 +60,7 @@ class EmptyPatientController(object):
                     int(self.view.organ_table.item(row, 2).text()),
                     int(self.view.organ_table.item(row, 3).text()),
                 ],
-                radius=int(self.view.organ_table.item(row, 4).text())
-            )
+                radius=int(self.view.organ_table.item(row, 4).text()))
             vdxCube.add_voi(voi)
 
         self.model.vdx = vdxCube

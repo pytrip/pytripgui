@@ -15,7 +15,8 @@ class EmptyPatientQtView(object):
         self.width = LineEdit(self._ui.width_lineEdit)
         self.height = LineEdit(self._ui.height_lineEdit)
         self.depth = LineEdit(self._ui.depth_lineEdit)
-        self.distanceBetweenSlices = LineEdit(self._ui.distanceBetweenSlices_lineEdit)
+        self.distanceBetweenSlices = LineEdit(
+            self._ui.distanceBetweenSlices_lineEdit)
         self.patientName = LineEdit(self._ui.patientName_lineEdit)
 
         self.organ_table = TableWidget(self._ui.organ_tableWidget)
