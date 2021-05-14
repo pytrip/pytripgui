@@ -2,6 +2,8 @@ from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
 from pytripgui.field_vc.field_cont import FieldController
+from pytripgui.empty_patient_vc.empty_patient_view import EmptyPatientQtView
+from pytripgui.empty_patient_vc.empty_patient_cont import EmptyPatientController
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 
 from pytripgui.tree_vc.tree_items import PatientItem, PlanItem, FieldItem
@@ -183,10 +185,18 @@ class AppCallback:
             return item
         return None
 
-    #
     def open_empty_patient_callback(self, patient_item):
+
         patient = patient_item.data
-        patient.init_with_empty_cube()
+
+        view = EmptyPatientQtView(self.parent_gui.ui)
+        controller = EmptyPatientController(patient, view)
+        view.show()
+
+        if controller.is_cancelled:
+            return False
+
+        patient = controller.model
 
         if not self.app_model.viewcanvases:
             self.app_model.viewcanvases = ViewCanvases()
