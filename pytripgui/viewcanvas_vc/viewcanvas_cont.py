@@ -62,6 +62,7 @@ class ViewCanvasCont(object):
             self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
+            self._model.vc_text.plot(self._ui._plotter)
 
         if self._model.dose:
             self._ui.enable_dose()
@@ -105,10 +106,7 @@ class ViewCanvasCont(object):
         self.update_viewcanvas()
 
     def set_simulation_results(self, simulation_results):
-        self._ui.clear()
-        self._model = PlotModel()
-        self._model.set_ctx(simulation_results.patient.ctx)
-        self._model.set_vdx(simulation_results.patient.vdx.vois)
+        self.set_patient(simulation_results.patient)
 
         if simulation_results:
             if simulation_results.dose:

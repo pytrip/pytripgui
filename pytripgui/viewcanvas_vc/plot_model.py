@@ -6,6 +6,7 @@ from pytripgui.viewcanvas_vc.objects.dos import Dos
 from pytripgui.viewcanvas_vc.objects.let import Let
 from pytripgui.viewcanvas_vc.objects.ctx import Ctx
 from pytripgui.viewcanvas_vc.objects.vdx import Vdx
+from pytripgui.viewcanvas_vc.objects.vc_text import ViewCanvasTextCont
 
 logger = logging.getLogger(__name__)
 
@@ -91,8 +92,7 @@ class PlotModel(object):
     def __init__(self):
 
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.vois = [
-        ]  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
 
         self.projection_selector = ProjectionSelector()
         self.display_filter = ""
@@ -125,6 +125,7 @@ class PlotModel(object):
         self.projection_selector._coronal_slice_no = max_item_index[1]
 
     def set_vdx(self, vois):
+        self.vc_text = ViewCanvasTextCont(self.projection_selector)
         self.vdx = Vdx(self.projection_selector)
         self.vois = vois[4:6]
         self.vdx.vois = self.vois
