@@ -136,6 +136,3 @@ class ListWidget:
     def _update_event(self):
         if self.event_callback:
             self.event_callback()
-
-        for i in self.checked_items():
-            print(i.name)
