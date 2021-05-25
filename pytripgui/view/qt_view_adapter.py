@@ -108,6 +108,9 @@ class ListWidget:
         self._items = list()
         self._checkable = checkable
 
+        self.event_callback = None
+        self._ui.itemClicked.connect(self._update_event)
+
     def fill(self, items, lambda_names):
         self._ui.clear()
         self._items.clear()
@@ -118,3 +121,21 @@ class ListWidget:
                 q_item.setCheckState(Qt.Unchecked)
             self._items.append(q_item)
             self._ui.addItem(q_item)
+
+    def checked_items(self):
+        selected = list()
+        if not self._checkable:
+            return selected
+
+        for i in range(self._ui.count()):
+            widget = self._ui.item(i)
+            if widget.checkState() == Qt.Checked:
+                selected.append(widget.data(Qt.UserRole))
+        return selected
+
+    def _update_event(self):
+        if self.event_callback:
+            self.event_callback()
+
+        for i in self.checked_items():
+            print(i.name)

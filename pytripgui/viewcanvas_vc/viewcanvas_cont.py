@@ -62,7 +62,6 @@ class ViewCanvasCont(object):
             self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
-            self._model.vc_text.plot(self._ui._plotter)
 
         if self._model.dose:
             self._ui.enable_dose()
@@ -97,9 +96,10 @@ class ViewCanvasCont(object):
         self._model = PlotModel()
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
-            self._model.set_vdx(patient.vdx.vois)
+            self._model.set_vdx()
 
         if patient.vdx.vois:
+            self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
@@ -115,4 +115,8 @@ class ViewCanvasCont(object):
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
 
+        self.update_viewcanvas()
+
+    def _on_update_voi(self):
+        self._model.vdx.vois = self._ui.voi_list.checked_items()
         self.update_viewcanvas()

@@ -125,9 +125,7 @@ class PlotModel(object):
         self.projection_selector._sagittal_slice_no = max_item_index[2]
         self.projection_selector._coronal_slice_no = max_item_index[1]
 
-    def set_vdx(self, vois):
-        self.vc_text = ViewCanvasTextCont(self.projection_selector)
+    def set_vdx(self):
         self.vdx = Vdx(self.projection_selector)
-        self.vois = vois[4:6]
-        self.vdx.vois = self.vois
+        self.vdx.vois = list()
         self.vdx.ctx = self.ctx.cube

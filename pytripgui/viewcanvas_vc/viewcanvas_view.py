@@ -30,8 +30,12 @@ class ViewCanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
+        self.vois_tree_set_enabled(False)
 
     def _internal_events_setup(self):
+
+        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
+
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
 
@@ -139,6 +143,14 @@ class ViewCanvasView:
 
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
+
+    def vois_tree_set_enabled(self, state):
+        if state:
+            self._ui.voi_listWidget.show()
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._ui.voi_listWidget.hide()
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 class ViewCanvasWidget(FigureCanvas):

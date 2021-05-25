@@ -45,19 +45,9 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <widget class="QRadioButton" name="radioButton">
+          <widget class="QCheckBox" name="voiList_checkBox">
            <property name="text">
-            <string>VOIs on</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="radioButton_2">
-           <property name="text">
-            <string>VOIs off</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
+            <string>VOIs list</string>
            </property>
           </widget>
          </item>
@@ -195,38 +185,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>radioButton</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>voi_listWidget</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>299</x>
-     <y>61</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>radioButton_2</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>voi_listWidget</receiver>
-   <slot>hide()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>299</x>
-     <y>137</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
