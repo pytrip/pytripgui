@@ -13,5 +13,8 @@ class ViewCanvases:
     def set_patient(self, patient):
         self.plot_cont.set_patient(patient)
 
+    def set_plan(self, patient, plan_index):
+        self.plot_cont.set_plan(patient, plan_index)
+
     def set_simulation_results(self, simulation_results):
         self.plot_cont.set_simulation_results(simulation_results)

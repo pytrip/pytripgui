@@ -59,7 +59,8 @@ class ViewCanvasCont:
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
-            self._model.vdx.plot(self._ui._plotter)
+            if self._model.vdx:
+                self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
 
@@ -93,31 +94,61 @@ class ViewCanvasCont:
 
     def set_patient(self, patient):
         self._ui.clear()
-        self._model = PlotModel()
-        if patient.ctx:
-            self._model.set_ctx(patient.ctx)
-            self._model.set_vdx()
+        if patient.plot_model is None:
+            self._model = PlotModel()
+            if patient.ctx:
+                self._model.set_ctx(patient.ctx)
+                self._model.set_vdx()
 
-        if patient.vdx.vois:
-            self._ui.voi_list.event_callback = self._on_update_voi
-            self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            self._on_update_voi()
+            if patient.vdx.vois:
+                self._ui.voi_list.event_callback = self._on_update_voi
+                self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+                self._on_update_voi()
 
-        self._ui.set_position_changed_callback(self.set_current_slice_no)
+            self._ui.set_position_changed_callback(self.set_current_slice_no)
+
+            patient.plot_model = self._model
+        else:
+            self._model = patient.plot_model
+
+        self.update_viewcanvas()
+
+    def set_plan(self, patient, plan_index):
+        self._ui.clear()
+        if patient.plans_plot_models[plan_index] is None:
+            self._model = PlotModel()
+            if patient.ctx:
+                self._model.set_ctx(patient.ctx)
+
+            self._ui.set_position_changed_callback(self.set_current_slice_no)
+
+            patient.plans_plot_models[plan_index] = self._model
+        else:
+            self._model = patient.plans_plot_models[plan_index]
+
         self.update_viewcanvas()
 
     def set_simulation_results(self, simulation_results):
         self.set_patient(simulation_results.patient)
+        self._ui.clear()
+        if simulation_results.plot_model is None:
+            self._model = PlotModel()
+            self._model.set_ctx(simulation_results.patient.ctx)
 
-        if simulation_results:
-            if simulation_results.dose:
-                self._model.set_dose(simulation_results.dose)
+            if simulation_results:
+                if simulation_results.dose:
+                    self._model.set_dose(simulation_results.dose)
 
-            if simulation_results.let:
-                self._model.set_let(simulation_results.let)
+                if simulation_results.let:
+                    self._model.set_let(simulation_results.let)
+
+            simulation_results.plot_model = self._model
+        else:
+            self._model = simulation_results.plot_model
 
         self.update_viewcanvas()
 
     def _on_update_voi(self):
-        self._model.vdx.vois = self._ui.voi_list.checked_items()
+        if self._model.vdx:
+            self._model.vdx.vois = self._ui.voi_list.checked_items()
         self.update_viewcanvas()

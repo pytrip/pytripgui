@@ -13,6 +13,11 @@ class PatientModel:
         self.dcm = None
 
         self.plans = []
+        self.plans_plot_models = []
+        self.plot_model = None
+
+    def add_empty_plan_plot_model(self):
+        self.plans_plot_models.append(None)
 
     def open_ctx(self, path):
         ctx = pt.CtxCube()

@@ -71,6 +71,7 @@ class AppCallback:
         if not selected_patient:
             self.parent_gui.show_info(*InfoMessages["addNewPatient"])
             return
+
         self.new_item_callback(selected_patient)
 
     def on_kernels_configurator(self):
@@ -134,6 +135,8 @@ class AppCallback:
             self.add_empty_patient()
         elif isinstance(parent, PatientItem):
             plan = self.edit_plan(PlanItem(), parent)
+            if plan is not None:
+                parent.data.add_empty_plan_plot_model()
             self.app_model.patient_tree.add_new_item(parent, plan)
         elif isinstance(parent, PlanItem):
             field = self.edit_field(FieldItem())
@@ -231,11 +234,20 @@ class AppCallback:
                 self.app_model.viewcanvases.set_patient(top_item.data)
 
         if isinstance(item, PlanItem):
+            if self.app_model.viewcanvases:
+                plan_index = self.app_model.patient_tree.patient_tree_view.currentIndex().row()
+                self.app_model.viewcanvases.set_plan(top_item.data, plan_index)
+
             self.parent_gui.action_create_field_set_enable(True)
             if self.is_executable(item):
                 self.parent_gui.action_execute_plan_set_enable(True)
 
         elif isinstance(item, FieldItem):
+            if isinstance(item.parent, PlanItem):
+                if self.app_model.viewcanvases:
+                    plan_index = self.app_model.patient_tree.patient_tree_view.currentIndex().parent().row()
+                    self.app_model.viewcanvases.set_plan(top_item.data, plan_index)
+
             self.parent_gui.action_create_field_set_enable(True)
             if self.is_executable(item):
                 self.parent_gui.action_execute_plan_set_enable(True)

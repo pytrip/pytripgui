@@ -18,6 +18,8 @@ class SimulationResults:
 
         self._import_results(plan)
 
+        self.plot_model = None
+
     def _import_results(self, plan):
         self.name = plan.basename
         self.plan = plan
