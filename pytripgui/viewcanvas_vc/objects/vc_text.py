@@ -17,17 +17,13 @@ class ViewCanvasTextCont(object):
         """
         """
 
-        bbox = plc.axes.get_window_extent().transformed(
-            plc.figure.dpi_scale_trans.inverted())
+        bbox = plc.axes.get_window_extent().transformed(plc.figure.dpi_scale_trans.inverted())
         width, height = bbox.width * plc.figure.dpi, bbox.height * plc.figure.dpi
         size = [width, height]
 
         width = (float(size[0]) / self.zoom) * 100.0
         height = (float(size[1]) / self.zoom) * 100.0
-        center = [
-            float(size[0]) * self.center[0] / 100,
-            float(size[1]) * self.center[1] / 100
-        ]
+        center = [float(size[0]) * self.center[0] / 100, float(size[1]) * self.center[1] / 100]
         offset = [center[0] - width / 2, center[1] - height / 2]
         return offset
 
@@ -45,8 +41,7 @@ class ViewCanvasTextCont(object):
 
         axes = plc.axes
 
-        bbox = plc.axes.get_window_extent().transformed(
-            plc.figure.dpi_scale_trans.inverted())
+        bbox = plc.axes.get_window_extent().transformed(plc.figure.dpi_scale_trans.inverted())
         width, height = bbox.width * plc.figure.dpi, bbox.height * plc.figure.dpi
         # size = [width, height]
         # width = size[0]

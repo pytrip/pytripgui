@@ -26,12 +26,10 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no +
-                                 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no -
-                                 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -91,8 +89,7 @@ class PlotModel(object):
     def __init__(self):
 
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.vois = [
-        ]  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
 
         self.projection_selector = ProjectionSelector()
         self.display_filter = ""

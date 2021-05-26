@@ -15,9 +15,7 @@ logger = logging.getLogger(__name__)
 
 class ViewCanvasView:
     def __init__(self, parent=None):
-        self.internal_events = Events(
-            ('on_perspective_change', 'on_display_filter_change',
-             'on_change_slice_position'))
+        self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
         self._plotter = ViewCanvasWidget()
@@ -34,18 +32,14 @@ class ViewCanvasView:
 
     def _internal_events_setup(self):
 
-        self._ui.voiList_checkBox.stateChanged.connect(
-            self.vois_tree_set_enabled)
+        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
 
-        self._ui.Dose_radioButton.released.connect(
-            self.internal_events.on_display_filter_change)
-        self._ui.LET_radioButton.released.connect(
-            self.internal_events.on_display_filter_change)
-        self._ui.None_radioButton.released.connect(
-            self.internal_events.on_display_filter_change)
+        self._ui.Dose_radioButton.released.connect(self.internal_events.on_display_filter_change)
+        self._ui.LET_radioButton.released.connect(self.internal_events.on_display_filter_change)
+        self._ui.None_radioButton.released.connect(self.internal_events.on_display_filter_change)
 
     def widget(self):
         return self._ui
@@ -81,8 +75,7 @@ class ViewCanvasView:
 
     @perspective.setter
     def perspective(self, perspective):
-        index_of_element = self._ui.perspective_comboBox.findText(
-            perspective, QtCore.Qt.MatchFixedString)
+        index_of_element = self._ui.perspective_comboBox.findText(perspective, QtCore.Qt.MatchFixedString)
         if index_of_element == -1:
             raise Exception("Cannot find given perspective to select")
         else:
@@ -148,12 +141,10 @@ class ViewCanvasView:
     def vois_tree_set_enabled(self, state):
         if state:
             self._ui.voi_listWidget.show()
-            self._ui.voiList_checkBox.setCheckState(
-                QtCore.Qt.CheckState.Checked)
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Checked)
         else:
             self._ui.voi_listWidget.hide()
-            self._ui.voiList_checkBox.setCheckState(
-                QtCore.Qt.CheckState.Unchecked)
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 class ViewCanvasWidget(FigureCanvas):
@@ -199,8 +190,7 @@ class ViewCanvasWidget(FigureCanvas):
         if parent:
             parent.addWidget(self)
 
-        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
@@ -222,9 +212,7 @@ class ViewCanvasWidget(FigureCanvas):
         self.figure.canvas.mpl_connect('key_press_event', callback)
 
     def plot_bg(self, background):
-        extent = [
-            0, 512, 0, 512
-        ]  # extention of the axesimage, used for plotting the background image.
+        extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
         self.axim_bg = self.axes.imshow(background,
                                         cmap=plt.cm.gray,
                                         vmin=-5,
@@ -260,8 +248,7 @@ class ViewCanvasWidget(FigureCanvas):
         cb.outline.set_edgecolor(self.bg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color)
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color,
-                                    labelsize=self.cb_fontsize)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.dose_bar = cb
 
         if dos.dos_scale == "abs":
@@ -298,14 +285,11 @@ class ViewCanvasWidget(FigureCanvas):
     def _plot_let_bar(self):
         cax = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
         cb = self.axes.figure.colorbar(self.axim_let, cax=cax)
-        cb.set_label("LET (keV/um)",
-                     color=self.fg_color,
-                     fontsize=self.cb_fontsize)
+        cb.set_label("LET (keV/um)", color=self.fg_color, fontsize=self.cb_fontsize)
         cb.outline.set_edgecolor(self.bg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color)
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color,
-                                    labelsize=self.cb_fontsize)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.let_bar = cb
 
     def remove_ctx(self):
@@ -336,6 +320,5 @@ class ViewCanvasWidget(FigureCanvas):
         cb.outline.set_edgecolor(self.bg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color)
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color,
-                                    labelsize=self.cb_fontsize)
+        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.hu_bar = cb
