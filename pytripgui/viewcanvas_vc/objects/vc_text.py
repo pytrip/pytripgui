@@ -48,8 +48,7 @@ class ViewCanvasTextCont(object):
         bbox = plc.axes.get_window_extent().transformed(
             plc.figure.dpi_scale_trans.inverted())
         width, height = bbox.width * plc.figure.dpi, bbox.height * plc.figure.dpi
-        size = [width, height]
-
+        # size = [width, height]
         # width = size[0]
         # height = size[1]
         #

@@ -105,7 +105,7 @@ class ConfigController(object):
             sftp = ssh.open_sftp()
             try:
                 sftp.stat(self.view.wdir_remote_path.text)
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 self.view.info_box.show_error(
                     "File not found", "Remote working directory doesn't exist")
             else:

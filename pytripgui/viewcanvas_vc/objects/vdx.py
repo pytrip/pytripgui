@@ -156,14 +156,8 @@ class Vdx(object):
                 point[:, 0] *= ct_pixsize_inv
                 point[:, 1] *= ct_pixsize_inv
             elif plane == "Sagittal":
-                point[:, 0] = (-point[:, 1] +
-                               ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
-                point[:,
-                      1] = (-point[:, 2] +
-                            ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
             elif plane == "Coronal":
-                point[:, 0] = (-point[:, 0] +
-                               ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
-                point[:,
-                      1] = (-point[:, 2] +
-                            ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
+                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv

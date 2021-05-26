@@ -6,7 +6,6 @@ from pytripgui.viewcanvas_vc.objects.dos import Dos
 from pytripgui.viewcanvas_vc.objects.let import Let
 from pytripgui.viewcanvas_vc.objects.ctx import Ctx
 from pytripgui.viewcanvas_vc.objects.vdx import Vdx
-from pytripgui.viewcanvas_vc.objects.vc_text import ViewCanvasTextCont
 
 logger = logging.getLogger(__name__)
 
@@ -27,12 +26,10 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no +
-                                 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no -
-                                 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
