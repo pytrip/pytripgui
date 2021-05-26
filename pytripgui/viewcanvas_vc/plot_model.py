@@ -127,5 +127,5 @@ class PlotModel(object):
 
     def set_vdx(self):
         self.vdx = Vdx(self.projection_selector)
-        self.vdx.vois = list()
+        self.vdx.vois = []
         self.vdx.ctx = self.ctx.cube

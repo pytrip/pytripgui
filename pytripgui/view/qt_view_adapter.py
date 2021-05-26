@@ -105,7 +105,7 @@ class UserInfoBox:
 class ListWidget:
     def __init__(self, list_widget, checkable=False):
         self._ui = list_widget
-        self._items = list()
+        self._items = []
         self._checkable = checkable
 
         self.event_callback = None
@@ -123,7 +123,7 @@ class ListWidget:
             self._ui.addItem(q_item)
 
     def checked_items(self):
-        selected = list()
+        selected = []
         if not self._checkable:
             return selected
 
