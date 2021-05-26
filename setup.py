@@ -26,6 +26,7 @@ with open('README.rst') as readme_file:
 install_requires = [
     'pytrip98~=3.0',
     'anytree~=2.8',
+    'paramiko~=2.7',
     'Events~=0.3',
     "PyQt5<5.10 ; python_version<'3.8'",
     "PyQt5>=5.15 ; python_version>='3.8'",
