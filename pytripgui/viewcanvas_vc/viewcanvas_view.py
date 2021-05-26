@@ -30,7 +30,7 @@ class ViewCanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
-        self.vois_tree_set_enabled(False)
+        self.vois_tree_set_enabled(True)
 
     def _internal_events_setup(self):
 

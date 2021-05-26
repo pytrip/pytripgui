@@ -101,6 +101,7 @@ class ViewCanvasCont(object):
         if patient.vdx.vois:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+            self._on_update_voi()
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_viewcanvas()
