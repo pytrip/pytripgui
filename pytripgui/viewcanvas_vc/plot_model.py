@@ -37,9 +37,9 @@ class ProjectionSelector:
     def get_projection(self, data):
         if self.plane == "Transversal":
             return data.cube[self.current_slice_no]
-        elif self.plane == "Sagittal":
+        if self.plane == "Sagittal":
             return data.cube[-1:0:-1, -1:0:-1, self.current_slice_no]
-        elif self.plane == "Coronal":
+        if self.plane == "Coronal":
             return data.cube[-1:0:-1, self.current_slice_no, -1:0:-1]
 
     def load_slices_count(self, data):
