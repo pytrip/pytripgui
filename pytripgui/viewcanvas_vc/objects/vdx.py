@@ -6,7 +6,7 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 
-class Vdx(object):
+class Vdx:
     """
     This class holds logic for plotting Vdx stuff.
     """

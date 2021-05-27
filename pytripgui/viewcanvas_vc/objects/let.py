@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class Let(object):
+class Let:
     def __init__(self, selector):
         self.aspect = 1.0  # aspect ratio of plot
 

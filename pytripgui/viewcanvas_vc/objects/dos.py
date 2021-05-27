@@ -16,7 +16,7 @@ class DoseAxisType(Enum):
     abs = 2
 
 
-class Dos(object):
+class Dos:
     def __init__(self, selector):
         self.aspect = 1.0  # aspect ratio of plot
 

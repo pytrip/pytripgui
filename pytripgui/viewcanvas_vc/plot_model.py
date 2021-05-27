@@ -85,7 +85,7 @@ class ProjectionSelector:
             return self._coronal_last_slice_no
 
 
-class PlotModel(object):
+class PlotModel:
     def __init__(self):
 
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.

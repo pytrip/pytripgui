@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasTextCont(object):
+class ViewCanvasTextCont:
     """
     This class holds logic for plotting all various text decorators for the ViewCanvas plot.
     # TODO: find better name than "ViewCanvas" for this object.
