@@ -6,33 +6,33 @@ import numpy as np
 logger = logging.getLogger(__name__)
 
 
-class Vdx(object):
+class Vdx:
     """
     This class holds logic for plotting Vdx stuff.
     """
+    def __init__(self, projection_selector):
+        self.projection_selector = projection_selector
+        self.vois = None
+        self.ctx = None
 
-    def __init__(self):
-        pass
-
-    @staticmethod
-    def plot(plc):
+    def plot(self, plc):
         """
         Plots the VOIs.
         """
-        pm = plc._model.plot
-        ctx = plc._model.ctx
-        idx = plc._model.plot.zslice
-
-        Vdx.clean_plot(plc)
-
-        if not pm.vois:
+        if not self.vois:
             # there is nothing to plot.
             return
 
-        for voi in pm.vois:
+        for voi in self.vois:
             logger.debug("plot() voi:{}".format(voi.name))
 
-            _slice = voi.get_slice_at_pos(ctx.slice_to_z(idx + 1))
+            if self.projection_selector.plane == "Transversal":
+                _slice = voi.get_slice_at_pos(self.ctx.slice_to_z(self.projection_selector.current_slice_no + 1))
+            elif self.projection_selector.plane == "Sagittal":
+                _slice = voi.get_2d_slice(voi.sagittal, self.projection_selector.current_slice_no)
+            elif self.projection_selector.plane == "Coronal":
+                _slice = voi.get_2d_slice(voi.coronal, self.projection_selector.current_slice_no)
+
             if _slice is None:
                 continue
 
@@ -40,8 +40,8 @@ class Vdx(object):
             # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
             # they will be transformed and put into <data>
             for _c in _slice.contours:
-                data = np.array(_c.contour) - np.array([ctx.xoffset, ctx.yoffset, 0.0])
-                Vdx.plane_points_idx([data], ctx, plc._model.plot.plane)  # this transforms the <data> array
+                data = np.array(_c.contour) - np.array([self.ctx.xoffset, self.ctx.yoffset, 0.0])
+                Vdx.plane_points_idx([data], self.ctx)  # this transforms the <data> array
                 contour_color = np.array(voi.color) / 255.0
 
                 if _c.contour_closed:
@@ -117,16 +117,6 @@ class Vdx(object):
                       backgroundcolor=(0.0, 0.0, 0.0, 0.8),
                       zorder=20)  # zorder higher, so text is always above the lines
         plc.axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
-
-    @staticmethod
-    def clean_plot(plc):
-        """
-        Scrub the plot for any lines and text.
-        """
-        while len(plc.axes.lines) > 0:
-            plc.axes.lines.pop(0)
-        while len(plc.axes.texts) > 0:
-            plc.axes.texts.pop(0)
 
     @staticmethod
     def plane_points_idx(points, ctx, plane="Transversal"):

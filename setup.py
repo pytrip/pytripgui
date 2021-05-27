@@ -18,7 +18,6 @@ def write_version_py(filename=os.path.join('pytripgui', 'VERSION')):
 
 write_version_py()
 
-
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
@@ -26,6 +25,7 @@ with open('README.rst') as readme_file:
 install_requires = [
     'pytrip98~=3.0',
     'anytree~=2.8',
+    'paramiko~=2.7',
     'Events~=0.3',
     "PyQt5<5.10 ; python_version<'3.8'",
     "PyQt5>=5.15 ; python_version>='3.8'",
@@ -57,7 +57,6 @@ setuptools.setup(
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
         'Topic :: Scientific/Engineering :: Physics',
         'Operating System :: POSIX :: Linux',
-
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
 
         # Specify the Python versions you support here. In particular, ensure
@@ -73,5 +72,4 @@ setuptools.setup(
         'console_scripts': [
             'pytripgui=pytripgui.main:main',
         ],
-    }
-)
+    })

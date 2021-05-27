@@ -1,6 +1,6 @@
 import logging
 
-from pytripgui.model.plot_model import PlotModel
+from pytripgui.viewcanvas_vc.plot_model import PlotModel
 
 logger = logging.getLogger(__name__)
 
@@ -9,12 +9,9 @@ class ViewCanvasCont(object):
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
-
     def __init__(self, model, ui):
         self._model = model
         self._ui = ui
-
-        self.plot_bg()
 
         self._setup_ui_callbacks()
 
@@ -58,9 +55,11 @@ class ViewCanvasCont(object):
         self._ui.clear()
 
     def update_viewcanvas(self):
+        self.clear_view()
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
+            self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
 
@@ -92,24 +91,23 @@ class ViewCanvasCont(object):
 
         self._ui.draw()
 
-    def plot_bg(self):
-        import numpy as np
-        chessboard_data = np.add.outer(range(32), range(32)) % 2  # chessboard
-        self._ui.plot_bg(chessboard_data)
-
     def set_patient(self, patient):
         self._ui.clear()
         self._model = PlotModel()
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
+            self._model.set_vdx()
+
+        if patient.vdx.vois:
+            self._ui.voi_list.event_callback = self._on_update_voi
+            self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+            self._on_update_voi()
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_viewcanvas()
 
     def set_simulation_results(self, simulation_results):
-        self._ui.clear()
-        self._model = PlotModel()
-        self._model.set_ctx(simulation_results.patient.ctx)
+        self.set_patient(simulation_results.patient)
 
         if simulation_results:
             if simulation_results.dose:
@@ -118,4 +116,8 @@ class ViewCanvasCont(object):
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
 
+        self.update_viewcanvas()
+
+    def _on_update_voi(self):
+        self._model.vdx.vois = self._ui.voi_list.checked_items()
         self.update_viewcanvas()

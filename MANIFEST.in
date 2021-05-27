@@ -24,5 +24,6 @@
   exclude tox.ini
   exclude .travis.yml
   exclude appveyor.yml
+  exclude .deepsource.toml
   prune .travis
   prune install_deps.sh

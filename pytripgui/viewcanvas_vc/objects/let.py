@@ -1,16 +1,17 @@
 import logging
+
 logger = logging.getLogger(__name__)
 
 
-class Ctx(object):
+class Let:
     def __init__(self, selector):
         self.aspect = 1.0  # aspect ratio of plot
 
         self.cube = None
         self.data_to_plot = None
 
-        self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.contrast_ct = [-500, 2000]
+        self.min_let = 0
+        self.max_let = None
         self.projection_selector = selector
 
     def prepare_data_to_plot(self):
@@ -19,6 +20,7 @@ class Ctx(object):
 
         self._set_aspect()
         self.data_to_plot = self.projection_selector.get_projection(self.cube)
+        self.data_to_plot[self.data_to_plot <= self.min_let] = self.min_let
 
     def _set_aspect(self):
         if self.projection_selector.plane == "Transversal":

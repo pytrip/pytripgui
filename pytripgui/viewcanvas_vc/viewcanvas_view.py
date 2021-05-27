@@ -8,20 +8,19 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 
 from pytripgui.view.qt_gui import UiViewCanvas
+from pytripgui.view.qt_view_adapter import ListWidget
 
 logger = logging.getLogger(__name__)
 
 
 class ViewCanvasView:
     def __init__(self, parent=None):
-        self.internal_events = Events((
-            'on_perspective_change',
-            'on_display_filter_change',
-            'on_change_slice_position'
-        ))
+        self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
         self._plotter = ViewCanvasWidget()
+
+        self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
 
         self._ui.vc_layout.addWidget(self._plotter)
 
@@ -29,11 +28,14 @@ class ViewCanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
+        self.vois_tree_set_enabled(True)
 
     def _internal_events_setup(self):
+
+        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
+
         self._ui.perspective_comboBox.currentIndexChanged.connect(
-            lambda index: self.internal_events.on_perspective_change()
-        )
+            lambda index: self.internal_events.on_perspective_change())
 
         self._ui.Dose_radioButton.released.connect(self.internal_events.on_display_filter_change)
         self._ui.LET_radioButton.released.connect(self.internal_events.on_display_filter_change)
@@ -128,20 +130,28 @@ class ViewCanvasView:
         self._plotter.draw()
 
     def clear(self):
+        self._plotter.remove_vois()
         self._plotter.remove_dos()
         self._plotter.remove_let()
-        self._plotter.remove_ctx()
+        # self._plotter.remove_ctx()
 
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
+
+    def vois_tree_set_enabled(self, state):
+        if state:
+            self._ui.voi_listWidget.show()
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Checked)
+        else:
+            self._ui.voi_listWidget.hide()
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
 
 
 class ViewCanvasWidget(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
-
-    def __init__(self, parent=None, width=4, height=4, dpi=110):
+    def __init__(self, parent=None, width=10, height=10, dpi=100):
         """
         Init canvas.
         """
@@ -173,7 +183,7 @@ class ViewCanvasWidget(FigureCanvas):
 
         # Figure
         self.figure = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.figure.add_subplot(111)
+        self.axes = self.figure.add_subplot(1, 1, 1)
 
         FigureCanvas.__init__(self, self.figure)
 
@@ -203,12 +213,13 @@ class ViewCanvasWidget(FigureCanvas):
 
     def plot_bg(self, background):
         extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
-        self.axim_bg = self.axes.imshow(
-            background, cmap=plt.cm.gray,
-            vmin=-5, vmax=5,
-            interpolation='nearest',
-            extent=extent,
-            zorder=0)
+        self.axim_bg = self.axes.imshow(background,
+                                        cmap=plt.cm.gray,
+                                        vmin=-5,
+                                        vmax=5,
+                                        interpolation='nearest',
+                                        extent=extent,
+                                        zorder=0)
 
     def remove_dos(self):
         if self.axim_dos:
@@ -220,13 +231,11 @@ class ViewCanvasWidget(FigureCanvas):
 
     def plot_dos(self, dos):
         if not self.axim_dos and dos.max_dose > dos.min_dose:
-            self.axim_dos = self.axes.imshow(
-                dos.data_to_plot,
-                cmap=self.colormap_dose,
-                vmax=dos.max_dose,
-                aspect=dos.aspect,
-                zorder=5
-            )
+            self.axim_dos = self.axes.imshow(dos.data_to_plot,
+                                             cmap=self.colormap_dose,
+                                             vmax=dos.max_dose,
+                                             aspect=dos.aspect,
+                                             zorder=5)
             if not self.dose_bar:
                 self._plot_dos_bar(dos)
         else:
@@ -255,15 +264,19 @@ class ViewCanvasWidget(FigureCanvas):
             self.let_bar.ax.cla()
             self.let_bar = None
 
+    def remove_vois(self):
+        while len(self.axes.lines) > 0:
+            self.axes.lines.pop(0)
+        while len(self.axes.texts) > 0:
+            self.axes.texts.pop(0)
+
     def plot_let(self, data):
         if not self.axim_let:
-            self.axim_let = self.axes.imshow(
-                data.data_to_plot,
-                cmap=self.colormap_let,
-                vmax=data.max_let,
-                aspect=data.aspect,
-                zorder=10
-            )
+            self.axim_let = self.axes.imshow(data.data_to_plot,
+                                             cmap=self.colormap_let,
+                                             vmax=data.max_let,
+                                             aspect=data.aspect,
+                                             zorder=10)
             if not self.let_bar:
                 self._plot_let_bar()
         else:
@@ -289,14 +302,12 @@ class ViewCanvasWidget(FigureCanvas):
 
     def plot_ctx(self, data):
         if not self.axim_ctx:
-            self.axim_ctx = self.axes.imshow(
-                data.data_to_plot,
-                cmap=self.colormap_ctx,
-                vmin=data.contrast_ct[0],
-                vmax=data.contrast_ct[1],
-                aspect=data.aspect,
-                zorder=1
-            )
+            self.axim_ctx = self.axes.imshow(data.data_to_plot,
+                                             cmap=self.colormap_ctx,
+                                             vmin=data.contrast_ct[0],
+                                             vmax=data.contrast_ct[1],
+                                             aspect=data.aspect,
+                                             zorder=1)
             if not self.hu_bar:
                 self._plot_hu_bar()
         else:

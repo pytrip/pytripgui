@@ -3,6 +3,7 @@ from enum import Enum
 import numpy as np
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -15,7 +16,7 @@ class DoseAxisType(Enum):
     abs = 2
 
 
-class Dos(object):
+class Dos:
     def __init__(self, selector):
         self.aspect = 1.0  # aspect ratio of plot
 
@@ -55,10 +56,9 @@ class Dos(object):
     def _get_proposed_scale(self):
         if self.cube.target_dose <= 0:
             return DoseAxisType.rel
-        elif self.dose_axis == DoseAxisType.auto and self.cube.target_dose != 0.0:
+        if self.dose_axis == DoseAxisType.auto and self.cube.target_dose != 0.0:
             return DoseAxisType.abs
-        else:
-            return self.dose_axis
+        return self.dose_axis
 
     def _set_aspect(self):
         if self.projection_selector.plane == "Transversal":
