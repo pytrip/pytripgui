@@ -13,6 +13,8 @@ class TreeItem(NodeMixin):
     def __init__(self):
         super().__init__()
         self.children = ()
+        self.data = None
+        self.state = None
 
     # For qt TreeView
     def has_index(self, p_int):
@@ -85,8 +87,6 @@ class PatientItem(TreeItem):
 class SimulationResultItem(TreeItem):
     def __init__(self):
         super().__init__()
-
-        self.data = None
 
     def __repr__(self):
         if self.data:

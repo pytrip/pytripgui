@@ -1,6 +1,6 @@
 import logging
 
-from pytripgui.viewcanvas_vc.plot_model import PlotModel
+from pytripgui.viewcanvas_vc.plot_model import PlotModel, ProjectionSelector
 
 logger = logging.getLogger(__name__)
 
@@ -92,61 +92,45 @@ class ViewCanvasCont:
 
         self._ui.draw()
 
-    def set_patient(self, patient):
+    def set_patient(self, patient, state):
         self._ui.clear()
-        if patient.plot_model is None:
-            self._model = PlotModel()
-            if patient.ctx:
-                self._model.set_ctx(patient.ctx)
-                self._model.set_vdx()
+        if state is None:
+            state = ProjectionSelector()
+        self._model = PlotModel(state)
 
-            if patient.vdx.vois:
-                self._ui.voi_list.event_callback = self._on_update_voi
-                self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-                self._on_update_voi()
+        if patient.ctx:
+            self._model.set_ctx(patient.ctx)
+            self._model.set_vdx()
 
-            self._ui.set_position_changed_callback(self.set_current_slice_no)
+        if patient.vdx.vois:
+            self._ui.voi_list.event_callback = self._on_update_voi
+            self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+            self._on_update_voi()
 
-            patient.plot_model = self._model
-        else:
-            self._model = patient.plot_model
+        self._ui.set_position_changed_callback(self.set_current_slice_no)
 
+        patient.plot_model = self._model
         self.update_viewcanvas()
 
-    def set_plan(self, patient, plan_index):
+        return state
+
+    def set_simulation_results(self, simulation_results, state):
+        self.set_patient(simulation_results.patient, None)
         self._ui.clear()
-        if patient.plans_plot_models[plan_index] is None:
-            self._model = PlotModel()
-            if patient.ctx:
-                self._model.set_ctx(patient.ctx)
+        if state is None:
+            state = ProjectionSelector()
+        self._model = PlotModel(state)
 
-            self._ui.set_position_changed_callback(self.set_current_slice_no)
+        self._model.set_ctx(simulation_results.patient.ctx)
 
-            patient.plans_plot_models[plan_index] = self._model
-        else:
-            self._model = patient.plans_plot_models[plan_index]
-
+        if simulation_results:
+            if simulation_results.dose:
+                self._model.set_dose(simulation_results.dose)
+            if simulation_results.let:
+                self._model.set_let(simulation_results.let)
         self.update_viewcanvas()
 
-    def set_simulation_results(self, simulation_results):
-        self.set_patient(simulation_results.patient)
-        self._ui.clear()
-        if simulation_results.plot_model is None:
-            self._model = PlotModel()
-            self._model.set_ctx(simulation_results.patient.ctx)
-
-            if simulation_results:
-                if simulation_results.dose:
-                    self._model.set_dose(simulation_results.dose)
-
-                if simulation_results.let:
-                    self._model.set_let(simulation_results.let)
-
-            simulation_results.plot_model = self._model
-        else:
-            self._model = simulation_results.plot_model
-
-        self.update_viewcanvas()
+        return state
 
     def _on_update_voi(self):
         if self._model.vdx:

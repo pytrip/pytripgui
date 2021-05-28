@@ -10,11 +10,8 @@ class ViewCanvases:
     def widget(self):
         return self.viewcanvas_view.widget()
 
-    def set_patient(self, patient):
-        self.plot_cont.set_patient(patient)
+    def set_patient(self, patient, state=None):
+        return self.plot_cont.set_patient(patient, state)
 
-    def set_plan(self, patient, plan_index):
-        self.plot_cont.set_plan(patient, plan_index)
-
-    def set_simulation_results(self, simulation_results):
-        self.plot_cont.set_simulation_results(simulation_results)
+    def set_simulation_results(self, simulation_results, state=None):
+        return self.plot_cont.set_simulation_results(simulation_results, state)

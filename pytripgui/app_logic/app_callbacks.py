@@ -135,8 +135,6 @@ class AppCallback:
             self.add_empty_patient()
         elif isinstance(parent, PatientItem):
             plan = self.edit_plan(PlanItem(), parent)
-            if plan is not None:
-                parent.data.add_empty_plan_plot_model()
             self.app_model.patient_tree.add_new_item(parent, plan)
         elif isinstance(parent, PlanItem):
             field = self.edit_field(FieldItem())
@@ -226,31 +224,25 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(top_item.data)
+            top_item.state = self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
             self.chart.set_simulation_result(top_item.data)
-        elif isinstance(top_item, PatientItem):
+        elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             if self.app_model.viewcanvases:
-                self.app_model.viewcanvases.set_patient(top_item.data)
-
-        if isinstance(item, PlanItem):
+                top_item.state = self.app_model.viewcanvases.set_patient(top_item.data, top_item.state)
+        elif isinstance(item, PlanItem):
+            self.parent_gui.action_create_plan_set_enable(True)
+            self.parent_gui.action_create_field_set_enable(True)
             if self.app_model.viewcanvases:
-                plan_index = self.app_model.patient_tree.patient_tree_view.currentIndex().row()
-                self.app_model.viewcanvases.set_plan(top_item.data, plan_index)
-
-            self.parent_gui.action_create_field_set_enable(True)
-            if self.is_executable(item):
-                self.parent_gui.action_execute_plan_set_enable(True)
-
+                item.state = self.app_model.viewcanvases.set_patient(top_item.data, item.state)
         elif isinstance(item, FieldItem):
-            if isinstance(item.parent, PlanItem):
-                if self.app_model.viewcanvases:
-                    plan_index = self.app_model.patient_tree.patient_tree_view.currentIndex().parent().row()
-                    self.app_model.viewcanvases.set_plan(top_item.data, plan_index)
-
+            self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             if self.is_executable(item):
                 self.parent_gui.action_execute_plan_set_enable(True)
+            if self.app_model.viewcanvases:
+                item.state = self.app_model.viewcanvases.set_patient(top_item.data, item.state)
+
 
     @staticmethod
     def is_executable(item):
