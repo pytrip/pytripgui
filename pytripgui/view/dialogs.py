@@ -10,7 +10,6 @@ class MyDialogs:
     """
     Class for holding dialogs using along with PyTRiP
     """
-
     def __init__(self):
         pass
 
@@ -53,10 +52,7 @@ class MyDialogs:
         options |= QFileDialog.DontResolveSymlinks
         options |= QFileDialog.DontUseNativeDialog
 
-        filename = QFileDialog.getExistingDirectory(app,
-                                                    title,
-                                                    ddir,
-                                                    options=options)
+        filename = QFileDialog.getExistingDirectory(app, title, ddir, options=options)
 
         if filename:
             logger.debug(filename)
@@ -75,8 +71,7 @@ class MyDialogs:
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(
-            app, title, ddir, filters, options=options)
+        fileName, _ = QFileDialog.getOpenFileName(app, title, ddir, filters, options=options)
         if fileName:
             logger.debug(fileName)
             return fileName
@@ -92,8 +87,7 @@ class MyDialogs:
 
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(
-            app, title, ddir, filters, options=options)
+        fileName, _ = QFileDialog.getSaveFileName(app, title, ddir, filters, options=options)
         if fileName:
             logger.debug(fileName)
             return fileName
@@ -114,8 +108,11 @@ class MyDialogs:
     def openFileNamesDialog(app):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(
-            app, "QFileDialog.getOpenFileNames()", "", "All Files (*);;Python Files (*.py)", options=options)
+        files, _ = QFileDialog.getOpenFileNames(app,
+                                                "QFileDialog.getOpenFileNames()",
+                                                "",
+                                                "All Files (*);;Python Files (*.py)",
+                                                options=options)
         if files:
             logger.debug(files)
             return files
@@ -124,8 +121,11 @@ class MyDialogs:
     def saveFileDialog(app):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getSaveFileName(
-            app, "QFileDialog.getSaveFileName()", "", "All Files (*);;Text Files (*.txt)", options=options)
+        fileName, _ = QFileDialog.getSaveFileName(app,
+                                                  "QFileDialog.getSaveFileName()",
+                                                  "",
+                                                  "All Files (*);;Text Files (*.txt)",
+                                                  options=options)
         if fileName:
             logger.debug(fileName)
             return fileName

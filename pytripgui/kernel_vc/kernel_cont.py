@@ -2,6 +2,7 @@ from pytrip.tripexecuter import KernelModel
 from pytrip.tripexecuter import Projectile
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 

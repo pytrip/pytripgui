@@ -4,6 +4,7 @@ from pytripgui.view.plot_volhist import VolHist
 from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -11,7 +12,6 @@ class MainView:
     """
     Viewer class for matplotlib 2D plotting widget
     """
-
     def __init__(self):
         self.ui = UiMainWindow()
 

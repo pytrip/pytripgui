@@ -1,6 +1,7 @@
 from pytripgui.view.qt_gui import UiFieldDialog
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -74,9 +75,11 @@ class FieldQtView:
         return self.ui.manualIsocenter_checkBox.isChecked()
 
     def get_isocenter_value(self):
-        isocenter = [self.ui.isocenterX_doubleSpinBox.value(),
-                     self.ui.isocenterY_doubleSpinBox.value(),
-                     self.ui.isocenterZ_doubleSpinBox.value()]
+        isocenter = [
+            self.ui.isocenterX_doubleSpinBox.value(),
+            self.ui.isocenterY_doubleSpinBox.value(),
+            self.ui.isocenterZ_doubleSpinBox.value()
+        ]
         return isocenter
 
     def set_isocenter_state(self, state):
@@ -104,14 +107,12 @@ class FieldQtView:
 
     @property
     def raster_step(self):
-        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
-                       self.ui.rasterSpaceY_doubleSpinBox.value()]
+        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(), self.ui.rasterSpaceY_doubleSpinBox.value()]
         return raster_step
 
     @raster_step.getter
     def raster_step(self):
-        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(),
-                       self.ui.rasterSpaceY_doubleSpinBox.value()]
+        raster_step = [self.ui.rasterSpaceX_doubleSpinBox.value(), self.ui.rasterSpaceY_doubleSpinBox.value()]
         return raster_step
 
     @raster_step.setter

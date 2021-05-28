@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 import os
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -20,30 +21,26 @@ class KernelQtView:
         self.ui.dddPath_pushButton.clicked.connect(self._browse_ddd_dir)
         self.ui.spcPath_pushButton.clicked.connect(self._browse_spc_dir)
         self.ui.sisPath_pushButton.clicked.connect(self._browse_sis_path)
-        self.ui.kernelName_lineEdit.textChanged.connect(
-            self._set_current_kernel_combobox_name)
+        self.ui.kernelName_lineEdit.textChanged.connect(self._set_current_kernel_combobox_name)
 
     def _set_current_kernel_combobox_name(self, name):
         current_index = self.ui.beamKernel_comboBox.currentIndex()
         self.ui.beamKernel_comboBox.setItemText(current_index, name)
 
     def _browse_ddd_dir(self):
-        selected_dir = QFileDialog.getExistingDirectory(
-            self.ui, "Select DDD directory", self.ddd_dir_path,
-            QFileDialog.DontResolveSymlinks)
+        selected_dir = QFileDialog.getExistingDirectory(self.ui, "Select DDD directory", self.ddd_dir_path,
+                                                        QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.ddd_dir_path = os.path.join(selected_dir, "", "*")
 
     def _browse_spc_dir(self):
-        selected_dir = QFileDialog.getExistingDirectory(
-            self.ui, "Select SPC directory", self.spc_dir_path,
-            QFileDialog.DontResolveSymlinks)
+        selected_dir = QFileDialog.getExistingDirectory(self.ui, "Select SPC directory", self.spc_dir_path,
+                                                        QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.spc_dir_path = os.path.join(selected_dir, "", "*")
 
     def _browse_sis_path(self):
-        selected_file = QFileDialog.getOpenFileName(self.ui, "Select sis path",
-                                                    self.sis_path, "(*.sis)")
+        selected_file = QFileDialog.getOpenFileName(self.ui, "Select sis path", self.sis_path, "(*.sis)")
         if selected_file[0] != "":
             self.sis_path = selected_file[0]
 
@@ -144,8 +141,7 @@ class KernelQtView:
 
     @projectile_symbol.setter
     def projectile_symbol(self, projectile_symbol):
-        index_of_symbol = self.ui.symbol_comboBox.findData(
-            projectile_symbol, Qt.UserRole)
+        index_of_symbol = self.ui.symbol_comboBox.findData(projectile_symbol, Qt.UserRole)
         if index_of_symbol == -1:
             raise Exception("Given symbol wasn't found on the list")
         self.ui.symbol_comboBox.setCurrentIndex(index_of_symbol)
@@ -206,8 +202,7 @@ class KernelQtView:
         return kernels
 
     def replace_kernel_by_index(self, kernel, kernel_index):
-        self.ui.beamKernel_comboBox.setItemData(kernel_index, kernel,
-                                                Qt.UserRole)
+        self.ui.beamKernel_comboBox.setItemData(kernel_index, kernel, Qt.UserRole)
 
     def setup_all_available_projectile_symbols(self, symbols):
         for symbol in symbols:
