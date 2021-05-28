@@ -28,21 +28,19 @@ class TreeModel(QAbstractItemModel):
         if not parent.isValid():
             logger.debug("rowCount() for: {}".format("root"))
             return self._root_item.row_count()
-        else:
-            name = parent.internalPointer().__repr__()
-            logger.debug("rowCount() for: {}".format(name))
-            return parent.internalPointer().row_count()
+        name = parent.internalPointer().__repr__()
+        logger.debug("rowCount() for: {}".format(name))
+        return parent.internalPointer().row_count()
 
     def hasChildren(self, parent=None, *args, **kwargs):
         if not parent.isValid():
             logger.debug("hasChildren() for: {}".format("root"))
             return self._root_item.has_children()
-        else:
-            name = parent.internalPointer().__repr__()
-            has_children = parent.internalPointer().has_children()
-            logger.debug("hasChildren() for: {} returns: {}".format(
-                name, has_children))
-            return has_children
+        name = parent.internalPointer().__repr__()
+        has_children = parent.internalPointer().has_children()
+        logger.debug("hasChildren() for: {} returns: {}".format(
+            name, has_children))
+        return has_children
 
     def index(self, p_int, p_int_1, parent=None, *args, **kwargs):
         logger.debug("index() {} {}".format(p_int, p_int_1))
@@ -53,8 +51,7 @@ class TreeModel(QAbstractItemModel):
 
         if not parent.isValid():
             return self._create_index(self._root_item, p_int, p_int_1)
-        else:
-            return self._create_index(parent.internalPointer(), p_int, p_int_1)
+        return self._create_index(parent.internalPointer(), p_int, p_int_1)
 
     def hasIndex(self, p_int, p_int_1, parent=None, *args, **kwargs):
         if p_int_1 != 0:
@@ -64,12 +61,11 @@ class TreeModel(QAbstractItemModel):
             logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
                 "root", p_int, p_int_1, True))
             return True
-        else:
-            name = parent.internalPointer().__repr__()
-            has_index = parent.internalPointer().has_index(p_int)
-            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
-                name, p_int, p_int_1, has_index))
-            return has_index
+        name = parent.internalPointer().__repr__()
+        has_index = parent.internalPointer().has_index(p_int)
+        logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
+            name, p_int, p_int_1, has_index))
+        return has_index
 
     def _create_index(self, parent, p_int, p_int_1):
         name = parent.__repr__()
@@ -78,8 +74,7 @@ class TreeModel(QAbstractItemModel):
         selected_item = parent.index(p_int, p_int_1)
         if selected_item:
             return self.createIndex(p_int, p_int_1, selected_item)
-        else:
-            return QModelIndex()
+        return QModelIndex()
 
     def delete_item(self, q_item):
         parent = q_item.parent()

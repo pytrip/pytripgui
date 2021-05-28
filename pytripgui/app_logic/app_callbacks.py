@@ -145,7 +145,7 @@ class AppCallback:
     def edit_item_callback(self, item, patient):
         if isinstance(item, PatientItem):
             return
-        elif isinstance(item, PlanItem):
+        if isinstance(item, PlanItem):
             self.edit_plan(item, patient)
         elif isinstance(item, FieldItem):
             self.edit_field(item)
