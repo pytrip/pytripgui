@@ -77,7 +77,7 @@ class ComboBox:
 
     @property
     def data(self):
-        data = list()
+        data = []
         for i in range(self.count):
             data.append(self._ui.itemData(i))
         return data
