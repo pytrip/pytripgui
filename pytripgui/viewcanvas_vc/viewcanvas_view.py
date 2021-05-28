@@ -78,8 +78,7 @@ class ViewCanvasView:
         index_of_element = self._ui.perspective_comboBox.findText(perspective, QtCore.Qt.MatchFixedString)
         if index_of_element == -1:
             raise Exception("Cannot find given perspective to select")
-        else:
-            self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
+        self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
 
     @property
     def display_filter(self):

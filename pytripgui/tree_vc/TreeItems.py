@@ -145,8 +145,7 @@ class KernelItem(TreeItem):
 
         if parent and not isinstance(parent, FieldItem):
             raise Exception("Only FieldItem can be parent of KernelItem")
-        else:
-            self.parent = parent
+        self.parent = parent
 
     def __repr__(self):
         if self.data.name:
