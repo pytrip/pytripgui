@@ -37,7 +37,7 @@ class ConfigQtView:
         self._setup_internal_callbacks()
         self._ui.local_radioButton.clicked.emit()
 
-        self.name.emit_on_text_change(lambda text: self.configs.set_current_item_text(text))
+        self.name.emit_on_text_change(self.configs.set_current_item_text)
 
     def test_ssh_clicked_callback_connect(self, callback):
         self._ui.testSsh_pushButton.clicked.connect(callback)

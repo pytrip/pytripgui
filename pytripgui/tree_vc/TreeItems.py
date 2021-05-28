@@ -37,8 +37,7 @@ class TreeItem(NodeMixin):
         """
         if self.parent is None:
             return 0
-        else:
-            return self.parent.children.index(self)
+        return self.parent.children.index(self)
 
     def add_child(self, child):
         """
@@ -92,8 +91,7 @@ class SimulationResultItem(TreeItem):
     def __repr__(self):
         if self.data:
             return self.data.__str__()
-        else:
-            return "Empty simulation"
+        return "Empty simulation"
 
 
 class PlanItem(TreeItem):

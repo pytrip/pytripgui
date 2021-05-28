@@ -84,10 +84,9 @@ class ViewCanvasView:
     def display_filter(self):
         if self._ui.Dose_radioButton.isChecked():
             return "DOS"
-        elif self._ui.LET_radioButton.isChecked():
+        if self._ui.LET_radioButton.isChecked():
             return "LET"
-        else:
-            return "None"
+        return "None"
 
     @display_filter.setter
     def display_filter(self, display_filter):

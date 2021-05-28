@@ -16,5 +16,4 @@ def main_dir():
         return os.environ.get("_MEIPASS2", os.path.abspath("."))
         # when using single directory installer, this one should be probably used:
         # return os.path.dirname(sys.executable)
-    else:
-        return os.path.dirname(__file__)
+    return os.path.dirname(__file__)
