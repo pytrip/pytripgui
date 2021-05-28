@@ -4,6 +4,7 @@ from pytripgui.messages import InfoMessages
 
 from pytripgui.app_logic.patient_tree import PatientTree
 from pytripgui.app_logic.app_callbacks import AppCallback
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -59,4 +60,4 @@ class MainWindowController(object):
 
     @staticmethod
     def on_exit():
-        exit()
+        sys.exit()

@@ -3,6 +3,7 @@ import logging
 
 import pytrip.tripexecuter as pte
 from pytripgui.plan_executor.simulation_results import SimulationResults
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class PlanExecutor:
         except BaseException as e:
             self.listener.write(e.__str__())
             logger.error(e.__str__())
-            exit(-1)
+            sys.exit(-1)
 
         results = SimulationResults(patient, plan)
 
