@@ -95,7 +95,6 @@ class SettingsController:
         """
         Returns PyTRiP user config dir. Create it, if it does not exsist.
         """
-        import os
         path = os.path.join(os.path.expanduser("~"), ".pytrip")
         if not os.path.exists(path):
             os.makedirs(path)
