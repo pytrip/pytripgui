@@ -26,8 +26,7 @@ class MainWindowController(object):
         """
         TODO: some description here
         """
-        pass
-        # raise Exception("Unimplemented")  # TODO
+        raise Exception("Unimplemented")
 
     def _initialize(self):
         """
