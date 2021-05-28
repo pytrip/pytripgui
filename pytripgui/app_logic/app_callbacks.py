@@ -53,15 +53,12 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        trip_config = ExecuteConfigView(self.app_model.trip_configs,
-                                        self.parent_gui.ui)
+        trip_config = ExecuteConfigView(self.app_model.trip_configs, self.parent_gui.ui)
         trip_config.show()
         if not trip_config.config:
             return
 
-        executor = GuiExecutor(trip_config.config, patient, plan,
-                               self._execute_finish_callback,
-                               self.parent_gui.ui)
+        executor = GuiExecutor(trip_config.config, patient, plan, self._execute_finish_callback, self.parent_gui.ui)
 
         executor.start()
         executor.show()
@@ -161,8 +158,7 @@ class AppCallback:
 
         view = PlanQtView(self.parent_gui.ui)
 
-        controller = PlanController(item.data, view, self.app_model.kernels,
-                                    patient.data.vdx.vois)
+        controller = PlanController(item.data, view, self.app_model.kernels, patient.data.vdx.vois)
         controller.set_view_from_model()
         view.show()
 
@@ -185,8 +181,7 @@ class AppCallback:
         return None
 
     def open_voxelplan_callback(self, patient_item):
-        path = self.parent_gui.browse_file_path("Open Voxelpan",
-                                                "Voxelplan (*.hed)")
+        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         filename, extension = os.path.splitext(path)
 
         if filename == "":

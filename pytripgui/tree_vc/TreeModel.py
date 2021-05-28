@@ -38,8 +38,7 @@ class TreeModel(QAbstractItemModel):
             return self._root_item.has_children()
         name = parent.internalPointer().__repr__()
         has_children = parent.internalPointer().has_children()
-        logger.debug("hasChildren() for: {} returns: {}".format(
-            name, has_children))
+        logger.debug("hasChildren() for: {} returns: {}".format(name, has_children))
         return has_children
 
     def index(self, p_int, p_int_1, parent=None, *args, **kwargs):
@@ -58,13 +57,11 @@ class TreeModel(QAbstractItemModel):
             return False  # current implementation supports one column
 
         if not parent.isValid():
-            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
-                "root", p_int, p_int_1, True))
+            logger.debug("hasIndex() for: {}:{}:{} returns: {}".format("root", p_int, p_int_1, True))
             return True
         name = parent.internalPointer().__repr__()
         has_index = parent.internalPointer().has_index(p_int)
-        logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(
-            name, p_int, p_int_1, has_index))
+        logger.debug("hasIndex() for: {}:{}:{} returns: {}".format(name, p_int, p_int_1, has_index))
         return has_index
 
     def _create_index(self, parent, p_int, p_int_1):
