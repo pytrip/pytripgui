@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class FieldQtView(object):
+class FieldQtView:
     def __init__(self, parent=None):
         self.ui = UiFieldDialog(parent)
 

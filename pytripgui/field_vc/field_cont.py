@@ -2,7 +2,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class FieldController(object):
+class FieldController:
     def __init__(self, model, view, kernels):
         self.model = model
         self.view = view

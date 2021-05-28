@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class MainView(object):
+class MainView:
     """
     Viewer class for matplotlib 2D plotting widget
     """

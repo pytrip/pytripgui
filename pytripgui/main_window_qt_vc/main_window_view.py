@@ -10,7 +10,7 @@ from pytripgui.kernel_vc import KernelQtView
 logger = logging.getLogger(__name__)
 
 
-class MainWindowQtView(object):
+class MainWindowQtView:
     def __init__(self):
         self.ui = UiMainWindow()
 

@@ -5,7 +5,7 @@ from pytripgui.messages import InfoMessages
 logger = logging.getLogger(__name__)
 
 
-class PlanController(object):
+class PlanController:
     def __init__(self, model, view, kernels, patient_vois):
         self.model = model
         self.view = view

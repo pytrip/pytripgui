@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PlanQtView(object):
+class PlanQtView:
     """
     """
     def __init__(self, parent=None):

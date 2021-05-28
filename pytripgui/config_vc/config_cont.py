@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ConfigController(object):
+class ConfigController:
     def __init__(self, model, view):
         self.model = model
         self.view = view

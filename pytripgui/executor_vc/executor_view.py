@@ -1,7 +1,7 @@
 from pytripgui.view.qt_gui import UiExecuteDialog
 
 
-class ExecutorQtView(object):
+class ExecutorQtView:
     def __init__(self, parent=None):
         self._ui = UiExecuteDialog(parent)
         self._setup_internal_callbacks()

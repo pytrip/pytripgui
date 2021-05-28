@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox
 logger = logging.getLogger(__name__)
 
 
-class MyDialogs(object):
+class MyDialogs:
     """
     Class for holding dialogs using along with PyTRiP
     """

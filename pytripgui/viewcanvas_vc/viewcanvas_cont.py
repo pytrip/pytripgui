@@ -5,7 +5,7 @@ from pytripgui.viewcanvas_vc.plot_model import PlotModel
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasCont(object):
+class ViewCanvasCont:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """

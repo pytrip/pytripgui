@@ -2,7 +2,7 @@ from pytripgui.view.qt_gui import UiExecuteConfigDialog
 from pytripgui.view.qt_view_adapter import ComboBox
 
 
-class ExecuteConfigView(object):
+class ExecuteConfigView:
     def __init__(self, model, ui):
         self._ui = UiExecuteConfigDialog(ui)
         self.config = None

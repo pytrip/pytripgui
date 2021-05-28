@@ -5,7 +5,7 @@ from pytrip.volhist import VolHist
 logger = logging.getLogger(__name__)
 
 
-class Dvh(object):
+class Dvh:
     """
     This class holds logic for plotting CTX stuff.
     """

@@ -9,7 +9,7 @@ import sys
 logger = logging.getLogger(__name__)
 
 
-class MainWindowController(object):
+class MainWindowController:
     """
     TODO: some description here
     """

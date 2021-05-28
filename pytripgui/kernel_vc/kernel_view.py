@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class KernelQtView(object):
+class KernelQtView:
     """
     """
     def __init__(self):
