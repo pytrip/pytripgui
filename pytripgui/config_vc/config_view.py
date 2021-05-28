@@ -37,8 +37,7 @@ class ConfigQtView(object):
         self._setup_internal_callbacks()
         self._ui.local_radioButton.clicked.emit()
 
-        self.name.emit_on_text_change(
-            self.configs.set_current_item_text)
+        self.name.emit_on_text_change(self.configs.set_current_item_text)
 
     def test_ssh_clicked_callback_connect(self, callback):
         self._ui.testSsh_pushButton.clicked.connect(callback)
@@ -50,44 +49,38 @@ class ConfigQtView(object):
         self._ui.dedx_pushButton.clicked.connect(self._browse_dedx_path)
         self._ui.pKey_pushButton.clicked.connect(self._browse_pkey_path)
 
-        self._ui.local_radioButton.clicked.connect(
-            self._on_local_radio_button_click)
-        self._ui.remote_radioButton.clicked.connect(
-            self._on_remote_radio_button_click)
+        self._ui.local_radioButton.clicked.connect(self._on_local_radio_button_click)
+        self._ui.remote_radioButton.clicked.connect(self._on_remote_radio_button_click)
 
     def _browse_wdir(self):
-        selected_dir = QFileDialog.getExistingDirectory(
-            self._ui, "Select working directory", self.wdir_path.text,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        selected_dir = QFileDialog.getExistingDirectory(self._ui, "Select working directory", self.wdir_path.text,
+                                                        QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.wdir_path.text = selected_dir
 
     def _browse_trip_path(self):
-        selected_dir = QFileDialog.getExistingDirectory(
-            self._ui, "Select trip executable directory", self.trip_path.text,
-            QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
+        selected_dir = QFileDialog.getExistingDirectory(self._ui, "Select trip executable directory",
+                                                        self.trip_path.text,
+                                                        QFileDialog.ShowDirsOnly | QFileDialog.DontResolveSymlinks)
         if selected_dir != "":
             self.trip_path.text = selected_dir
 
     def _browse_hlut_path(self):
-        selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select HLUT", self.hlut_path.text,
-            "Hounsfield lookup table (*.hlut)")
+        selected_file = QFileDialog.getOpenFileName(self._ui, "Select HLUT", self.hlut_path.text,
+                                                    "Hounsfield lookup table (*.hlut)")
         if selected_file[0] != "":
             self.hlut_path.text = selected_file[0]
 
     def _browse_dedx_path(self):
-        selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select DEDX", self.dedx_path.text,
-            "Stopping power table (*.dedx)")
+        selected_file = QFileDialog.getOpenFileName(self._ui, "Select DEDX", self.dedx_path.text,
+                                                    "Stopping power table (*.dedx)")
         if selected_file[0] != "":
             print(selected_file)
             self.dedx_path.text = selected_file[0]
 
     def _browse_pkey_path(self):
-        selected_file = QFileDialog.getOpenFileName(
-            self._ui, "Select private key for SSH connection",
-            self.pkey_path.text, "Private key (*)")
+        selected_file = QFileDialog.getOpenFileName(self._ui, "Select private key for SSH connection",
+                                                    self.pkey_path.text, "Private key (*)")
         if selected_file[0] != "":
             self.pkey_path.text = selected_file[0]
 
