@@ -26,10 +26,12 @@ class ProjectionSelector:
         self.plane = "Transversal"
 
     def next_slice(self):
-        self.current_slice_no = (self.current_slice_no + 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no +
+                                 1) % self.last_slice_no
 
     def prev_slice(self):
-        self.current_slice_no = (self.current_slice_no - 1) % self.last_slice_no
+        self.current_slice_no = (self.current_slice_no -
+                                 1) % self.last_slice_no
 
     def get_projection(self, data):
         if self.plane == "Transversal":
@@ -49,9 +51,9 @@ class ProjectionSelector:
         self._coronal_slice_no = self._coronal_last_slice_no // 2
 
     def is_loaded(self):
-        return (self._transversal_last_slice_no != 0 and
-                self._sagittal_last_slice_no != 0 and
-                self._coronal_last_slice_no != 0)
+        return (self._transversal_last_slice_no != 0
+                and self._sagittal_last_slice_no != 0
+                and self._coronal_last_slice_no != 0)
 
     @property
     def current_slice_no(self):
