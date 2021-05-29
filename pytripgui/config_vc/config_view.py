@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ConfigQtView(object):
+class ConfigQtView:
     stackedWidget_local_index = 0
     stackedWidget_remote_index = 1
     """

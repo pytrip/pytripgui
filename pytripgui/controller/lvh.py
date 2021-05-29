@@ -5,11 +5,10 @@ from pytrip.volhist import VolHist
 logger = logging.getLogger(__name__)
 
 
-class Lvh(object):
+class Lvh:
     """
     This class holds logic for plotting CTX stuff.
     """
-
     def __init__(self, model, view):
         """
         """

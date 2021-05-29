@@ -3,10 +3,11 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidgetItem, QRadioButton, QMessageBox
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
-class PlanQtView(object):
+class PlanQtView:
     """
     """
     def __init__(self, parent=None):
@@ -29,11 +30,11 @@ class PlanQtView(object):
         QMessageBox.information(self.ui, name, content)
 
     @property
-    def basename(self):    # start
+    def basename(self):  # start
         return self.ui.basename_lineEdit.text()
 
     @basename.getter
-    def basename(self):    # start
+    def basename(self):  # start
         return self.ui.basename_lineEdit.text()
 
     @basename.setter

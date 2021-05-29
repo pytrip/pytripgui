@@ -2,10 +2,11 @@ from pytrip.tripexecuter import KernelModel
 from pytrip.tripexecuter import Projectile
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
-class KernelController(object):
+class KernelController:
     def __init__(self, model, view):
         self.kernels = model
         self.last_kernel_index = None

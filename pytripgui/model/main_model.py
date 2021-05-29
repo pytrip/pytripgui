@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class MainModel(object):
+class MainModel:
     def __init__(self):
 
         from pytrip import __version__ as _pytrip_version
@@ -20,7 +20,7 @@ class MainModel(object):
         self.settings = SettingsModel(self)
 
 
-class SettingsModel(object):
+class SettingsModel:
     """
     This class contains a list model parameters which need to be retained when closing PyTRiPGUI.
     The attribute names must be identical to those in Model.
