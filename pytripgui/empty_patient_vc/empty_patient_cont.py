@@ -19,7 +19,6 @@ class EmptyPatientController(object):
     def __init__(self, model, view):
         self.model = model
         self.view = view
-
         self.is_cancelled = True
         self._setup_callbacks()
 
@@ -27,7 +26,13 @@ class EmptyPatientController(object):
         self._validate_tabs()
 
         self.parameters = dict.fromkeys([
-            "width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
+            "width",
+            "height",
+            "depth",
+            "slice_distance",
+            "slice_number",
+            "pixel_number_x",
+            "pixel_number_y",
             "pixel_size"
         ])
 
@@ -37,8 +42,12 @@ class EmptyPatientController(object):
 
         self.view.dimensions_tabs.emit_on_tab_change(self._convert_tab_contents)
 
-        self.view.add_spherical_voi_button.emit_on_click(lambda: self._add_voi_widget(SphericalVOIWidget))
-        self.view.add_cuboidal_voi_button.emit_on_click(lambda: self._add_voi_widget(CuboidalVOIWidget))
+        self.view.add_spherical_voi_button.emit_on_click(
+            lambda: self._add_voi_widget(SphericalVOIWidget)
+        )
+        self.view.add_cuboidal_voi_button.emit_on_click(
+            lambda: self._add_voi_widget(CuboidalVOIWidget)
+        )
 
     def _save_and_exit(self):
         self._calculate_fields(self.view.dimensions_tabs.current_index)
@@ -142,12 +151,20 @@ class EmptyPatientController(object):
         vois = self.view.voi_scroll_area.widget().layout()
         for index in range(vois.count()):
             voi = vois.itemAt(index).widget()
-            cube_dims = [self.parameters["width"], self.parameters["height"], self.parameters["depth"]]
+            cube_dims = [
+                self.parameters["width"],
+                self.parameters["height"],
+                self.parameters["depth"]
+            ]
             voi_center = voi.get_center()
             if isinstance(voi, SphericalVOIWidget):
                 voi_params = [float(voi.radius.text)]
             else:
-                voi_params = [float(voi.width.text), float(voi.height.text), float(voi.depth.text)]
+                voi_params = [
+                    float(voi.width.text),
+                    float(voi.height.text),
+                    float(voi.depth.text)
+                ]
             if not validate_cube_voi(cube_dims, voi_center, voi_params):
                 voi.highlight_border(True)
                 result = False
@@ -196,13 +213,15 @@ class EmptyPatientController(object):
     def _set_model_from_view(self):
         cube = Cube()
 
-        cube.create_empty_cube(dimx=self.parameters["pixel_number_x"],
-                               dimy=self.parameters["pixel_number_y"],
-                               dimz=self.parameters["slice_number"],
-                               slice_offset=float(self.view.slice_offset.text),
-                               slice_distance=self.parameters["slice_distance"],
-                               pixel_size=self.parameters["pixel_size"],
-                               value=int(self.view.hu_value.text))
+        cube.create_empty_cube(
+            dimx=self.parameters["pixel_number_x"],
+            dimy=self.parameters["pixel_number_y"],
+            dimz=self.parameters["slice_number"],
+            slice_offset=float(self.view.slice_offset.text),
+            slice_distance=self.parameters["slice_distance"],
+            pixel_size=self.parameters["pixel_size"],
+            value=int(self.view.hu_value.text)
+        )
 
         self.model.ctx = CtxCube(cube)
         self.model.ctx.basename = self.view.name.text
@@ -216,14 +235,16 @@ class EmptyPatientController(object):
             center = voi.get_center()
 
             if isinstance(voi, SphericalVOIWidget):
-                sphere = create_sphere(cube=self.model.ctx,
-                                       name=voi.name.text,
-                                       center=[
-                                           center[0],
-                                           center[1],
-                                           center[2],
-                                       ],
-                                       radius=float(voi.radius.text))
+                sphere = create_sphere(
+                    cube=self.model.ctx,
+                    name=voi.name.text,
+                    center=[
+                        center[0],
+                        center[1],
+                        center[2],
+                    ],
+                    radius=float(voi.radius.text)
+                )
                 vdxCube.add_voi(sphere)
             else:
                 cube = create_cube(
