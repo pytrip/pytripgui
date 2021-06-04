@@ -13,8 +13,7 @@ class KernelController:
         self.view = view
         self.user_clicked_save = False
         self._setup_ok_and_cancel_buttons_callbacks()
-        self.view.set_selected_beam_kernel_callback(
-            self._current_kernel_index_has_changed)
+        self.view.set_selected_beam_kernel_callback(self._current_kernel_index_has_changed)
         self.view.new_beam_kernel_callback(self._new_beam_kernel)
         self.view.remove_beam_kernel_callback(self._remove_current_beam_kernel)
 
@@ -40,8 +39,7 @@ class KernelController:
             # save previous kernel config to VIEW memory
             if self.last_kernel_index is not None:
                 current_kernel_config = self._visible_kernel_config
-                self.view.replace_kernel_by_index(current_kernel_config,
-                                                  self.last_kernel_index)
+                self.view.replace_kernel_by_index(current_kernel_config, self.last_kernel_index)
 
         # load new kernel config
         self.last_kernel_index = index
@@ -59,10 +57,7 @@ class KernelController:
 
     def set_view_from_model(self):
         # projectile symbols should be setup before setup any kernel
-        sorted_projectile = [
-            y[0] for y in sorted(Projectile.projectile_defaults.items(),
-                                 key=lambda x: x[1][0])
-        ]
+        sorted_projectile = [y[0] for y in sorted(Projectile.projectile_defaults.items(), key=lambda x: x[1][0])]
         self.view.setup_all_available_projectile_symbols(sorted_projectile)
         if not self.kernels:
             self._new_beam_kernel()
@@ -76,8 +71,7 @@ class KernelController:
 
     def set_model_from_view(self):
         # saves current kernel config to GUI memory
-        self.view.replace_kernel_by_index(self._visible_kernel_config,
-                                          self.last_kernel_index)
+        self.view.replace_kernel_by_index(self._visible_kernel_config, self.last_kernel_index)
 
         # read all data from GUI memory
         kernels = self.view.get_all_kernels()

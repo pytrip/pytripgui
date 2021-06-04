@@ -26,21 +26,18 @@ class EmptyPatientController(object):
         self._validate_tabs()
 
         self.parameters = dict.fromkeys([
-            "width", "height", "depth", "slice_distance", "slice_number",
-            "pixel_number_x", "pixel_number_y", "pixel_size"
+            "width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
+            "pixel_size"
         ])
 
     def _setup_callbacks(self):
         self.view.accept_buttons.accepted.disconnect()
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
 
-        self.view.dimensions_tabs.emit_on_tab_change(
-            self._convert_tab_contents)
+        self.view.dimensions_tabs.emit_on_tab_change(self._convert_tab_contents)
 
-        self.view.add_spherical_voi_button.emit_on_click(
-            lambda: self._add_voi_widget(SphericalVOIWidget))
-        self.view.add_cuboidal_voi_button.emit_on_click(
-            lambda: self._add_voi_widget(CuboidalVOIWidget))
+        self.view.add_spherical_voi_button.emit_on_click(lambda: self._add_voi_widget(SphericalVOIWidget))
+        self.view.add_cuboidal_voi_button.emit_on_click(lambda: self._add_voi_widget(CuboidalVOIWidget))
 
     def _save_and_exit(self):
         self._calculate_fields(self.view.dimensions_tabs.current_index)
@@ -59,8 +56,7 @@ class EmptyPatientController(object):
             self._calculate_fields(previous_index)
 
             for field in self.view.dimensions_fields[current_index]:
-                self.view.dimensions_fields[current_index][
-                    field].text = self.parameters[field]
+                self.view.dimensions_fields[current_index][field].text = self.parameters[field]
         else:
             self._clear_tab(previous_index)
 
@@ -74,31 +70,23 @@ class EmptyPatientController(object):
             p["height"] = float(prev["height"].text)
             p["depth"] = float(prev["depth"].text)
             p["slice_distance"] = float(prev["slice_distance"].text)
-            p["slice_number"] = int(
-                float(prev["depth"].text) / float(prev["slice_distance"].text))
-            p["pixel_number_x"] = int(
-                float(prev["width"].text) / float(prev["pixel_size"].text))
-            p["pixel_number_y"] = int(
-                float(prev["width"].text) / float(prev["pixel_size"].text))
+            p["slice_number"] = int(float(prev["depth"].text) / float(prev["slice_distance"].text))
+            p["pixel_number_x"] = int(float(prev["width"].text) / float(prev["pixel_size"].text))
+            p["pixel_number_y"] = int(float(prev["width"].text) / float(prev["pixel_size"].text))
             p["pixel_size"] = float(prev["pixel_size"].text)
         elif index == 1:
             p["width"] = float(prev["width"].text)
             p["height"] = float(prev["height"].text)
             p["depth"] = float(prev["depth"].text)
-            p["slice_distance"] = float(prev["depth"].text) / int(
-                prev["slice_number"].text)
+            p["slice_distance"] = float(prev["depth"].text) / int(prev["slice_number"].text)
             p["slice_number"] = int(prev["slice_number"].text)
             p["pixel_number_x"] = int(prev["pixel_number_x"].text)
             p["pixel_number_y"] = int(prev["pixel_number_y"].text)
-            p["pixel_size"] = float(prev["width"].text) / int(
-                prev["pixel_number_x"].text)
+            p["pixel_size"] = float(prev["width"].text) / int(prev["pixel_number_x"].text)
         else:
-            p["width"] = int(prev["pixel_number_x"].text) * float(
-                prev["pixel_size"].text)
-            p["height"] = int(prev["pixel_number_y"].text) * float(
-                prev["pixel_size"].text)
-            p["depth"] = int(prev["slice_number"].text) * float(
-                prev["slice_distance"].text)
+            p["width"] = int(prev["pixel_number_x"].text) * float(prev["pixel_size"].text)
+            p["height"] = int(prev["pixel_number_y"].text) * float(prev["pixel_size"].text)
+            p["depth"] = int(prev["slice_number"].text) * float(prev["slice_distance"].text)
             p["slice_distance"] = float(prev["slice_distance"].text)
             p["slice_number"] = int(prev["slice_number"].text)
             p["pixel_number_x"] = int(prev["pixel_number_x"].text)
@@ -111,8 +99,7 @@ class EmptyPatientController(object):
                self._validate_vois() and self._validate_vois_patient()
 
     def _validate_general_parameters(self):
-        return self.view.hu_value.validate(
-        ) and self.view.slice_offset.validate()
+        return self.view.hu_value.validate() and self.view.slice_offset.validate()
 
     def _validate_tabs(self):
         result = True
@@ -130,14 +117,10 @@ class EmptyPatientController(object):
 
     def _validate_pixel_values_relation(self):
         dim = self.view.dimensions_fields[1]
-        fields = [
-            dim["width"], dim["height"], dim["pixel_number_x"],
-            dim["pixel_number_y"]
-        ]
+        fields = [dim["width"], dim["height"], dim["pixel_number_x"], dim["pixel_number_y"]]
 
         p = self.parameters
-        if p["width"] / p["pixel_number_x"] != p["height"] / p[
-                "pixel_number_y"]:
+        if p["width"] / p["pixel_number_x"] != p["height"] / p["pixel_number_y"]:
             [x.highlight_border(True) for x in fields]
             return False
         else:
@@ -158,19 +141,12 @@ class EmptyPatientController(object):
         vois = self.view.voi_scroll_area.widget().layout()
         for index in range(vois.count()):
             voi = vois.itemAt(index).widget()
-            cube_dims = [
-                self.parameters["width"], self.parameters["height"],
-                self.parameters["depth"]
-            ]
+            cube_dims = [self.parameters["width"], self.parameters["height"], self.parameters["depth"]]
             voi_center = voi.get_center()
             if isinstance(voi, SphericalVOIWidget):
                 voi_params = [float(voi.radius.text)]
             else:
-                voi_params = [
-                    float(voi.width.text),
-                    float(voi.height.text),
-                    float(voi.depth.text)
-                ]
+                voi_params = [float(voi.width.text), float(voi.height.text), float(voi.depth.text)]
             if not validate_cube_voi(cube_dims, voi_center, voi_params):
                 voi.highlight_border(True)
                 result = False
@@ -189,18 +165,12 @@ class EmptyPatientController(object):
 
         validator = QIntValidator()
         validator.setBottom(1)
-        self.view.dimensions_fields[1]["slice_number"].enable_validation(
-            validator)
-        self.view.dimensions_fields[1]["pixel_number_x"].enable_validation(
-            validator)
-        self.view.dimensions_fields[1]["pixel_number_y"].enable_validation(
-            validator)
-        self.view.dimensions_fields[2]["slice_number"].enable_validation(
-            validator)
-        self.view.dimensions_fields[2]["pixel_number_x"].enable_validation(
-            validator)
-        self.view.dimensions_fields[2]["pixel_number_y"].enable_validation(
-            validator)
+        self.view.dimensions_fields[1]["slice_number"].enable_validation(validator)
+        self.view.dimensions_fields[1]["pixel_number_x"].enable_validation(validator)
+        self.view.dimensions_fields[1]["pixel_number_y"].enable_validation(validator)
+        self.view.dimensions_fields[2]["slice_number"].enable_validation(validator)
+        self.view.dimensions_fields[2]["pixel_number_x"].enable_validation(validator)
+        self.view.dimensions_fields[2]["pixel_number_y"].enable_validation(validator)
 
         validator = DoubleValidatorLowerLimit()
         self.view.slice_offset.enable_validation(validator)
@@ -210,17 +180,13 @@ class EmptyPatientController(object):
         self.view.dimensions_fields[0]["width"].enable_validation(validator)
         self.view.dimensions_fields[0]["height"].enable_validation(validator)
         self.view.dimensions_fields[0]["depth"].enable_validation(validator)
-        self.view.dimensions_fields[0]["slice_distance"].enable_validation(
-            validator)
-        self.view.dimensions_fields[0]["pixel_size"].enable_validation(
-            validator)
+        self.view.dimensions_fields[0]["slice_distance"].enable_validation(validator)
+        self.view.dimensions_fields[0]["pixel_size"].enable_validation(validator)
         self.view.dimensions_fields[1]["width"].enable_validation(validator)
         self.view.dimensions_fields[1]["height"].enable_validation(validator)
         self.view.dimensions_fields[1]["depth"].enable_validation(validator)
-        self.view.dimensions_fields[2]["slice_distance"].enable_validation(
-            validator)
-        self.view.dimensions_fields[2]["pixel_size"].enable_validation(
-            validator)
+        self.view.dimensions_fields[2]["slice_distance"].enable_validation(validator)
+        self.view.dimensions_fields[2]["pixel_size"].enable_validation(validator)
 
     def _add_voi_widget(self, widget_type):
         widget = widget_type()
@@ -229,14 +195,13 @@ class EmptyPatientController(object):
     def _set_model_from_view(self):
         cube = Cube()
 
-        cube.create_empty_cube(
-            dimx=self.parameters["pixel_number_x"],
-            dimy=self.parameters["pixel_number_y"],
-            dimz=self.parameters["slice_number"],
-            slice_offset=float(self.view.slice_offset.text),
-            slice_distance=self.parameters["slice_distance"],
-            pixel_size=self.parameters["pixel_size"],
-            value=int(self.view.hu_value.text))
+        cube.create_empty_cube(dimx=self.parameters["pixel_number_x"],
+                               dimy=self.parameters["pixel_number_y"],
+                               dimz=self.parameters["slice_number"],
+                               slice_offset=float(self.view.slice_offset.text),
+                               slice_distance=self.parameters["slice_distance"],
+                               pixel_size=self.parameters["pixel_size"],
+                               value=int(self.view.hu_value.text))
 
         self.model.ctx = CtxCube(cube)
         self.model.ctx.basename = self.view.name.text
@@ -345,8 +310,7 @@ class CuboidalVOIWidget(VOIWidget):
         self.depth.validate()
 
     def validate(self):
-        return super().validate() and self.width.validate(
-        ) and self.height.validate() and self.depth.validate()
+        return super().validate() and self.width.validate() and self.height.validate() and self.depth.validate()
 
 
 class DoubleVector3Validator(QValidator):
@@ -362,9 +326,7 @@ class DoubleVector3Validator(QValidator):
             return QValidator.Intermediate, string, pos
 
         regex = QRegularExpression("[-]?\\d+([,.]?\\d*)?")
-        states = [
-            QRegularExpressionValidator(regex).validate(x, pos) for x in center
-        ]
+        states = [QRegularExpressionValidator(regex).validate(x, pos) for x in center]
         for state in states:
             if state[0] != QValidator.Acceptable:
                 return QValidator.Intermediate, string, pos
