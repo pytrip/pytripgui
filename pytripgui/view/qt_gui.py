@@ -1,6 +1,7 @@
 import os
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import Qt
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -123,3 +124,8 @@ class EmptyPatientDialog(QtWidgets.QDialog):
         super(EmptyPatientDialog, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'empty_patient.ui')
         uic.loadUi(ui_path, self)
+
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+    #
+    # def accept(self):
+    #     print("FF")
