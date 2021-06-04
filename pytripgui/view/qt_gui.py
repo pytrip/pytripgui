@@ -126,6 +126,7 @@ class EmptyPatientDialog(QtWidgets.QDialog):
         uic.loadUi(ui_path, self)
 
         self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+
     #
     # def accept(self):
     #     print("FF")
