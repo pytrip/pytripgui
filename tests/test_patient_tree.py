@@ -1,4 +1,7 @@
 import logging
+import sys
+
+import pytest
 
 from PyQt5.QtWidgets import QMainWindow
 
