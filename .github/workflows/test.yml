@@ -36,11 +36,11 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e pep8
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox
          
          
   normal_test:
-    if: "github.repository == 'DataMedSci/pymchelper' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    if: "github.repository == 'pytrip/pytripgui' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
         python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
@@ -73,7 +73,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r tests/requirements-test.txt
-    - name: Test with tox
+        
+    - name: Normal test with tox
+      env:
+        QT_DEBUG_PLUGINS: 1
+        DISPLAY: ':99.0'
       run: |         
-         tox -e py -- -k "not slow"
+        ulimit -c unlimited
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox
                   
