@@ -1,5 +1,5 @@
 import logging
-from pytestqt.qt_compat import qt_api
+
 from PyQt5.QtWidgets import QMainWindow
 
 from pytripgui.app_logic.patient_tree import PatientTree
