@@ -1,4 +1,6 @@
 import logging
+
+import pytest
 from pytestqt.qt_compat import qt_api
 
 from pytripgui.kernel_vc import KernelController
