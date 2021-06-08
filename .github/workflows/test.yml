@@ -45,7 +45,7 @@ jobs:
     strategy:
       matrix:
         tox-env: [py35, py36, py37, py38, packaging]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest, windows-latest]
         include:
           - tox-env: py35
             python-version: 3.5
@@ -58,14 +58,6 @@ jobs:
           - tox-env: packaging
             python-version: 3.8
         exclude:
-          - platform: macos-latest
-            tox-env: py35
-          - platform: macos-latest
-            tox-env: py36
-          - platform: macos-latest
-            tox-env: py37
-          - platform: macos-latest
-            tox-env: packaging
           - platform: windows-latest
             tox-env: py35
           - platform: windows-latest
