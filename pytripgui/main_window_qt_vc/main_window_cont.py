@@ -22,12 +22,6 @@ class MainWindowController:
 
         self._initialize()
 
-    def open_files(self, args):
-        """
-        TODO: some description here
-        """
-        raise Exception("Unimplemented")
-
     def _initialize(self):
         """
         TODO: some description here

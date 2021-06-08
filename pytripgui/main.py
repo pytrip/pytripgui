@@ -37,10 +37,7 @@ def main(args=sys.argv[1:]):
     app = QApplication(sys.argv)
     view = MainWindowQtView()
     model = MainModel()
-    controller = MainWindowController(model, view)
-
-    if args:
-        controller.open_files(args)
+    MainWindowController(model, view)
 
     view.show()
 
