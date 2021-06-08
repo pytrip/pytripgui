@@ -57,19 +57,19 @@ jobs:
             python-version: 3.8
           - tox-env: packaging
             python-version: 3.8
-#         exclude:
-#           - platform: macos-latest
-#             python-version: 3.5
-#           - platform: macos-latest
-#             python-version: 3.6
-#           - platform: macos-latest
-#             python-version: 3.7
-#           - platform: macos-latest
-#             python-version: 3.8
-#           - platform: windows-latest
-#             python-version: 3.5
-#           - platform: windows-latest
-#             python-version: 3.6
+        exclude:
+          - platform: macos-latest
+            tox-env: py35
+          - platform: macos-latest
+            tox-env: py36
+          - platform: macos-latest
+            tox-env: py37
+          - platform: macos-latest
+            tox-env: packaging
+          - platform: windows-latest
+            tox-env: py35
+          - platform: windows-latest
+            tox-env: py36
     runs-on: ${{ matrix.platform }}
     needs: [smoke_test]
     env:
