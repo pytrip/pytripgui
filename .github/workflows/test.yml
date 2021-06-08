@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2.2.1
       with:
-        python-version: 3.7
+        python-version: 3.8
 
     - name: Install dependencies
       run: |
@@ -36,7 +36,7 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py37
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py38
          
          
   normal_test:
