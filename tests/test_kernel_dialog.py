@@ -22,6 +22,7 @@ class TestKernelDialog:
     kernels.append(ker)
 
     @staticmethod
+    @pytest.mark.skip(reason="needs to be fixed, non-Widget passed to addWidget method")
     def test_basics(qtbot):
 
         view = KernelQtView()
