@@ -8,7 +8,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 def test_basics(qtbot):
-    assert qt_api.QApplication.instance() is not None
     widget = UiMainWindow()
     qtbot.addWidget(widget)
     widget.show()
