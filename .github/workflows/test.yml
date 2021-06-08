@@ -63,8 +63,7 @@ jobs:
             tox-env: py36
     runs-on: ${{ matrix.platform }}
     needs: [smoke_test]
-    env:
-      TOXENV: ${{ matrix.tox-env }}
+
     steps:
     - uses: actions/checkout@v2
 
@@ -91,12 +90,12 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e ${{ matrix.tox-env }}
 
     - name: Regular test with tox (Windows)
       if: ${{ runner.os == 'Windows' }}      
       env:
         QT_DEBUG_PLUGINS: 1
       run: |         
-        tox
+        tox -e ${{ matrix.tox-env }}
 
