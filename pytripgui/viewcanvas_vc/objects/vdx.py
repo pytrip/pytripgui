@@ -12,7 +12,7 @@ class Vdx:
     """
     def __init__(self, projection_selector):
         self.projection_selector = projection_selector
-        self.vois = None
+        self.vois = []
         self.ctx = None
 
     def plot(self, plc):
