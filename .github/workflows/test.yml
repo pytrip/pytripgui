@@ -78,7 +78,6 @@ jobs:
     - name: Regular test with tox (Linux)
       if: ${{ runner.os == 'Linux' }}      
       env:
-        QT_DEBUG_PLUGINS: 1
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
