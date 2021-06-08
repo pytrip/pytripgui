@@ -1,4 +1,6 @@
 import logging
+import sys
+
 import pytest
 
 from pytripgui.view.qt_gui import UiMainWindow
