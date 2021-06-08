@@ -108,7 +108,7 @@ class ListWidget:
         self._items = []
         self._checkable = checkable
 
-        self.event_callback = None
+        self.event_callback = lambda: None
         self._ui.itemClicked.connect(self._update_event)
 
     def fill(self, items, lambda_names):
