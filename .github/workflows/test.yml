@@ -44,23 +44,36 @@ jobs:
     if: "github.repository == 'pytrip/pytripgui' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+        tox-env: [py35, py36, py37, py38, packaging]
         platform: [ubuntu-latest, macos-latest, windows-latest]
-        exclude:
-          - platform: macos-latest
+        include:
+          - tox-env: py35
             python-version: 3.5
-          - platform: macos-latest
+          - tox-env: py36
             python-version: 3.6
-          - platform: macos-latest
+          - tox-env: py37
             python-version: 3.7
-          - platform: macos-latest
+          - tox-env: py38
             python-version: 3.8
-          - platform: windows-latest
-            python-version: 3.5
-          - platform: windows-latest
-            python-version: 3.6
+          - tox-env: packaging
+            python-version: 3.8
+#         exclude:
+#           - platform: macos-latest
+#             python-version: 3.5
+#           - platform: macos-latest
+#             python-version: 3.6
+#           - platform: macos-latest
+#             python-version: 3.7
+#           - platform: macos-latest
+#             python-version: 3.8
+#           - platform: windows-latest
+#             python-version: 3.5
+#           - platform: windows-latest
+#             python-version: 3.6
     runs-on: ${{ matrix.platform }}
     needs: [smoke_test]
+    env:
+      TOXENV: ${{ matrix.tox-env }}
     steps:
     - uses: actions/checkout@v2
 
@@ -74,12 +87,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r tests/requirements-test.txt
-        
-    - name: Normal test with tox
+        sudo apt install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
+#       /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -screen 0 1920x1200x24 -ac +extension GLX
+
+    - name: Smoke test with tox
       env:
         QT_DEBUG_PLUGINS: 1
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py38
                   
