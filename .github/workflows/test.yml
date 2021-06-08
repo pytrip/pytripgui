@@ -80,11 +80,12 @@ jobs:
         pip install -r tests/requirements-test.txt
 
     - name: Install dependencies (Linux)
-      if: ${{ runner.os == 'Windows' }}      
+      if: ${{ runner.os == 'Linux' }}      
       run: |
         sudo apt install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
 
     - name: Regular test with tox (Linux)
+      if: ${{ runner.os == 'Linux' }}      
       env:
         QT_DEBUG_PLUGINS: 1
         DISPLAY: ':99.0'
@@ -93,6 +94,7 @@ jobs:
         sudo catchsegv xvfb-run --auto-servernum `which python` -m tox
 
     - name: Regular test with tox (Windows)
+      if: ${{ runner.os == 'Windows' }}      
       env:
         QT_DEBUG_PLUGINS: 1
       run: |         
