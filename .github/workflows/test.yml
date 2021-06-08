@@ -28,14 +28,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r tests/requirements-test.txt
-        sudo apt-get install xvfb libxkbcommon-x11-0
+        sudo apt install -y xvfb x11-utils libxkbcommon-x11-0
 
     - name: Smoke test with tox
+      env:
+        QT_DEBUG_PLUGINS: 1
+        DISPLAY: ':99.0'
       run: |         
-        sudo Xvfb :1 -screen 0 1024x768x24 </dev/null &
-        export DISPLAY=":1"
-        xvfb-run tox -e py -- -k "smoke"
-        xvfb-run tox -e pep8
+        ulimit -c unlimited
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e pep8
          
          
   normal_test:
