@@ -23,7 +23,6 @@ class TestKernelDialog:
 
     @staticmethod
     def test_basics(qtbot):
-        assert qt_api.QApplication.instance() is not None
 
         view = KernelQtView()
         controller = KernelController(TestKernelDialog.kernels, view)
