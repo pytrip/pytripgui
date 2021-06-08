@@ -19,7 +19,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Set up Python
-      uses: actions/setup-python@v2.2.1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.8
 
@@ -34,9 +34,9 @@ jobs:
     - name: Smoke test with tox
       env:
         QT_DEBUG_PLUGINS: 1
-        DISPLAY: ':99.0'
+#        DISPLAY: ':99.0'
       run: |         
-        ulimit -c unlimited
+#        ulimit -c unlimited
         sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py38
          
          
