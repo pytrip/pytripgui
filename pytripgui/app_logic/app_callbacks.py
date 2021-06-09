@@ -224,28 +224,28 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            top_item.state = self.app_model.viewcanvases.set_simulation_results(
-                top_item.data, top_item.state)
+            self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
+            top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(top_item.data)
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             if self.app_model.viewcanvases:
-                top_item.state = self.app_model.viewcanvases.set_patient(
-                    top_item.data, top_item.state)
+                self.app_model.viewcanvases.set_patient(top_item.data, top_item.state)
+                top_item.state = self.app_model.viewcanvases.get_gui_state()
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             if self.app_model.viewcanvases:
-                item.state = self.app_model.viewcanvases.set_patient(
-                    top_item.data, item.state)
+                self.app_model.viewcanvases.set_patient(top_item.data, item.state)
+                item.state = self.app_model.viewcanvases.get_gui_state()
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             if self.is_executable(item):
                 self.parent_gui.action_execute_plan_set_enable(True)
             if self.app_model.viewcanvases:
-                item.state = self.app_model.viewcanvases.set_patient(
-                    top_item.data, item.state)
+                self.app_model.viewcanvases.set_patient(top_item.data, item.state)
+                item.state = self.app_model.viewcanvases.get_gui_state()
 
     @staticmethod
     def is_executable(item):

@@ -18,6 +18,8 @@ class ViewCanvasCont:
         self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
         self._ui.internal_events.on_display_filter_change += self._display_filter_has_changed_callback
 
+        self.projection_selector = None
+
     def _perspective_has_changed_callback(self):
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()
@@ -112,7 +114,7 @@ class ViewCanvasCont:
         patient.plot_model = self._model
         self.update_viewcanvas()
 
-        return state
+        self.projection_selector = state
 
     def set_simulation_results(self, simulation_results, state):
         self.set_patient(simulation_results.patient, None)
@@ -130,9 +132,12 @@ class ViewCanvasCont:
                 self._model.set_let(simulation_results.let)
         self.update_viewcanvas()
 
-        return state
+        self.projection_selector = state
 
     def _on_update_voi(self):
         if self._model.vdx:
             self._model.vdx.vois = self._ui.voi_list.checked_items()
         self.update_viewcanvas()
+
+    def get_projection_selector(self):
+        return self.projection_selector
