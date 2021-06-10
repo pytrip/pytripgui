@@ -1,5 +1,6 @@
-from anytree import NodeMixin
 import logging
+
+from anytree import NodeMixin
 
 from pytripgui.plan_executor.patient_model import PatientModel
 from pytrip.tripexecuter.plan import Plan
@@ -11,8 +12,9 @@ logger = logging.getLogger(__name__)
 
 class TreeItem(NodeMixin):
     def __init__(self):
-        super().__init__()
         self.children = ()
+        self.data = None
+        self.state = None
 
     # For qt TreeView
     def has_index(self, p_int):
@@ -25,8 +27,8 @@ class TreeItem(NodeMixin):
         return len(self.children)
 
     def index(self, p_int, p_int_1):
-        if not self.has_index(p_int) or \
-                p_int_1 != 0:   # only one column is supported
+        # only one column is supported
+        if not self.has_index(p_int) or p_int_1 != 0:
             return None
 
         return self.children[p_int]
@@ -85,8 +87,6 @@ class PatientItem(TreeItem):
 class SimulationResultItem(TreeItem):
     def __init__(self):
         super().__init__()
-
-        self.data = None
 
     def __repr__(self):
         if self.data:

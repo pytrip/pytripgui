@@ -48,6 +48,10 @@ class ProjectionSelector:
         self._sagittal_slice_no = self._sagittal_last_slice_no // 2
         self._coronal_slice_no = self._coronal_last_slice_no // 2
 
+    def is_loaded(self):
+        """Check if all slice numbers are non-zero"""
+        return self._transversal_last_slice_no * self._sagittal_last_slice_no * self._coronal_last_slice_no != 0
+
     @property
     def current_slice_no(self):
         if self.plane == "Transversal":
@@ -86,12 +90,12 @@ class ProjectionSelector:
 
 
 class PlotModel:
-    def __init__(self):
+    def __init__(self, projection_selector=ProjectionSelector()):
 
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
 
-        self.projection_selector = ProjectionSelector()
+        self.projection_selector = projection_selector
         self.display_filter = ""
         self.dose = None
         self.let = None
@@ -104,22 +108,25 @@ class PlotModel:
     def set_ctx(self, ctx):
         self.ctx = Ctx(self.projection_selector)
         self.ctx.cube = ctx
-        self.projection_selector.load_slices_count(ctx)
+        if not self.projection_selector.is_loaded():
+            self.projection_selector.load_slices_count(ctx)
 
     def set_let(self, let):
         self.let = Let(self.projection_selector)
         self.let.cube = let
-        self.projection_selector.load_slices_count(let)
+        if not self.projection_selector.is_loaded():
+            self.projection_selector.load_slices_count(let)
 
     def set_dose(self, dose):
         self.dose = Dos(self.projection_selector)
         self.dose.cube = dose
-        self.projection_selector.load_slices_count(dose)
+        if not self.projection_selector.is_loaded():
+            self.projection_selector.load_slices_count(dose)
 
-        max_item_index = unravel_index(dose.cube.argmax(), dose.cube.shape)
-        self.projection_selector._transversal_slice_no = max_item_index[0]
-        self.projection_selector._sagittal_slice_no = max_item_index[2]
-        self.projection_selector._coronal_slice_no = max_item_index[1]
+            max_item_index = unravel_index(dose.cube.argmax(), dose.cube.shape)
+            self.projection_selector._transversal_slice_no = max_item_index[0]
+            self.projection_selector._sagittal_slice_no = max_item_index[2]
+            self.projection_selector._coronal_slice_no = max_item_index[1]
 
     def set_vdx(self):
         self.vdx = Vdx(self.projection_selector)
