@@ -154,7 +154,8 @@ class AppCallback:
             self.parent_gui.show_info(*InfoMessages["loadCtxVdx"])
             return False
 
-        item.data.basename = patient.data.name
+        if not item.data.basename:
+            item.data.basename = patient.data.name
 
         view = PlanQtView(self.parent_gui.ui)
 
