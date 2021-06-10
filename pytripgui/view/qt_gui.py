@@ -84,8 +84,7 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_create_empty.setter
     def on_create_empty(self, callback):
         self._create_empty_callback = callback
-        self.createEmpty_pushButton.clicked.connect(
-            self._create_empty_internal_callback)
+        self.createEmpty_pushButton.clicked.connect(self._create_empty_internal_callback)
 
     def _create_empty_internal_callback(self):
         self._create_empty_callback()
@@ -98,8 +97,7 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_open_voxelplan.setter
     def on_open_voxelplan(self, callback):
         self._open_voxelplan_callback = callback
-        self.openVoxelplan_pushButton.clicked.connect(
-            self._on_open_voxelplan_internal_callback)
+        self.openVoxelplan_pushButton.clicked.connect(self._on_open_voxelplan_internal_callback)
 
     def _on_open_voxelplan_internal_callback(self):
         self._open_voxelplan_callback()
@@ -112,8 +110,7 @@ class UiAddPatient(QtWidgets.QDialog):
     @on_open_dicom.setter
     def on_open_dicom(self, callback):
         self._open_dicom_callback = callback
-        self.openDicom_pushButton.clicked.connect(
-            self._on_open_dicom_internal_callback)
+        self.openDicom_pushButton.clicked.connect(self._on_open_dicom_internal_callback)
 
     def _on_open_dicom_internal_callback(self):
         self._open_dicom_callback()

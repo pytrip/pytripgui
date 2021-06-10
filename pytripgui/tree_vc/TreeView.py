@@ -23,10 +23,8 @@ class TreeView(QTreeView):
         """
         Those events should only be subscribed by TreeController
         """
-        self.internal_events = Events(
-            ('on_add_child', 'on_edit_selected_item', 'on_open_voxelplan',
-             'on_open_dicom', 'on_execute', 'on_delete', 'on_export_voxelplan',
-             'on_click'))
+        self.internal_events = Events(('on_add_child', 'on_edit_selected_item', 'on_open_voxelplan', 'on_open_dicom',
+                                       'on_execute', 'on_delete', 'on_export_voxelplan', 'on_click'))
         """
         This field should be only used by TreeController
         """
@@ -46,8 +44,7 @@ class TreeView(QTreeView):
 
     def _init_q_tree_view(self):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.customContextMenuRequested.connect(
-            self._internal_context_menu_callback)
+        self.customContextMenuRequested.connect(self._internal_context_menu_callback)
         self.clicked.connect(self._update_selected_item)
 
     def _internal_context_menu_callback(self, pos):
@@ -56,30 +53,22 @@ class TreeView(QTreeView):
         popup_menu = QMenu(self)
 
         if self.selected_item is None:
-            popup_menu.addAction("Add new Patient",
-                                 self.internal_events.on_add_child)
+            popup_menu.addAction("Add new Patient", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PatientItem):
-            popup_menu.addAction("Open Voxelplan",
-                                 self.internal_events.on_open_voxelplan)
-            popup_menu.addAction("Add new Plan",
-                                 self.internal_events.on_add_child)
+            popup_menu.addAction("Open Voxelplan", self.internal_events.on_open_voxelplan)
+            popup_menu.addAction("Add new Plan", self.internal_events.on_add_child)
         elif isinstance(self.selected_item, PlanItem):
-            popup_menu.addAction("Add new Field",
-                                 self.internal_events.on_add_child)
+            popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
             popup_menu.addSeparator()
             popup_menu.addAction("Execute", self.internal_events.on_execute)
-            popup_menu.addAction("Edit",
-                                 self.internal_events.on_edit_selected_item)
+            popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
         elif isinstance(self.selected_item, FieldItem):
-            popup_menu.addAction("Edit selected Field",
-                                 self.internal_events.on_edit_selected_item)
-            popup_menu.addAction("Delete selected Field",
-                                 self.internal_events.on_delete)
+            popup_menu.addAction("Edit selected Field", self.internal_events.on_edit_selected_item)
+            popup_menu.addAction("Delete selected Field", self.internal_events.on_delete)
         elif isinstance(self.selected_item, SimulationResultItem):
             if isinstance(self.selected_item.data, SimulationResults):
                 return
-            popup_menu.addAction("Export Voxelplan",
-                                 self.internal_events.on_export_voxelplan)
+            popup_menu.addAction("Export Voxelplan", self.internal_events.on_export_voxelplan)
         else:
             return
 

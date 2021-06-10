@@ -8,7 +8,7 @@ from PyQt5.QtCore import QTimer
 
 
 class GuiExecutor:
-    GUI_UPDATE_RATE_MS = 10     # GUI update rate during trip98 execution [ms]
+    GUI_UPDATE_RATE_MS = 10  # GUI update rate during trip98 execution [ms]
 
     def __init__(self, trip_config, patient, plan, result_callback, partnt_view):
         if not plan.data.fields:
@@ -16,7 +16,7 @@ class GuiExecutor:
             return
 
         self.result_callback = result_callback
-        self.done = False   # True when object can be removed from memory
+        self.done = False  # True when object can be removed from memory
 
         self._gui_update_timer = QTimer()
         self._thread = ThreadedExecutor(plan, patient, trip_config)

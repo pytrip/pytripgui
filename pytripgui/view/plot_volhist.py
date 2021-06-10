@@ -16,7 +16,6 @@ class VolHist(FigureCanvas):
     """
     Viewer class for matplotlib figure for Volume Historgrams
     """
-
     def __init__(self, parent=None, width=6, height=4, dpi=110):
         """
         Init canvas.
@@ -37,9 +36,7 @@ class VolHist(FigureCanvas):
         layout.addWidget(self)
         parent.setLayout(layout)
 
-        FigureCanvas.setSizePolicy(self,
-                                   QSizePolicy.Expanding,
-                                   QSizePolicy.Expanding)
+        FigureCanvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
         # next too lines are needed in order to catch keypress events in plot canvas by mpl_connect()
