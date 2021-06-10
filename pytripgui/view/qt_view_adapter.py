@@ -134,5 +134,4 @@ class ListWidget:
         return selected
 
     def _update_event(self):
-        if self.event_callback:
-            self.event_callback()
+        self.event_callback()
