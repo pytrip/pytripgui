@@ -6,7 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class EmptyPatientQtView(object):
+class EmptyPatientQtView():
     """
     """
     def __init__(self, parent=None):
