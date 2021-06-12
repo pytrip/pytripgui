@@ -72,6 +72,7 @@ class AppCallback:
 
     def _execute_finish_callback(self, item):
         self.app_model.patient_tree.add_new_item(None, item)
+        self.app_model.viewcanvases.viewcanvas_view.hide_radio_buttons()
 
     def on_add_new_plan(self):
         selected_patient = self.app_model.patient_tree.selected_item_patient()
