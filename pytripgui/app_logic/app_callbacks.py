@@ -193,7 +193,7 @@ class AppCallback:
         controller = EmptyPatientController(patient, view)
         view.show()
 
-        if controller.is_cancelled:
+        if not controller.is_accepted:
             return False
 
         patient = controller.model

@@ -1,12 +1,14 @@
+import math
 import os
 import sys
+from enum import Enum
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QIntValidator, QValidator, QRegularExpressionValidator
-from pytrip.cube import Cube, validate_cube_voi
+from pytrip.cube import Cube
 from pytrip.ctx import CtxCube
-from pytrip.vdx import VdxCube, create_sphere, create_cube
+from pytrip.vdx import VdxCube, create_sphere, create_cube, is_cuboidal_voi_contained, is_spherical_voi_contained
 
 import logging
 
@@ -19,7 +21,7 @@ class EmptyPatientController(object):
     def __init__(self, model, view):
         self.model = model
         self.view = view
-        self.is_cancelled = True
+        self.is_accepted = False
         self._setup_callbacks()
 
         self._set_validators()
@@ -50,27 +52,30 @@ class EmptyPatientController(object):
         )
 
     def _save_and_exit(self):
-        self._calculate_fields(self.view.dimensions_tabs.current_index)
-
         if self._validate_all():
-            self.is_cancelled = False
+            self._calculate_fields(self.view.dimensions_tabs.current_index)
             self._set_model_from_view()
+            self.is_accepted = True
             self.view.accept()
 
     def _convert_tab_contents(self):
-        previous_index = self.view.dimensions_tabs.previous_index
-        current_index = self.view.dimensions_tabs.current_index
+        fields = self.view.dimensions_fields
+        tabs = self.view.dimensions_tabs
+        prev_index = tabs.previous_index
+        curr_index = tabs.current_index
 
-        if self._validate_tab(previous_index) and \
-                (self.view.dimensions_tabs.previous_index != 1 or self._validate_pixel_values_relation()):
-            self._calculate_fields(previous_index)
-
-            for field in self.view.dimensions_fields[current_index]:
-                self.view.dimensions_fields[current_index][field].text = self.parameters[field]
+        if self._validate_tab(prev_index):
+            self._calculate_fields(prev_index)
+            for field in fields[curr_index]:
+                fields[curr_index][field].text = self.parameters[field]
         else:
-            self._clear_tab(previous_index)
+            self._clear_tab(prev_index)
 
-        self.view.dimensions_tabs.update_previous_index()
+        tabs.update_previous_index()
+
+    def _clear_tab(self, index):
+        for field in self.view.dimensions_fields[index].values():
+            field.clear()
 
     def _calculate_fields(self, index):
         p = self.parameters
@@ -82,17 +87,17 @@ class EmptyPatientController(object):
             p["slice_distance"] = float(prev["slice_distance"].text)
             p["slice_number"] = int(float(prev["depth"].text) / float(prev["slice_distance"].text))
             p["pixel_number_x"] = int(float(prev["width"].text) / float(prev["pixel_size"].text))
-            p["pixel_number_y"] = int(float(prev["width"].text) / float(prev["pixel_size"].text))
+            p["pixel_number_y"] = int(float(prev["height"].text) / float(prev["pixel_size"].text))
             p["pixel_size"] = float(prev["pixel_size"].text)
         elif index == 1:
             p["width"] = float(prev["width"].text)
             p["height"] = float(prev["height"].text)
             p["depth"] = float(prev["depth"].text)
-            p["slice_distance"] = float(prev["depth"].text) / int(prev["slice_number"].text)
+            p["slice_distance"] = round(float(prev["depth"].text) / int(prev["slice_number"].text), 3)
             p["slice_number"] = int(prev["slice_number"].text)
             p["pixel_number_x"] = int(prev["pixel_number_x"].text)
             p["pixel_number_y"] = int(prev["pixel_number_y"].text)
-            p["pixel_size"] = float(prev["width"].text) / int(prev["pixel_number_x"].text)
+            p["pixel_size"] = round(float(prev["width"].text) / int(prev["pixel_number_x"].text), 3)
         else:
             p["width"] = int(prev["pixel_number_x"].text) * float(prev["pixel_size"].text)
             p["height"] = int(prev["pixel_number_y"].text) * float(prev["pixel_size"].text)
@@ -103,13 +108,92 @@ class EmptyPatientController(object):
             p["pixel_number_y"] = int(prev["pixel_number_y"].text)
             p["pixel_size"] = float(prev["pixel_size"].text)
 
+    def _set_validators(self):
+        dim = self.view.dimensions_fields
+
+        validator = QIntValidator()
+        self.view.hu_value.enable_validation(validator)
+
+        validator = QIntValidator()
+        validator.setBottom(1)
+        enable_validation_list(validator,
+            [
+                dim[1]["slice_number"],
+                dim[2]["slice_number"],
+                dim[2]["pixel_number_x"],
+                dim[2]["pixel_number_y"]
+            ]
+        )
+
+        validator = QRegularExpressionValidator(Regex.FLOAT.value)
+        self.view.slice_offset.enable_validation(validator)
+
+        validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        enable_validation_list(validator,
+            [
+                dim[0]["slice_distance"],
+                dim[0]["pixel_size"],
+                dim[1]["depth"],
+                dim[2]["slice_distance"],
+                dim[2]["pixel_size"]
+            ]
+        )
+
+        validator = MultipleOfRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        validator.set_multiple_of(dim[0]["pixel_size"])
+        enable_validation_list(validator,
+            [
+                dim[0]["width"],
+                dim[0]["height"],
+            ]
+        )
+        dim[0]["pixel_size"].emit_on_text_change(
+            lambda: validate_list([
+                dim[0]["width"],
+                dim[0]["height"]
+            ])
+        )
+
+        validator = MultipleOfRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        validator.set_multiple_of(dim[0]["slice_distance"])
+        enable_validation_list(validator,
+            [
+                dim[0]["depth"]
+            ]
+        )
+        dim[0]["slice_distance"].emit_on_text_change(
+            lambda: validate_list([
+                dim[0]["depth"]
+            ])
+        )
+
+        validator = PixelSizeValidator(Regex.FLOAT_POSITIVE.value)
+        validator.set_additional_validation(self._validate_pixel_size)
+        enable_validation_list(validator,
+            [
+                dim[1]["width"],
+                dim[1]["height"]
+            ]
+        )
+
+        validator = PixelSizeValidator(Regex.INT_POSITIVE.value)
+        validator.set_additional_validation(self._validate_pixel_size)
+        enable_validation_list(validator,
+            [
+                dim[1]["pixel_number_x"],
+                dim[1]["pixel_number_y"]
+            ]
+        )
+
     def _validate_all(self):
-        return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index) and \
-               (self.view.dimensions_tabs.current_index != 1 or self._validate_pixel_values_relation()) and \
-               self._validate_vois() and self._validate_vois_patient()
+        if self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index):
+            self._calculate_fields(self.view.dimensions_tabs.current_index)
+            return self._validate_vois() and self._validate_vois_cube()
+        return False
 
     def _validate_general_parameters(self):
-        return self.view.hu_value.validate() and self.view.slice_offset.validate()
+        return self.view.hu_value.validate() and \
+               self.view.slice_offset.validate()
 
     def _validate_tabs(self):
         result = True
@@ -125,90 +209,62 @@ class EmptyPatientController(object):
                 result = False
         return result
 
-    def _validate_pixel_values_relation(self):
+    def _validate_pixel_size(self):
         dim = self.view.dimensions_fields[1]
-        fields = [dim["width"], dim["height"], dim["pixel_number_x"], dim["pixel_number_y"]]
-
-        p = self.parameters
-        if p["width"] / p["pixel_number_x"] != p["height"] / p["pixel_number_y"]:
-            [x.highlight_border(True) for x in fields]
+        fields = [dim["width"], dim["pixel_number_x"], dim["height"], dim["pixel_number_y"]]
+        if any(not field.text for field in fields):
             return False
-        else:
-            [x.highlight_border(False) for x in fields]
+
+        width = string2float(dim["width"].text)
+        pixel_number_x = int(dim["pixel_number_x"].text)
+        height = string2float(dim["height"].text)
+        pixel_number_y = int(dim["pixel_number_y"].text)
+        if math.isclose(width / pixel_number_x, height / pixel_number_y, abs_tol=1e-3):
+            for field in fields:
+                field.highlight_border(False)
             return True
+        else:
+            for field in fields:
+                field.highlight_border(True)
+            return False
 
     def _validate_vois(self):
         result = True
         vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count()):
+        for index in range(vois.count() - 1):
             voi = vois.itemAt(index).widget()
             if not voi.validate():
                 result = False
         return result
 
-    def _validate_vois_patient(self):
-        result = True
+    def _validate_vois_cube(self):
+        final_result = True
         vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count()):
+        for index in range(vois.count() - 1):
             voi = vois.itemAt(index).widget()
             cube_dims = [
                 self.parameters["width"],
                 self.parameters["height"],
                 self.parameters["depth"]
             ]
-            voi_center = voi.get_center()
+
             if isinstance(voi, SphericalVOIWidget):
-                voi_params = [float(voi.radius.text)]
+                result = is_spherical_voi_contained(cube_dims, voi.center, voi.radius)
             else:
-                voi_params = [
-                    float(voi.width.text),
-                    float(voi.height.text),
-                    float(voi.depth.text)
-                ]
-            if not validate_cube_voi(cube_dims, voi_center, voi_params):
+                result = is_cuboidal_voi_contained(cube_dims, voi.center, voi.dims)
+
+            if not result:
                 voi.highlight_border(True)
-                result = False
+                final_result = False
             else:
                 voi.highlight_border(False)
 
-        return result
-
-    def _clear_tab(self, index):
-        for field in self.view.dimensions_fields[index].values():
-            field.clear()
-
-    def _set_validators(self):
-        validator = QIntValidator()
-        self.view.hu_value.enable_validation(validator)
-
-        validator = QIntValidator()
-        validator.setBottom(1)
-        self.view.dimensions_fields[1]["slice_number"].enable_validation(validator)
-        self.view.dimensions_fields[1]["pixel_number_x"].enable_validation(validator)
-        self.view.dimensions_fields[1]["pixel_number_y"].enable_validation(validator)
-        self.view.dimensions_fields[2]["slice_number"].enable_validation(validator)
-        self.view.dimensions_fields[2]["pixel_number_x"].enable_validation(validator)
-        self.view.dimensions_fields[2]["pixel_number_y"].enable_validation(validator)
-
-        validator = DoubleValidatorLowerLimit()
-        self.view.slice_offset.enable_validation(validator)
-
-        validator = DoubleValidatorLowerLimit()
-        validator.setBottom(0, False)
-        self.view.dimensions_fields[0]["width"].enable_validation(validator)
-        self.view.dimensions_fields[0]["height"].enable_validation(validator)
-        self.view.dimensions_fields[0]["depth"].enable_validation(validator)
-        self.view.dimensions_fields[0]["slice_distance"].enable_validation(validator)
-        self.view.dimensions_fields[0]["pixel_size"].enable_validation(validator)
-        self.view.dimensions_fields[1]["width"].enable_validation(validator)
-        self.view.dimensions_fields[1]["height"].enable_validation(validator)
-        self.view.dimensions_fields[1]["depth"].enable_validation(validator)
-        self.view.dimensions_fields[2]["slice_distance"].enable_validation(validator)
-        self.view.dimensions_fields[2]["pixel_size"].enable_validation(validator)
+        return final_result
 
     def _add_voi_widget(self, widget_type):
         widget = widget_type()
-        self.view.voi_scroll_area.widget().layout().addWidget(widget)
+        index = self.view.voi_scroll_area.widget().layout().count() - 1
+        self.view.voi_scroll_area.widget().layout().insertWidget(index, widget)
 
     def _set_model_from_view(self):
         cube = Cube()
@@ -230,36 +286,26 @@ class EmptyPatientController(object):
         vdxCube.basename = self.view.name.text
 
         vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count()):
+        for index in range(vois.count() - 1):
             voi = vois.itemAt(index).widget()
-            center = voi.get_center()
 
             if isinstance(voi, SphericalVOIWidget):
-                sphere = create_sphere(
+                voi = create_sphere(
                     cube=self.model.ctx,
-                    name=voi.name.text,
-                    center=[
-                        center[0],
-                        center[1],
-                        center[2],
-                    ],
-                    radius=float(voi.radius.text)
+                    name=voi.name,
+                    center=voi.center,
+                    radius=voi.radius
                 )
-                vdxCube.add_voi(sphere)
             else:
-                cube = create_cube(
+                voi = create_cube(
                     cube=self.model.ctx,
-                    name=voi.name.text,
-                    center=[
-                        center[0],
-                        center[1],
-                        center[2],
-                    ],
-                    width=float(voi.width.text),
-                    height=float(voi.height.text),
-                    depth=float(voi.depth.text),
+                    name=voi.name,
+                    center=voi.center,
+                    width=voi.width,
+                    height=voi.height,
+                    depth=voi.depth,
                 )
-                vdxCube.add_voi(cube)
+            vdxCube.add_voi(voi)
 
         self.model.vdx = vdxCube
         self.model.name = self.view.name.text
@@ -271,26 +317,37 @@ class VOIWidget(QtWidgets.QFrame):
         path = os.path.join(sys.path[0], file)
         uic.loadUi(path, self)
 
-        self.name = LineEdit(self.name_lineEdit)
-        self.center = LineEdit(self.center_lineEdit)
+        self._name = LineEdit(self.name_lineEdit)
+        self._center = [
+            LineEdit(self.centerX_lineEdit),
+            LineEdit(self.centerY_lineEdit),
+            LineEdit(self.centerZ_lineEdit)
+        ]
 
-        validator = QRegularExpressionValidator(QRegularExpression("\\w+"))
-        self.name.enable_validation(validator)
-        self.name.validate()
+        validator = QRegularExpressionValidator(Regex.STRING.value)
+        self._name.enable_validation(validator)
+        self._name.validate()
 
-        validator = DoubleVector3Validator()
-        self.center.enable_validation(validator)
-        self.center.validate()
+        validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        enable_validation_list(validator, self._center)
+        validate_list(self._center)
 
-        self.remove_button = PushButton(self.remove_pushButton)
-        self.remove_button.emit_on_click(self.close)
+        self._remove_button = PushButton(self.remove_pushButton)
+        self._remove_button.emit_on_click(
+            lambda: self._remove_self()
+        )
 
-    def get_center(self):
-        center = self.center.text.replace(" ", "").split(";")
-        return [float(x) for x in center]
+    @property
+    def name(self):
+        return self._name.text
+
+    @property
+    def center(self):
+        return [string2float(i.text) for i in self._center]
 
     def validate(self):
-        return self.name.validate() and self.center.validate()
+        return self._name.validate() and \
+               validate_list(self._center)
 
     def highlight_border(self, highlight=False):
         if highlight:
@@ -298,93 +355,135 @@ class VOIWidget(QtWidgets.QFrame):
         else:
             self.setStyleSheet("#VOI { border: 1px solid black }")
 
+    def _remove_self(self):
+        self.parent().layout().removeWidget(self)
+        self.close()
+
 
 class SphericalVOIWidget(VOIWidget):
     def __init__(self):
         super().__init__("view//spherical_voi.ui")
 
-        self.radius = LineEdit(self.radius_lineEdit)
+        self._radius = LineEdit(self.radius_lineEdit)
 
-        validator = DoubleValidatorLowerLimit()
-        validator.setBottom(0, False)
-        self.radius.enable_validation(validator)
-        self.radius.validate()
+        validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        self._radius.enable_validation(validator)
+        self._radius.validate()
+
+    @property
+    def radius(self):
+        return string2float(self._radius.text)
 
     def validate(self):
-        return super().validate() and self.radius.validate()
+        return super().validate() and \
+               self._radius.validate()
 
 
 class CuboidalVOIWidget(VOIWidget):
     def __init__(self):
         super().__init__("view//cuboidal_voi.ui")
 
-        self.width = LineEdit(self.width_lineEdit)
-        self.height = LineEdit(self.height_lineEdit)
-        self.depth = LineEdit(self.depth_lineEdit)
+        self._width = LineEdit(self.width_lineEdit)
+        self._height = LineEdit(self.height_lineEdit)
+        self._depth = LineEdit(self.depth_lineEdit)
+        self._dims = [
+            self._width,
+            self._height,
+            self._depth
+        ]
 
-        validator = DoubleValidatorLowerLimit()
-        validator.setBottom(0, False)
-        self.width.enable_validation(validator)
-        self.width.validate()
-        self.height.enable_validation(validator)
-        self.height.validate()
-        self.depth.enable_validation(validator)
-        self.depth.validate()
+        validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        enable_validation_list(validator, self._dims)
+        validate_list(self._dims)
+
+    @property
+    def width(self):
+        return string2float(self._width.text)
+
+    @property
+    def height(self):
+        return string2float(self._height.text)
+
+    @property
+    def depth(self):
+        return string2float(self._depth.text)
+
+    @property
+    def dims(self):
+        return [string2float(i.text) for i in self._dims]
 
     def validate(self):
-        return super().validate() and self.width.validate() and self.height.validate() and self.depth.validate()
+        return super().validate() and \
+               validate_list(self._dims)
 
 
-class DoubleVector3Validator(QValidator):
-    def __init__(self):
-        super().__init__()
+class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
+    def __init__(self, regex=None):
+        super().__init__(regex)
+        self._multiple_of_line_edit = None
 
-    def validate(self, string, pos):
-        if not string:
-            return QValidator.Intermediate, string, pos
-
-        center = string.replace(" ", "").split(";")
-        if len(center) != 3:
-            return QValidator.Intermediate, string, pos
-
-        regex = QRegularExpression("[-]?\\d+([,.]?\\d*)?")
-        states = [QRegularExpressionValidator(regex).validate(x, pos) for x in center]
-        for state in states:
-            if state[0] != QValidator.Acceptable:
-                return QValidator.Intermediate, string, pos
-
-        return QValidator.Acceptable, string, pos
-
-
-class DoubleValidatorLowerLimit(QValidator):
-    def __init__(self):
-        super().__init__()
-        self._bottom = None
-
-    def setBottom(self, value, inclusive=True):
-        self._bottom = value
-        self._inclusive = inclusive
+    def set_multiple_of(self, value):
+        self._multiple_of_line_edit = value
 
     def validate(self, string, pos):
-        if not string:
+        result = super().validate(string, pos)
+        if result[0] != QValidator.Acceptable:
+            return result
+
+        if self._multiple_of_line_edit is None:
             return QValidator.Intermediate, string, pos
 
-        if self._bottom and self._bottom >= 0:
-            regex = QRegularExpression("\\d+([,.]?\\d*)?")
-        else:
-            regex = QRegularExpression("[-]?\\d+([,.]?\\d*)?")
-        state = QRegularExpressionValidator(regex).validate(string, pos)
+        if not self._multiple_of_line_edit.text:
+            return QValidator.Acceptable, string, pos
 
-        if not self._bottom:
-            return state
+        string_num = string2float(string)
+        multiple_of = string2float(self._multiple_of_line_edit.text)
 
-        string_copy = string.replace(",", ".")
-        if string_copy.endswith("."):
-            string_copy = string_copy[:-1]
+        if math.isclose(string_num % multiple_of, 0, abs_tol=1e-3):
+            return QValidator.Acceptable, string, pos
+        return QValidator.Intermediate, string, pos
 
-        if state[0] == QValidator.Acceptable and \
-                ((self._inclusive and float(string_copy) < self._bottom) or
-                 (not self._inclusive and float(string_copy) <= self._bottom)):
-            return QValidator.Intermediate, string, pos
 
-        return state
+class PixelSizeValidator(QRegularExpressionValidator):
+    def __init__(self, regex=None):
+        super().__init__(regex)
+        self._pixel_size_validation = None
+
+    def set_additional_validation(self, validation):
+        self._pixel_size_validation = validation
+
+    def validate(self, string, pos):
+        result = super().validate(string, pos)
+        if result[0] != QValidator.Acceptable:
+            return result
+
+        if self._pixel_size_validation is not None and self._pixel_size_validation():
+            return QValidator.Acceptable, string, pos
+        return QValidator.Intermediate, string, pos
+
+
+class Regex(Enum):
+    STRING = QRegularExpression("\\w+")
+    INT_POSITIVE = QRegularExpression("\\d*[1-9]\\d*")
+    FLOAT = QRegularExpression("-?((\\d+([,\\.]\\d{0,3})?)|(\\d*[,\\.]\\d{1,3}))")
+    FLOAT_POSITIVE = QRegularExpression("((\\d*[1-9]\\d*([,\\.]\\d{0,3})?)|(\\d*[,\\.](?=\\d{1,3}$)(\\d*[1-9]\\d*)))")
+
+
+def string2float(string):
+    string_copy = string.replace(",", ".")
+    if string_copy.endswith("."):
+        string_copy = string_copy[:-1]
+    return float(string_copy)
+
+
+def enable_validation_list(validator, fields):
+    for field in fields:
+        field.enable_validation(validator)
+
+
+def validate_list(items):
+    result = True
+    for item in items:
+        if not item.validate():
+            result = False
+    return result
