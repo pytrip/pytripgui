@@ -15,8 +15,8 @@ logging.basicConfig(level=logging.DEBUG)
                     reason="fails on python 3.7 for unknown reasons")
 def test_basics(qtbot):
     main_window = QMainWindow()
-    patient_tree = PatientTree(main_window)
-    patient_tree.show(main_window)
+    patient_tree = PatientTree(main_window, main_window)
+    patient_tree.show()
     main_window.show()
 
     qtbot.addWidget(main_window)
