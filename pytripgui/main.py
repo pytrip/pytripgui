@@ -11,7 +11,9 @@ from pytripgui.model.main_model import MainModel
 logger = logging.getLogger(__name__)
 
 
-def main(args=sys.argv[1:]):
+def main(args=None):
+    if args is None:
+        args = sys.argv[1:]
     from pytripgui import __version__ as _ptgv
     from pytrip import __version__ as _ptv
     _vers = "PyTRiP98GUI {} using PyTRiP98 {}".format(_ptgv, _ptv)
