@@ -30,7 +30,6 @@ class MainWindowController:
 
         self.model.patient_tree = PatientTree(self.view, self.view.ui)
         self.model.patient_tree.app_callback(self.app_callback)
-        self.model.patient_tree.show()
 
         # main window callbacks
         self.view.open_voxelplan_callback = self.app_callback.on_open_voxelplan
@@ -41,7 +40,7 @@ class MainWindowController:
         self.view.action_add_patient = self.app_callback.on_add_patient
         self.view.action_create_field = self.app_callback.on_create_field
         self.view.action_execute_plan = self.app_callback.on_execute_selected_plan
-        self.view.action_open_tree = self.model.patient_tree.show
+        self.view.action_open_tree = self.app_callback.patient_tree_show
 
         self.view.about_callback = self.on_about
         self.view.exit_callback = self.on_exit

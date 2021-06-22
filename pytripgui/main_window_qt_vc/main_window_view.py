@@ -151,3 +151,9 @@ class MainWindowQtView:
     @action_open_tree.setter
     def action_open_tree(self, callback):
         self.ui.actionTree.triggered.connect(callback)
+        self.ui.actionTree.setCheckable(True)
+        self.ui.actionTree.setChecked(True)
+
+    @property
+    def action_open_tree_checked(self):
+        return self.ui.actionTree.isChecked()

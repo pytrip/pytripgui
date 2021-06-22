@@ -25,12 +25,16 @@ class PatientTree:
         self._parent_view = parent_view
 
         self.widget = QDockWidget()
+        self.widget.setFeatures(self.widget.features() & ~QDockWidget.DockWidgetClosable)
         self.widget.setWidget(self.patient_tree_view)
         self._parent_view.addDockWidget(Qt.LeftDockWidgetArea, self.widget)
         self.widget.setWindowTitle("Patient tree")
 
-    def show(self):
-        self.widget.show()
+    def set_visible(self, visible):
+        if visible:
+            self.widget.show()
+        else:
+            self.widget.hide()
 
     def app_callback(self, app_callback):
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback

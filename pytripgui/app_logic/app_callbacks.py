@@ -248,6 +248,9 @@ class AppCallback:
                 self.app_model.viewcanvases.set_patient(top_item.data, item.state)
                 item.state = self.app_model.viewcanvases.get_gui_state()
 
+    def patient_tree_show(self):
+        self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
+
     @staticmethod
     def is_executable(item):
         if isinstance(item, PlanItem):
