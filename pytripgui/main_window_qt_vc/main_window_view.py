@@ -143,3 +143,17 @@ class MainWindowQtView:
 
     def action_execute_plan_set_enable(self, enabled):
         self.ui.actionExecute_Plan.setEnabled(enabled)
+
+    @property
+    def action_open_tree(self):
+        return None
+
+    @action_open_tree.setter
+    def action_open_tree(self, callback):
+        self.ui.actionTree.triggered.connect(callback)
+        self.ui.actionTree.setCheckable(True)
+        self.ui.actionTree.setChecked(True)
+
+    @property
+    def action_open_tree_checked(self):
+        return self.ui.actionTree.isChecked()

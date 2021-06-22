@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class PatientTree:
-    def __init__(self, gui):
+    def __init__(self, gui, parent_view):
         self._gui = gui
         self.patient_tree_model = TreeModel(PatientList())
         self.patient_tree_view = TreeView()
@@ -22,11 +22,19 @@ class PatientTree:
         self.patient_tree_cont = TreeController(self.patient_tree_model, self.patient_tree_view)
 
         self.patient_tree_view.internal_events.on_export_voxelplan = self._export_cube_callback
+        self._parent_view = parent_view
 
-    def show(self, parent_view):
-        widget = QDockWidget()
-        widget.setWidget(self.patient_tree_view)
-        parent_view.addDockWidget(Qt.LeftDockWidgetArea, widget)
+        self.widget = QDockWidget()
+        self.widget.setFeatures(self.widget.features() & ~QDockWidget.DockWidgetClosable)
+        self.widget.setWidget(self.patient_tree_view)
+        self._parent_view.addDockWidget(Qt.LeftDockWidgetArea, self.widget)
+        self.widget.setWindowTitle("Patient tree")
+
+    def set_visible(self, visible):
+        if visible:
+            self.widget.show()
+        else:
+            self.widget.hide()
 
     def app_callback(self, app_callback):
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback
