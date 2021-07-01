@@ -68,17 +68,6 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="menuPlan">
-    <property name="title">
-     <string>Plan</string>
-    </property>
-    <addaction name="actionNew_Plan"/>
-    <addaction name="actionEdit_Plan"/>
-    <addaction name="separator"/>
-    <addaction name="actionExport_Plan"/>
-    <addaction name="separator"/>
-    <addaction name="actionDelete_Plan"/>
-   </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
@@ -124,7 +113,6 @@
     <addaction name="actionTree"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuPlan"/>
    <addaction name="menuTools"/>
    <addaction name="menuSettings"/>
    <addaction name="menuView"/>

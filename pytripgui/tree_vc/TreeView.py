@@ -62,6 +62,7 @@ class TreeView(QTreeView):
             popup_menu.addSeparator()
             popup_menu.addAction("Execute", self.internal_events.on_execute)
             popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
+            popup_menu.addAction("Delete", self.internal_events.on_delete)
         elif isinstance(self.selected_item, FieldItem):
             popup_menu.addAction("Edit selected Field", self.internal_events.on_edit_selected_item)
             popup_menu.addAction("Delete selected Field", self.internal_events.on_delete)
