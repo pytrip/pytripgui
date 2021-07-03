@@ -337,15 +337,15 @@ class ViewCanvasWidget(FigureCanvas):
         info_axes.set_yticks([])
         info_axes.set_zticks([])
         # plot cubic frame
-        r = [-1,1]
+        r = [-1, 1]
         X, Y = np.meshgrid(r, r)
         one = np.ones(4).reshape(2, 2)
-        info_axes.plot_wireframe(X,Y,one, alpha=0.2, color='black')
-        info_axes.plot_wireframe(X,Y,-one, alpha=0.2, color='black')
-        info_axes.plot_wireframe(X,-one,Y, alpha=0.2, color='black')
-        info_axes.plot_wireframe(X,one,Y, alpha=0.2, color='black')
-        info_axes.plot_wireframe(one,X,Y, alpha=0.2, color='black')
-        info_axes.plot_wireframe(-one,X,Y, alpha=0.2, color='black')
+        info_axes.plot_wireframe(X, Y, one, alpha=0.2, color='black')
+        info_axes.plot_wireframe(X, Y, -one, alpha=0.2, color='black')
+        info_axes.plot_wireframe(X, -one, Y, alpha=0.2, color='black')
+        info_axes.plot_wireframe(X, one, Y, alpha=0.2, color='black')
+        info_axes.plot_wireframe(one, X, Y, alpha=0.2, color='black')
+        info_axes.plot_wireframe(-one, X, Y, alpha=0.2, color='black')
         info_axes.dist = 18
 
         # get current positions in each plane
@@ -357,7 +357,7 @@ class ViewCanvasWidget(FigureCanvas):
 
         # plot all three planes
         # rescale from [0...last slice] to [-1...1]
-        trans_ones = np.multiply(one, 2*current_slices['Transversal']/last_slices['Transversal'])-1
+        trans_ones = np.multiply(one, 2 * current_slices['Transversal'] / last_slices['Transversal']) - 1
         # plot full color if this is current plane
         if current_plane == 'Transversal':
             info_axes.plot_surface(X, Y, trans_ones, color='g')
@@ -365,17 +365,14 @@ class ViewCanvasWidget(FigureCanvas):
         else:
             info_axes.plot_surface(X, Y, trans_ones, alpha=0.2, color='g')
 
-        sag_ones = np.multiply(one, 2*current_slices['Sagittal']/last_slices['Sagittal'])-1
+        sag_ones = np.multiply(one, 2 * current_slices['Sagittal'] / last_slices['Sagittal']) - 1
         if current_plane == 'Sagittal':
             info_axes.plot_surface(sag_ones, X, Y, color='r')
         else:
             info_axes.plot_surface(sag_ones, X, Y, alpha=0.2, color='r')
 
-        cor_ones = np.multiply(one, 2*current_slices['Coronal']/last_slices['Coronal'])-1
+        cor_ones = np.multiply(one, 2 * current_slices['Coronal'] / last_slices['Coronal']) - 1
         if current_plane == 'Coronal':
             info_axes.plot_surface(X, cor_ones, Y, color='b')
         else:
             info_axes.plot_surface(X, cor_ones, Y, alpha=0.2, color='b')
-
-
-

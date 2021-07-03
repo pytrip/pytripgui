@@ -44,7 +44,7 @@ class ProjectionSelector:
             'Transversal': self._transversal_slice_no,
             'Sagittal': self._sagittal_slice_no,
             'Coronal': self._coronal_slice_no
-            }
+        }
 
     def get_last_slices(self):
         return {
