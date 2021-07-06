@@ -45,6 +45,8 @@ class MainWindowController:
         self.view.about_callback = self.on_about
         self.view.exit_callback = self.on_exit
 
+        self.app_callback.load_pat()
+
     def on_about(self):
         """
         Callback to display the "about" box.

@@ -31,6 +31,12 @@ class AppCallback:
 
         self.settings = SettingsController(self.app_model)
 
+    def load_pat(self):
+        patient = PatientItem()
+        path = "/home/deerjelen/dev/sandbox/IFJ/res/TST000/TST000000"
+        if self.open_voxelplan_filename(patient, path):
+            self.app_model.patient_tree.add_new_item(None, patient)
+
     def on_open_voxelplan(self):
         patient = PatientItem()
         if self.open_voxelplan_callback(patient):
@@ -189,6 +195,9 @@ class AppCallback:
         if filename == "":
             return False
 
+        return self.open_voxelplan_filename(patient_item, filename)
+
+    def open_voxelplan_filename(self, patient_item, filename):
         patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
         patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
