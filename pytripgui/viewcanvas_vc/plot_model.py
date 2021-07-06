@@ -39,6 +39,20 @@ class ProjectionSelector:
         if self.plane == "Coronal":
             return data.cube[-1:0:-1, self.current_slice_no, -1:0:-1]
 
+    def get_current_slices(self):
+        return {
+            'Transversal': self._transversal_slice_no,
+            'Sagittal': self._sagittal_slice_no,
+            'Coronal': self._coronal_slice_no
+        }
+
+    def get_last_slices(self):
+        return {
+            'Transversal': self._transversal_last_slice_no,
+            'Sagittal': self._sagittal_last_slice_no,
+            'Coronal': self._coronal_last_slice_no
+        }
+
     def load_slices_count(self, data):
         self._transversal_last_slice_no = data.dimz
         self._sagittal_last_slice_no = data.dimy
