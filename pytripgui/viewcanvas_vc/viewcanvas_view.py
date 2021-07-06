@@ -353,9 +353,8 @@ class ViewCanvasWidget(FigureCanvas):
             info_axes.dist = 18
             self.info_axes = info_axes
         else:
-            self.info_axes.collections.pop()
-            self.info_axes.collections.pop()
-            self.info_axes.collections.pop()
+            # remove last 3 plots - only planes that show current position of each slice
+            del self.info_axes.collections[-3:]
 
         # get current positions in each plane
         current_slices = data.projection_selector.get_current_slices()
