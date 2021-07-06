@@ -331,7 +331,7 @@ class ViewCanvasWidget(FigureCanvas):
         X, Y = np.meshgrid(r, r)
         one = np.ones(4).reshape(2, 2)
 
-        if not self.info_axes:
+        if self.info_axes is None:
             # create place for new plot
             info_axes = self.axes.figure.add_axes([0.8, 0.8, 0.2, 0.2], projection='3d')
             # set plot labels
@@ -353,7 +353,9 @@ class ViewCanvasWidget(FigureCanvas):
             info_axes.dist = 18
             self.info_axes = info_axes
         else:
-            self.info_axes.clear()
+            self.info_axes.collections.pop()
+            self.info_axes.collections.pop()
+            self.info_axes.collections.pop()
 
         # get current positions in each plane
         current_slices = data.projection_selector.get_current_slices()
