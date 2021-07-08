@@ -8,7 +8,7 @@ from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QIntValidator, QValidator, QRegularExpressionValidator
 from pytrip.cube import Cube
 from pytrip.ctx import CtxCube
-from pytrip.vdx import VdxCube, create_sphere, create_cube, is_cuboidal_voi_contained, is_spherical_voi_contained
+from pytrip.vdx import VdxCube, create_sphere, create_cube
 
 import logging
 
@@ -17,7 +17,7 @@ from pytripgui.view.qt_view_adapter import LineEdit, PushButton
 logger = logging.getLogger(__name__)
 
 
-class EmptyPatientController():
+class EmptyPatientController(object):
     def __init__(self, model, view):
         self.model = model
         self.view = view
@@ -148,11 +148,11 @@ class EmptyPatientController():
 
     def _validate_general_parameters(self):
         return self.view.hu_value.validate() and \
-            self.view.slice_offset.validate()
+               self.view.slice_offset.validate()
 
     def _validate_tabs(self):
         result = True
-        for index, _ in enumerate(self.view.dimensions_fields):
+        for index in range(len(self.view.dimensions_fields)):
             if not self._validate_tab(index):
                 result = False
         return result
@@ -170,45 +170,68 @@ class EmptyPatientController():
         if any(not field.text for field in fields):
             return False
 
-        width = string2float(dim["width"].text)
+        width = float(dim["width"].text)
         pixel_number_x = int(dim["pixel_number_x"].text)
-        height = string2float(dim["height"].text)
+        height = float(dim["height"].text)
         pixel_number_y = int(dim["pixel_number_y"].text)
         if math.isclose(width / pixel_number_x, height / pixel_number_y, abs_tol=1e-3):
             for field in fields:
                 field.highlight_border(False)
             return True
-
-        for field in fields:
-            field.highlight_border(True)
-        return False
+        else:
+            for field in fields:
+                field.highlight_border(True)
+            return False
 
     def _validate_vois(self):
         result = True
-        vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count() - 1):
-            voi = vois.itemAt(index).widget()
-            if not voi.validate():
+        voi_widgets = self.view.voi_scroll_area.widget().layout()
+        for index in range(voi_widgets.count() - 1):
+            voi_widget = voi_widgets.itemAt(index).widget()
+            if not voi_widget.validate():
                 result = False
         return result
 
     def _validate_vois_cube(self):
         final_result = True
-        vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count() - 1):
-            voi = vois.itemAt(index).widget()
-            cube_dims = [self.parameters["width"], self.parameters["height"], self.parameters["depth"]]
 
-            if isinstance(voi, SphericalVOIWidget):
-                result = is_spherical_voi_contained(cube_dims, voi.center, voi.radius)
+        cube = Cube()
+        cube.create_empty_cube(dimx=self.parameters["pixel_number_x"],
+                               dimy=self.parameters["pixel_number_y"],
+                               dimz=self.parameters["slice_number"],
+                               slice_offset=float(self.view.slice_offset.text),
+                               slice_distance=self.parameters["slice_distance"],
+                               pixel_size=self.parameters["pixel_size"],
+                               value=int(self.view.hu_value.text)
+                               )
+        ctx = CtxCube(cube)
+
+        voi_widgets = self.view.voi_scroll_area.widget().layout()
+        for index in range(voi_widgets.count() - 1):
+            voi_widget = voi_widgets.itemAt(index).widget()
+
+            if isinstance(voi_widget, SphericalVOIWidget):
+                voi = create_sphere(
+                    cube=ctx,
+                    name=voi_widget.name,
+                    center=voi_widget.center,
+                    radius=voi_widget.radius
+                )
             else:
-                result = is_cuboidal_voi_contained(cube_dims, voi.center, voi.dims)
+                voi = create_cube(
+                    cube=ctx,
+                    name=voi_widget.name,
+                    center=voi_widget.center,
+                    width=voi_widget.width,
+                    height=voi_widget.height,
+                    depth=voi_widget.depth,
+                )
 
-            if not result:
-                voi.highlight_border(True)
+            if voi.is_fully_contained():
+                voi_widget.highlight_border(False)
+            else:
+                voi_widget.highlight_border(True)
                 final_result = False
-            else:
-                voi.highlight_border(False)
 
         return final_result
 
@@ -226,7 +249,8 @@ class EmptyPatientController():
                                slice_offset=float(self.view.slice_offset.text),
                                slice_distance=self.parameters["slice_distance"],
                                pixel_size=self.parameters["pixel_size"],
-                               value=int(self.view.hu_value.text))
+                               value=int(self.view.hu_value.text)
+                               )
 
         self.model.ctx = CtxCube(cube)
         self.model.ctx.basename = self.view.name.text
@@ -234,20 +258,25 @@ class EmptyPatientController():
         vdxCube = VdxCube(self.model.ctx)
         vdxCube.basename = self.view.name.text
 
-        vois = self.view.voi_scroll_area.widget().layout()
-        for index in range(vois.count() - 1):
-            voi = vois.itemAt(index).widget()
+        voi_widgets = self.view.voi_scroll_area.widget().layout()
+        for index in range(voi_widgets.count() - 1):
+            voi_widget = voi_widgets.itemAt(index).widget()
 
-            if isinstance(voi, SphericalVOIWidget):
-                voi = create_sphere(cube=self.model.ctx, name=voi.name, center=voi.center, radius=voi.radius)
+            if isinstance(voi_widget, SphericalVOIWidget):
+                voi = create_sphere(
+                    cube=self.model.ctx,
+                    name=voi_widget.name,
+                    center=voi_widget.center,
+                    radius=voi_widget.radius
+                )
             else:
                 voi = create_cube(
                     cube=self.model.ctx,
-                    name=voi.name,
-                    center=voi.center,
-                    width=voi.width,
-                    height=voi.height,
-                    depth=voi.depth,
+                    name=voi_widget.name,
+                    center=voi_widget.center,
+                    width=voi_widget.width,
+                    height=voi_widget.height,
+                    depth=voi_widget.depth,
                 )
             vdxCube.add_voi(voi)
 
@@ -277,7 +306,7 @@ class VOIWidget(QtWidgets.QFrame):
         validate_list(self._center)
 
         self._remove_button = PushButton(self.remove_pushButton)
-        self._remove_button.emit_on_click(self._remove_self)
+        self._remove_button.emit_on_click(lambda: self._remove_self())
 
     @property
     def name(self):
@@ -285,11 +314,11 @@ class VOIWidget(QtWidgets.QFrame):
 
     @property
     def center(self):
-        return [string2float(i.text) for i in self._center]
+        return [float(i.text) for i in self._center]
 
     def validate(self):
         return self._name.validate() and \
-            validate_list(self._center)
+               validate_list(self._center)
 
     def highlight_border(self, highlight=False):
         if highlight:
@@ -314,11 +343,11 @@ class SphericalVOIWidget(VOIWidget):
 
     @property
     def radius(self):
-        return string2float(self._radius.text)
+        return float(self._radius.text)
 
     def validate(self):
         return super().validate() and \
-            self._radius.validate()
+               self._radius.validate()
 
 
 class CuboidalVOIWidget(VOIWidget):
@@ -336,23 +365,23 @@ class CuboidalVOIWidget(VOIWidget):
 
     @property
     def width(self):
-        return string2float(self._width.text)
+        return float(self._width.text)
 
     @property
     def height(self):
-        return string2float(self._height.text)
+        return float(self._height.text)
 
     @property
     def depth(self):
-        return string2float(self._depth.text)
+        return float(self._depth.text)
 
     @property
     def dims(self):
-        return [string2float(i.text) for i in self._dims]
+        return [float(i.text) for i in self._dims]
 
     def validate(self):
         return super().validate() and \
-            validate_list(self._dims)
+               validate_list(self._dims)
 
 
 class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
@@ -374,10 +403,16 @@ class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
         if not self._multiple_of_line_edit.text:
             return QValidator.Acceptable, string, pos
 
-        string_num = string2float(string)
-        multiple_of = string2float(self._multiple_of_line_edit.text)
+        string = string.replace(",", ".")
+        if string.endswith("."):
+            string = string[:-1]
+        string_num = float(string)
+        multiple_of = float(self._multiple_of_line_edit.text)
 
-        if math.isclose(string_num % multiple_of, 0, abs_tol=1e-3):
+        if multiple_of and \
+                ((multiple_of < 1 and math.isclose(abs(round(string_num / multiple_of, 0) - string_num / multiple_of),
+                                                   0, abs_tol=1e-9)) or
+                 math.isclose(string_num % multiple_of, 0, abs_tol=1e-3)):
             return QValidator.Acceptable, string, pos
         return QValidator.Intermediate, string, pos
 
@@ -401,17 +436,10 @@ class PixelSizeValidator(QRegularExpressionValidator):
 
 
 class Regex(Enum):
-    STRING = QRegularExpression("\\w+")
-    INT_POSITIVE = QRegularExpression("\\d*[1-9]\\d*")
-    FLOAT = QRegularExpression("-?((\\d+([,\\.]\\d{0,3})?)|(\\d*[,\\.]\\d{1,3}))")
-    FLOAT_POSITIVE = QRegularExpression("((\\d*[1-9]\\d*([,\\.]\\d{0,3})?)|(\\d*[,\\.](?=\\d{1,3}$)(\\d*[1-9]\\d*)))")
-
-
-def string2float(string):
-    string_copy = string.replace(",", ".")
-    if string_copy.endswith("."):
-        string_copy = string_copy[:-1]
-    return float(string_copy)
+    STRING = QRegularExpression(r"\w+")
+    INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
+    FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
+    FLOAT_POSITIVE = QRegularExpression(r"((\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*)))")
 
 
 def enable_validation_list(validator, fields):
