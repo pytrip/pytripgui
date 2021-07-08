@@ -202,8 +202,7 @@ class EmptyPatientController(object):
                                slice_offset=float(self.view.slice_offset.text),
                                slice_distance=self.parameters["slice_distance"],
                                pixel_size=self.parameters["pixel_size"],
-                               value=int(self.view.hu_value.text)
-                               )
+                               value=int(self.view.hu_value.text))
         ctx = CtxCube(cube)
 
         voi_widgets = self.view.voi_scroll_area.widget().layout()
@@ -211,12 +210,7 @@ class EmptyPatientController(object):
             voi_widget = voi_widgets.itemAt(index).widget()
 
             if isinstance(voi_widget, SphericalVOIWidget):
-                voi = create_sphere(
-                    cube=ctx,
-                    name=voi_widget.name,
-                    center=voi_widget.center,
-                    radius=voi_widget.radius
-                )
+                voi = create_sphere(cube=ctx, name=voi_widget.name, center=voi_widget.center, radius=voi_widget.radius)
             else:
                 voi = create_cube(
                     cube=ctx,
@@ -249,8 +243,7 @@ class EmptyPatientController(object):
                                slice_offset=float(self.view.slice_offset.text),
                                slice_distance=self.parameters["slice_distance"],
                                pixel_size=self.parameters["pixel_size"],
-                               value=int(self.view.hu_value.text)
-                               )
+                               value=int(self.view.hu_value.text))
 
         self.model.ctx = CtxCube(cube)
         self.model.ctx.basename = self.view.name.text
@@ -263,12 +256,10 @@ class EmptyPatientController(object):
             voi_widget = voi_widgets.itemAt(index).widget()
 
             if isinstance(voi_widget, SphericalVOIWidget):
-                voi = create_sphere(
-                    cube=self.model.ctx,
-                    name=voi_widget.name,
-                    center=voi_widget.center,
-                    radius=voi_widget.radius
-                )
+                voi = create_sphere(cube=self.model.ctx,
+                                    name=voi_widget.name,
+                                    center=voi_widget.center,
+                                    radius=voi_widget.radius)
             else:
                 voi = create_cube(
                     cube=self.model.ctx,
