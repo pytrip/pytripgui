@@ -38,14 +38,12 @@ class FieldQtView:
         checkbox_state = self.ui.manualIsocenter_checkBox.checkState()
         self.set_isocenter_state(checkbox_state)
 
-    def is_angles_standard_IEC(self):
-        return self.ui.anglesStandardIEC_radio.isChecked()
-
     def get_angles_standard(self):
         if self.ui.anglesStandardTRiP_radio.isChecked():
             return "TRiP"
-        elif self.ui.anglesStandardIEC_radio.isChecked():
+        if self.ui.anglesStandardIEC_radio.isChecked():
             return "IEC"
+        return None
 
     def _angles_standard_IEC(self):
         if self.ui.anglesStandardIEC_radio.isChecked():
