@@ -2,9 +2,9 @@ import logging
 
 from anytree import NodeMixin
 
+from pytripgui.field_vc.field_model import FieldModel
 from pytripgui.plan_executor.patient_model import PatientModel
 from pytrip.tripexecuter.plan import Plan
-from pytrip.tripexecuter.field import Field
 from pytrip.tripexecuter.kernel import KernelModel
 
 logger = logging.getLogger(__name__)
@@ -115,7 +115,7 @@ class PlanItem(TreeItem):
 
     @property
     def data(self):
-        self._data.fields = [child.data for child in self.children]
+        self._data.fields = [child.data.field for child in self.children]
         for field in self._data.fields:
             field.kernel = self._data.default_kernel
         return self._data
@@ -129,7 +129,7 @@ class FieldItem(TreeItem):
     def __init__(self):
         super().__init__()
 
-        self.data = Field()
+        self.data = FieldModel()
 
     def __repr__(self):
         return "Field: " + str(self.data.number)

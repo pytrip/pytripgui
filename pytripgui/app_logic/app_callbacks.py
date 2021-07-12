@@ -173,7 +173,7 @@ class AppCallback:
 
         view = FieldQtView(self.parent_gui.ui)
 
-        item.data.basename = "field"
+        item.data.field.basename = "field"
         controller = FieldController(item.data, view, self.app_model.kernels)
         controller.set_view_from_model()
         view.show()
@@ -226,19 +226,22 @@ class AppCallback:
 
         if isinstance(top_item, SimulationResultItem):
             self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
-            top_item.state = self.app_model.viewcanvases.get_gui_state()
+            if top_item.state is None:
+                top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(top_item.data)
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             if self.app_model.viewcanvases:
                 self.app_model.viewcanvases.set_patient(top_item.data, top_item.state)
-                top_item.state = self.app_model.viewcanvases.get_gui_state()
+                if top_item.state is None:
+                    top_item.state = self.app_model.viewcanvases.get_gui_state()
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             if self.app_model.viewcanvases:
                 self.app_model.viewcanvases.set_patient(top_item.data, item.state)
-                item.state = self.app_model.viewcanvases.get_gui_state()
+                if item.state is None:
+                    item.state = self.app_model.viewcanvases.get_gui_state()
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
@@ -246,7 +249,8 @@ class AppCallback:
                 self.parent_gui.action_execute_plan_set_enable(True)
             if self.app_model.viewcanvases:
                 self.app_model.viewcanvases.set_patient(top_item.data, item.state)
-                item.state = self.app_model.viewcanvases.get_gui_state()
+                if item.state is None:
+                    item.state = self.app_model.viewcanvases.get_gui_state()
 
     def patient_tree_show(self):
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)

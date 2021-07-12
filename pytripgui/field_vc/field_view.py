@@ -1,4 +1,5 @@
 from pytripgui.view.qt_gui import UiFieldDialog
+from pytrip.res.point import angles_from_trip, angles_to_trip
 
 import logging
 
@@ -26,6 +27,8 @@ class FieldQtView:
 
     def _setup_internal_callbacks(self):
         self.ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
+        self.ui.anglesStandardIEC_radio.toggled.connect(self._angles_standard_IEC)
+        self.ui.anglesStandardTRiP_radio.toggled.connect(self._angles_standard_TRiP)
         self.ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
         self.ui.gantry_pushButton_m90.clicked.connect(self._gantry_m90)  # -90 deg
         self.ui.couch_pushButton_p90.clicked.connect(self._couch_p90)  # +90 deg
@@ -34,6 +37,33 @@ class FieldQtView:
     def _isocenter_checkbox_callback(self):
         checkbox_state = self.ui.manualIsocenter_checkBox.checkState()
         self.set_isocenter_state(checkbox_state)
+
+    def is_angles_standard_IEC(self):
+        return self.ui.anglesStandardIEC_radio.isChecked()
+
+    def get_angles_standard(self):
+        if self.ui.anglesStandardTRiP_radio.isChecked():
+            return "TRiP"
+        elif self.ui.anglesStandardIEC_radio.isChecked():
+            return "IEC"
+
+    def _angles_standard_IEC(self):
+        if self.ui.anglesStandardIEC_radio.isChecked():
+            gantry, couch = angles_from_trip(self.gantry_angle, self.couch_angle)
+            self.gantry_angle = gantry
+            self.couch_angle = couch
+
+    def _angles_standard_TRiP(self):
+        if self.ui.anglesStandardTRiP_radio.isChecked():
+            gantry, couch = angles_to_trip(self.gantry_angle, self.couch_angle)
+            self.gantry_angle = gantry
+            self.couch_angle = couch
+
+    def set_angles_standard(self, angles_standard):
+        if angles_standard == "TRiP":
+            self.ui.anglesStandardTRiP_radio.setChecked(True)
+        elif angles_standard == "IEC":
+            self.ui.anglesStandardIEC_radio.setChecked(True)
 
     def _gantry_p90(self):
         self.gantry_angle += 90.0
