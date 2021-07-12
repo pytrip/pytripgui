@@ -74,4 +74,3 @@ class FieldController:
         field.dose_extension = self.view.dose_extension
         field.contour_extension = self.view.contour_extension
         field.zsteps = self.view.depth_steps
-
