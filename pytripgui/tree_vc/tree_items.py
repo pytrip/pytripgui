@@ -115,7 +115,7 @@ class PlanItem(TreeItem):
 
     @property
     def data(self):
-        self._data.fields = [child.data.field for child in self.children]
+        self._data.fields = [child.data for child in self.children]
         for field in self._data.fields:
             field.kernel = self._data.default_kernel
         return self._data

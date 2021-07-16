@@ -18,8 +18,6 @@ class CanvasController:
         self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
         self._ui.internal_events.on_display_filter_change += self._display_filter_has_changed_callback
 
-        self.projection_selector = None
-
     def _perspective_has_changed_callback(self):
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()

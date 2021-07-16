@@ -12,38 +12,31 @@ class FieldController:
         self.user_clicked_save = False
 
     def set_view_from_model(self):
-        field = self.model.field
-
         if self._is_isocenter_manually():
-            self.view.set_isocenter_values(field.isocenter)
+            self.view.set_isocenter_values(self.model.isocenter)
             self.view.set_isocenter_state(True)
         else:
             self.view.set_isocenter_state(False)
 
         self._setup_ok_and_cancel_buttons_callbacks()
 
-        self.view.set_angles_standard(self.model.angles_standard)
+        self.view.angles_standard = self.model.display_angles_in_standard
+        self._set_view_angles_according_to_standard(
+            self.model.display_angles_in_standard, self.model.gantry, self.model.couch)
 
-        if self.model.angles_standard == "IEC":
-            gantry, couch = angles_from_trip(field.gantry, field.couch)
-            self.view.gantry_angle = gantry
-            self.view.couch_angle = couch
-        else:
-            self.view.gantry_angle = field.gantry
-            self.view.couch_angle = field.couch
-
-        self.view.spot_size = field.fwhm
-        self.view.raster_step = field.raster_step
-        self.view.dose_extension = field.dose_extension
-        self.view.contour_extension = field.contour_extension
-        self.view.depth_steps = field.zsteps
+        self.view.spot_size = self.model.fwhm
+        self.view.raster_step = self.model.raster_step
+        self.view.dose_extension = self.model.dose_extension
+        self.view.contour_extension = self.model.contour_extension
+        self.view.depth_steps = self.model.zsteps
 
     def _is_isocenter_manually(self):
-        return len(self.model.field.isocenter) == 3
+        return len(self.model.isocenter) == 3
 
     def _setup_ok_and_cancel_buttons_callbacks(self):
         self.view.set_ok_callback(self._save_and_exit)
         self.view.set_cancel_callback(self._exit)
+        self.view.set_gui_needs_update_callback(self._recalculate_gui_values)
 
     def _save_and_exit(self):
         self.set_model_from_view()
@@ -54,23 +47,37 @@ class FieldController:
         self.view.exit()
 
     def set_model_from_view(self):
-        field = self.model.field
         if self.view.is_isocenter_manually():
-            field.isocenter = self.view.get_isocenter_value()
+            self.model.isocenter = self.view.get_isocenter_value()
         else:
-            field.isocenter = []
+            self.model.isocenter = []
 
-        self.model.angles_standard = self.view.get_angles_standard()
-        if self.model.angles_standard == "IEC":
-            gantry, couch = angles_to_trip(self.view.gantry_angle, self.view.couch_angle)
-            field.gantry = gantry
-            field.couch = couch
+        self.model.display_angles_in_standard = self.view.angles_standard
+        self.model.gantry, self.model.couch = self._get_view_angles_in_trip_standard()
+
+        self.model.fwhm = self.view.spot_size
+        self.model.raster_step = self.view.raster_step
+        self.model.dose_extension = self.view.dose_extension
+        self.model.contour_extension = self.view.contour_extension
+        self.model.zsteps = self.view.depth_steps
+
+    def _get_view_angles_in_trip_standard(self):
+        _gantry, _couch = self.view.gantry_angle, self.view.couch_angle
+
+        if self.view.angles_standard == "IEC":
+            _gantry, _couch = angles_to_trip(_gantry, _couch)
+
+        return _gantry, _couch
+
+    def _recalculate_gui_values(self):
+        self._set_view_angles_according_to_standard(
+            self.view.angles_standard, self.view.gantry_angle, self.view.couch_angle)
+
+    def _set_view_angles_according_to_standard(self, standard, gantry, couch):
+        if standard == "IEC":
+            _gantry, _couch = angles_from_trip(gantry, couch)
+            self.view.gantry_angle = _gantry
+            self.view.couch_angle = _couch
         else:
-            field.gantry = self.view.gantry_angle
-            field.couch = self.view.couch_angle
-
-        field.fwhm = self.view.spot_size
-        field.raster_step = self.view.raster_step
-        field.dose_extension = self.view.dose_extension
-        field.contour_extension = self.view.contour_extension
-        field.zsteps = self.view.depth_steps
+            self.view.gantry_angle = self.model.gantry
+            self.view.couch_angle = self.model.couch

@@ -173,7 +173,7 @@ class AppCallback:
 
         view = FieldQtView(self.parent_gui.ui)
 
-        item.data.field.basename = "field"
+        item.data.basename = "field"
         controller = FieldController(item.data, view, self.app_model.kernels)
         controller.set_view_from_model()
         view.show()
