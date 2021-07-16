@@ -21,8 +21,8 @@ class FieldController:
         self._setup_ok_and_cancel_buttons_callbacks()
 
         self.view.angles_standard = self.model.display_angles_in_standard
-        self._set_view_angles_according_to_standard(
-            self.model.display_angles_in_standard, self.model.gantry, self.model.couch)
+        self._set_view_angles_according_to_standard(self.model.display_angles_in_standard, self.model.gantry,
+                                                    self.model.couch)
 
         self.view.spot_size = self.model.fwhm
         self.view.raster_step = self.model.raster_step
@@ -70,8 +70,8 @@ class FieldController:
         return _gantry, _couch
 
     def _recalculate_gui_values(self):
-        self._set_view_angles_according_to_standard(
-            self.view.angles_standard, self.view.gantry_angle, self.view.couch_angle)
+        self._set_view_angles_according_to_standard(self.view.angles_standard, self.view.gantry_angle,
+                                                    self.view.couch_angle)
 
     def _set_view_angles_according_to_standard(self, standard, gantry, couch):
         if standard == "IEC":
