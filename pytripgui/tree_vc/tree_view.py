@@ -4,10 +4,10 @@ from events import Events
 from PyQt5.QtCore import Qt, QPoint, QModelIndex
 from PyQt5.QtWidgets import QTreeView, QMenu
 
-from pytripgui.tree_vc.TreeItems import PatientItem
-from pytripgui.tree_vc.TreeItems import PlanItem
-from pytripgui.tree_vc.TreeItems import FieldItem
-from pytripgui.tree_vc.TreeItems import SimulationResultItem
+from pytripgui.tree_vc.tree_items import PatientItem
+from pytripgui.tree_vc.tree_items import PlanItem
+from pytripgui.tree_vc.tree_items import FieldItem
+from pytripgui.tree_vc.tree_items import SimulationResultItem
 
 from pytripgui.plan_executor.simulation_results import SimulationResults
 

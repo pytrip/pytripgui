@@ -3,11 +3,11 @@ import logging
 from PyQt5.QtWidgets import QDockWidget
 from PyQt5.QtCore import Qt
 
-from pytripgui.tree_vc.TreeModel import TreeModel
-from pytripgui.tree_vc.TreeItems import PatientList
+from pytripgui.tree_vc.tree_model import TreeModel
+from pytripgui.tree_vc.tree_items import PatientList
 
-from pytripgui.tree_vc.TreeController import TreeController
-from pytripgui.tree_vc.TreeView import TreeView
+from pytripgui.tree_vc.tree_controller import TreeController
+from pytripgui.tree_vc.tree_view import TreeView
 
 logger = logging.getLogger(__name__)
 

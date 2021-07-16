@@ -4,8 +4,8 @@ from pytripgui.field_vc.field_view import FieldQtView
 from pytripgui.field_vc.field_cont import FieldController
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 
-from pytripgui.tree_vc.TreeItems import PatientItem, PlanItem, FieldItem
-from pytripgui.tree_vc.TreeItems import SimulationResultItem
+from pytripgui.tree_vc.tree_items import PatientItem, PlanItem, FieldItem
+from pytripgui.tree_vc.tree_items import SimulationResultItem
 
 from pytripgui.messages import InfoMessages
 from pytripgui.app_logic.charts import Charts
