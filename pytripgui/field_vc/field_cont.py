@@ -1,6 +1,8 @@
 import logging
 from pytrip.res.point import angles_to_trip, angles_from_trip
 
+from pytripgui.field_vc.angles_standard import AnglesStandard
+
 logger = logging.getLogger(__name__)
 
 
@@ -21,8 +23,8 @@ class FieldController:
         self._setup_ok_and_cancel_buttons_callbacks()
 
         self.view.angles_standard = self.model.display_angles_in_standard
-        self._set_view_angles_according_to_standard(self.model.display_angles_in_standard, self.model.gantry,
-                                                    self.model.couch)
+        self._set_view_angles_according_to_standard(
+            self.view.angles_standard, self.view.gantry_angle, self.view.couch_angle, True)
 
         self.view.spot_size = self.model.fwhm
         self.view.raster_step = self.model.raster_step
@@ -64,7 +66,7 @@ class FieldController:
     def _get_view_angles_in_trip_standard(self):
         _gantry, _couch = self.view.gantry_angle, self.view.couch_angle
 
-        if self.view.angles_standard == "IEC":
+        if self.view.angles_standard == AnglesStandard.IEC:
             _gantry, _couch = angles_to_trip(_gantry, _couch)
 
         return _gantry, _couch
@@ -73,11 +75,12 @@ class FieldController:
         self._set_view_angles_according_to_standard(self.view.angles_standard, self.view.gantry_angle,
                                                     self.view.couch_angle)
 
-    def _set_view_angles_according_to_standard(self, standard, gantry, couch):
-        if standard == "IEC":
+    def _set_view_angles_according_to_standard(self, standard, gantry, couch, init=False):
+        if standard == AnglesStandard.IEC:
             _gantry, _couch = angles_from_trip(gantry, couch)
             self.view.gantry_angle = _gantry
             self.view.couch_angle = _couch
         else:
-            self.view.gantry_angle = self.model.gantry
-            self.view.couch_angle = self.model.couch
+            _gantry, _couch = angles_to_trip(gantry, couch) if not init else (gantry, couch)
+            self.view.gantry_angle = _gantry
+            self.view.couch_angle = _couch

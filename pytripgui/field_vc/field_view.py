@@ -1,3 +1,4 @@
+from pytripgui.field_vc.angles_standard import AnglesStandard
 from pytripgui.view.qt_gui import UiFieldDialog
 
 import logging
@@ -41,16 +42,16 @@ class FieldQtView:
     @property
     def angles_standard(self):
         if self.ui.anglesStandardTRiP_radio.isChecked():
-            return "TRiP"
+            return AnglesStandard.TRIP
         if self.ui.anglesStandardIEC_radio.isChecked():
-            return "IEC"
+            return AnglesStandard.IEC
         return None
 
     @angles_standard.setter
     def angles_standard(self, angles_standard):
-        if angles_standard == "TRiP":
+        if angles_standard == AnglesStandard.TRIP:
             self.ui.anglesStandardTRiP_radio.setChecked(True)
-        elif angles_standard == "IEC":
+        elif angles_standard == AnglesStandard.IEC:
             self.ui.anglesStandardIEC_radio.setChecked(True)
 
     def _gantry_p90(self):
