@@ -23,8 +23,8 @@ class FieldController:
         self._setup_ok_and_cancel_buttons_callbacks()
 
         self.view.angles_standard = self.model.display_angles_in_standard
-        self._set_view_angles_according_to_standard(
-            self.view.angles_standard, self.view.gantry_angle, self.view.couch_angle, True)
+        self._set_view_angles_according_to_standard(self.view.angles_standard, self.view.gantry_angle,
+                                                    self.view.couch_angle, True)
 
         self.view.spot_size = self.model.fwhm
         self.view.raster_step = self.model.raster_step
