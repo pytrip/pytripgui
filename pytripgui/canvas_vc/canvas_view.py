@@ -15,7 +15,7 @@ from pytripgui.view.qt_view_adapter import ListWidget
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasView:
+class CanvasView:
     def __init__(self, parent=None):
         self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
 

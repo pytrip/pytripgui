@@ -1,7 +1,7 @@
 from pytripgui.view.qt_gui import UiMainWindow
 from pytripgui.view.plot_volhist import VolHist
 
-from pytripgui.viewcanvas_vc.viewcanvas_view import ViewCanvasView
+from pytripgui.canvas_vc.canvas_view import CanvasView
 
 import logging
 
@@ -16,7 +16,7 @@ class MainView:
         self.ui = UiMainWindow()
 
         # attach canvas for 2D plots
-        self.ui.one_viewcanvas = ViewCanvasView()
+        self.ui.one_viewcanvas = CanvasView()
         self.ui.tab_Vlayout.addWidget(self.ui.one_viewcanvas.widget())
 
         self.ui.dvh = VolHist(parent=self.ui.tab_dvh)

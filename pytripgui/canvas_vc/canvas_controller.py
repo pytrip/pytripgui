@@ -1,11 +1,11 @@
 import logging
 
-from pytripgui.viewcanvas_vc.plot_model import PlotModel, ProjectionSelector
+from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
 
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasCont:
+class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
