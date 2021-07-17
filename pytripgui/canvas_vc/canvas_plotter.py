@@ -8,7 +8,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 
-class CanvasWidget(FigureCanvas):
+class CanvasPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """

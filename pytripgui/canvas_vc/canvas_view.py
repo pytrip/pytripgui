@@ -5,7 +5,7 @@ from events import Events
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
 
-from pytripgui.canvas_vc.canvas_widget import CanvasWidget
+from pytripgui.canvas_vc.canvas_plotter import CanvasPlotter
 from pytripgui.view.qt_gui import UiViewCanvas
 from pytripgui.view.qt_view_adapter import ListWidget
 
@@ -17,7 +17,7 @@ class CanvasView:
         self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
-        self._plotter = CanvasWidget()
+        self._plotter = CanvasPlotter()
 
         self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
 
