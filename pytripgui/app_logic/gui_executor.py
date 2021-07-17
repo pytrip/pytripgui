@@ -1,7 +1,7 @@
 from pytripgui.executor_vc.executor_view import ExecutorQtView
 
 from pytripgui.plan_executor.threaded_executor import ThreadedExecutor
-from pytripgui.tree_vc.TreeItems import SimulationResultItem
+from pytripgui.tree_vc.tree_items import SimulationResultItem
 from pytripgui.messages import InfoMessages
 
 from PyQt5.QtCore import QTimer
