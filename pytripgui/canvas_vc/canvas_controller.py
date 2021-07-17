@@ -1,11 +1,11 @@
 import logging
 
-from pytripgui.viewcanvas_vc.plot_model import PlotModel, ProjectionSelector
+from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
 
 logger = logging.getLogger(__name__)
 
 
-class ViewCanvasCont:
+class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
@@ -23,7 +23,7 @@ class ViewCanvasCont:
     def _perspective_has_changed_callback(self):
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
     def _display_filter_has_changed_callback(self):
         if self._model is None:
@@ -31,7 +31,7 @@ class ViewCanvasCont:
 
         self._model.display_filter = self._ui.display_filter
         self.clear_view()
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
     def _setup_ui_callbacks(self):
         self._ui.set_plotter_click_callback(self.on_click)
@@ -47,16 +47,16 @@ class ViewCanvasCont:
         else:
             self._model.projection_selector.prev_slice()
 
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
     def clear_view(self):
         self._ui.clear()
 
-    def update_viewcanvas(self):
+    def update_canvas_view(self):
         self.clear_view()
         self._ui.reset_radiobuttons()
 
@@ -112,7 +112,7 @@ class ViewCanvasCont:
         self._ui.set_position_changed_callback(self.set_current_slice_no)
 
         patient.plot_model = self._model
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
         self.projection_selector = state
 
@@ -130,14 +130,14 @@ class ViewCanvasCont:
                 self._model.set_dose(simulation_results.dose)
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
         self.projection_selector = state
 
     def _on_update_voi(self):
         if self._model.vdx:
             self._model.vdx.vois = self._ui.voi_list.checked_items()
-        self.update_viewcanvas()
+        self.update_canvas_view()
 
     def get_projection_selector(self):
         return self.projection_selector
