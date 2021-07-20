@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from pytripgui.canvas_vc.bars.ctx_bar import CtxBar
+from pytripgui.canvas_vc.bars.dos_bar import DosBar
+from pytripgui.canvas_vc.bars.projection_enum import BarProjection
 
 
 class CanvasPlotter(FigureCanvas):
@@ -88,7 +90,7 @@ class CanvasPlotter(FigureCanvas):
             self.axim_dos.remove()
             self.axim_dos = None
         if self.dose_bar:
-            self.dose_bar.ax.cla()
+            self.dose_bar.clear_bar()
             self.dose_bar = None
 
     def plot_dos(self, dos):
@@ -104,26 +106,15 @@ class CanvasPlotter(FigureCanvas):
             self.axim_dos.set_data(dos.data_to_plot)
 
     def _plot_dos_bar(self, dos):
-        cax = self.axes.figure.add_axes([0.01, 0.1, 0.02, 0.8])
-        cb = self.axes.figure.colorbar(self.axim_dos, cax=cax)
-        cb.set_label("Dose", color=self.fg_color, fontsize=self.cb_fontsize)
-        cb.outline.set_edgecolor(self.bg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color)
-        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
-        self.dose_bar = cb
-
-        if dos.dos_scale == "abs":
-            self.dose_bar.set_label("Dose [Gy]")
-        else:
-            self.dose_bar.set_label("Dose [%]")
+        self.dose_bar = self.axes.figure.add_axes([0.01, 0.1, 0.02, 0.8], projection=BarProjection.DOS.value)
+        self.dose_bar.plot_bar(self.axim_dos, scale=dos.dos_scale)
 
     def remove_let(self):
         if self.axim_let:
             self.axim_let.remove()
             self.axim_let = None
         if self.let_bar:
-            self.let_bar.ax.cla()
+            self.let_bar.clear_bar()
             self.let_bar = None
 
     def remove_vois(self):
@@ -145,14 +136,8 @@ class CanvasPlotter(FigureCanvas):
             self.axim_let.set_data(data.data_to_plot)
 
     def _plot_let_bar(self):
-        cax = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8])
-        cb = self.axes.figure.colorbar(self.axim_let, cax=cax)
-        cb.set_label("LET (keV/um)", color=self.fg_color, fontsize=self.cb_fontsize)
-        cb.outline.set_edgecolor(self.bg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color)
-        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
-        self.let_bar = cb
+        self.let_bar = self.axes.figure.add_axes([0.85, 0.1, 0.02, 0.8], projection=BarProjection.LET.value)
+        self.let_bar.plot_bar(self.axim_let)
 
     def remove_ctx(self):
         if self.axim_ctx:
@@ -177,7 +162,7 @@ class CanvasPlotter(FigureCanvas):
             self.axim_ctx.set_data(data.data_to_plot)
 
     def _plot_hu_bar(self):
-        self.hu_bar = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8], projection='ctx_bar')
+        self.hu_bar = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8], projection=BarProjection.CTX.value)
         self.hu_bar.plot_bar(self.axim_ctx)
 
     def _plot_coordinate_info(self, data):
