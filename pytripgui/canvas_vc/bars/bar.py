@@ -1,15 +1,15 @@
+from abc import ABC
+
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.pyplot import colorbar
-from matplotlib.projections import register_projection
-from abc import ABC, abstractmethod
+
+from pytripgui.canvas_vc.bars.projection_enum import BarProjection
+
 
 # base abstract class for bars
-
-
-
 class Bar(ABC, Axes):
-    name: str = 'BAR_PROJECTION_DEFAULT_NAME'
+    name: str = BarProjection.DEFAULT.value
 
     def __init__(self, fig, rect, **kwargs):
         super().__init__(fig, rect, **kwargs)
@@ -20,7 +20,7 @@ class Bar(ABC, Axes):
         self.label = 'DEFAULT_LABEL'
         self.bar = None
 
-    def plot_bar(self, data):
+    def plot_bar(self, data, **kwargs):
         cb = colorbar(data, cax=self)
         cb.set_label(self.label, color=self.fg_color, fontsize=self.cb_fontsize)
         cb.outline.set_edgecolor(self.bg_color)
