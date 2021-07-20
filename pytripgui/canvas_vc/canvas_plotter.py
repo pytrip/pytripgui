@@ -1,11 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 import numpy as np
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QSizePolicy
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from pytripgui.canvas_vc.bars.ctx_bar import CtxBar
 
 
 class CanvasPlotter(FigureCanvas):
@@ -160,7 +159,7 @@ class CanvasPlotter(FigureCanvas):
             self.axim_ctx.remove()
             self.axim_ctx = None
         if self.hu_bar:
-            self.hu_bar.ax.cla()
+            self.hu_bar.clear_bar()
             self.hu_bar = None
 
     def plot_ctx(self, data):
@@ -178,14 +177,8 @@ class CanvasPlotter(FigureCanvas):
             self.axim_ctx.set_data(data.data_to_plot)
 
     def _plot_hu_bar(self):
-        cax = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8])
-        cb = self.axes.figure.colorbar(self.axim_ctx, cax=cax)
-        cb.set_label("HU", color=self.fg_color, fontsize=self.cb_fontsize)
-        cb.outline.set_edgecolor(self.bg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color)
-        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
-        cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
-        self.hu_bar = cb
+        self.hu_bar = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8], projection='ctx_bar')
+        self.hu_bar.plot_bar(self.axim_ctx)
 
     def _plot_coordinate_info(self, data):
         r = [-1, 1]
