@@ -41,9 +41,10 @@ class FieldQtView:
 
     @property
     def angles_standard(self):
-        if self.ui.anglesStandardTRiP_radio.isChecked():
+        checked_button = self.ui.anglesStandardGroup.checkedButton()
+        if checked_button == self.ui.anglesStandardTRiP_radio:
             return AnglesStandard.TRIP
-        if self.ui.anglesStandardIEC_radio.isChecked():
+        if checked_button == self.ui.anglesStandardIEC_radio:
             return AnglesStandard.IEC
         return None
 

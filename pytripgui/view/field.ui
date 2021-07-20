@@ -425,6 +425,9 @@
         <property name="checked">
          <bool>true</bool>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anglesStandardGroup</string>
+        </attribute>
        </widget>
       </item>
       <item row="2" column="2">
@@ -432,6 +435,9 @@
         <property name="text">
          <string>IEC</string>
         </property>
+        <attribute name="buttonGroup">
+         <string notr="true">anglesStandardGroup</string>
+        </attribute>
        </widget>
       </item>
      </layout>
@@ -479,4 +485,7 @@
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="anglesStandardGroup"/>
+ </buttongroups>
 </ui>

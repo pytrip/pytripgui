@@ -22,9 +22,9 @@ class FieldController:
 
         self._setup_ok_and_cancel_buttons_callbacks()
 
-        self.view.angles_standard = self.model.display_angles_in_standard
-        self._set_view_angles_according_to_standard(self.model.display_angles_in_standard, self.model.gantry,
-                                                    self.model.couch, True)
+        self.view.angles_standard = self.model.angles_standard
+        self._set_view_angles_according_to_standard(self.model.angles_standard, self.model.gantry_angle_trip98,
+                                                    self.model.couch_angle_trip98, True)
 
         self.view.spot_size = self.model.fwhm
         self.view.raster_step = self.model.raster_step
@@ -54,8 +54,8 @@ class FieldController:
         else:
             self.model.isocenter = []
 
-        self.model.display_angles_in_standard = self.view.angles_standard
-        self.model.gantry, self.model.couch = self._get_view_angles_in_trip_standard()
+        self.model.angles_standard = self.view.angles_standard
+        self.model.gantry_angle_trip98, self.model.couch_angle_trip98 = self._get_view_angles_in_trip_standard()
 
         self.model.fwhm = self.view.spot_size
         self.model.raster_step = self.view.raster_step
@@ -64,23 +64,24 @@ class FieldController:
         self.model.zsteps = self.view.depth_steps
 
     def _get_view_angles_in_trip_standard(self):
-        _gantry, _couch = self.view.gantry_angle, self.view.couch_angle
+        _gantry_angle, _couch_angle = self.view.gantry_angle, self.view.couch_angle
 
         if self.view.angles_standard == AnglesStandard.IEC:
-            _gantry, _couch = angles_to_trip(_gantry, _couch)
+            _gantry_angle, _couch_angle = angles_to_trip(_gantry_angle, _couch_angle)
 
-        return _gantry, _couch
+        return _gantry_angle, _couch_angle
 
     def _recalculate_gui_values(self):
         self._set_view_angles_according_to_standard(self.view.angles_standard, self.view.gantry_angle,
                                                     self.view.couch_angle)
 
-    def _set_view_angles_according_to_standard(self, standard, gantry, couch, init=False):
+    def _set_view_angles_according_to_standard(self, standard, gantry_angle, couch_angle, init=False):
         if standard == AnglesStandard.IEC:
-            _gantry, _couch = angles_from_trip(gantry, couch)
-            self.view.gantry_angle = _gantry
-            self.view.couch_angle = _couch
+            _gantry_angle, _couch_angle = angles_from_trip(gantry_angle, couch_angle)
+            self.view.gantry_angle = _gantry_angle
+            self.view.couch_angle = _couch_angle
         else:
-            _gantry, _couch = angles_to_trip(gantry, couch) if not init else (gantry, couch)
-            self.view.gantry_angle = _gantry
-            self.view.couch_angle = _couch
+            _gantry_angle, _couch_angle = angles_to_trip(gantry_angle, couch_angle) if not init \
+                else (gantry_angle, couch_angle)
+            self.view.gantry_angle = _gantry_angle
+            self.view.couch_angle = _couch_angle
