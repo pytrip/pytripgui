@@ -8,8 +8,7 @@ class CtxBar(Bar):
     name: str = BarProjection.LET.value
 
     def __init__(self, fig, rect, **kwargs):
-        super().__init__(fig, rect, **kwargs)
-        self.label = "LET (keV/um)"
+        super().__init__("LET (keV/um)", fig, rect, **kwargs)
 
 
 register_projection(CtxBar)

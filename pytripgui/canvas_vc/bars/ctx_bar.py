@@ -10,8 +10,7 @@ class CtxBar(Bar):
     name: str = BarProjection.CTX.value
 
     def __init__(self, fig, rect, **kwargs):
-        super().__init__(fig, rect, **kwargs)
-        self.label = "HU"
+        super().__init__("HU", fig, rect, **kwargs)
 
 
 # also very important - register new type of projection

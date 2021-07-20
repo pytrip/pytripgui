@@ -8,8 +8,7 @@ class DosBar(Bar):
     name: str = BarProjection.DOS.value
 
     def __init__(self, fig, rect, **kwargs):
-        super().__init__(fig, rect, **kwargs)
-        self.label = "Dose"
+        super().__init__("Dose", fig, rect, **kwargs)
 
     def plot_bar(self, data, **kwargs):
         super().plot_bar(data)

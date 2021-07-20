@@ -11,7 +11,7 @@ from pytripgui.canvas_vc.bars.projection_enum import BarProjection
 class Bar(ABC, Axes):
     name: str = BarProjection.DEFAULT.value
 
-    def __init__(self, fig, rect, **kwargs):
+    def __init__(self, label, fig, rect, **kwargs):
         super().__init__(fig, rect, **kwargs)
         self.text_color = "#33DD33"  # text decorator colour
         self.fg_color = 'white'  # colour for colourbar ticks and labels
@@ -19,6 +19,7 @@ class Bar(ABC, Axes):
         self.cb_fontsize = 8  # fontsize of colourbar labels
         self.label = 'DEFAULT_LABEL'
         self.bar = None
+        self.label = label
 
     def plot_bar(self, data, **kwargs):
         cb = colorbar(data, cax=self)
