@@ -138,7 +138,7 @@ class CanvasView:
     def vois_tree_set_enabled(self, state):
         if state:
             self._ui.voi_listWidget.show()
-            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Checked)
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
         else:
             self._ui.voi_listWidget.hide()
-            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.CheckState.Unchecked)
+            self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)

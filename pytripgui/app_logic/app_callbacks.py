@@ -226,27 +226,30 @@ class AppCallback:
 
         if isinstance(top_item, SimulationResultItem):
             self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
-            top_item.state = self.app_model.viewcanvases.get_gui_state()
+            if top_item.state is None:
+                top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(top_item.data)
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
-            if self.app_model.viewcanvases:
-                self.app_model.viewcanvases.set_patient(top_item.data, top_item.state)
-                top_item.state = self.app_model.viewcanvases.get_gui_state()
+            self._show_patient(top_item, top_item)
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
-            if self.app_model.viewcanvases:
-                self.app_model.viewcanvases.set_patient(top_item.data, item.state)
-                item.state = self.app_model.viewcanvases.get_gui_state()
+            self._show_patient(top_item, item)
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             if self.is_executable(item):
                 self.parent_gui.action_execute_plan_set_enable(True)
-            if self.app_model.viewcanvases:
-                self.app_model.viewcanvases.set_patient(top_item.data, item.state)
-                item.state = self.app_model.viewcanvases.get_gui_state()
+            self._show_patient(top_item, item)
+
+    def _show_patient(self, data_item, state_item):
+        if self.app_model.viewcanvases:
+            self.app_model.viewcanvases.set_patient(data_item.data, state_item.state)
+
+            # set state of plot when plotting first time
+            if state_item.state is None:
+                state_item.state = self.app_model.viewcanvases.get_gui_state()
 
     def patient_tree_show(self):
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)

@@ -1,3 +1,4 @@
+from pytripgui.field_vc.angles_standard import AnglesStandard
 from pytripgui.view.qt_gui import UiFieldDialog
 
 import logging
@@ -24,6 +25,9 @@ class FieldQtView:
     def set_cancel_callback(self, fun):
         self.ui.accept_ButtonBox.rejected.connect(fun)
 
+    def set_gui_needs_update_callback(self, fun):
+        self.ui.anglesStandardIEC_radio.toggled.connect(fun)
+
     def _setup_internal_callbacks(self):
         self.ui.manualIsocenter_checkBox.stateChanged.connect(self._isocenter_checkbox_callback)
         self.ui.gantry_pushButton_p90.clicked.connect(self._gantry_p90)  # +90 deg
@@ -34,6 +38,22 @@ class FieldQtView:
     def _isocenter_checkbox_callback(self):
         checkbox_state = self.ui.manualIsocenter_checkBox.checkState()
         self.set_isocenter_state(checkbox_state)
+
+    @property
+    def angles_standard(self):
+        checked_button = self.ui.anglesStandardGroup.checkedButton()
+        if checked_button == self.ui.anglesStandardTRiP_radio:
+            return AnglesStandard.TRIP
+        if checked_button == self.ui.anglesStandardIEC_radio:
+            return AnglesStandard.IEC
+        return None
+
+    @angles_standard.setter
+    def angles_standard(self, angles_standard):
+        if angles_standard == AnglesStandard.TRIP:
+            self.ui.anglesStandardTRiP_radio.setChecked(True)
+        elif angles_standard == AnglesStandard.IEC:
+            self.ui.anglesStandardIEC_radio.setChecked(True)
 
     def _gantry_p90(self):
         self.gantry_angle += 90.0
