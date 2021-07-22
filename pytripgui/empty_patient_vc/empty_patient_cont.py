@@ -16,7 +16,7 @@ from pytripgui.view.qt_view_adapter import LineEdit, PushButton
 logger = logging.getLogger(__name__)
 
 
-class EmptyPatientController(object):
+class EmptyPatientController:
     def __init__(self, model, view):
         self.model = model
         self.view = view
@@ -147,7 +147,7 @@ class EmptyPatientController(object):
 
     def _validate_general_parameters(self):
         return self.view.hu_value.validate() and \
-               self.view.slice_offset.validate()
+            self.view.slice_offset.validate()
 
     def _validate_tabs(self):
         result = True
@@ -178,10 +178,9 @@ class EmptyPatientController(object):
             for field in fields:
                 field.highlight_border(False)
             return True
-        else:
-            for field in fields:
-                field.highlight_border(True)
-            return False
+        for field in fields:
+            field.highlight_border(True)
+        return False
 
     def _validate_vois(self):
         result = True
@@ -304,7 +303,7 @@ class VOIWidget(QtWidgets.QFrame):
         validate_list(self._center)
 
         self._remove_button = PushButton(self.remove_pushButton)
-        self._remove_button.emit_on_click(lambda: self._remove_self())
+        self._remove_button.emit_on_click(self._remove_self)
 
     @property
     def name(self):
@@ -316,7 +315,7 @@ class VOIWidget(QtWidgets.QFrame):
 
     def validate(self):
         return self._name.validate() and \
-               validate_list(self._center)
+            validate_list(self._center)
 
     def highlight_border(self, highlight=False):
         if highlight:
@@ -345,7 +344,7 @@ class SphericalVOIWidget(VOIWidget):
 
     def validate(self):
         return super().validate() and \
-               self._radius.validate()
+            self._radius.validate()
 
 
 class CuboidalVOIWidget(VOIWidget):
@@ -379,7 +378,7 @@ class CuboidalVOIWidget(VOIWidget):
 
     def validate(self):
         return super().validate() and \
-               validate_list(self._dims)
+            validate_list(self._dims)
 
 
 class ToolTipRegularExpressionValidator(QRegularExpressionValidator):
