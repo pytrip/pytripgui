@@ -48,7 +48,7 @@ nissfile.close()
 a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
              binaries=[],
-             datas=[ ('pytripgui/res/*', 'res'), ('pytripgui/VERSION', '.' ), ('pytripgui/view/*.ui', 'view')],
+             datas=[ ('pytripgui/res/*', 'pytripgui/res'), ('pytripgui/view/*.ui', 'pytripgui/view') ],
              hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
              hookspath=[],
              runtime_hooks=[],
@@ -64,6 +64,12 @@ a.binaries = a.binaries - TOC([
  ('sqlite3.dll', None, None),
  ('_sqlite3', None, None),
  ('_ssl', None, None)])
+
+print("=======================================================================")
+print("Binaries:")
+for bin in a.binaries:
+    print(bin)
+print("=======================================================================")
 
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=None)

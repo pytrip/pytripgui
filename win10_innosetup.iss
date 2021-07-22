@@ -1,7 +1,7 @@
 ﻿
 
 #define MyAppName "pytripgui"
-#define MyAppVersion "X.Y.Z"
+#define MyAppVersion "1.2.0+rev26"
 #define MyAppPublisher "Leszek Grzanka"
 #define MyAppURL "https://github.com/pytrip/pytripgui"
 #define MyAppExeName "pytripgui.exe"
