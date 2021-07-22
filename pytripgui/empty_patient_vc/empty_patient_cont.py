@@ -244,15 +244,13 @@ class EmptyPatientController(object):
     def _set_model_from_view(self):
         ctx = CtxCube()
 
-        ctx.create_empty_cube(
-            dimx=self.parameters["pixel_number_x"],
-            dimy=self.parameters["pixel_number_y"],
-            dimz=self.parameters["slice_number"],
-            slice_offset=float(self.view.slice_offset.text),
-            slice_distance=self.parameters["slice_distance"],
-            pixel_size=self.parameters["pixel_size"],
-            value=int(self.view.hu_value.text)
-        )
+        ctx.create_empty_cube(dimx=self.parameters["pixel_number_x"],
+                              dimy=self.parameters["pixel_number_y"],
+                              dimz=self.parameters["slice_number"],
+                              slice_offset=float(self.view.slice_offset.text),
+                              slice_distance=self.parameters["slice_distance"],
+                              pixel_size=self.parameters["pixel_size"],
+                              value=int(self.view.hu_value.text))
 
         self.model.ctx = ctx
         self.model.ctx.basename = self.view.name.text
@@ -265,12 +263,10 @@ class EmptyPatientController(object):
             voi_widget = voi_widgets.itemAt(index).widget()
 
             if isinstance(voi_widget, SphericalVOIWidget):
-                voi = create_sphere(
-                    cube=self.model.ctx,
-                    name=voi_widget.name,
-                    center=voi_widget.center,
-                    radius=voi_widget.radius
-                )
+                voi = create_sphere(cube=self.model.ctx,
+                                    name=voi_widget.name,
+                                    center=voi_widget.center,
+                                    radius=voi_widget.radius)
             else:
                 voi = create_cube(
                     cube=self.model.ctx,
