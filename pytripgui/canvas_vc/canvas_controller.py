@@ -54,9 +54,9 @@ class CanvasController:
         self._ui.update()
         # self._ui.draw()
         end_draw = time.time()
-        print('Drawing time ', end_draw-start_draw)
+        print('Drawing time ', end_draw - start_draw)
         end = time.time()
-        print('Whole updating and redrawing operation ', end-start)
+        print('Whole updating and redrawing operation ', end - start)
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
@@ -75,11 +75,11 @@ class CanvasController:
             start = time.time()
             self._model.ctx.prepare_data_to_plot()
             end = time.time()
-            print('CTX prepraing time ', end-start)
+            print('CTX prepraing time ', end - start)
             start = time.time()
             self._ui.plot_ctx(self._model.ctx)
             end = time.time()
-            print('CTX plotting time ', end-start)
+            print('CTX plotting time ', end - start)
 
         if self._model.dose:
             self._ui.enable_dose()
@@ -89,11 +89,11 @@ class CanvasController:
                 start = time.time()
                 self._model.dose.prepare_data_to_plot()
                 end = time.time()
-                print('DOS prepraing time ', end-start)
+                print('DOS prepraing time ', end - start)
                 start = time.time()
                 self._ui.plot_dos(self._model.dose)
                 end = time.time()
-                print('DOS plotting time ', end-start)
+                print('DOS plotting time ', end - start)
 
         if self._model.let:
             self._ui.enable_let()
@@ -114,7 +114,7 @@ class CanvasController:
         #     ViewCanvasTextCont().plot(self)
 
         end_update = time.time()
-        print('Updating canvas time', end_update-start_update)
+        print('Updating canvas time', end_update - start_update)
 
     def set_patient(self, patient, state):
         self._ui.clear()
