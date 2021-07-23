@@ -126,11 +126,14 @@ class CanvasView:
     def draw(self):
         self._plotter.draw()
 
+    def update(self):
+        self._plotter.update()
+
     def clear(self):
         self._plotter.remove_vois()
         self._plotter.remove_dos()
         self._plotter.remove_let()
-        # self._plotter.remove_ctx()
+        self._plotter.remove_ctx()
 
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)

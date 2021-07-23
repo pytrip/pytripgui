@@ -1,4 +1,5 @@
 import logging
+import time
 
 from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
 
@@ -22,6 +23,7 @@ class CanvasController:
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()
         self.update_canvas_view()
+        self._ui.draw()
 
     def _display_filter_has_changed_callback(self):
         if self._model is None:
@@ -30,6 +32,7 @@ class CanvasController:
         self._model.display_filter = self._ui.display_filter
         self.clear_view()
         self.update_canvas_view()
+        self._ui.draw()
 
     def _setup_ui_callbacks(self):
         self._ui.set_plotter_click_callback(self.on_click)
@@ -45,7 +48,15 @@ class CanvasController:
         else:
             self._model.projection_selector.prev_slice()
 
+        start = time.time()
         self.update_canvas_view()
+        start_draw = time.time()
+        self._ui.update()
+        # self._ui.draw()
+        end_draw = time.time()
+        print('Drawing time ', end_draw-start_draw)
+        end = time.time()
+        print('Whole updating and redrawing operation ', end-start)
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
@@ -55,22 +66,34 @@ class CanvasController:
         self._ui.clear()
 
     def update_canvas_view(self):
-        self.clear_view()
+        start_update = time.time()
+        # self.clear_view()
         self._ui.reset_radiobuttons()
-
         if self._model.ctx:
             if self._model.vdx:
                 self._model.vdx.plot(self._ui._plotter)
+            start = time.time()
             self._model.ctx.prepare_data_to_plot()
+            end = time.time()
+            print('CTX prepraing time ', end-start)
+            start = time.time()
             self._ui.plot_ctx(self._model.ctx)
+            end = time.time()
+            print('CTX plotting time ', end-start)
 
         if self._model.dose:
             self._ui.enable_dose()
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "DOS"):
                 self._model.display_filter = "DOS"
+                start = time.time()
                 self._model.dose.prepare_data_to_plot()
+                end = time.time()
+                print('DOS prepraing time ', end-start)
+                start = time.time()
                 self._ui.plot_dos(self._model.dose)
+                end = time.time()
+                print('DOS plotting time ', end-start)
 
         if self._model.let:
             self._ui.enable_let()
@@ -90,7 +113,8 @@ class CanvasController:
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
 
-        self._ui.draw()
+        end_update = time.time()
+        print('Updating canvas time', end_update-start_update)
 
     def set_patient(self, patient, state):
         self._ui.clear()
@@ -109,6 +133,7 @@ class CanvasController:
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
+        self._ui.draw()
 
     def set_simulation_results(self, simulation_results, state):
         self.set_patient(simulation_results.patient, None)
@@ -125,6 +150,7 @@ class CanvasController:
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
         self.update_canvas_view()
+        self._ui.draw()
 
     def _on_update_voi(self):
         if self._model.vdx:

@@ -4,8 +4,6 @@ from pytripgui.canvas_vc.bars.bar import Bar
 from pytripgui.canvas_vc.bars.projection_enum import BarProjection
 
 
-# define new class that inherits from Axes
-# class attribute - name - is very important
 class CtxBar(Bar):
     name: str = BarProjection.CTX.value
 
@@ -14,6 +12,4 @@ class CtxBar(Bar):
         self.label = "HU"
 
 
-# also very important - register new type of projection
-# that type is defined by class attribute - name
 register_projection(CtxBar)

@@ -4,23 +4,25 @@ from PyQt5.QtWidgets import QSizePolicy
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from pytripgui.canvas_vc.bars.ctx_bar import CtxBar
-from pytripgui.canvas_vc.bars.dos_bar import DosBar
-from pytripgui.canvas_vc.bars.projection_enum import BarProjection
+from matplotlib.gridspec import GridSpec
+
+from pytripgui.canvas_vc.bars import BarProjection
+from pytripgui.canvas_vc.blit_manager import BlitManager
 
 
 class CanvasPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
-    def __init__(self, parent=None, width=10, height=10, dpi=100):
+    def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Init canvas.
         """
+        super().__init__()
         # ViewCanvas specific:
         self.text_color = "#33DD33"  # text decorator colour
         self.fg_color = 'white'  # colour for colourbar ticks and labels
-        self.bg_color = 'black'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
+        self.bg_color = 'red'  # background colour, i.e. between colourbar and CTX/DOS/LET plot
         self.cb_fontsize = 8  # fontsize of colourbar labels
         # Data Specific
         self.axim_bg = None  # placehodler for AxisImage for background image
@@ -44,9 +46,9 @@ class CanvasPlotter(FigureCanvas):
         self.colormap_ctx = plt.get_cmap("gray")
 
         # Figure
-        self.figure = Figure(figsize=(width, height), dpi=dpi)
-        self.axes = self.figure.add_subplot(1, 1, 1)
-
+        self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
+        self.gs = GridSpec(ncols=16, nrows=9, figure=self.figure)
+        self.axes = self.figure.add_subplot(self.gs[:, 2:14])
         self.info_axes = None
 
         FigureCanvas.__init__(self, self.figure)
@@ -62,6 +64,7 @@ class CanvasPlotter(FigureCanvas):
         FigureCanvas.setFocus(self)
 
         self.figure.patch.set_facecolor(self.bg_color)
+        self.blit_manager = BlitManager(self)
 
     def set_button_press_callback(self, callback):
         self.figure.canvas.mpl_connect('button_press_event', callback)
@@ -76,21 +79,23 @@ class CanvasPlotter(FigureCanvas):
         self.figure.canvas.mpl_connect('key_press_event', callback)
 
     def plot_bg(self, background):
-        extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
-        self.axim_bg = self.axes.imshow(background,
-                                        cmap=plt.cm.gray,
-                                        vmin=-5,
-                                        vmax=5,
-                                        interpolation='nearest',
-                                        extent=extent,
-                                        zorder=0)
+        pass
+        # extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
+        # self.axim_bg = self.axes.imshow(background,
+        #                                 cmap=plt.cm.gray,
+        #                                 vmin=-5,
+        #                                 vmax=5,
+        #                                 interpolation='nearest',
+        #                                 extent=extent,
+        #                                 zorder=0)
 
     def remove_dos(self):
         if self.axim_dos:
+            self.blit_manager.remove_artist(self.axim_dos)
             self.axim_dos.remove()
             self.axim_dos = None
         if self.dose_bar:
-            self.dose_bar.clear_bar()
+            self.dose_bar.remove()
             self.dose_bar = None
 
     def plot_dos(self, dos):
@@ -100,13 +105,14 @@ class CanvasPlotter(FigureCanvas):
                                              vmax=dos.max_dose,
                                              aspect=dos.aspect,
                                              zorder=5)
+            self.blit_manager.add_artist(self.axim_dos)
             if not self.dose_bar:
                 self._plot_dos_bar(dos)
         else:
             self.axim_dos.set_data(dos.data_to_plot)
 
     def _plot_dos_bar(self, dos):
-        self.dose_bar = self.axes.figure.add_axes([0.01, 0.1, 0.02, 0.8], projection=BarProjection.DOS.value)
+        self.dose_bar = self.figure.add_subplot(self.gs[:, 0], projection=BarProjection.DOS.value)
         self.dose_bar.plot_bar(self.axim_dos, scale=dos.dos_scale)
 
     def remove_let(self):
@@ -141,6 +147,7 @@ class CanvasPlotter(FigureCanvas):
 
     def remove_ctx(self):
         if self.axim_ctx:
+            self.blit_manager.remove_artist(self.axim_ctx)
             self.axim_ctx.remove()
             self.axim_ctx = None
         if self.hu_bar:
@@ -156,13 +163,14 @@ class CanvasPlotter(FigureCanvas):
                                              vmax=data.contrast_ct[1],
                                              aspect=data.aspect,
                                              zorder=1)
+            self.blit_manager.add_artist(self.axim_ctx)
             if not self.hu_bar:
                 self._plot_hu_bar()
         else:
             self.axim_ctx.set_data(data.data_to_plot)
 
     def _plot_hu_bar(self):
-        self.hu_bar = self.axes.figure.add_axes([0.1, 0.1, 0.03, 0.8], projection=BarProjection.CTX.value)
+        self.hu_bar = self.figure.add_subplot(self.gs[:, 1], projection=BarProjection.CTX.value)
         self.hu_bar.plot_bar(self.axim_ctx)
 
     def _plot_coordinate_info(self, data):
@@ -172,7 +180,7 @@ class CanvasPlotter(FigureCanvas):
 
         if self.info_axes is None:
             # create place for new plot
-            info_axes = self.axes.figure.add_axes([0.8, 0.8, 0.2, 0.2], projection='3d')
+            info_axes = self.axes.figure.add_subplot(self.gs[:2, 13:], projection='3d')
             # set plot labels
             info_axes.set_xlabel('x')
             info_axes.set_ylabel('y')
@@ -191,6 +199,7 @@ class CanvasPlotter(FigureCanvas):
             info_axes.plot_wireframe(-one, X, Y, alpha=0.2, color='black')
             info_axes.dist = 18
             self.info_axes = info_axes
+            self.blit_manager.add_artist(self.info_axes)
         else:
             # remove last 3 plots - only planes that show current position of each slice
             del self.info_axes.collections[-3:]
@@ -223,3 +232,6 @@ class CanvasPlotter(FigureCanvas):
             self.info_axes.plot_surface(X, cor_ones, Y, color='b')
         else:
             self.info_axes.plot_surface(X, cor_ones, Y, alpha=0.2, color='b')
+
+    def update(self):
+        self.blit_manager.update()
