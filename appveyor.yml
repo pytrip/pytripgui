@@ -6,8 +6,8 @@ build: off
 
 environment:
   matrix:
-    - platform: x64
-      PYTHON: "C:\\Python35-x64"
+#    - platform: x64
+#      PYTHON: "C:\\Python35-x64"
 
 #     - platform: x64
 #       PYTHON: "C:\\Python36-x64"
@@ -15,8 +15,8 @@ environment:
 #     - platform: x64
 #       PYTHON: "C:\\Python37-x64"
 
-#     - platform: x64
-#       PYTHON: "C:\\Python38-x64"
+     - platform: x64
+       PYTHON: "C:\\Python38-x64"
 
 init:
 # check python version
