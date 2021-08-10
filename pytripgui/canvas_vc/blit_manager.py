@@ -1,5 +1,7 @@
 # class copied from https://matplotlib.org/stable/tutorials/advanced/blitting.html
 # added removing artists
+
+
 class BlitManager:
     def __init__(self, canvas, animated_artists=()):
         """

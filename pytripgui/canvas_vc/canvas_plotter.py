@@ -8,6 +8,7 @@ from matplotlib.gridspec import GridSpec
 
 from pytripgui.canvas_vc.bars import BarProjection
 from pytripgui.canvas_vc.blit_manager import BlitManager
+from pytripgui.canvas_vc.main_plot import CoordinateInfo
 
 
 class CanvasPlotter(FigureCanvas):
@@ -174,64 +175,11 @@ class CanvasPlotter(FigureCanvas):
         self.hu_bar.plot_bar(self.axim_ctx)
 
     def _plot_coordinate_info(self, data):
-        r = [-1, 1]
-        X, Y = np.meshgrid(r, r)
-        one = np.ones(4).reshape(2, 2)
-
         if self.info_axes is None:
-            # create place for new plot
-            info_axes = self.axes.figure.add_subplot(self.gs[:2, 13:], projection='3d')
-            # set plot labels
-            info_axes.set_xlabel('x')
-            info_axes.set_ylabel('y')
-            info_axes.set_zlabel('z')
-            # remove grid and axes ticks
-            info_axes.grid(False)
-            info_axes.set_xticks([])
-            info_axes.set_yticks([])
-            info_axes.set_zticks([])
-            # plot cubic frame
-            info_axes.plot_wireframe(X, Y, one, alpha=0.2, color='black')
-            info_axes.plot_wireframe(X, Y, -one, alpha=0.2, color='black')
-            info_axes.plot_wireframe(X, -one, Y, alpha=0.2, color='black')
-            info_axes.plot_wireframe(X, one, Y, alpha=0.2, color='black')
-            info_axes.plot_wireframe(one, X, Y, alpha=0.2, color='black')
-            info_axes.plot_wireframe(-one, X, Y, alpha=0.2, color='black')
-            info_axes.dist = 18
-            self.info_axes = info_axes
+            self.info_axes = self.axes.figure.add_subplot(self.gs[:2, 13:], projection='CoordinateInfo')
             self.blit_manager.add_artist(self.info_axes)
-        else:
-            # remove last 3 plots - only planes that show current position of each slice
-            del self.info_axes.collections[-3:]
 
-        # get current positions in each plane
-        current_slices = data.projection_selector.get_current_slices()
-        # get max position for each plane
-        last_slices = data.projection_selector.get_last_slices()
-        # get current plane type
-        current_plane = data.projection_selector.plane
-
-        # plot all three planes
-        # rescale from [0...last slice] to [-1...1]
-        trans_ones = np.multiply(one, 2 * current_slices['Transversal'] / last_slices['Transversal']) - 1
-        # plot full color if this is current plane
-        if current_plane == 'Transversal':
-            self.info_axes.plot_surface(X, Y, trans_ones, color='g')
-        # plot partially transparent if it is not current plane
-        else:
-            self.info_axes.plot_surface(X, Y, trans_ones, alpha=0.2, color='g')
-
-        sag_ones = np.multiply(one, 2 * current_slices['Sagittal'] / last_slices['Sagittal']) - 1
-        if current_plane == 'Sagittal':
-            self.info_axes.plot_surface(sag_ones, X, Y, color='r')
-        else:
-            self.info_axes.plot_surface(sag_ones, X, Y, alpha=0.2, color='r')
-
-        cor_ones = np.multiply(one, 2 * current_slices['Coronal'] / last_slices['Coronal']) - 1
-        if current_plane == 'Coronal':
-            self.info_axes.plot_surface(X, cor_ones, Y, color='b')
-        else:
-            self.info_axes.plot_surface(X, cor_ones, Y, alpha=0.2, color='b')
+        self.info_axes.update_info(data)
 
     def update(self):
         self.blit_manager.update()
