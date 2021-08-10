@@ -65,6 +65,10 @@ exclude = [
     "libcrypto-1_1-x64.dll",
     "libEGL.dll",
     "libGLESv2.dll",
+
+    "libssl-1_1.dll",
+    "libcrypto-1_1.dll",
+
     "libssl-1_1-x64.dll",
     "MSVCP140.dll",
     "MSVCP140_1.dll",

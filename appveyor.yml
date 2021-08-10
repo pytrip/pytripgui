@@ -37,10 +37,12 @@ install:
           throw "There are newer queued builds for this pull request, failing early." }
   # Prepend Python to the PATH of this build
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+# update pip
+  - python -m pip install --upgrade pip
 # check pip version
   - pip -V
 # install usual requirements
-  - pip install "setuptools>=30.0.0"  # minimal version of setuptools required to build package without error
+  - pip install "setuptools>=57.4.0"
   - pip install --upgrade -r requirements.txt
   - pip install --upgrade -r tests\\requirements-test.txt
 # check numpy version
@@ -48,31 +50,56 @@ install:
 # check python and pip versions
   - python -V
   - pip -V
+# check 32 or 64 bit
+  - python -c "import struct;print(8 * struct.calcsize('P'))"
 
-test_script:
+build_script:
 # make wheel package
   - pip install wheel
   - python setup.py bdist_wheel
 # clean build directory
   - rd /s /q build
-
 # installer
 # generate single dir installation
 # Installing InnoSetup
-  - choco install -y curl InnoSetup
-  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+#  - choco install -y curl InnoSetup
+#  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
 # upx is needed by pyinstaller to compress files
-  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
-  - 7z e upx.zip *.exe -r
-# pyinstaller
+#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
+#  - 7z e upx.zip *.exe -r
+
+# venv
+  - pip install virtualenv
+  - python -m venv env
+  - .\env\Scripts\activate
+  - where python # check if in environmet
+# check versions
+  - python -V
+  - pip -V
+# update pip
+  - python -m pip install --upgrade pip
+# install packages
+  - pip install --upgrade -r requirements.txt
+  - pip install "setuptools>=57.4.0"
   - pip install pyinstaller
+# newer pydicom doesn't work
+  - pip uninstall -y pydicom
+  - pip install "pydicom==2.1.2"
 # install missing dependencies
-  - pip install appdirs tornado packaging
+#  - pip install appdirs tornado packaging
+# check python packages list and theirs version
+  - pip list
 # generate installer
   - python setup.py -V # trick needed to generate VERSION file
   - pyinstaller main.spec
-  - iscc win10_innosetup.iss
+# compress pytripgui package
+  - 7z a pytripgui.zip ./dist/pytripgui
+# leaving venv
+  - deactivate
+# make windows installer
+#  - iscc win10_innosetup.iss
 
+test_script:
 # testing
 # remove source directory, to be sure that we use only wheel package for testing
   - rd /s /q pytripgui
@@ -88,6 +115,8 @@ artifacts:
     name: wheel
   - path: 'Output\pytrip*exe'
     name: installer
+  - path: 'pytripgui.zip'
+    name: package
 
 # push artifacts to github
 deploy:
