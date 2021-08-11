@@ -57,19 +57,16 @@ exclude_modules = [
     "_tkinter",
 
     'pywin.debugger',
-    'IPython',
-    'tornado'
+    'IPython'
 ]
 exclude = [
     "d3dcompiler_47.dll",
     "libcrypto-1_1-x64.dll",
+    "libcrypto-1_1.dll",
     "libEGL.dll",
     "libGLESv2.dll",
-
-    "libssl-1_1.dll",
-    "libcrypto-1_1.dll",
-
     "libssl-1_1-x64.dll",
+    "libssl-1_1.dll",
     "MSVCP140.dll",
     "MSVCP140_1.dll",
     "opengl32sw.dll",
@@ -98,7 +95,7 @@ a = Analysis(['pytripgui\\main.py'],
              datas=[('pytripgui/res/*', 'pytripgui/res'),
                     ('pytripgui/view/*.ui', 'pytripgui/view'),
                     ('pytripgui/VERSION', '.')],
-             hiddenimports=['appdirs', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=exclude_modules,

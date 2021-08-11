@@ -18,13 +18,6 @@ environment:
      - platform: x64
        PYTHON: "C:\\Python38-x64"
 
-init:
-# check python version
-  - python -V
-# check 32 or 64 bit
-  - python -c "import struct;print(8 * struct.calcsize('P'))"
-
-
 install:
   # If there is a newer build queued for the same PR, cancel this one.
   # The AppVeyor 'rollout builds' option is supposed to serve the same
@@ -39,54 +32,29 @@ install:
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 # update pip
   - python -m pip install --upgrade pip
-# check pip version
-  - pip -V
-# install usual requirements
-  - pip install "setuptools>=57.4.0"
-  - pip install --upgrade -r requirements.txt
-  - pip install --upgrade -r tests\\requirements-test.txt
-# check numpy version
-  - python -c "import numpy as np;print(np.version.version)"
-# check python and pip versions
-  - python -V
-  - pip -V
-# check 32 or 64 bit
-  - python -c "import struct;print(8 * struct.calcsize('P'))"
-
-build_script:
-# make wheel package
-  - pip install wheel
-  - python setup.py bdist_wheel
-# clean build directory
-  - rd /s /q build
-# installer
-# generate single dir installation
-# Installing InnoSetup
-#  - choco install -y curl InnoSetup
-#  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
-# upx is needed by pyinstaller to compress files
-#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
-#  - 7z e upx.zip *.exe -r
-
-# venv
-  - pip install virtualenv
-  - python -m venv env
-  - .\env\Scripts\activate
-  - where python # check if in environmet
 # check versions
   - python -V
   - pip -V
-# update pip
-  - python -m pip install --upgrade pip
-# install packages
-  - pip install --upgrade -r requirements.txt
-  - pip install "setuptools>=57.4.0"
-  - pip install pyinstaller
+  - python -m pip -V
+  - pip list
+# check 32 or 64 bit
+  - python -c "import struct;print(8 * struct.calcsize('P'))"
+# install usual requirements
+  - python -m pip install --upgrade setuptools
+  - python -m pip install --upgrade -r requirements.txt
+  - pip list
+# check numpy version
+  - python -c "import numpy as np;print(np.version.version)"
+
+build_script:
+# py to exe package
+# upx is needed by pyinstaller to compress files
+#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
+#  - 7z e upx.zip *.exe -r
+# install pyinstaller
+  - python -m pip install pyinstaller
 # newer pydicom doesn't work
-  - pip uninstall -y pydicom
-  - pip install "pydicom==2.1.2"
-# install missing dependencies
-#  - pip install appdirs tornado packaging
+  - python -m pip install "pydicom==2.1.2"
 # check python packages list and theirs version
   - pip list
 # generate installer
@@ -94,18 +62,32 @@ build_script:
   - pyinstaller main.spec
 # compress pytripgui package
   - 7z a pytripgui.zip ./dist/pytripgui
-# leaving venv
-  - deactivate
+
+# installer
+# generate single dir installation
+# Installing InnoSetup
+#  - choco install -y curl InnoSetup
+#  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
 # make windows installer
 #  - iscc win10_innosetup.iss
 
+# make wheel package
+  - python -m pip install wheel
+  - pip list
+  - python setup.py bdist_wheel
+# clean build directory
+  - rd /s /q build
+
 test_script:
 # testing
+# install needed dependencies
+  - python -m pip install --upgrade -r tests\\requirements-test.txt
+  - pip list
 # remove source directory, to be sure that we use only wheel package for testing
   - rd /s /q pytripgui
   - del setup.py
 # install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
-  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
+  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; python -m pip install $_}
 # run tests
   - pytest
 
