@@ -39,11 +39,7 @@ class CoordinateInfo(Axes3D):
         # flag that tells if plot should be initialized or updated
         self._data_set = False
         # set default surfaces
-        self._surfaces = {
-            'Transversal': None,
-            'Sagittal': None,
-            'Coronal': None
-        }
+        self._surfaces = {'Transversal': None, 'Sagittal': None, 'Coronal': None}
         self._actions = {
             'Transversal': self._plot_transversal,
             'Sagittal': self._plot_sagittal,
@@ -89,8 +85,11 @@ class CoordinateInfo(Axes3D):
             self._surfaces['Transversal'] = self.plot_surface(self.x, self.y, trans_ones, color=self.transversal_color)
         # plot partially transparent if it is not current plane
         else:
-            self._surfaces['Transversal'] = self.plot_surface(
-                self.x, self.y, trans_ones, alpha=self.alpha, color=self.transversal_color)
+            self._surfaces['Transversal'] = self.plot_surface(self.x,
+                                                              self.y,
+                                                              trans_ones,
+                                                              alpha=self.alpha,
+                                                              color=self.transversal_color)
 
     def _plot_sagittal(self, current_slices, last_slices, current_plane):
         sag_ones = np.multiply(self.one, 2 * current_slices['Sagittal'] / last_slices['Sagittal']) - 1
@@ -98,8 +97,11 @@ class CoordinateInfo(Axes3D):
         if current_plane == 'Sagittal':
             self._surfaces['Sagittal'] = self.plot_surface(sag_ones, self.x, self.y, color=self.sagittal_color)
         else:
-            self._surfaces['Sagittal'] = self.plot_surface(
-                sag_ones, self.x, self.y, alpha=self.alpha, color=self.sagittal_color)
+            self._surfaces['Sagittal'] = self.plot_surface(sag_ones,
+                                                           self.x,
+                                                           self.y,
+                                                           alpha=self.alpha,
+                                                           color=self.sagittal_color)
 
     def _plot_coronal(self, current_slices, last_slices, current_plane):
         cor_ones = np.multiply(self.one, 2 * current_slices['Coronal'] / last_slices['Coronal']) - 1
@@ -107,8 +109,11 @@ class CoordinateInfo(Axes3D):
         if current_plane == 'Coronal':
             self._surfaces['Coronal'] = self.plot_surface(self.x, cor_ones, self.y, color=self.coronal_color)
         else:
-            self._surfaces['Coronal'] = self.plot_surface(
-                self.x, cor_ones, self.y, alpha=self.alpha, color=self.coronal_color)
+            self._surfaces['Coronal'] = self.plot_surface(self.x,
+                                                          cor_ones,
+                                                          self.y,
+                                                          alpha=self.alpha,
+                                                          color=self.coronal_color)
 
 
 register_projection(CoordinateInfo)
