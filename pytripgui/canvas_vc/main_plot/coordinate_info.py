@@ -4,10 +4,13 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 class CoordinateInfo(Axes3D):
+    # name to register that as projection in matplotlib
     name: str = 'CoordinateInfo'
+    # variables to ease wireframe plotting
     r = [-1, 1]
     x, y = np.meshgrid(r, r)
     one = np.ones(4).reshape(2, 2)
+    # wireframe and surface parameters
     alpha = 0.2
     wireframe_color = 'black'
     transversal_color = 'g'
@@ -67,6 +70,7 @@ class CoordinateInfo(Axes3D):
         self._last_plane = current_plane
 
     def _initialise(self, data):
+        # TODO remove this method and copy its body to update_info method
         current_plane = data.projection_selector.plane
         current_slices = data.projection_selector.get_current_slices()
         last_slices = data.projection_selector.get_last_slices()

@@ -52,7 +52,6 @@ class CanvasController:
         self.update_canvas_view()
         start_draw = time.time()
         self._ui.update()
-        # self._ui.draw()
         end_draw = time.time()
         print('Drawing time ', end_draw - start_draw)
         end = time.time()
@@ -60,17 +59,21 @@ class CanvasController:
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
+
         self.update_canvas_view()
+        self._ui.update()
 
     def clear_view(self):
         self._ui.clear()
 
     def update_canvas_view(self):
         start_update = time.time()
-        # self.clear_view()
+
         self._ui.reset_radiobuttons()
+
         if self._model.ctx:
             if self._model.vdx:
+                # TODO this does not work
                 self._model.vdx.plot(self._ui._plotter)
             start = time.time()
             self._model.ctx.prepare_data_to_plot()
@@ -100,8 +103,14 @@ class CanvasController:
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "LET"):
                 self._model.display_filter = "LET"
+                start = time.time()
                 self._model.let.prepare_data_to_plot()
+                end = time.time()
+                print('LET prepraing time ', end - start)
+                start = time.time()
                 self._ui.plot_let(self._model.let)
+                end = time.time()
+                print('LET plotting time ', end - start)
 
         self._ui.display_filter = self._model.display_filter
 
