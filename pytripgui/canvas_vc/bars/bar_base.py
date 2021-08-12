@@ -25,7 +25,7 @@ class BarBase(ABC, Axes):
         cb.set_label(self.label, color=self.fg_color, fontsize=self.cb_fontsize)
         cb.outline.set_edgecolor(self.bg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color)
-        plt.setp(plt.getp(cb.ax._axes, 'yticklabels'), color=self.fg_color)
+        plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.bar = cb
 

@@ -1,6 +1,5 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QSizePolicy
-from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -14,6 +13,7 @@ class CanvasPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
+
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Init canvas.
@@ -37,6 +37,9 @@ class CanvasPlotter(FigureCanvas):
         self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
         self.placement_manager = PlacementManager(self.figure)
         self.axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
+        self.axes.grid(False)
+        self.axes.set_xticks([])
+        self.axes.set_yticks([])
         self.info_axes = None
         self.blit_manager = BlitManager(self)
         self.slice_plot = SlicePlot(self.axes)

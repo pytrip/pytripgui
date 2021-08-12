@@ -51,13 +51,15 @@ class CoordinateInfo(Axes3D):
 
     def update_info(self, data):
         current_plane = data.projection_selector.plane
+        current_slices = data.projection_selector.get_current_slices()
+        last_slices = data.projection_selector.get_last_slices()
 
         if not self._data_set:
-            self._initialise(data)
-        else:
-            current_slices = data.projection_selector.get_current_slices()
-            last_slices = data.projection_selector.get_last_slices()
+            for _plane, f in self._actions.items():
+                f(current_slices, last_slices, current_plane)
 
+            self._data_set = True
+        else:
             # if last and current plane are not the same remove and plot surface that represents last plane
             if self._last_plane != current_plane:
                 self._surfaces[self._last_plane].remove()
@@ -68,17 +70,6 @@ class CoordinateInfo(Axes3D):
             self._actions[current_plane](current_slices, last_slices, current_plane)
 
         self._last_plane = current_plane
-
-    def _initialise(self, data):
-        # TODO remove this method and copy its body to update_info method
-        current_plane = data.projection_selector.plane
-        current_slices = data.projection_selector.get_current_slices()
-        last_slices = data.projection_selector.get_last_slices()
-
-        for _plane, f in self._actions.items():
-            f(current_slices, last_slices, current_plane)
-
-        self._data_set = True
 
     def _plot_transversal(self, current_slices, last_slices, current_plane):
         # rescale from [0...last slice] to [-1...1]
