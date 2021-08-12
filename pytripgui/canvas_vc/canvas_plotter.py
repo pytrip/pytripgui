@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 
 from pytripgui.canvas_vc.bars import BarProjection
 from pytripgui.canvas_vc.blit_manager import BlitManager
-from pytripgui.canvas_vc.main_plot import CoordinateInfo
+from pytripgui.canvas_vc.main_plot import CoordinateInfo, SlicePlot
 from pytripgui.canvas_vc.placement_manager import PlacementManager
 
 
@@ -14,6 +14,7 @@ class CanvasPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
+
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Init canvas.
@@ -27,23 +28,11 @@ class CanvasPlotter(FigureCanvas):
         # Data Specific
         self.axim_bg = None  # placehodler for AxisImage for background image
         # DOS
-        self.axim_dos = None  # placeholder for AxesImage object returned by imshow() for DoseCube
         self.dose_bar = None
-        self.colormap_dose = plt.get_cmap()
-        self.colormap_dose._init()
-        self.colormap_dose._lut[:, -1] = 0.7
-        self.colormap_dose._lut[0, -1] = 0.0
         # LET
-        self.axim_let = None  # placeholder for AxesImage object returned by imshow() for LETCube
         self.let_bar = None
-        self.colormap_let = plt.get_cmap()
-        self.colormap_let._init()
-        self.colormap_let._lut[:, -1] = 0.7
-        self.colormap_let._lut[0, -1] = 0.0
         # CTX
-        self.axim_ctx = None  # placeholder for AxesImage object returned by imshow() for CTX cube
         self.hu_bar = None  # placeholder for Colorbar object returned by matplotlib.colorbar
-        self.colormap_ctx = plt.get_cmap("gray")
 
         # plotting fields
         self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
@@ -51,6 +40,7 @@ class CanvasPlotter(FigureCanvas):
         self.axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
         self.info_axes = None
         self.blit_manager = BlitManager(self)
+        self.slice_plot = SlicePlot(self.axes)
 
         FigureCanvas.__init__(self, self.figure)
 
@@ -90,43 +80,28 @@ class CanvasPlotter(FigureCanvas):
         #                                 zorder=0)
 
     def remove_dos(self):
-        if self.axim_dos:
-            self.blit_manager.remove_artist(self.axim_dos)
-            self.axim_dos.remove()
-            self.axim_dos = None
+        if self.slice_plot.dose.is_present():
+            self.blit_manager.remove_artist(self.slice_plot.dose.get())
+            self.slice_plot.dose.remove()
         if self.dose_bar:
             self.placement_manager.remove_dose_bar()
             self.dose_bar.remove()
             self.dose_bar = None
 
     def plot_dos(self, dos):
-        if not self.axim_dos and dos.max_dose > dos.min_dose:
-            self.axim_dos = self.axes.imshow(dos.data_to_plot,
-                                             cmap=self.colormap_dose,
-                                             vmax=dos.max_dose,
-                                             aspect=dos.aspect,
-                                             zorder=5)
-            self.blit_manager.add_artist(self.axim_dos)
+        if not self.slice_plot.dose.is_present() and dos.max_dose > dos.min_dose:
+            self.slice_plot.dose.plot(dos)
+            self.blit_manager.add_artist(self.slice_plot.dose.get())
             if not self.dose_bar:
                 self.placement_manager.add_dose_bar()
                 self._plot_dos_bar(dos)
         else:
-            self.axim_dos.set_data(dos.data_to_plot)
+            self.slice_plot.dose.update(dos)
 
     def _plot_dos_bar(self, dos):
         self.dose_bar = self.figure.add_subplot(self.placement_manager.get_dose_bar_place(),
                                                 projection=BarProjection.DOS.value)
-        self.dose_bar.plot_bar(self.axim_dos, scale=dos.dos_scale)
-
-    def remove_let(self):
-        if self.axim_let:
-            self.blit_manager.remove_artist(self.axim_let)
-            self.axim_let.remove()
-            self.axim_let = None
-        if self.let_bar:
-            self.placement_manager.remove_let_bar()
-            self.let_bar.clear_bar()
-            self.let_bar = None
+        self.dose_bar.plot_bar(self.slice_plot.dose.get(), scale=dos.dos_scale)
 
     def remove_vois(self):
         while len(self.axes.lines) > 0:
@@ -134,30 +109,34 @@ class CanvasPlotter(FigureCanvas):
         while len(self.axes.texts) > 0:
             self.axes.texts.pop(0)
 
+    def remove_let(self):
+        if self.slice_plot.let.is_present():
+            self.blit_manager.remove_artist(self.slice_plot.let.get())
+            self.slice_plot.let.remove()
+        if self.let_bar:
+            self.placement_manager.remove_let_bar()
+            self.let_bar.clear_bar()
+            self.let_bar = None
+
     def plot_let(self, data):
-        if not self.axim_let:
-            self.axim_let = self.axes.imshow(data.data_to_plot,
-                                             cmap=self.colormap_let,
-                                             vmax=data.max_let,
-                                             aspect=data.aspect,
-                                             zorder=10)
-            self.blit_manager.add_artist(self.axim_let)
+        if not self.slice_plot.let.is_present():
+            self.slice_plot.let.plot(data)
+            self.blit_manager.add_artist(self.slice_plot.let.get())
             if not self.let_bar:
                 self.placement_manager.add_let_bar()
                 self._plot_let_bar()
         else:
-            self.axim_let.set_data(data.data_to_plot)
+            self.slice_plot.let.update(data)
 
     def _plot_let_bar(self):
         self.let_bar = self.figure.add_subplot(self.placement_manager.get_let_bar_place(),
                                                projection=BarProjection.LET.value)
-        self.let_bar.plot_bar(self.axim_let)
+        self.let_bar.plot_bar(self.slice_plot.let.get())
 
     def remove_ctx(self):
-        if self.axim_ctx:
-            self.blit_manager.remove_artist(self.axim_ctx)
-            self.axim_ctx.remove()
-            self.axim_ctx = None
+        if self.slice_plot.ctx.is_present():
+            self.blit_manager.remove_artist(self.slice_plot.ctx.get())
+            self.slice_plot.ctx.remove()
         if self.hu_bar:
             self.placement_manager.remove_ctx_bar()
             self.hu_bar.clear_bar()
@@ -165,24 +144,19 @@ class CanvasPlotter(FigureCanvas):
 
     def plot_ctx(self, data):
         self._plot_coordinate_info(data)
-        if not self.axim_ctx:
-            self.axim_ctx = self.axes.imshow(data.data_to_plot,
-                                             cmap=self.colormap_ctx,
-                                             vmin=data.contrast_ct[0],
-                                             vmax=data.contrast_ct[1],
-                                             aspect=data.aspect,
-                                             zorder=1)
-            self.blit_manager.add_artist(self.axim_ctx)
+        if not self.slice_plot.ctx.is_present():
+            self.slice_plot.ctx.plot(data)
+            self.blit_manager.add_artist(self.slice_plot.ctx.get())
             if not self.hu_bar:
                 self.placement_manager.add_ctx_bar()
                 self._plot_hu_bar()
         else:
-            self.axim_ctx.set_data(data.data_to_plot)
+            self.slice_plot.ctx.update(data)
 
     def _plot_hu_bar(self):
         self.hu_bar = self.figure.add_subplot(self.placement_manager.get_ctx_bar_place(),
                                               projection=BarProjection.CTX.value)
-        self.hu_bar.plot_bar(self.axim_ctx)
+        self.hu_bar.plot_bar(self.slice_plot.ctx.get())
 
     def _plot_coordinate_info(self, data):
         if self.info_axes is None:
