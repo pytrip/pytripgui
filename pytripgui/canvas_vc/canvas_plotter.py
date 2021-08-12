@@ -1,10 +1,8 @@
-import numpy as np
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QSizePolicy
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from matplotlib.gridspec import GridSpec
 
 from pytripgui.canvas_vc.bars import BarProjection
 from pytripgui.canvas_vc.blit_manager import BlitManager
@@ -16,6 +14,7 @@ class CanvasPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
+
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Init canvas.
@@ -48,13 +47,11 @@ class CanvasPlotter(FigureCanvas):
         self.colormap_ctx = plt.get_cmap("gray")
 
         # plotting fields
-        self.blit_manager = BlitManager(self)
         self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
-        self.gs = GridSpec(ncols=16, nrows=9, figure=self.figure)
-        self.axes = self.figure.add_subplot(self.gs[:, 2:14])
-        # self.placement_manager = PlacementManager(self.figure)
-        # self.axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
+        self.placement_manager = PlacementManager(self.figure)
+        self.axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
         self.info_axes = None
+        self.blit_manager = BlitManager(self)
 
         FigureCanvas.__init__(self, self.figure)
 
@@ -99,7 +96,7 @@ class CanvasPlotter(FigureCanvas):
             self.axim_dos.remove()
             self.axim_dos = None
         if self.dose_bar:
-            # self.placement_manager.remove_dose_bar()
+            self.placement_manager.remove_dose_bar()
             self.dose_bar.remove()
             self.dose_bar = None
 
@@ -112,15 +109,14 @@ class CanvasPlotter(FigureCanvas):
                                              zorder=5)
             self.blit_manager.add_artist(self.axim_dos)
             if not self.dose_bar:
-                # self.placement_manager.add_dose_bar()
+                self.placement_manager.add_dose_bar()
                 self._plot_dos_bar(dos)
         else:
             self.axim_dos.set_data(dos.data_to_plot)
 
     def _plot_dos_bar(self, dos):
-        # self.dose_bar = self.figure.add_subplot(self.placement_manager.get_dose_bar_place(),
-        #                                         projection=BarProjection.DOS.value)
-        self.dose_bar = self.figure.add_subplot(self.gs[:, 0], projection=BarProjection.DOS.value)
+        self.dose_bar = self.figure.add_subplot(self.placement_manager.get_dose_bar_place(),
+                                                projection=BarProjection.DOS.value)
         self.dose_bar.plot_bar(self.axim_dos, scale=dos.dos_scale)
 
     def remove_let(self):
@@ -129,7 +125,7 @@ class CanvasPlotter(FigureCanvas):
             self.axim_let.remove()
             self.axim_let = None
         if self.let_bar:
-            # self.placement_manager.remove_let_bar()
+            self.placement_manager.remove_let_bar()
             self.let_bar.clear_bar()
             self.let_bar = None
 
@@ -148,15 +144,14 @@ class CanvasPlotter(FigureCanvas):
                                              zorder=10)
             self.blit_manager.add_artist(self.axim_let)
             if not self.let_bar:
-                # self.placement_manager.add_let_bar()
+                self.placement_manager.add_let_bar()
                 self._plot_let_bar()
         else:
             self.axim_let.set_data(data.data_to_plot)
 
     def _plot_let_bar(self):
-        # self.let_bar = self.figure.add_subplot(self.placement_manager.get_let_bar_place(),
-        #                                        projection=BarProjection.LET.value)
-        self.let_bar = self.axes.figure.add_subplot(self.gs[:, 0], projection=BarProjection.LET.value)
+        self.let_bar = self.figure.add_subplot(self.placement_manager.get_let_bar_place(),
+                                               projection=BarProjection.LET.value)
         self.let_bar.plot_bar(self.axim_let)
 
     def remove_ctx(self):
@@ -165,12 +160,12 @@ class CanvasPlotter(FigureCanvas):
             self.axim_ctx.remove()
             self.axim_ctx = None
         if self.hu_bar:
-            # self.placement_manager.remove_ctx_bar()
+            self.placement_manager.remove_ctx_bar()
             self.hu_bar.clear_bar()
             self.hu_bar = None
 
     def plot_ctx(self, data):
-        # self._plot_coordinate_info(data)
+        self._plot_coordinate_info(data)
         if not self.axim_ctx:
             self.axim_ctx = self.axes.imshow(data.data_to_plot,
                                              cmap=self.colormap_ctx,
@@ -179,23 +174,21 @@ class CanvasPlotter(FigureCanvas):
                                              aspect=data.aspect,
                                              zorder=1)
             self.blit_manager.add_artist(self.axim_ctx)
-            # if not self.hu_bar:
-            #     # self.placement_manager.add_ctx_bar()
-            #     self._plot_hu_bar()
+            if not self.hu_bar:
+                self.placement_manager.add_ctx_bar()
+                self._plot_hu_bar()
         else:
             self.axim_ctx.set_data(data.data_to_plot)
 
     def _plot_hu_bar(self):
-        # self.hu_bar = self.figure.add_subplot(self.placement_manager.get_ctx_bar_place(),
-        #                                       projection=BarProjection.CTX.value)
-        self.hu_bar = self.figure.add_subplot(self.gs[:, 1], projection=BarProjection.CTX.value)
+        self.hu_bar = self.figure.add_subplot(self.placement_manager.get_ctx_bar_place(),
+                                              projection=BarProjection.CTX.value)
         self.hu_bar.plot_bar(self.axim_ctx)
 
     def _plot_coordinate_info(self, data):
         if self.info_axes is None:
-            # self.info_axes = self.figure.add_subplot(self.placement_manager.get_coord_info_place(),
-            #                                          projection='CoordinateInfo')
-            self.info_axes = self.axes.figure.add_subplot(self.gs[:2, 13:], projection='CoordinateInfo')
+            self.info_axes = self.figure.add_subplot(self.placement_manager.get_coord_info_place(),
+                                                     projection=CoordinateInfo.name)
             self.blit_manager.add_artist(self.info_axes)
 
         self.info_axes.update_info(data)
