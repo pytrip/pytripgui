@@ -75,7 +75,7 @@ class CoordinateInfo(Axes3D):
         current_slices = data.projection_selector.get_current_slices()
         last_slices = data.projection_selector.get_last_slices()
 
-        for plane, f in self._actions.items():
+        for _plane, f in self._actions.items():
             f(current_slices, last_slices, current_plane)
 
         self._data_set = True

@@ -45,9 +45,7 @@ class PlacementManager:
         self._update_places()
 
     def _only_ctx(self) -> bool:
-        return self._ctx_bar \
-               and not self._dose_bar \
-               and not self._let_bar
+        return self._ctx_bar and not self._dose_bar and not self._let_bar
 
     def _only_ctx_places(self) -> None:
         self._positions['ctx_bar'] = self._grid_spec[:, 1]
@@ -55,9 +53,7 @@ class PlacementManager:
         self._positions['let_bar'] = None
 
     def _ctx_and_dose(self) -> bool:
-        return self._ctx_bar \
-               and self._dose_bar \
-               and not self._let_bar
+        return self._ctx_bar and self._dose_bar and not self._let_bar
 
     def _ctx_and_dose_places(self) -> None:
         self._positions['ctx_bar'] = self._grid_spec[:, 1]
@@ -65,9 +61,7 @@ class PlacementManager:
         self._positions['let_bar'] = None
 
     def _ctx_and_let(self) -> bool:
-        return self._ctx_bar \
-               and not self._dose_bar \
-               and self._let_bar
+        return self._ctx_bar and not self._dose_bar and self._let_bar
 
     def _ctx_and_let_places(self) -> None:
         self._positions['ctx_bar'] = self._grid_spec[:, 1]

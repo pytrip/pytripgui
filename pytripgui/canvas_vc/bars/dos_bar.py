@@ -1,10 +1,10 @@
 from matplotlib.projections import register_projection
 
-from pytripgui.canvas_vc.bars.bar import Bar
+from pytripgui.canvas_vc.bars.bar_base import BarBase
 from pytripgui.canvas_vc.bars.projection_enum import BarProjection
 
 
-class DosBar(Bar):
+class DosBar(BarBase):
     name: str = BarProjection.DOS.value
 
     def __init__(self, fig, rect, **kwargs):

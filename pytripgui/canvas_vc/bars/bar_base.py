@@ -8,7 +8,7 @@ from pytripgui.canvas_vc.bars.projection_enum import BarProjection
 
 
 # base abstract class for bars
-class Bar(ABC, Axes):
+class BarBase(ABC, Axes):
     name: str = BarProjection.DEFAULT.value
 
     def __init__(self, fig, rect, **kwargs):
