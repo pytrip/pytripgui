@@ -37,3 +37,5 @@ class PatientModel:
         if 'rtss' in self.dcm:
             self.vdx = pt.VdxCube(self.ctx)
             self.vdx.read_dicom(self.dcm)
+
+        self.name = self.ctx.basename
