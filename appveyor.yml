@@ -61,7 +61,7 @@ build_script:
   - python setup.py -V # trick needed to generate VERSION file
   - pyinstaller main.spec
 # remove dist-info folders
-  - for /f %i in ('dir /a:d /b dist\pytripgui\*.dist-info') do rd /s /q %i
+  - ps: Remove-Item dist\pytripgui\*.dist-info -Recurse
 # compress pytripgui package
   - 7z a pytripgui.zip ./dist/pytripgui
 
