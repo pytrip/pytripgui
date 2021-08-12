@@ -201,10 +201,13 @@ class AppCallback:
         return True
 
     def open_dicom_callback(self, patient_item):
+        logger.debug("Open DICOM start")
         dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
 
         if not dir_name:
             return False
+
+        logger.debug("Open DICOM by patient start")
 
         patient = patient_item.data
         patient.open_dicom(dir_name)  # Todo catch exceptions
@@ -214,6 +217,41 @@ class AppCallback:
             self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
 
         self.app_model.viewcanvases.set_patient(patient)
+        return True
+
+    def export_patient_voxelplan_callback(self, patient_item):
+        # exports patient cube to Voxelplan format (.hed, .ctx, .vdx) with the selected name
+        logger.debug("Voxelplan export start.")
+        path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
+
+        if path == "":
+            return False
+
+        path_base, extension = os.path.splitext(path)
+        path, basename = os.path.split(path_base)
+        logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
+
+        patient_item.data.ctx.write(os.path.join(path, basename + ".ctx"))
+        patient_item.data.vdx.write(os.path.join(path, basename + ".vdx"))
+
+        logger.debug("Voxelplan export finished.")
+        return True
+
+    def export_patient_dicom_callback(self, patient_item):
+        # TODO finish and test
+        # exports patient cube to DICOM format in the selected folder
+        logger.debug("DICOM export start.")
+        path = self.parent_gui.browse_folder_path("Export patient to DICOM")
+
+        if path == "":
+            return False
+
+        logger.info("DICOM export to: " + path)
+
+        patient_item.data.ctx.write_dicom(path)
+        patient_item.data.vdx.write_dicom(path)
+
+        logger.debug("DICOM export finished.")
         return True
 
     def one_click_callback(self):
