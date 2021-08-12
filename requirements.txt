@@ -1,5 +1,5 @@
 pytrip98~=3.0  # use versions compatible with 3.0 (3.0 and later from 3.x series)
-PyQt5>=5.15; python_version >= '3.8'
+PyQt5>=5.15  ; python_version >= '3.8'
 PyQt5<5.10 ; python_version < '3.8'
 PyQtChart>=5.15  ; python_version >= '3.8'
 PyQtChart<5.10 ; python_version < '3.8'
