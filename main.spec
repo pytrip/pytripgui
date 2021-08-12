@@ -31,7 +31,7 @@ version = pytripgui.__version__
 ## Create inno setup .iss file
 import codecs
 import platform
-filename = "win10_innosetup.iss"
+filename = "win_innosetup.iss"
 issfile = codecs.open(filename, 'r', "utf-8")
 iss = issfile.readlines()
 issfile.close()
@@ -67,8 +67,6 @@ exclude = [
     "libGLESv2.dll",
     "libssl-1_1-x64.dll",
     "libssl-1_1.dll",
-    "MSVCP140.dll",
-    "MSVCP140_1.dll",
     "opengl32sw.dll",
     "Qt5DBus.dll",
     "Qt5Network.dll",
@@ -79,9 +77,7 @@ exclude = [
     "Qt5WebSockets.dll",
     "tcl86t.dll",
     "tk86t.dll",
-    "ucrtbase.dll",
-    "VCRUNTIME140.dll",
-    "VCRUNTIME140_1.dll",
+    "ucrtbase.dll"
 ]
 exclude_startswith = [
     "api-ms-win",
@@ -137,11 +133,11 @@ coll = COLLECT(exe,
 #a = Analysis(['pytripgui\\main.py'],
 #             pathex=['.'],
 #             binaries=[],
-#             datas=[ ('pytripgui/res/*', 'res' )],
-#             hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+#             datas=[('pytripgui/res/*', 'res')],
+#             hiddenimports=[],
 #             hookspath=[],
 #             runtime_hooks=[],
-#             excludes=['pywin.debugger', 'tcl', 'IPython', 'tornado'],
+#             excludes=exclude_modules,
 #             win_no_prefer_redirects=False,
 #             win_private_assemblies=False,
 #             cipher=None)
@@ -160,4 +156,4 @@ coll = COLLECT(exe,
 #          debug=False,
 #          strip=False,
 #          upx=True,
-#          console=False )
+#          console=False)
