@@ -1,7 +1,7 @@
 from pytripgui.canvas_vc.plotter.bars import BarProjection
-from pytripgui.canvas_vc.plotter import CoordinateInfo
+from pytripgui.canvas_vc.plotter.coordinate_info import CoordinateInfo
 from pytripgui.canvas_vc.plotter.images import CtxImage, DoseImage, LetImage
-from pytripgui.canvas_vc.plotter.placement_manager import PlacementManager
+from pytripgui.canvas_vc.plotter.managers import PlacementManager
 
 
 class PlottingManager:
