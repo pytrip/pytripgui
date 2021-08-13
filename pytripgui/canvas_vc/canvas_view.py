@@ -5,7 +5,7 @@ from events import Events
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
 
-from pytripgui.canvas_vc.canvas_plotter import CanvasPlotter
+from pytripgui.canvas_vc.plotter.mpl_plotter import MplPlotter
 from pytripgui.view.qt_gui import UiViewCanvas
 from pytripgui.view.qt_view_adapter import ListWidget
 
@@ -17,7 +17,7 @@ class CanvasView:
         self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
-        self._plotter = CanvasPlotter()
+        self._plotter = MplPlotter()
 
         self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
 
@@ -120,17 +120,16 @@ class CanvasView:
         self._plotter.plot_ctx(data)
         self._enable_perspective_selector()
 
-    def plot_bg(self, data):
-        self._plotter.plot_bg(data)
-
     def draw(self):
         self._plotter.draw()
 
+    def update(self):
+        self._plotter.update()
+
     def clear(self):
-        self._plotter.remove_vois()
         self._plotter.remove_dos()
         self._plotter.remove_let()
-        # self._plotter.remove_ctx()
+        self._plotter.remove_ctx()
 
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)

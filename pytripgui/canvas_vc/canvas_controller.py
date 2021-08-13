@@ -22,6 +22,7 @@ class CanvasController:
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()
         self.update_canvas_view()
+        self._ui.draw()
 
     def _display_filter_has_changed_callback(self):
         if self._model is None:
@@ -30,6 +31,7 @@ class CanvasController:
         self._model.display_filter = self._ui.display_filter
         self.clear_view()
         self.update_canvas_view()
+        self._ui.draw()
 
     def _setup_ui_callbacks(self):
         self._ui.set_plotter_click_callback(self.on_click)
@@ -46,20 +48,23 @@ class CanvasController:
             self._model.projection_selector.prev_slice()
 
         self.update_canvas_view()
+        self._ui.update()
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
+
         self.update_canvas_view()
+        self._ui.update()
 
     def clear_view(self):
         self._ui.clear()
 
     def update_canvas_view(self):
-        self.clear_view()
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
             if self._model.vdx:
+                # TODO this does not work
                 self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
@@ -90,8 +95,6 @@ class CanvasController:
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
 
-        self._ui.draw()
-
     def set_patient(self, patient, state):
         self._ui.clear()
         if state is None:
@@ -109,6 +112,7 @@ class CanvasController:
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
+        self._ui.draw()
 
     def set_simulation_results(self, simulation_results, state):
         self.set_patient(simulation_results.patient, None)
@@ -125,6 +129,7 @@ class CanvasController:
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
         self.update_canvas_view()
+        self._ui.draw()
 
     def _on_update_voi(self):
         if self._model.vdx:
