@@ -14,7 +14,7 @@ class PlacementManager:
 
         self._positions: dict = {
             'coord_info': self._grid_spec[:2, 13:],
-            'main_plot': self._grid_spec[:, 2:14],
+            'plotter': self._grid_spec[:, 2:14],
             'ctx_bar': None,
             'dose_bar': None,
             'let_bar': None
@@ -80,7 +80,7 @@ class PlacementManager:
         return self._positions['coord_info']
 
     def get_main_plot_place(self) -> SubplotSpec:
-        return self._positions['main_plot']
+        return self._positions['plotter']
 
     def get_ctx_bar_place(self) -> SubplotSpec:
         return self._positions['ctx_bar']

@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 
-from pytripgui.canvas_vc.main_plot.images.patient_image_base import PatientImageBase
+from pytripgui.canvas_vc.plotter.images.patient_image_base import PatientImageBase
 from pytripgui.canvas_vc.objects.dos import Dos
 
 

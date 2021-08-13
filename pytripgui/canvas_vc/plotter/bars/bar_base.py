@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.pyplot import colorbar
 
-from pytripgui.canvas_vc.bars.projection_enum import BarProjection
+from pytripgui.canvas_vc.plotter.bars.projection_enum import BarProjection
 
 
 # base abstract class for bars

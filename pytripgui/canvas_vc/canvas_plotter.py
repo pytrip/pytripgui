@@ -4,7 +4,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
 from pytripgui.canvas_vc.blit_manager import BlitManager
-from pytripgui.canvas_vc.main_plot import PlottingManager
+from pytripgui.canvas_vc.plotter import PlottingManager
 
 
 class CanvasPlotter(FigureCanvas):
