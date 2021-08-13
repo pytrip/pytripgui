@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from pytripgui.canvas_vc.plotter.managers import PlottingManager, BlitManager
 
 
-class CanvasPlotter(FigureCanvas):
+class MplPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
