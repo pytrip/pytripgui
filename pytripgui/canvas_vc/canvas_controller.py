@@ -61,8 +61,6 @@ class CanvasController:
         self._ui.clear()
 
     def update_canvas_view(self):
-        start_update = time.time()
-
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
