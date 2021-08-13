@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from matplotlib.image import AxesImage
-
 '''
 This class and its subclasses were made to remove extra responsibility from mpl_plotter.
 It has methods that allow to show image, check if it is shown, update and remove it.
@@ -15,7 +14,6 @@ class PatientImageBase(ABC):
 
     Method plot(data) must be implemented in subclasses, because it strongly depends on type of shown image
     """
-
     def __init__(self, axes):
         """
         Parameters
