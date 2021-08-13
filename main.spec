@@ -31,7 +31,7 @@ version = pytripgui.__version__
 ## Create inno setup .iss file
 import codecs
 import platform
-filename = "win10_innosetup.iss"
+filename = "win_innosetup.iss"
 issfile = codecs.open(filename, 'r', "utf-8")
 iss = issfile.readlines()
 issfile.close()
@@ -45,42 +45,87 @@ nissfile = codecs.open(filename, 'wb', "utf-8")
 nissfile.writelines(iss)
 nissfile.close()
 
+exclude_modules = [
+    "_asyncio",
+    "_bz2",
+    "_decimal",
+    "_elementtree",
+    "_hashlib",
+    "_lzma",
+    "_overlapped",
+    "_queue",
+    "_tkinter",
+
+    'pywin.debugger',
+    'IPython'
+]
+exclude = [
+    "d3dcompiler_47.dll",
+    "libcrypto-1_1-x64.dll",
+    "libcrypto-1_1.dll",
+    "libEGL.dll",
+    "libGLESv2.dll",
+    "libssl-1_1-x64.dll",
+    "libssl-1_1.dll",
+    "opengl32sw.dll",
+    "Qt5DBus.dll",
+    "Qt5Network.dll",
+    "Qt5Qml.dll",
+    "Qt5QmlModels.dll",
+    "Qt5Quick.dll",
+    "Qt5Svg.dll",
+    "Qt5WebSockets.dll",
+    "tcl86t.dll",
+    "tk86t.dll",
+    "ucrtbase.dll"
+]
+exclude_startswith = [
+    "api-ms-win",
+    "PyQt5\\Qt5\\plugins\\imageformats",
+    "PyQt5\\Qt5\\plugins\\iconengines"
+]
+
 a = Analysis(['pytripgui\\main.py'],
              pathex=['.'],
              binaries=[],
-             datas=[ ('pytripgui/res/*', 'res'), ('pytripgui/VERSION', '.' ), ('pytripgui/view/*.ui', 'view')],
-             hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+             datas=[('pytripgui/res/*', 'pytripgui/res'),
+                    ('pytripgui/view/*.ui', 'pytripgui/view'),
+                    ('pytripgui/VERSION', '.')],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
-             excludes=['pywin.debugger', 'tcl', 'IPython', 'tornado'],
+             excludes=exclude_modules,
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=None)
 
-a.binaries = [x for x in a.binaries if not x[0].startswith("IPython")]
-a.binaries = [x for x in a.binaries if not x[0].startswith("zmq")]
 
-a.binaries = a.binaries - TOC([
- ('sqlite3.dll', None, None),
- ('_sqlite3', None, None),
- ('_ssl', None, None)])
+a.binaries = TOC([b for b in a.binaries if b[0] not in exclude])
+for e in exclude_startswith:
+    a.binaries = TOC([b for b in a.binaries if not b[0].startswith(e)])
 
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=None)
+print("=======================================================================")
+print("Binaries:")
+for bin in a.binaries:
+    print(bin)
+print("=======================================================================")
+
+pyz = PYZ(a.pure, a.zipped_data, cipher=None)
 exe = EXE(pyz,
           a.scripts,
           exclude_binaries=True,
           name='pytripgui',
           debug=False,
           strip=False,
-          upx=False,
-          console=True )
+          upx=True,
+          console=False,
+          icon='pytripgui/res/icon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
                a.datas,
                strip=False,
-               upx=False,
+               upx=True,
                name='pytripgui')
 
 
@@ -88,23 +133,18 @@ coll = COLLECT(exe,
 #a = Analysis(['pytripgui\\main.py'],
 #             pathex=['.'],
 #             binaries=[],
-#             datas=[ ('pytripgui/res/*', 'res' )],
-#             hiddenimports=['appdirs', 'packaging', 'packaging', 'packaging.version', 'packaging.specifiers', 'packaging.requirements'],
+#             datas=[('pytripgui/res/*', 'res')],
+#             hiddenimports=[],
 #             hookspath=[],
 #             runtime_hooks=[],
-#             excludes=['pywin.debugger', 'tcl', 'IPython', 'tornado'],
+#             excludes=exclude_modules,
 #             win_no_prefer_redirects=False,
 #             win_private_assemblies=False,
 #             cipher=None)
 #
-#a.binaries = [x for x in a.binaries if not x[0].startswith("IPython")]
-#a.binaries = [x for x in a.binaries if not x[0].startswith("zmq")]
-#
-#a.binaries = a.binaries - TOC([
-# ('sqlite3.dll', None, None),
-# ('_sqlite3', None, None),
-# ('_ssl', None, None)])
-#
+# a.binaries = TOC([b for b in a.binaries if b[0] not in exclude])
+# for e in exclude_startswith:
+#     a.binaries = TOC([b for b in a.binaries if not b[0].startswith(e)])
 #
 #pyz = PYZ(a.pure)
 #exe = EXE(pyz,
@@ -116,4 +156,4 @@ coll = COLLECT(exe,
 #          debug=False,
 #          strip=False,
 #          upx=True,
-#          console=False )
+#          console=False)
