@@ -1,5 +1,5 @@
-from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from pytripgui.canvas_vc.objects.ctx import Ctx
 from pytripgui.canvas_vc.objects.dos import Dos
@@ -26,9 +26,9 @@ class PlottingManager:
         """
         Parameters:
         ----------
-        figure : Figure - object on which everything will be plotted
+        figure : Figure -- object on which everything will be plotted
 
-        blit_manager : BlitManager - object that is responsible for fast figure updating
+        blit_manager : BlitManager -- object that is responsible for fast figure updating
         """
         self.figure = figure
         self.placement_manager = PlacementManager(self.figure)

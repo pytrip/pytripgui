@@ -12,9 +12,23 @@ class MplPlotter(FigureCanvas):
     """
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
-        Init canvas.
+        Parameters:
+        ----------
+        parent : type? -- ?
+
+        width : int -- width of created figure
+
+        height : int -- height of created figure
+
+        dpi: int -- dpi of created figure
         """
         super().__init__()
+        '''
+        self.figure has to be initialized before self.blit_manager
+        it is so because blit_manager uses figure to do its work - restoring background
+        if blit_manager will be created before figure is initialized
+        dummy figure will be used and restoring background will work improperly        
+        '''
         self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
         self.blit_manager = BlitManager(self)
         self.plotting_manager = PlottingManager(self.figure, self.blit_manager)
