@@ -85,31 +85,19 @@ class CoordinateInfo(Axes3D):
             return self.plot_surface(self.x, self.y, ones, color=self.transversal_color)
         # plot partially transparent if it is not current plane
         else:
-            return self.plot_surface(self.x,
-                                     self.y,
-                                     ones,
-                                     alpha=self.alpha,
-                                     color=self.transversal_color)
+            return self.plot_surface(self.x, self.y, ones, alpha=self.alpha, color=self.transversal_color)
 
     def _plot_sagittal(self, ones, is_current_plane):
         if is_current_plane:
             return self.plot_surface(ones, self.x, self.y, color=self.sagittal_color)
         else:
-            return self.plot_surface(ones,
-                                     self.x,
-                                     self.y,
-                                     alpha=self.alpha,
-                                     color=self.sagittal_color)
+            return self.plot_surface(ones, self.x, self.y, alpha=self.alpha, color=self.sagittal_color)
 
     def _plot_coronal(self, ones, is_current_plane):
         if is_current_plane:
             return self.plot_surface(self.x, ones, self.y, color=self.coronal_color)
         else:
-            return self.plot_surface(self.x,
-                                     ones,
-                                     self.y,
-                                     alpha=self.alpha,
-                                     color=self.coronal_color)
+            return self.plot_surface(self.x, ones, self.y, alpha=self.alpha, color=self.coronal_color)
 
 
 register_projection(CoordinateInfo)
