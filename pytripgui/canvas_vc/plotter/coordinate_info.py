@@ -4,6 +4,20 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 class CoordinateInfo(Axes3D):
+    """
+    Special class that inherits from Axes3D from matplotlib.
+
+    Holds logic for plotting wireframe cube, which represents patient, with three surfaces.
+    Those surfaces' positions represent number of slice that user sees in all three perspectives.
+
+    It is registered as projection in matplotlib.
+
+    Examples of usage:
+        1) using string:
+            figure.add_subplot(111, projection='CoordinateInfo')
+        2) using class parameter:
+            figure.add_subplot(123, projection=CoordinateInfo.name)
+    """
     # name to register that as projection in matplotlib
     name: str = 'CoordinateInfo'
 
@@ -50,6 +64,15 @@ class CoordinateInfo(Axes3D):
         }
 
     def update_info(self, data):
+        """
+        Updates positions of surfaces.
+
+        First invocation plots all surfaces.
+        Next invocations update position of one surface or two surfaces, if perspective has changed.
+
+        Parameters:
+            data - object from plot_model that has projection_selector
+        """
         current_plane = data.projection_selector.plane
         current_slices = data.projection_selector.get_current_slices()
         last_slices = data.projection_selector.get_last_slices()
