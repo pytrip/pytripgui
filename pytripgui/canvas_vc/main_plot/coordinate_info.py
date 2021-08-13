@@ -6,19 +6,19 @@ from mpl_toolkits.mplot3d import Axes3D
 class CoordinateInfo(Axes3D):
     # name to register that as projection in matplotlib
     name: str = 'CoordinateInfo'
-    # variables to ease wireframe plotting
-    r = [-1, 1]
-    x, y = np.meshgrid(r, r)
-    one = np.ones(4).reshape(2, 2)
-    # wireframe and surface parameters
-    alpha = 0.2
-    wireframe_color = 'black'
-    transversal_color = 'g'
-    sagittal_color = 'r'
-    coronal_color = 'b'
 
     def __init__(self, fig, rect, **kwargs):
         super().__init__(fig, rect, **kwargs)
+        # variables to ease wireframe plotting
+        r = [-1, 1]
+        self.x, self.y = np.meshgrid(r, r)
+        self.one = np.ones(4).reshape(2, 2)
+        # wireframe and surface parameters
+        self.alpha = 0.2
+        self.wireframe_color = 'black'
+        self.transversal_color = 'g'
+        self.sagittal_color = 'r'
+        self.coronal_color = 'b'
         # set plot labels
         self.set_xlabel('x')
         self.set_ylabel('y')
