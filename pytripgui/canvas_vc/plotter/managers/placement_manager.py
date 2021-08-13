@@ -1,6 +1,5 @@
 from matplotlib.figure import Figure
 from matplotlib.gridspec import GridSpec, SubplotSpec
-
 '''
 This class was made to remove extra responsibilities from mpl_plotter.
 It gathers information about elements that are added to the figure and determines where they should be put
@@ -22,7 +21,6 @@ class PlacementManager:
     Class that holds information what is present on figure and positions of those elements.
     Updates positions every time something is added to figure to ensure that everything has space to be shown properly.
     """
-
     def __init__(self, figure: Figure):
         """
         Parameters:
