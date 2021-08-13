@@ -10,6 +10,7 @@ class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
+
     def __init__(self, model, ui):
         self._model = model
         self._ui = ui
@@ -48,14 +49,8 @@ class CanvasController:
         else:
             self._model.projection_selector.prev_slice()
 
-        start = time.time()
         self.update_canvas_view()
-        start_draw = time.time()
         self._ui.update()
-        end_draw = time.time()
-        print('Drawing time ', end_draw - start_draw)
-        end = time.time()
-        print('Whole updating and redrawing operation ', end - start)
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
@@ -75,42 +70,24 @@ class CanvasController:
             if self._model.vdx:
                 # TODO this does not work
                 self._model.vdx.plot(self._ui._plotter)
-            start = time.time()
             self._model.ctx.prepare_data_to_plot()
-            end = time.time()
-            print('CTX prepraing time ', end - start)
-            start = time.time()
             self._ui.plot_ctx(self._model.ctx)
-            end = time.time()
-            print('CTX plotting time ', end - start)
 
         if self._model.dose:
             self._ui.enable_dose()
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "DOS"):
                 self._model.display_filter = "DOS"
-                start = time.time()
                 self._model.dose.prepare_data_to_plot()
-                end = time.time()
-                print('DOS prepraing time ', end - start)
-                start = time.time()
                 self._ui.plot_dos(self._model.dose)
-                end = time.time()
-                print('DOS plotting time ', end - start)
 
         if self._model.let:
             self._ui.enable_let()
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "LET"):
                 self._model.display_filter = "LET"
-                start = time.time()
                 self._model.let.prepare_data_to_plot()
-                end = time.time()
-                print('LET prepraing time ', end - start)
-                start = time.time()
                 self._ui.plot_let(self._model.let)
-                end = time.time()
-                print('LET plotting time ', end - start)
 
         self._ui.display_filter = self._model.display_filter
 
@@ -121,9 +98,6 @@ class CanvasController:
         #     Vdx.plot(self)
         # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
         #     ViewCanvasTextCont().plot(self)
-
-        end_update = time.time()
-        print('Updating canvas time', end_update - start_update)
 
     def set_patient(self, patient, state):
         self._ui.clear()

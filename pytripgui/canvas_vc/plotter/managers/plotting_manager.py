@@ -24,7 +24,7 @@ class PlottingManager:
         self.let_bar = None
 
         # painting background color
-        self.figure.patch.set_facecolor('red')
+        self.figure.patch.set_facecolor('black')
 
     def _initialize_axes(self):
         axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
