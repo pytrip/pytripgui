@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 
 from matplotlib.image import AxesImage
-'''
+"""
 This class and its subclasses were made to remove extra responsibility from mpl_plotter.
 It has methods that allow to show image, check if it is shown, update and remove it.
 Greatly removes code duplicates and hides information how images are made.
-'''
+"""
 
 
 class PatientImageBase(ABC):
@@ -28,7 +28,6 @@ class PatientImageBase(ABC):
         """
         Plots image from passed data.
         """
-        pass
 
     def get(self) -> AxesImage:
         """

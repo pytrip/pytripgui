@@ -1,6 +1,6 @@
 from matplotlib.figure import Figure
 from matplotlib.gridspec import GridSpec, SubplotSpec
-'''
+"""
 This class was made to remove extra responsibilities from mpl_plotter.
 It gathers information about elements that are added to the figure and determines where they should be put
  based on some boolean mask.
@@ -11,9 +11,9 @@ If you want to add new element, follow these few steps:
     2. Add new entry to _positions dictionary for your element
     3. Add getter for that new entry
     4. Add methods that set that flag to true and false
-    5. Add method that holds condition with your element's flag 
+    5. Add method that holds condition with your element's flag
     6. Add method that changes entries in _positions dictionary in the way that your elements fits in figure
-'''
+"""
 
 
 class PlacementManager:
@@ -43,9 +43,9 @@ class PlacementManager:
             'let_bar': None
         }
 
-    '''
+    """
     Block of methods that set each flag to false or true
-    '''
+    """
 
     def add_ctx_bar(self) -> None:
         self._ctx_bar = True
@@ -71,9 +71,9 @@ class PlacementManager:
         self._let_bar = False
         self._update_places()
 
-    '''
+    """
     Block of methods that hold conditions and methods that change _positions based on those conditions
-    '''
+    """
 
     def _only_ctx(self) -> bool:
         return self._ctx_bar and not self._dose_bar and not self._let_bar
@@ -99,9 +99,9 @@ class PlacementManager:
         self._positions['dose_bar'] = None
         self._positions['let_bar'] = self._grid_spec[:, 0]
 
-    '''
+    """
     Method that checks which condition is satisfied and updates positions
-    '''
+    """
 
     def _update_places(self) -> None:
         if self._only_ctx():
@@ -111,9 +111,9 @@ class PlacementManager:
         elif self._ctx_and_let():
             self._ctx_and_let_places()
 
-    '''
+    """
     Block of getter for each element
-    '''
+    """
 
     def get_coord_info_place(self) -> SubplotSpec:
         return self._positions['coord_info']

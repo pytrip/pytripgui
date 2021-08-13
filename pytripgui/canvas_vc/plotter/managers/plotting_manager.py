@@ -11,7 +11,7 @@ from pytripgui.canvas_vc.plotter.managers import PlacementManager, BlitManager
 '''
 This class was created to remove extra responsibilities from mpl_plotter.
 It hides how things are plotted, if they are present and how they are removed.
-Thanks to that, mpl_plotter does not know how most things are done 
+Thanks to that, mpl_plotter does not know how most things are done
 and delegates almost everything connected to plotting to this class.
 '''
 
