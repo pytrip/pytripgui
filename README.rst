@@ -15,7 +15,7 @@ Quick installation guide
 
 We recommend that you run a recent Linux distribution. A recent Ubuntu version or Debian Stable/Testing should work,
 or any rolling release (archLinux, openSUSE tumbleweed). In this case, be sure you have **python**
-and **pythpip** installed.
+and **pip** installed.
 
 As a baseline we recommend running python version at least 3.5.
 To get them and install system-wide on Debian or Ubuntu, type being logged in as normal user::
