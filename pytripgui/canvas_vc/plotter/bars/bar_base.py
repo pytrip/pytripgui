@@ -5,7 +5,6 @@ from matplotlib.axes import Axes
 from matplotlib.pyplot import colorbar
 
 from pytripgui.canvas_vc.plotter.bars.projection_enum import BarProjection
-
 '''
 This class and its subclasses were made to remove extra responsibilities from mpl_plotter.
 This class holds basic logic and parameters that are shared between all of its subclasses.
