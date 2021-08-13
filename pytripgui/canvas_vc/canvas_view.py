@@ -5,7 +5,7 @@ from events import Events
 from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
 
-from pytripgui.canvas_vc.canvas_plotter import CanvasPlotter
+from pytripgui.canvas_vc.plotter.canvas_plotter import CanvasPlotter
 from pytripgui.view.qt_gui import UiViewCanvas
 from pytripgui.view.qt_view_adapter import ListWidget
 
