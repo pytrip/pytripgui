@@ -120,9 +120,6 @@ class CanvasView:
         self._plotter.plot_ctx(data)
         self._enable_perspective_selector()
 
-    def plot_bg(self, data):
-        self._plotter.plot_bg(data)
-
     def draw(self):
         self._plotter.draw()
 
@@ -130,7 +127,6 @@ class CanvasView:
         self._plotter.update()
 
     def clear(self):
-        self._plotter.remove_vois()
         self._plotter.remove_dos()
         self._plotter.remove_let()
         self._plotter.remove_ctx()

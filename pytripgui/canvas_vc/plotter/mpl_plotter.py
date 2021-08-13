@@ -63,23 +63,3 @@ class MplPlotter(FigureCanvas):
 
     def update(self):
         self.blit_manager.update()
-
-    def plot_bg(self, background):
-        # it is not used, so I commented it for now and raised error for safety
-        raise NotImplementedError("plot_bg in canvas_plotter is NOT implemented")
-        # extent = [0, 512, 0, 512]  # extention of the axesimage, used for plotting the background image.
-        # self.axim_bg = self.axes.imshow(background,
-        #                                 cmap=plt.cm.gray,
-        #                                 vmin=-5,
-        #                                 vmax=5,
-        #                                 interpolation='nearest',
-        #                                 extent=extent,
-        #                                 zorder=0)
-
-    def remove_vois(self):
-        # TODO make plotting vois an integral part of plotter, now they are plotted somewhere else
-        pass
-        # while len(self.axes.lines) > 0:
-        #     self.axes.lines.pop(0)
-        # while len(self.axes.texts) > 0:
-        #     self.axes.texts.pop(0)
