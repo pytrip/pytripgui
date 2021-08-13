@@ -4,7 +4,7 @@ from matplotlib.image import AxesImage
 '''
 This class and its subclasses were made to remove extra responsibility from mpl_plotter.
 It has methods that allow to show image, check if it is shown, update and remove it.
-Greatly removes repeated code and hides how images are made.
+Greatly removes code duplicates and hides information how images are made.
 '''
 
 
