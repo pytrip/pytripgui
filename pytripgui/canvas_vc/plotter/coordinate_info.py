@@ -71,7 +71,9 @@ class CoordinateInfo(Axes3D):
         Next invocations update position of one surface or two surfaces, if perspective has changed.
 
         Parameters:
-            data - object from plot_model that has projection_selector
+        ----------
+        data : Ctx - object that has projection_selector
+
         """
         current_plane = data.projection_selector.plane
         current_slices = data.projection_selector.get_current_slices()
