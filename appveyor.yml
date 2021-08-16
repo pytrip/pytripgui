@@ -39,9 +39,6 @@ install:
 
 build_script:
 # py to exe package
-# upx is needed by pyinstaller to compress files
-#  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
-#  - 7z e upx.zip *.exe -r
 # install pyinstaller
   - python -m pip install pyinstaller
 # newer pydicom doesn't work
