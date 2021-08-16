@@ -117,7 +117,7 @@ exe = EXE(pyz,
           name='pytripgui',
           debug=False,
           strip=False,
-          upx=True,
+          upx=False,
           console=False,
           icon='pytripgui/res/icon.ico')
 coll = COLLECT(exe,
@@ -125,7 +125,7 @@ coll = COLLECT(exe,
                a.zipfiles,
                a.datas,
                strip=False,
-               upx=True,
+               upx=False,
                name='pytripgui')
 
 
