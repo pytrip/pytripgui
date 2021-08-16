@@ -51,6 +51,4 @@ class PlotModel:
             self.projection_selector._coronal_slice_no = max_item_index[1]
 
     def set_vdx(self):
-        self.vdx = Vdx(self.projection_selector)
-        self.vdx.vois = []
-        self.vdx.ctx = self.ctx.cube
+        self.vdx = Vdx(self.projection_selector, self.ctx.cube)
