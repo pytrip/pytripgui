@@ -65,7 +65,7 @@ class CanvasController:
         if self._model.ctx:
             if self._model.vdx:
                 # TODO this does not work
-                self._model.vdx.plot(self._ui._plotter)
+                self._ui.plot_voi(self._model.vdx)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
 
@@ -108,7 +108,7 @@ class CanvasController:
         if patient.vdx.vois:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            self._on_update_voi()
+            # self._on_update_voi()
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
@@ -133,8 +133,9 @@ class CanvasController:
 
     def _on_update_voi(self):
         if self._model.vdx:
-            self._model.vdx.vois = self._ui.voi_list.checked_items()
+            self._model.vdx.voi_list = self._ui.voi_list.checked_items()
         self.update_canvas_view()
+        self._ui.update()
 
     def get_projection_selector(self):
         return self._model.projection_selector

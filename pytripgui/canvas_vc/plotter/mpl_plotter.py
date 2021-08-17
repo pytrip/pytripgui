@@ -10,6 +10,7 @@ class MplPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
+
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Parameters:
@@ -29,9 +30,9 @@ class MplPlotter(FigureCanvas):
         if blit_manager will be created before figure is initialized
         dummy figure will be used and restoring background will work improperly
         """
-        self.figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
-        self.blit_manager = BlitManager(self)
-        self.plotting_manager = PlottingManager(self.figure, self.blit_manager)
+        self.figure: Figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
+        self.blit_manager: BlitManager = BlitManager(self)
+        self.plotting_manager: PlottingManager = PlottingManager(self.figure, self.blit_manager)
 
         FigureCanvas.__init__(self, self.figure)
 
@@ -74,6 +75,12 @@ class MplPlotter(FigureCanvas):
 
     def plot_ctx(self, data):
         self.plotting_manager.plot_ctx(data)
+
+    def plot_voi(self, vdx):
+        self.plotting_manager.plot_voi(vdx)
+
+    def remove_voi(self):
+        self.plotting_manager.remove_voi()
 
     def update(self):
         self.blit_manager.update()

@@ -15,7 +15,7 @@ class PlotModel:
     def __init__(self, projection_selector=ProjectionSelector()):
 
         self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        # self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
 
         self.projection_selector = projection_selector
         self.display_filter = ""
