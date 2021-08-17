@@ -72,7 +72,7 @@ class VoiManager:
                     if self._plotted_voi.get(voi.name) is None:
                         self._plotted_voi[voi.name] = []
                     if len(self._plotted_voi[voi.name]) < number_of_contours:
-                        (line,) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=100)
+                        (line, ) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=100)
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
                     else:
