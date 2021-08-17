@@ -37,7 +37,7 @@ class VoiManager:
         # remove VOI that should not be plotted or updated
         voi_names_to_remove = [v for v in self._plotted_voi.keys() if v not in [voi.name for voi in vdx.voi_list]]
         for name in voi_names_to_remove:
-            self._remove_voi_plot(name)
+            self._remove_all_voi_plots(name)
 
         for voi in vdx.voi_list:
             logger.debug("plot() voi:{}".format(voi.name))
@@ -47,11 +47,14 @@ class VoiManager:
             # remove VOI plot if it does not exist on current slice
             if current_slice is None:
                 if self._plotted_voi.get(voi.name) is not None:
-                    self._remove_voi_plot(voi.name)
+                    self._remove_all_voi_plots(voi.name)
                 continue
 
             contour_color = self._get_color(voi, random.randint(0, len(voi.colors)))
             number_of_contours = len(current_slice.contours)
+            # remove redundant voi plots
+            if self._plotted_voi.get(voi.name) is not None and len(self._plotted_voi[voi.name]) > number_of_contours:
+                self._remove_all_voi_plots(voi.name)
             # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
                 # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
@@ -93,9 +96,9 @@ class VoiManager:
     def remove_voi(self):
         names = list(self._plotted_voi.keys())
         for name in names:
-            self._remove_voi_plot(name)
+            self._remove_all_voi_plots(name)
 
-    def _remove_voi_plot(self, name):
+    def _remove_all_voi_plots(self, name):
         for line in self._plotted_voi[name]:
             self._blit_manager.remove_artist(line)
             line.remove()
