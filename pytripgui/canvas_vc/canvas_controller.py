@@ -63,11 +63,11 @@ class CanvasController:
         self._ui.reset_radiobuttons()
 
         if self._model.ctx:
+            self._model.ctx.prepare_data_to_plot()
+            self._ui.plot_ctx(self._model.ctx)
             if self._model.vdx:
                 # TODO this does work, but is not fully reworked yet
                 self._ui.plot_voi(self._model.vdx)
-            self._model.ctx.prepare_data_to_plot()
-            self._ui.plot_ctx(self._model.ctx)
 
         if self._model.dose:
             self._ui.enable_dose()
