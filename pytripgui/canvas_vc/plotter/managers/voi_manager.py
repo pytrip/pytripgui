@@ -1,3 +1,4 @@
+import colorsys
 import logging
 
 import matplotlib.colors
@@ -16,6 +17,18 @@ class VoiManager:
         self._axes: Axes = axes
         self._blit_manager: BlitManager = blit_manager
         self._plotted_voi: dict = {}
+
+        # colors
+        n = 30
+        hsv_tuples = [(x*1.0/n, 1, 1) for x in range(n)]
+        rgb_tuples = map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples)
+        self._colors = list(rgb_tuples)
+        self._current_color = 0
+
+    def _get_next_color(self):
+        color = self._colors[self._current_color]
+        self._current_color = (self._current_color+1) % len(self._colors)
+        return color
 
     def plot_voi(self, vdx: Vdx):
         """
@@ -48,7 +61,7 @@ class VoiManager:
             for i, _c in enumerate(current_slice.contours):
                 data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, 0.0])
                 self._plane_points_idx([data], vdx.ctx)  # this transforms the <data> array
-                contour_color = np.array(voi.color) / 255.0
+                contour_color = self._get_next_color()
 
                 if _c.contour_closed:
                     xy = np.concatenate((data, [data[0]]), axis=0)
@@ -67,7 +80,7 @@ class VoiManager:
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
                     else:
-                        line = self._plotted_voi[voi.name][i]
+                        line: Line2D = self._plotted_voi[voi.name][i]
                         line.set_data(xy[:, 0], xy[:, 1])
 
     def _get_current_slice(self, vdx, voi):
@@ -82,7 +95,8 @@ class VoiManager:
         return _slice
 
     def remove_voi(self):
-        for name in self._plotted_voi.keys():
+        names = list(self._plotted_voi.keys())
+        for name in names:
             self._remove_voi_plot(name)
 
     def _remove_voi_plot(self, name):
