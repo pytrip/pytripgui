@@ -60,7 +60,7 @@ class VoiManager:
                     self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
                 else:
                     if self._plotted_voi.get(voi.name) is None:
-                        (line,) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
+                        (line, ) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
                         self._plotted_voi[voi.name] = line
                         self._blit_manager.add_artist(line)
                     else:

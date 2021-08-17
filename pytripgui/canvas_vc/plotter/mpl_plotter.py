@@ -10,7 +10,6 @@ class MplPlotter(FigureCanvas):
     """
     Viewer class for matplotlib 2D plotting widget
     """
-
     def __init__(self, parent=None, width=16, height=9, dpi=100):
         """
         Parameters:

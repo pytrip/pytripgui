@@ -9,7 +9,6 @@ from pytripgui.canvas_vc.plotter.coordinate_info import CoordinateInfo
 from pytripgui.canvas_vc.plotter.images import CtxImage, DoseImage, LetImage
 from pytripgui.canvas_vc.plotter.managers import PlacementManager, BlitManager
 from pytripgui.canvas_vc.plotter.managers.voi_manager import VoiManager
-
 '''
 This class was created to remove extra responsibilities from mpl_plotter.
 It hides how things are plotted, if they are present and how they are removed.
@@ -22,7 +21,6 @@ class PlottingManager:
     """
     Holds high level logic for plotting/removing images and bars.
     """
-
     def __init__(self, figure: Figure, blit_manager: BlitManager):
         """
         Parameters:
