@@ -21,14 +21,14 @@ class VoiManager:
 
         # colors
         n = 30
-        hsv_tuples = [(x*1.0/n, 1, 1) for x in range(n)]
+        hsv_tuples = [(x * 1.0 / n, 1, 1) for x in range(n)]
         rgb_tuples = map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples)
         self._colors = list(rgb_tuples)
         self._current_color = 0
 
     def _get_next_color(self):
         color = self._colors[self._current_color]
-        self._current_color = (self._current_color+1) % len(self._colors)
+        self._current_color = (self._current_color + 1) % len(self._colors)
         return color
 
     def plot_voi(self, vdx: Vdx):
