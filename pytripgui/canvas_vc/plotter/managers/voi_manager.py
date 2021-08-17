@@ -44,7 +44,8 @@ class VoiManager:
             # for a given VOI, the slice viewed may consist of multiple Contours.
             # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
             # they will be transformed and put into <data>
-            for _c in current_slice.contours:
+            number_of_contours = len(current_slice.contours)
+            for i, _c in enumerate(current_slice.contours):
                 data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, 0.0])
                 self._plane_points_idx([data], vdx.ctx)  # this transforms the <data> array
                 contour_color = np.array(voi.color) / 255.0
@@ -60,11 +61,13 @@ class VoiManager:
                     self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
                 else:
                     if self._plotted_voi.get(voi.name) is None:
-                        (line, ) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
-                        self._plotted_voi[voi.name] = line
+                        self._plotted_voi[voi.name] = []
+                    if len(self._plotted_voi[voi.name]) < number_of_contours:
+                        (line,) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
+                        self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
                     else:
-                        line = self._plotted_voi[voi.name]
+                        line = self._plotted_voi[voi.name][i]
                         line.set_data(xy[:, 0], xy[:, 1])
 
     def _get_current_slice(self, vdx, voi):
@@ -83,12 +86,15 @@ class VoiManager:
             self._remove_voi_plot(name)
 
     def _remove_voi_plot(self, name):
-        line: Line2D = self._plotted_voi[name]
-        self._blit_manager.remove_artist(line)
-        line.remove()
+        for line in self._plotted_voi[name]:
+            self._blit_manager.remove_artist(line)
+            line.remove()
+            del line
+
         del self._plotted_voi[name]
 
     def _plot_poi(self, x, y, color='#00ff00', legend=''):
+        # TODO not reworked yet
         """ Plot a point of interest at x,y
         :params x,y: position in real world CT units
         :params color: colour of the point of interest
@@ -99,7 +105,7 @@ class VoiManager:
 
         bbox = self._axes.get_window_extent().transformed(self._axes.figure.dpi_scale_trans.inverted())
         width, height = bbox.width * self._axes.figure.dpi, bbox.height * self._axes.figure.dpi
-        size = [width, height]
+        # size = [width, height]
 
         logger.debug("_plot_poi width,height: {} {} pixels".format(width, height))
 
