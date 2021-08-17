@@ -5,6 +5,7 @@ import matplotlib.colors
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
+from pytrip.vdx import Slice
 
 from pytripgui.canvas_vc.objects.vdx import Vdx
 from pytripgui.canvas_vc.plotter.managers import BlitManager
@@ -46,7 +47,7 @@ class VoiManager:
         for voi in vdx.voi_list:
             logger.debug("plot() voi:{}".format(voi.name))
 
-            current_slice = self._get_current_slice(vdx, voi)
+            current_slice: Slice = self._get_current_slice(vdx, voi)
 
             # remove VOI plot if it does not exist on current slice
             if current_slice is None:
@@ -83,8 +84,8 @@ class VoiManager:
                         line: Line2D = self._plotted_voi[voi.name][i]
                         line.set_data(xy[:, 0], xy[:, 1])
 
-    def _get_current_slice(self, vdx, voi):
-        _slice = None
+    def _get_current_slice(self, vdx, voi) -> Slice:
+        _slice: Slice = None
         # TODO create enum class that holds all plane strings
         if vdx.projection_selector.plane == "Transversal":
             _slice = voi.get_slice_at_pos(vdx.ctx.slice_to_z(vdx.projection_selector.current_slice_no + 1))
