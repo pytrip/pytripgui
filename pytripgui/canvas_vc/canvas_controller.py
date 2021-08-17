@@ -9,6 +9,7 @@ class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
+
     def __init__(self, model, ui):
         self._model = model
         self._ui = ui
@@ -65,9 +66,6 @@ class CanvasController:
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
-            if self._model.vdx:
-                # TODO this does work, but is not fully reworked yet
-                self._ui.plot_voi(self._model.vdx)
 
         if self._model.dose:
             self._ui.enable_dose()
@@ -84,6 +82,10 @@ class CanvasController:
                 self._model.display_filter = "LET"
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
+
+        if self._model.vdx:
+            # TODO this does work, but is not fully reworked yet
+            self._ui.plot_voi(self._model.vdx)
 
         self._ui.display_filter = self._model.display_filter
 
@@ -115,11 +117,11 @@ class CanvasController:
         self._ui.draw()
 
     def set_simulation_results(self, simulation_results, state):
-        self.set_patient(simulation_results.patient, None)
         self._ui.clear()
-        if state is None:
-            state = ProjectionSelector()
-        self._model = PlotModel(state)
+        self.set_patient(simulation_results.patient, None)
+        # if state is None:
+        #     state = ProjectionSelector()
+        # self._model = PlotModel(state)
 
         self._model.set_ctx(simulation_results.patient.ctx)
 

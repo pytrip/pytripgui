@@ -1,11 +1,11 @@
-import colorsys
 import logging
+import random
 
 import matplotlib.colors
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
-from pytrip.vdx import Slice
+from pytrip.vdx import Slice, Voi
 
 from pytripgui.canvas_vc.objects.vdx import Vdx
 from pytripgui.canvas_vc.plotter.managers import BlitManager
@@ -19,16 +19,11 @@ class VoiManager:
         self._blit_manager: BlitManager = blit_manager
         self._plotted_voi: dict = {}
 
-        # colors
-        n = 30
-        hsv_tuples = [(x * 1.0 / n, 1, 1) for x in range(n)]
-        rgb_tuples = map(lambda x: colorsys.hsv_to_rgb(*x), hsv_tuples)
-        self._colors = list(rgb_tuples)
-        self._current_color = 0
-
-    def _get_next_color(self):
-        color = self._colors[self._current_color]
-        self._current_color = (self._current_color + 1) % len(self._colors)
+    def _get_color(self, voi: Voi, i: int):
+        i = i % len(voi.colors)
+        # color in voi is stored as [a, b, c] where a,b,c are number from 0 to 255
+        # dividing by 255 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
+        color = np.array(voi.get_color(i)) / 255.0
         return color
 
     def plot_voi(self, vdx: Vdx):
@@ -55,14 +50,14 @@ class VoiManager:
                     self._remove_voi_plot(voi.name)
                 continue
 
-            # for a given VOI, the slice viewed may consist of multiple Contours.
-            # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
-            # they will be transformed and put into <data>
+            contour_color = self._get_color(voi, random.randint(0, len(voi.colors)))
             number_of_contours = len(current_slice.contours)
+            # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
+                # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
+                # they will be transformed and put into <data>
                 data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, 0.0])
                 self._plane_points_idx([data], vdx.ctx)  # this transforms the <data> array
-                contour_color = self._get_next_color()
 
                 if _c.contour_closed:
                     xy = np.concatenate((data, [data[0]]), axis=0)
@@ -77,7 +72,7 @@ class VoiManager:
                     if self._plotted_voi.get(voi.name) is None:
                         self._plotted_voi[voi.name] = []
                     if len(self._plotted_voi[voi.name]) < number_of_contours:
-                        (line, ) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=15)
+                        (line,) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=100)
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
                     else:
