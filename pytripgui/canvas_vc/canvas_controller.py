@@ -65,6 +65,9 @@ class CanvasController:
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
+            if self._model.vdx:
+                # TODO this does work, but is not fully reworked yet
+                self._ui.plot_voi(self._model.vdx)
 
         if self._model.dose:
             self._ui.enable_dose()
@@ -81,10 +84,6 @@ class CanvasController:
                 self._model.display_filter = "LET"
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
-
-        if self._model.vdx:
-            # TODO this does work, but is not fully reworked yet
-            self._ui.plot_voi(self._model.vdx)
 
         self._ui.display_filter = self._model.display_filter
 
