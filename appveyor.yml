@@ -1,4 +1,3 @@
-
 # validation page for appveyor config: https://ci.appveyor.com/tools/validate-yaml
 
 # we are not building Visual Studio project, so default build step is off
@@ -6,24 +5,9 @@ build: off
 
 environment:
   matrix:
-    - platform: x64
-      PYTHON: "C:\\Python35-x64"
 
-#     - platform: x64
-#       PYTHON: "C:\\Python36-x64"
-
-#     - platform: x64
-#       PYTHON: "C:\\Python37-x64"
-
-#     - platform: x64
-#       PYTHON: "C:\\Python38-x64"
-
-init:
-# check python version
-  - python -V
-# check 32 or 64 bit
-  - python -c "import struct;print(8 * struct.calcsize('P'))"
-
+     - platform: x64
+       PYTHON: "C:\\Python38-x64"
 
 install:
   # If there is a newer build queued for the same PR, cancel this one.
@@ -37,48 +21,62 @@ install:
           throw "There are newer queued builds for this pull request, failing early." }
   # Prepend Python to the PATH of this build
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-# check pip version
-  - pip -V
-# install usual requirements
-  - pip install "setuptools>=30.0.0"  # minimal version of setuptools required to build package without error
-  - pip install --upgrade -r requirements.txt
-  - pip install --upgrade -r tests\\requirements-test.txt
-# check numpy version
-  - python -c "import numpy as np;print(np.version.version)"
-# check python and pip versions
+# update pip
+  - python -m pip install --upgrade pip
+# check versions
   - python -V
   - pip -V
+  - python -m pip -V
+  - pip list
+# check 32 or 64 bit
+  - python -c "import struct;print(8 * struct.calcsize('P'))"
+# install usual requirements
+  - python -m pip install --upgrade setuptools
+  - python -m pip install --upgrade -r requirements.txt
+  - pip list
+# check numpy version
+  - python -c "import numpy as np;print(np.version.version)"
 
-test_script:
+build_script:
+# py to exe package
+# install pyinstaller
+  - python -m pip install pyinstaller
+# newer pydicom doesn't work
+  - python -m pip install "pydicom==2.1.2"
+# check python packages list and theirs version
+  - pip list
+# generate installer
+  - python setup.py -V # trick needed to generate VERSION file
+  - pyinstaller main.spec
+# remove dist-info folders
+  - ps: Remove-Item dist\pytripgui\*.dist-info -Recurse
+# compress pytripgui package
+  - 7z a pytripgui.zip ./dist/pytripgui
+
+# installer
+# generate single dir installation
+# add InnoSetup to PATH
+  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
+# make windows installer
+  - iscc win_innosetup.iss
+
 # make wheel package
-  - pip install wheel
+  - python -m pip install wheel
+  - pip list
   - python setup.py bdist_wheel
 # clean build directory
   - rd /s /q build
 
-# installer
-# generate single dir installation
-# Installing InnoSetup
-  - choco install -y curl InnoSetup
-  - set PATH="C:\Program Files (x86)\Inno Setup 5";%PATH%
-# upx is needed by pyinstaller to compress files
-  - curl -L -o upx.zip https://github.com/upx/upx/releases/download/v3.96/upx-3.96-win64.zip
-  - 7z e upx.zip *.exe -r
-# pyinstaller
-  - pip install pyinstaller
-# install missing dependencies
-  - pip install appdirs tornado packaging
-# generate installer
-  - python setup.py -V # trick needed to generate VERSION file
-  - pyinstaller main.spec
-  - iscc win10_innosetup.iss
-
+test_script:
 # testing
+# install needed dependencies
+  - python -m pip install --upgrade -r tests\\requirements-test.txt
+  - pip list
 # remove source directory, to be sure that we use only wheel package for testing
   - rd /s /q pytripgui
   - del setup.py
 # install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
-  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; pip install $_}
+  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; python -m pip install $_}
 # run tests
   - pytest
 
@@ -88,13 +86,15 @@ artifacts:
     name: wheel
   - path: 'Output\pytrip*exe'
     name: installer
+  - path: 'pytripgui.zip'
+    name: package
 
 # push artifacts to github
 deploy:
   description: 'AppveyorCI build'
   provider: GitHub
   auth_token:
-    secure: p+WOiBJJTkzczNSfry0A4Jmf63P61UbnuMgM/i2Y+TvkVNkjc9cFjQs8UEEdy9J/
+    secure: PK+PK8/w2Emruyqi9bLVDfHGNmbT5Lq+hArBCb9JG1S4V2F9mlTTdMfzTweLlXL3  # github auth token valid until 13.08.2022
   artifact: installer
   draft: false
   prerelease: false
