@@ -20,9 +20,10 @@ class VoiManager:
         self._plotted_voi: dict = {}
 
     def _get_color(self, voi: Voi, i: int):
+        # TODO if colors are implemented properly in pytrip - change this method
         i = i % len(voi.colors)
-        # color in voi is stored as [a, b, c] where a,b,c are number from 0 to 255
-        # dividing by 255 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
+        # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
+        # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
         color = np.array(voi.get_color(i)) / 255.0
         return color
 
@@ -44,7 +45,7 @@ class VoiManager:
 
             current_slice: Slice = self._get_current_slice(vdx, voi)
 
-            # remove VOI plot if it does not exist on current slice
+            # remove VOI plots if it does not exist on current slice
             if current_slice is None:
                 if self._plotted_voi.get(voi.name) is not None:
                     self._remove_all_voi_plots(voi.name)
@@ -53,8 +54,10 @@ class VoiManager:
             contour_color = self._get_color(voi, random.randint(0, len(voi.colors)))
             number_of_contours = len(current_slice.contours)
             # remove redundant voi plots
-            if self._plotted_voi.get(voi.name) is not None and len(self._plotted_voi[voi.name]) > number_of_contours:
+            # it fixes problem with updating VOIs that change number of contours
+            if self._plotted_voi.get(voi.name) is not None and len(self._plotted_voi[voi.name]) != number_of_contours:
                 self._remove_all_voi_plots(voi.name)
+
             # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
                 # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
