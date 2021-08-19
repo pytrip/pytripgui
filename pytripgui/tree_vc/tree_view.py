@@ -59,7 +59,7 @@ class TreeView(QTreeView):
             popup_menu.addAction("Open Voxelplan", self.internal_events.on_open_voxelplan)
             popup_menu.addAction("Add new Plan", self.internal_events.on_add_child)
             popup_menu.addAction("Export as Voxelplan", self.internal_events.on_export_patient_voxelplan)
-            popup_menu.addAction("Export as Dicom", self.internal_events.on_export_patient_dicom)
+            popup_menu.addAction("Export as DICOM", self.internal_events.on_export_patient_dicom)
         elif isinstance(self.selected_item, PlanItem):
             popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
             popup_menu.addSeparator()
