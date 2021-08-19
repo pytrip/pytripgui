@@ -1,5 +1,4 @@
 import logging
-import os
 
 from PyQt5.QtWidgets import QFileDialog
 
