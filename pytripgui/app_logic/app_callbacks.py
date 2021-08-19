@@ -191,7 +191,12 @@ class AppCallback:
 
         patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
+        try:
+            patient.open_vdx(filename + ".vdx")  # Todo catch more exceptions
+        except FileNotFoundError:
+            logger.warning("Loaded patient has no VOI data")
+            # TODO add empty vdx init if needed
+            patient.vdx = None
 
         if not self.app_model.viewcanvases:
             self.app_model.viewcanvases = ViewCanvases()
