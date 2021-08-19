@@ -34,7 +34,7 @@ class MainWindowQtView:
         """
         Browse for an existing file.
 
-        :return full file path (absolute), or empty string
+        :return full file path (absolute), or empty string if browsing was aborted
         """
         selected_file_path, selected_file_extension = QFileDialog.getOpenFileName(self.ui, name, path, extension)
         return selected_file_path
@@ -43,7 +43,7 @@ class MainWindowQtView:
         """
         Select the name and directory of a file to be created.
 
-        :return full file path (absolute), or empty string
+        :return full file path (absolute), or empty string if browsing was aborted
         """
         selected_file_path, selected_file_extension = QFileDialog.getSaveFileName(self.ui, caption, path, extension)
         return selected_file_path
@@ -52,7 +52,7 @@ class MainWindowQtView:
         """
         Browse for an existing directory.
 
-        :return full directory path (absolute), or empty string
+        :return full directory path (absolute), or empty string if browsing was aborted
         """
         dialog = QFileDialog(self.ui, name, path)
         dialog.setFileMode(QFileDialog.Directory)
