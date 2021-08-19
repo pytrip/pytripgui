@@ -186,7 +186,7 @@ class AppCallback:
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         filename, extension = os.path.splitext(path)
 
-        if filename == "":
+        if not filename:
             return False
 
         patient = patient_item.data
@@ -230,17 +230,17 @@ class AppCallback:
         bool: Whether export was successful
         """
         logger.debug("Voxelplan export start.")
-        path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
+        full_path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
 
-        if path == "":
+        if not full_path:
             return False
 
-        path_base, extension = os.path.splitext(path)
+        path_base, extension = os.path.splitext(full_path)
         path, basename = os.path.split(path_base)
         logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
 
         patient_item.data.ctx.write(os.path.join(path, basename + patient_item.data.ctx.data_file_extension))
-        if patient_item.data.vdx is not None:
+        if patient_item.data.vdx:
             patient_item.data.vdx.write(os.path.join(path, basename + patient_item.data.vdx.data_file_extension))
         else:
             logger.warning("Exported patient has no VOI.")
@@ -259,16 +259,16 @@ class AppCallback:
         bool: Whether export was successful
         """
         logger.debug("DICOM export start.")
-        path = self.parent_gui.browse_folder_path("Export patient to DICOM")
+        full_path = self.parent_gui.browse_folder_path("Export patient to DICOM")
 
-        if path == "":
+        if not full_path:
             return False
 
-        logger.info("DICOM export to: " + path)
+        logger.info("DICOM export to: " + full_path)
 
-        patient_item.data.ctx.write_dicom(path)
-        if patient_item.data.vdx is not None:
-            patient_item.data.vdx.write_dicom(path)
+        patient_item.data.ctx.write_dicom(full_path)
+        if patient_item.data.vdx:
+            patient_item.data.vdx.write_dicom(full_path)
         else:
             logger.warning("Exported patient has no VOI.")
 
