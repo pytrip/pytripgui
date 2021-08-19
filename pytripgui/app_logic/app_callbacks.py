@@ -231,8 +231,8 @@ class AppCallback:
         path, basename = os.path.split(path_base)
         logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
 
-        patient_item.data.ctx.write(os.path.join(path, basename + ".ctx"))
-        patient_item.data.vdx.write(os.path.join(path, basename + ".vdx"))
+        patient_item.data.ctx.write(os.path.join(path, basename + patient_item.data.ctx.data_file_extension))
+        patient_item.data.vdx.write(os.path.join(path, basename + patient_item.data.vdx.data_file_extension))
 
         logger.debug("Voxelplan export finished.")
         return True

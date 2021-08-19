@@ -35,12 +35,15 @@ class MainWindowQtView:
         """
         :return full file path, or empty string
         """
-        selected_file = QFileDialog.getOpenFileName(self.ui, name, path, extension)
-        return selected_file[0]
+        selected_file_path, selected_file_extension = QFileDialog.getOpenFileName(self.ui, name, path, extension)
+        return selected_file_path
 
     def save_file_path(self, caption, extension, path=None):
-        file = QFileDialog.getSaveFileName(self.ui, caption, path, extension)
-        return file[0]
+        """
+        :return full file, or empty string
+        """
+        selected_file_path, selected_file_extension = QFileDialog.getSaveFileName(self.ui, caption, path, extension)
+        return selected_file_path
 
     def browse_folder_path(self, name, path=None):
         """
@@ -50,7 +53,7 @@ class MainWindowQtView:
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setOptions(QFileDialog.ShowDirsOnly)
         dialog.exec_()
-        selected_path = os.path.join(dialog.directory().path(), '')
+        selected_path = dialog.selectedFiles()[0]
         if dialog.result() == QFileDialog.Accepted:
             return selected_path
         return ""
