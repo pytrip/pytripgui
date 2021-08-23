@@ -1,5 +1,6 @@
 import logging
 import random
+from copy import deepcopy
 
 import matplotlib.colors
 import numpy as np
@@ -43,6 +44,7 @@ class VoiManager:
         for voi in vdx.voi_list:
             logger.debug("plot() voi:{}".format(voi.name))
 
+            # get slice with contours in current plane and position
             current_slice: Slice = self._get_current_slice(vdx, voi)
 
             # remove VOI plots if it does not exist on current slice
@@ -53,6 +55,7 @@ class VoiManager:
 
             contour_color = self._get_color(voi, random.randint(0, len(voi.colors)))
             number_of_contours = len(current_slice.contours)
+
             # remove redundant voi plots
             # it fixes problem with updating VOIs that change number of contours
             if self._plotted_voi.get(voi.name) is not None and len(self._plotted_voi[voi.name]) != number_of_contours:
@@ -60,40 +63,63 @@ class VoiManager:
 
             # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
-                # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm)
-                # they will be transformed and put into <data>
-                data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, 0.0])
-                self._plane_points_idx([data], vdx.ctx)  # this transforms the <data> array
+                # zoffset is set to 0.0 in most cubes, which is wrong
+                # because of that fact, next line calculates the zoffset as it should be done in CtxCube
+                z_offset = min(vdx.ctx.slice_pos) # slice_pos contains z positions in mm
+
+                # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm), we need to remove offsets
+                data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, z_offset])
+
+                # translating positions in mm into pixel positions
+                data_pixels = self._plane_points_idx([data], vdx.ctx, vdx.projection_selector.plane)
 
                 if _c.contour_closed:
-                    xy = np.concatenate((data, [data[0]]), axis=0)
+                    xy = np.concatenate((data_pixels, [data_pixels[0]]), axis=0)
                 else:
-                    xy = data
+                    xy = data_pixels
 
                 # TODO: what are plotting here? in terms of mm or pixels?
                 if _c.number_of_points() == 1:
                     # TODO not reworked yet
                     self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
                 else:
+                    x, y = self._get_plot_data(vdx, xy)
                     if self._plotted_voi.get(voi.name) is None:
                         self._plotted_voi[voi.name] = []
                     if len(self._plotted_voi[voi.name]) < number_of_contours:
-                        (line, ) = self._axes.plot(xy[:, 0], xy[:, 1], color=contour_color, zorder=100)
+                        (line, ) = self._axes.plot(x, y, color=contour_color, zorder=100)
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
                     else:
                         line: Line2D = self._plotted_voi[voi.name][i]
-                        line.set_data(xy[:, 0], xy[:, 1])
+                        line.set_data(x, y)
 
-    def _get_current_slice(self, vdx, voi) -> Slice:
+    def _get_plot_data(self, vdx, data) -> ([float], [float]):
+        if vdx.projection_selector.plane == "Transversal":
+            # "Transversal" (xy)
+            return data[:, 0], data[:, 1]
+        elif vdx.projection_selector.plane == "Sagittal":
+            # "Sagittal" (yz)
+            return data[:, 1], data[:, 2]
+        elif vdx.projection_selector.plane == "Coronal":
+            # "Coronal"  (xz)
+            return data[:, 0], data[:, 2]
+
+    def _get_current_slice(self, vdx, voi: Voi) -> Slice:
         _slice: Slice = None
+        # get current indices in all planes
+        positions_indices = vdx.projection_selector.get_current_slices()
+        # transform them into [x, y, z] array
+        indices = [positions_indices['Sagittal'], positions_indices['Coronal'], positions_indices['Transversal']]
+        # get positions in mm
+        positions_mm = voi.cube.indices_to_pos(indices)
         # TODO create enum class that holds all plane strings
         if vdx.projection_selector.plane == "Transversal":
-            _slice = voi.get_slice_at_pos(vdx.ctx.slice_to_z(vdx.projection_selector.current_slice_no + 1))
+            _slice = voi.get_slice_at_pos(positions_mm[2])
         elif vdx.projection_selector.plane == "Sagittal":
-            _slice = voi.get_2d_slice(voi.sagittal, vdx.projection_selector.current_slice_no)
+            _slice = voi.get_2d_slice(voi.sagittal, positions_mm[0])
         elif vdx.projection_selector.plane == "Coronal":
-            _slice = voi.get_2d_slice(voi.coronal, vdx.projection_selector.current_slice_no)
+            _slice = voi.get_2d_slice(voi.coronal, positions_mm[1])
         return _slice
 
     def remove_voi(self):
@@ -108,6 +134,36 @@ class VoiManager:
             del line
 
         del self._plotted_voi[name]
+
+    def _plane_points_idx(self, points, ctx, plane):
+        """
+        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
+
+        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
+                       OUTPUT: list of points pseudo-2D format.
+        :param ctx:
+        :param plane:
+
+        TODO: code would be easier to read, if this is split up into two steps. 1) conv. to index, 2) extraction.
+        """
+
+        ct_pixsize_inv = 1.0 / ctx.pixel_size
+        ct_slicedist_inv = 1.0 / ctx.slice_distance
+
+        results = deepcopy(points)
+
+        for point, result in zip(points, results):
+            if plane == "Transversal":
+                result[:, 0] = point[:, 0] * ct_pixsize_inv
+                result[:, 1] = point[:, 1] * ct_pixsize_inv
+            elif plane == "Sagittal":
+                result[:, 1] = (-point[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
+                result[:, 2] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+            elif plane == "Coronal":
+                result[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
+                result[:, 2] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+
+        return result
 
     def _plot_poi(self, x, y, color='#00ff00', legend=''):
         # TODO not reworked yet
@@ -173,29 +229,3 @@ class VoiManager:
                         backgroundcolor=(0.0, 0.0, 0.0, 0.8),
                         zorder=20)  # zorder higher, so text is always above the lines
         self._axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
-
-    def _plane_points_idx(self, points, ctx, plane="Transversal"):
-        """
-        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
-
-        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
-                       OUTPUT: list of points pseudo-2D format.
-        :param ctx:
-        :param plane:
-
-        TODO: code would be easier to read, if this is split up into two steps. 1) conv. to index, 2) extraction.
-        """
-
-        ct_pixsize_inv = 1.0 / ctx.pixel_size
-        ct_slicedist_inv = 1.0 / ctx.slice_distance
-
-        for point in points:
-            if plane == "Transversal":
-                point[:, 0] *= ct_pixsize_inv
-                point[:, 1] *= ct_pixsize_inv
-            elif plane == "Sagittal":
-                point[:, 0] = (-point[:, 1] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
-            elif plane == "Coronal":
-                point[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
-                point[:, 1] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
