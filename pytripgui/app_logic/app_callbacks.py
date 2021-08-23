@@ -184,7 +184,7 @@ class AppCallback:
 
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, extension = os.path.splitext(path)
+        filename, _ = os.path.splitext(path)
 
         if filename == "":
             return False
