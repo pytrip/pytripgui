@@ -129,10 +129,6 @@ class ComboBox:
     def last_data(self):
         return self._ui.itemData(self.last_index)
 
-    @property
-    def count(self):
-        return self._ui.count()
-
 
 class UserInfoBox:
     def __init__(self, parent_ui):

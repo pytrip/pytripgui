@@ -1,4 +1,4 @@
-from pytripgui.view.qt_view_adapter import LineEdit, TabWidget, PushButton
+from pytripgui.view.qt_view_adapter import LineEdit, TabWidget
 from pytripgui.view.qt_gui import EmptyPatientDialog
 
 import logging
