@@ -184,14 +184,19 @@ class AppCallback:
 
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, extension = os.path.splitext(path)
+        filename, _ = os.path.splitext(path)
 
         if filename == "":
             return False
 
         patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
+        try:
+            patient.open_vdx(filename + ".vdx")  # Todo catch more exceptions
+        except FileNotFoundError:
+            logger.warning("Loaded patient has no VOI data")
+            # TODO add empty vdx init if needed
+            patient.vdx = None
 
         if not self.app_model.viewcanvases:
             self.app_model.viewcanvases = ViewCanvases()
@@ -250,6 +255,13 @@ class AppCallback:
             # set state of plot when plotting first time
             if state_item.state is None:
                 state_item.state = self.app_model.viewcanvases.get_gui_state()
+
+            # hide VOI list
+            if not data_item.data.vdx or not data_item.data.vdx.vois:
+                logger.debug("no VOI data present, hiding VOI list control")
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(True)
+            else:
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
     def patient_tree_show(self):
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)

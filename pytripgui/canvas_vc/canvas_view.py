@@ -27,11 +27,11 @@ class CanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
-        self.vois_tree_set_enabled(True)
+        self.voi_list_set_visibility(visible=True)
 
     def _internal_events_setup(self):
 
-        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
+        self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_visibility)
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
@@ -134,10 +134,36 @@ class CanvasView:
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
 
-    def vois_tree_set_enabled(self, state):
-        if state:
+    def voi_list_set_visibility(self, visible: bool = True) -> None:
+        """
+        Method that handles displaying and hiding the VOI list.
+
+        Parameters:
+        visible(bool): Whether the list should be shown.
+        """
+        if visible:
             self._ui.voi_listWidget.show()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
         else:
             self._ui.voi_listWidget.hide()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)
+
+    def voi_list_empty(self, empty: bool = True) -> None:
+        """
+        Method that handles displaying and hiding the VOI list and its checkBox when VOI data is unavailable.
+
+        Parameters:
+        empty(bool): Whether the list is empty and should be hidden.
+        """
+        voi_list = self._ui.voi_listWidget
+        checkbox = self._ui.voiList_checkBox
+
+        if empty:
+            voi_list.hide()
+            checkbox.hide()
+        else:
+            checkbox.show()
+            if checkbox.isChecked():
+                voi_list.show()
+            else:
+                voi_list.hide()
