@@ -141,3 +141,23 @@ class CanvasView:
         else:
             self._ui.voi_listWidget.hide()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)
+
+    def vois_tree_empty(self, empty=True):
+        """
+        Method that handles displaying and hiding the VOI list and its checkBox.
+
+        Parameters:
+        empty(bool): Whether the list is empty and should be hidden.
+        """
+        voi_list = self._ui.voi_listWidget
+        checkbox = self._ui.voiList_checkBox
+
+        if empty:
+            voi_list.hide()
+            checkbox.hide()
+        else:
+            checkbox.show()
+            if checkbox.isChecked():
+                voi_list.show()
+            else:
+                voi_list.hide()

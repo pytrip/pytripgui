@@ -256,6 +256,13 @@ class AppCallback:
             if state_item.state is None:
                 state_item.state = self.app_model.viewcanvases.get_gui_state()
 
+            # hide VOI list
+            if not data_item.data.vdx or not data_item.data.vdx.vois:
+                logger.debug("no VOI data present, hiding VOI list control")
+                self.app_model.viewcanvases.viewcanvas_view.vois_tree_empty(True)
+            else:
+                self.app_model.viewcanvases.viewcanvas_view.vois_tree_empty(False)
+
     def patient_tree_show(self):
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
 
