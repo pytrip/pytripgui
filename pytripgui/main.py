@@ -36,12 +36,16 @@ def main(args=None):
     else:
         logging.basicConfig()
 
+    # all these objects need to be saved as variables, otherwise they will be garbage collected before app execution
     app = QApplication(sys.argv)
     view = MainWindowQtView()
     model = MainModel()
-    MainWindowController(model, view)
+    controller = MainWindowController(model, view)
 
     view.show()
+
+    if controller:
+        logger.debug("MainWindowController is active to serve its callbacks.")
 
     return app.exec_()
 
