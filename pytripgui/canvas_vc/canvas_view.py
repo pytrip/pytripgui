@@ -27,11 +27,11 @@ class CanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
-        self.vois_tree_set_enabled(True)
+        self.voi_list_set_enabled(True)
 
     def _internal_events_setup(self):
 
-        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
+        self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_enabled)
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
@@ -134,7 +134,7 @@ class CanvasView:
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
 
-    def vois_tree_set_enabled(self, state):
+    def voi_list_set_enabled(self, state):
         if state:
             self._ui.voi_listWidget.show()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
@@ -142,7 +142,7 @@ class CanvasView:
             self._ui.voi_listWidget.hide()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)
 
-    def vois_tree_empty(self, empty=True):
+    def voi_list_empty(self, empty=True):
         """
         Method that handles displaying and hiding the VOI list and its checkBox.
 
