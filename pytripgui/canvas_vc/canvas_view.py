@@ -27,11 +27,11 @@ class CanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
-        self.voi_list_set_enabled(True)
+        self.voi_list_set_visibility(True)
 
     def _internal_events_setup(self):
 
-        self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_enabled)
+        self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_visibility)
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
@@ -134,8 +134,14 @@ class CanvasView:
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
 
-    def voi_list_set_enabled(self, state):
-        if state:
+    def voi_list_set_visibility(self, visible=True):
+        """
+        Method that handles displaying and hiding the VOI list.
+
+        Parameters:
+        visible(bool): Whether the list should be shown.
+        """
+        if visible:
             self._ui.voi_listWidget.show()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
         else:
@@ -144,7 +150,7 @@ class CanvasView:
 
     def voi_list_empty(self, empty=True):
         """
-        Method that handles displaying and hiding the VOI list and its checkBox.
+        Method that handles displaying and hiding the VOI list and its checkBox when VOI data is unavailable.
 
         Parameters:
         empty(bool): Whether the list is empty and should be hidden.
