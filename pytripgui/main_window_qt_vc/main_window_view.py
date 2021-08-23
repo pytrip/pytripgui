@@ -1,5 +1,4 @@
 import logging
-import os
 
 from PyQt5.QtWidgets import QFileDialog
 
@@ -33,20 +32,37 @@ class MainWindowQtView:
 
     def browse_file_path(self, name, extension, path=None):
         """
-        :return full file path, or empty string
+        Browse for an existing file.
+
+        :return full file path (absolute), or empty string if browsing was aborted
         """
-        selected_file = QFileDialog.getOpenFileName(self.ui, name, path, extension)
-        return selected_file[0]
+        selected_file_path, selected_file_extension = QFileDialog.getOpenFileName(self.ui, name, path, extension)
+        return selected_file_path
+
+    def save_file_path(self, caption, extension, path=None):
+        """
+        Select the name and directory of a file to be created.
+
+        :return full file path (absolute), or empty string if browsing was aborted
+        """
+        selected_file_path, selected_file_extension = QFileDialog.getSaveFileName(self.ui, caption, path, extension)
+        return selected_file_path
 
     def browse_folder_path(self, name, path=None):
         """
-        :return full file path, or empty string
+        Browse for an existing directory.
+
+        :return full directory path (absolute), or empty string if browsing was aborted
         """
         dialog = QFileDialog(self.ui, name, path)
         dialog.setFileMode(QFileDialog.Directory)
         dialog.setOptions(QFileDialog.ShowDirsOnly)
         dialog.exec_()
-        selected_path = os.path.join(dialog.directory().path(), '')
+
+        # only one directory can be selected in dialog window,
+        # but the selectedFiles method only returns a list, so [0] is selected
+        selected_path = dialog.selectedFiles()[0]
+
         if dialog.result() == QFileDialog.Accepted:
             return selected_path
         return ""
