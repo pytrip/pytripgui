@@ -37,11 +37,6 @@ class EmptyPatientQtView():
             "pixel_size": LineEdit(self._ui.pixelSize_lineEdit_3),
         }]
 
-        self.voi_scroll_area = self._ui.voi_scrollArea
-
-        self.add_spherical_voi_button = PushButton(self._ui.addSphericalVOI_pushButton)
-        self.add_cuboidal_voi_button = PushButton(self._ui.addCuboidalVOI_pushButton)
-
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
 

@@ -1,19 +1,10 @@
 import math
-import os
-import sys
 from enum import Enum
 
-from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
-from pytrip.vdx import VdxCube, create_sphere, create_cube
-
-import logging
-
-from pytripgui.view.qt_view_adapter import LineEdit, PushButton
-
-logger = logging.getLogger(__name__)
+from pytrip.vdx import VdxCube
 
 
 class EmptyPatientController:
@@ -36,9 +27,6 @@ class EmptyPatientController:
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
 
         self.view.dimensions_tabs.emit_on_tab_change(self._convert_tab_contents)
-
-        self.view.add_spherical_voi_button.emit_on_click(lambda: self._add_voi_widget(SphericalVOIWidget))
-        self.view.add_cuboidal_voi_button.emit_on_click(lambda: self._add_voi_widget(CuboidalVOIWidget))
 
     def _save_and_exit(self):
         if self._validate_all():
@@ -131,19 +119,18 @@ class EmptyPatientController:
 
         validator = PixelSizeValidator(Regex.FLOAT_POSITIVE.value)
         validator.set_additional_validation(self._validate_pixel_size)
-        validator.set_tooltip_message("Width/Number of pixels along X must be equal to Height/Number of pixels along Y")
+        validator.set_tooltip_message("(Width/Number of pixels along X) must be equal to (Height/Number of pixels "
+                                      "along Y)")
         enable_validation_list(validator, [dim[1]["width"], dim[1]["height"]])
 
         validator = PixelSizeValidator(Regex.INT_POSITIVE.value)
         validator.set_additional_validation(self._validate_pixel_size)
-        validator.set_tooltip_message("Width/Number of pixels along X must be equal to Height/Number of pixels along Y")
+        validator.set_tooltip_message("(Width/Number of pixels along X) must be equal to (Height/Number of pixels "
+                                      "along Y)")
         enable_validation_list(validator, [dim[1]["pixel_number_x"], dim[1]["pixel_number_y"]])
 
     def _validate_all(self):
-        if self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index):
-            self._calculate_fields(self.view.dimensions_tabs.current_index)
-            return self._validate_vois() and self._validate_vois_contained()
-        return False
+        return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index)
 
     def _validate_general_parameters(self):
         return self.view.hu_value.validate() and \
@@ -182,64 +169,6 @@ class EmptyPatientController:
             field.highlight_border(True)
         return False
 
-    def _validate_vois(self):
-        result = True
-        voi_widgets = self.view.voi_scroll_area.widget().layout()
-        for index in range(voi_widgets.count() - 1):
-            voi_widget = voi_widgets.itemAt(index).widget()
-            if not voi_widget.validate():
-                result = False
-        return result
-
-    def _validate_vois_contained(self):
-        final_result = True
-
-        ctx = self._create_temp_ctx_cube()
-
-        voi_widgets = self.view.voi_scroll_area.widget().layout()
-        for index in range(voi_widgets.count() - 1):
-            voi_widget = voi_widgets.itemAt(index).widget()
-
-            if isinstance(voi_widget, SphericalVOIWidget):
-                voi = create_sphere(cube=ctx, name=voi_widget.name, center=voi_widget.center, radius=voi_widget.radius)
-            else:
-                voi = create_cube(
-                    cube=ctx,
-                    name=voi_widget.name,
-                    center=voi_widget.center,
-                    width=voi_widget.width,
-                    height=voi_widget.height,
-                    depth=voi_widget.depth,
-                )
-
-            if voi.is_fully_contained():
-                voi_widget.highlight_border(False)
-            else:
-                voi_widget.highlight_border(True)
-                final_result = False
-
-        return final_result
-
-    def _create_temp_ctx_cube(self):
-        slice_offset = float(self.view.slice_offset.text)
-
-        ctx = CtxCube()
-        ctx.dimx = self.parameters["pixel_number_x"]
-        ctx.dimy = self.parameters["pixel_number_y"]
-        ctx.dimz = self.parameters["slice_number"]
-        ctx.slice_number = ctx.dimz
-        ctx.zoffset = slice_offset
-        ctx.pixel_size = self.parameters["pixel_size"]
-        ctx.slice_distance = self.parameters["slice_distance"]
-        ctx.slice_pos = [ctx.slice_distance * i + slice_offset for i in range(ctx.dimz)]
-
-        return ctx
-
-    def _add_voi_widget(self, widget_type):
-        widget = widget_type()
-        index = self.view.voi_scroll_area.widget().layout().count() - 1
-        self.view.voi_scroll_area.widget().layout().insertWidget(index, widget)
-
     def _set_model_from_view(self):
         ctx = CtxCube()
 
@@ -250,135 +179,13 @@ class EmptyPatientController:
                               slice_distance=self.parameters["slice_distance"],
                               pixel_size=self.parameters["pixel_size"],
                               value=int(self.view.hu_value.text))
-
         self.model.ctx = ctx
         self.model.ctx.basename = self.view.name.text
 
         vdxCube = VdxCube(self.model.ctx)
         vdxCube.basename = self.view.name.text
-
-        voi_widgets = self.view.voi_scroll_area.widget().layout()
-        for index in range(voi_widgets.count() - 1):
-            voi_widget = voi_widgets.itemAt(index).widget()
-
-            if isinstance(voi_widget, SphericalVOIWidget):
-                voi = create_sphere(cube=self.model.ctx,
-                                    name=voi_widget.name,
-                                    center=voi_widget.center,
-                                    radius=voi_widget.radius)
-            else:
-                voi = create_cube(
-                    cube=self.model.ctx,
-                    name=voi_widget.name,
-                    center=voi_widget.center,
-                    width=voi_widget.width,
-                    height=voi_widget.height,
-                    depth=voi_widget.depth,
-                )
-            vdxCube.add_voi(voi)
-
         self.model.vdx = vdxCube
         self.model.name = self.view.name.text
-
-
-class VOIWidget(QtWidgets.QFrame):
-    def __init__(self, file):
-        super().__init__()
-        path = os.path.join(sys.path[0], file)
-        uic.loadUi(path, self)
-
-        self._name = LineEdit(self.name_lineEdit)
-        self._center = [
-            LineEdit(self.centerX_lineEdit),
-            LineEdit(self.centerY_lineEdit),
-            LineEdit(self.centerZ_lineEdit)
-        ]
-
-        validator = ToolTipRegularExpressionValidator(Regex.STRING.value)
-        self._name.enable_validation(validator)
-        self._name.validate()
-
-        validator = ToolTipRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
-        enable_validation_list(validator, self._center)
-        validate_list(self._center)
-
-        self._remove_button = PushButton(self.remove_pushButton)
-        self._remove_button.emit_on_click(self._remove_self)
-
-    @property
-    def name(self):
-        return self._name.text
-
-    @property
-    def center(self):
-        return [float(i.text) for i in self._center]
-
-    def validate(self):
-        return self._name.validate() and \
-            validate_list(self._center)
-
-    def highlight_border(self, highlight=False):
-        if highlight:
-            self.setStyleSheet("#VOI { border: 1px solid red }")
-        else:
-            self.setStyleSheet("#VOI { border: 1px solid black }")
-
-    def _remove_self(self):
-        self.parent().layout().removeWidget(self)
-        self.close()
-
-
-class SphericalVOIWidget(VOIWidget):
-    def __init__(self):
-        super().__init__("view//spherical_voi.ui")
-
-        self._radius = LineEdit(self.radius_lineEdit)
-
-        validator = ToolTipRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
-        self._radius.enable_validation(validator)
-        self._radius.validate()
-
-    @property
-    def radius(self):
-        return float(self._radius.text)
-
-    def validate(self):
-        return super().validate() and \
-            self._radius.validate()
-
-
-class CuboidalVOIWidget(VOIWidget):
-    def __init__(self):
-        super().__init__("view//cuboidal_voi.ui")
-
-        self._width = LineEdit(self.width_lineEdit)
-        self._height = LineEdit(self.height_lineEdit)
-        self._depth = LineEdit(self.depth_lineEdit)
-        self._dims = [self._width, self._height, self._depth]
-
-        validator = ToolTipRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
-        enable_validation_list(validator, self._dims)
-        validate_list(self._dims)
-
-    @property
-    def width(self):
-        return float(self._width.text)
-
-    @property
-    def height(self):
-        return float(self._height.text)
-
-    @property
-    def depth(self):
-        return float(self._depth.text)
-
-    @property
-    def dims(self):
-        return [float(i.text) for i in self._dims]
-
-    def validate(self):
-        return super().validate() and \
-            validate_list(self._dims)
 
 
 class ToolTipRegularExpressionValidator(QRegularExpressionValidator):

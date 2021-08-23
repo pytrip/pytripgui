@@ -1,9 +1,6 @@
-import logging
-
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QValidator
-from PyQt5.QtWidgets import QMessageBox
-
-logger = logging.getLogger(__name__)
+from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
 
 
 class LineEdit:
@@ -51,7 +48,6 @@ class LineEdit:
                 self.highlight_border(True)
                 return False
 
-        logger.debug("Validator not set")
         return False
 
     def highlight_border(self, highlight=False):
@@ -147,6 +143,41 @@ class UserInfoBox:
 
     def show_info(self, name, content):
         QMessageBox.information(self._parent_ui, name, content)
+
+
+class ListWidget:
+    def __init__(self, list_widget, checkable=False):
+        self._ui = list_widget
+        self._items = []
+        self._checkable = checkable
+
+        self.event_callback = lambda: None
+        self._ui.itemClicked.connect(self._update_event)
+
+    def fill(self, items, lambda_names):
+        self._ui.clear()
+        self._items.clear()
+        for item in items:
+            q_item = QListWidgetItem(lambda_names(item))
+            q_item.setData(Qt.UserRole, item)
+            if self._checkable:
+                q_item.setCheckState(Qt.Unchecked)
+            self._items.append(q_item)
+            self._ui.addItem(q_item)
+
+    def checked_items(self):
+        selected = []
+        if not self._checkable:
+            return selected
+
+        for i in range(self._ui.count()):
+            widget = self._ui.item(i)
+            if widget.checkState() == Qt.Checked:
+                selected.append(widget.data(Qt.UserRole))
+        return selected
+
+    def _update_event(self):
+        self.event_callback()
 
 
 class TableWidget:
