@@ -65,7 +65,7 @@ class VoiManager:
             for i, _c in enumerate(current_slice.contours):
                 # zoffset is set to 0.0 in most cubes, which is wrong
                 # because of that fact, next line calculates the zoffset as it should be done in CtxCube
-                z_offset = min(vdx.ctx.slice_pos) # slice_pos contains z positions in mm
+                z_offset = min(vdx.ctx.slice_pos)  # slice_pos contains z positions in mm
 
                 # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm), we need to remove offsets
                 data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, z_offset])
