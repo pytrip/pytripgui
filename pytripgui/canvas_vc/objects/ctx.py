@@ -23,8 +23,8 @@ class Ctx:
 
     def _set_aspect(self):
         if self.projection_selector.plane == "Transversal":
-            self.aspect = self.cube.dimx/self.cube.dimy
+            self.aspect = self.cube.dimx / self.cube.dimy
         elif self.projection_selector.plane == "Sagittal":
-            self.aspect = self.cube.dimy*self.cube.pixel_size/(self.cube.dimz*self.cube.slice_distance)
+            self.aspect = self.cube.dimy * self.cube.pixel_size / (self.cube.dimz * self.cube.slice_distance)
         elif self.projection_selector.plane == "Coronal":
-            self.aspect = self.cube.dimx*self.cube.pixel_size/(self.cube.dimz*self.cube.slice_distance)
+            self.aspect = self.cube.dimx * self.cube.pixel_size / (self.cube.dimz * self.cube.slice_distance)
