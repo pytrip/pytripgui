@@ -41,49 +41,7 @@ class CoordinateInfo(Axes3D):
         self._sagittal_color: str = 'red'
         self._coronal_color: str = 'cyan'
 
-        # set plot labels
-        self.set_xlabel('x')
-        self.xaxis.label.set_color(self._sagittal_color)
-        self.set_ylabel('y')
-        self.yaxis.label.set_color(self._coronal_color)
-        self.set_zlabel('z')
-        self.zaxis.label.set_color(self._transversal_color)
-
-        # remove grid and axes ticks
-        self.grid(False)
-        self.set_xticks([])
-        self.set_yticks([])
-        self.set_zticks([])
-
-        # set background color
-        self.set_facecolor('black')
-
-        # turn off panes visibility
-        self.xaxis.pane.set_visible(False)
-        self.yaxis.pane.set_visible(False)
-        self.zaxis.pane.set_visible(False)
-
-        # set proper distance from plot
-        self.dist = 18
-
-        # plot cubic frame
-        self.plot_wireframe(self._x, self.y, self._one, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, self.y, -self._one, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, -self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
-
-        # plot arrows for axis indicators
-        indicator_params = [(self.xaxis.line, '>', [1], self._sagittal_color),
-                            (self.yaxis.line, '>', [0], self._coronal_color),
-                            (self.zaxis.line, '^', [1], self._transversal_color)]
-        for line, marker, position, color in indicator_params:
-            line.set_marker(marker)
-            line.set_markevery(position)
-            line.set_markerfacecolor(color)
-            line.set_color(color)
-            line.set_clip_on(False)
+        self._plot_initial_state()
 
         # set default last plane
         self._last_plane: str = 'DEFAULT_PLANE'
@@ -97,6 +55,45 @@ class CoordinateInfo(Axes3D):
             'Sagittal': self._plot_sagittal,
             'Coronal': self._plot_coronal
         }
+
+    def _plot_initial_state(self):
+        # set plot labels
+        self.set_xlabel('x')
+        self.xaxis.label.set_color(self._sagittal_color)
+        self.set_ylabel('y')
+        self.yaxis.label.set_color(self._coronal_color)
+        self.set_zlabel('z')
+        self.zaxis.label.set_color(self._transversal_color)
+        # remove grid and axes ticks
+        self.grid(False)
+        self.set_xticks([])
+        self.set_yticks([])
+        self.set_zticks([])
+        # set background color
+        self.set_facecolor('black')
+        # turn off panes visibility
+        self.xaxis.pane.set_visible(False)
+        self.yaxis.pane.set_visible(False)
+        self.zaxis.pane.set_visible(False)
+        # set proper distance from plot
+        self.dist = 18
+        # plot cubic frame
+        self.plot_wireframe(self._x, self.y, self._one, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self.y, -self._one, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, -self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
+        # plot arrows for axis indicators
+        indicator_params = [(self.xaxis.line, '>', [1], self._sagittal_color),
+                            (self.yaxis.line, '>', [0], self._coronal_color),
+                            (self.zaxis.line, '^', [1], self._transversal_color)]
+        for line, marker, position, color in indicator_params:
+            line.set_marker(marker)
+            line.set_markevery(position)
+            line.set_markerfacecolor(color)
+            line.set_color(color)
+            line.set_clip_on(False)
 
     def update_info(self, data: Ctx) -> None:
         """
