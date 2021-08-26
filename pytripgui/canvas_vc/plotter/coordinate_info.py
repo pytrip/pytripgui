@@ -39,11 +39,7 @@ class CoordinateInfo(Axes3D):
         self._alpha: float = 0.5
         self._wireframe_color: str = 'grey'
         # set surfaces' colors
-        self._colors: Dict[str, str] = {
-            'Transversal': 'limegreen',
-            'Sagittal': 'orangered',
-            'Coronal': 'royalblue'
-        }
+        self._colors: Dict[str, str] = {'Transversal': 'limegreen', 'Sagittal': 'orangered', 'Coronal': 'royalblue'}
         # set default last plane
         self._last_plane: str = 'DEFAULT_PLANE'
         # flag that tells if plot should be initialized or updated
@@ -51,17 +47,9 @@ class CoordinateInfo(Axes3D):
         # set default surfaces
         self._surfaces: Dict[str, Optional[Poly3DCollection]] = {'Transversal': None, 'Sagittal': None, 'Coronal': None}
         # set rotation values for each plane
-        self._rotations: Dict[str, int] = {
-            'Transversal': 0,
-            'Sagittal': 1,
-            'Coronal': -1
-        }
+        self._rotations: Dict[str, int] = {'Transversal': 0, 'Sagittal': 1, 'Coronal': -1}
         # set axis to be changed for each plane
-        self._xyz_axis: Dict[str, Axis] = {
-            'Transversal': self.zaxis,
-            'Sagittal': self.xaxis,
-            'Coronal': self.yaxis
-        }
+        self._xyz_axis: Dict[str, Axis] = {'Transversal': self.zaxis, 'Sagittal': self.xaxis, 'Coronal': self.yaxis}
 
         self._plot_initial_state()
 
@@ -95,9 +83,7 @@ class CoordinateInfo(Axes3D):
         self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
         # plot arrows for axis indicators
         # indicators should be in order in which xyz_axis ale colors are ordered
-        indicators = [('^', [1]),
-                      ('>', [1]),
-                      ('>', [0])]
+        indicators = [('^', [1]), ('>', [1]), ('>', [0])]
         indicators_params = zip(self._xyz_axis.values(), indicators, self._colors.values())
         for axis, (marker, position), color in indicators_params:
             axis.line.set_marker(marker)
