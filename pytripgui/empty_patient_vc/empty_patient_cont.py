@@ -88,18 +88,18 @@ class EmptyPatientController:
     def _set_validators(self):
         dim = self.view.dimensions_fields
 
-        validator = ToolTipRegularExpressionValidator(Regex.INT.value)
+        validator = QRegularExpressionValidator(Regex.INT.value)
         self.view.hu_value.enable_validation(validator)
 
-        validator = ToolTipRegularExpressionValidator(Regex.INT_POSITIVE.value)
+        validator = QRegularExpressionValidator(Regex.INT_POSITIVE.value)
         enable_validation_list(
             validator,
             [dim[1]["slice_number"], dim[2]["slice_number"], dim[2]["pixel_number_x"], dim[2]["pixel_number_y"]])
 
-        validator = ToolTipRegularExpressionValidator(Regex.FLOAT.value)
+        validator = QRegularExpressionValidator(Regex.FLOAT.value)
         self.view.slice_offset.enable_validation(validator)
 
-        validator = ToolTipRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
+        validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
         enable_validation_list(validator, [
             dim[0]["slice_distance"], dim[0]["pixel_size"], dim[1]["depth"], dim[2]["slice_distance"],
             dim[2]["pixel_size"]
@@ -107,34 +107,27 @@ class EmptyPatientController:
 
         validator = MultipleOfRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
         validator.set_multiple_of(dim[0]["pixel_size"])
-        validator.set_tooltip_message("Must be a multiple of Pixel size")
         enable_validation_list(validator, [dim[0]["width"], dim[0]["height"]])
         dim[0]["pixel_size"].emit_on_text_change(lambda: validate_list([dim[0]["width"], dim[0]["height"]]))
 
         validator = MultipleOfRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
         validator.set_multiple_of(dim[0]["slice_distance"])
-        validator.set_tooltip_message("Must be a multiple of Distance between slices")
         enable_validation_list(validator, [dim[0]["depth"]])
         dim[0]["slice_distance"].emit_on_text_change(lambda: validate_list([dim[0]["depth"]]))
 
         validator = PixelSizeValidator(Regex.FLOAT_POSITIVE.value)
         validator.set_additional_validation(self._validate_pixel_size)
-        validator.set_tooltip_message("(Width/Number of pixels along X) must be equal to (Height/Number of pixels "
-                                      "along Y)")
         enable_validation_list(validator, [dim[1]["width"], dim[1]["height"]])
 
         validator = PixelSizeValidator(Regex.INT_POSITIVE.value)
         validator.set_additional_validation(self._validate_pixel_size)
-        validator.set_tooltip_message("(Width/Number of pixels along X) must be equal to (Height/Number of pixels "
-                                      "along Y)")
         enable_validation_list(validator, [dim[1]["pixel_number_x"], dim[1]["pixel_number_y"]])
 
     def _validate_all(self):
         return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index)
 
     def _validate_general_parameters(self):
-        return self.view.hu_value.validate() and \
-            self.view.slice_offset.validate()
+        return self.view.hu_value.validate() and self.view.slice_offset.validate()
 
     def _validate_tabs(self):
         result = True
@@ -188,19 +181,7 @@ class EmptyPatientController:
         self.model.name = self.view.name.text
 
 
-class ToolTipRegularExpressionValidator(QRegularExpressionValidator):
-    def __init__(self, regex=None):
-        super().__init__(regex)
-        self._tooltip_message = None
-
-    def set_tooltip_message(self, value):
-        self._tooltip_message = value
-
-    def get_tooltip_message(self):
-        return self._tooltip_message
-
-
-class MultipleOfRegularExpressionValidator(ToolTipRegularExpressionValidator):
+class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
     def __init__(self, regex=None):
         super().__init__(regex)
         self._multiple_of_line_edit = None
@@ -233,7 +214,7 @@ class MultipleOfRegularExpressionValidator(ToolTipRegularExpressionValidator):
         return QValidator.Intermediate, string, pos
 
 
-class PixelSizeValidator(ToolTipRegularExpressionValidator):
+class PixelSizeValidator(QRegularExpressionValidator):
     def __init__(self, regex=None):
         super().__init__(regex)
         self._pixel_size_validation = None
@@ -253,7 +234,7 @@ class PixelSizeValidator(ToolTipRegularExpressionValidator):
 
 class Regex(Enum):
     STRING = QRegularExpression(r"\w+")
-    INT = QRegularExpression(r"-?\d*")
+    INT = QRegularExpression(r"-?\d+")
     INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
     FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
     FLOAT_POSITIVE = QRegularExpression(r"(\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*))")
