@@ -116,10 +116,7 @@ class CanvasController:
 
     def set_simulation_results(self, simulation_results, state):
         self._ui.clear()
-        self.set_patient(simulation_results.patient, None)
-        # if state is None:
-        #     state = ProjectionSelector()
-        # self._model = PlotModel(state)
+        self.set_patient(simulation_results.patient, state)
 
         self._model.set_ctx(simulation_results.patient.ctx)
 
