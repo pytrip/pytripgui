@@ -105,92 +105,7 @@ class VoiManager:
                         line: Line2D = self._plotted_voi[voi.name][i]
                         line.set_data(x, y)
 
-    def remove_voi(self) -> None:
-        names = list(self._plotted_voi.keys())
-        for name in names:
-            self._remove_all_voi_plots(name)
-
-    def _remove_all_voi_plots(self, name) -> None:
-        for line in self._plotted_voi[name]:
-            self._blit_manager.remove_artist(line)
-            line.remove()
-
-        del self._plotted_voi[name]
-
-    @staticmethod
-    def _get_color(voi: Voi, i: int) -> [float, float, float]:
-        # TODO if colors are implemented properly in pytrip - change this method
-        i = i % len(voi.colors)
-        # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
-        # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
-        color = np.array(voi.get_color(i)) / 255.0
-        return color
-
-    @staticmethod
-    def _get_plot_data(vdx, data) -> (List[float], List[float]):
-        if vdx.projection_selector.plane == "Transversal":
-            # "Transversal" (xy)
-            return data[:, 0], data[:, 1]
-        if vdx.projection_selector.plane == "Sagittal":
-            # "Sagittal" (yz)
-            return data[:, 1], data[:, 2]
-        if vdx.projection_selector.plane == "Coronal":
-            # "Coronal"  (xz)
-            return data[:, 0], data[:, 2]
-
-    @staticmethod
-    def _get_current_slice(vdx, voi: Voi) -> Optional[Slice]:
-        _slice: Optional[Slice] = None
-
-        # get current indices in all planes
-        positions_indices = vdx.projection_selector.get_current_slices()
-
-        # transform them into [x, y, z] array
-        indices = [positions_indices['Sagittal'], positions_indices['Coronal'], positions_indices['Transversal']]
-
-        # get positions in mm
-        positions_mm = voi.cube.indices_to_pos(indices)
-
-        # TODO create enum class that holds all plane strings
-        if vdx.projection_selector.plane == "Transversal":
-            _slice = voi.get_slice_at_pos(positions_mm[2])
-        elif vdx.projection_selector.plane == "Sagittal":
-            _slice = voi.get_2d_slice(voi.sagittal, positions_mm[0])
-        elif vdx.projection_selector.plane == "Coronal":
-            _slice = voi.get_2d_slice(voi.coronal, positions_mm[1])
-        return _slice
-
-    @staticmethod
-    def _plane_points_idx(points, ctx: CtxCube, plane: str):
-        """
-        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
-
-        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
-                       OUTPUT: list of points pseudo-2D format.
-        :param ctx: CtxCube
-        :param plane: string that represents current plane
-
-        """
-
-        ct_pix_size_inv = 1.0 / ctx.pixel_size
-        ct_slice_dist_inv = 1.0 / ctx.slice_distance
-
-        results = deepcopy(points)
-
-        if plane == "Transversal":
-            results[:, 0] = points[:, 0] * ct_pix_size_inv
-            results[:, 1] = points[:, 1] * ct_pix_size_inv
-        elif plane == "Sagittal":
-            results[:, 1] = (-points[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pix_size_inv
-            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
-        elif plane == "Coronal":
-            results[:, 0] = (-points[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pix_size_inv
-            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
-
-        return results
-
-    @staticmethod
-    def _plot_poi(x, y, color='#00ff00', legend=''):
+    def _plot_poi(self, x, y, color='#00ff00', legend=''):
         # TODO not reworked yet
         """ Plot a point of interest at x,y
         :params x,y: position in real world CT units
@@ -254,3 +169,87 @@ class VoiManager:
                         backgroundcolor=(0.0, 0.0, 0.0, 0.8),
                         zorder=20)  # zorder higher, so text is always above the lines
         self._axes.plot(x, y, 'o', color=color, zorder=15)  # plot the dot
+
+    def remove_voi(self) -> None:
+        names = list(self._plotted_voi.keys())
+        for name in names:
+            self._remove_all_voi_plots(name)
+
+    def _remove_all_voi_plots(self, name: str) -> None:
+        for line in self._plotted_voi[name]:
+            self._blit_manager.remove_artist(line)
+            line.remove()
+
+        del self._plotted_voi[name]
+
+    @staticmethod
+    def _get_color(voi: Voi, i: int) -> [float, float, float]:
+        # TODO if colors are implemented properly in pytrip - change this method
+        i = i % len(voi.colors)
+        # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
+        # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
+        color = np.array(voi.get_color(i)) / 255.0
+        return color
+
+    @staticmethod
+    def _get_plot_data(vdx: Vdx, data):
+        if vdx.projection_selector.plane == "Transversal":
+            # "Transversal" (xy)
+            return data[:, 0], data[:, 1]
+        if vdx.projection_selector.plane == "Sagittal":
+            # "Sagittal" (yz)
+            return data[:, 1], data[:, 2]
+        if vdx.projection_selector.plane == "Coronal":
+            # "Coronal"  (xz)
+            return data[:, 0], data[:, 2]
+
+    @staticmethod
+    def _get_current_slice(vdx: Vdx, voi: Voi) -> Optional[Slice]:
+        _slice: Optional[Slice] = None
+
+        # get current indices in all planes
+        positions_indices = vdx.projection_selector.get_current_slices()
+
+        # transform them into [x, y, z] array
+        indices = [positions_indices['Sagittal'], positions_indices['Coronal'], positions_indices['Transversal']]
+
+        # get positions in mm
+        positions_mm = voi.cube.indices_to_pos(indices)
+
+        # TODO create enum class that holds all plane strings
+        if vdx.projection_selector.plane == "Transversal":
+            _slice = voi.get_slice_at_pos(positions_mm[2])
+        elif vdx.projection_selector.plane == "Sagittal":
+            _slice = voi.get_2d_slice(voi.sagittal, positions_mm[0])
+        elif vdx.projection_selector.plane == "Coronal":
+            _slice = voi.get_2d_slice(voi.coronal, positions_mm[1])
+        return _slice
+
+    @staticmethod
+    def _plane_points_idx(points, ctx: CtxCube, plane: str):
+        """
+        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
+
+        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
+                       OUTPUT: list of points pseudo-2D format.
+        :param ctx: CtxCube
+        :param plane: string that represents current plane
+
+        """
+
+        ct_pix_size_inv = 1.0 / ctx.pixel_size
+        ct_slice_dist_inv = 1.0 / ctx.slice_distance
+
+        results = deepcopy(points)
+
+        if plane == "Transversal":
+            results[:, 0] = points[:, 0] * ct_pix_size_inv
+            results[:, 1] = points[:, 1] * ct_pix_size_inv
+        elif plane == "Sagittal":
+            results[:, 1] = (-points[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pix_size_inv
+            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
+        elif plane == "Coronal":
+            results[:, 0] = (-points[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pix_size_inv
+            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
+
+        return results
