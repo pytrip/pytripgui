@@ -35,22 +35,33 @@ class CoordinateInfo(Axes3D):
         self._one = np.ones(4).reshape(2, 2)
 
         # wireframe and surface parameters
-        self._alpha: float = 0.2
-        self._wireframe_color: str = 'black'
-        self._transversal_color: str = 'g'
-        self._sagittal_color: str = 'r'
-        self._coronal_color: str = 'b'
+        self._alpha: float = 0.4
+        self._wireframe_color: str = 'white'
+        self._transversal_color: str = 'lime'
+        self._sagittal_color: str = 'red'
+        self._coronal_color: str = 'cyan'
 
         # set plot labels
         self.set_xlabel('x')
+        self.xaxis.label.set_color(self._sagittal_color)
         self.set_ylabel('y')
+        self.yaxis.label.set_color(self._coronal_color)
         self.set_zlabel('z')
+        self.zaxis.label.set_color(self._transversal_color)
 
         # remove grid and axes ticks
         self.grid(False)
         self.set_xticks([])
         self.set_yticks([])
         self.set_zticks([])
+
+        # set background color
+        self.set_facecolor('black')
+
+        # turn off panes visibility
+        self.xaxis.pane.set_visible(False)
+        self.yaxis.pane.set_visible(False)
+        self.zaxis.pane.set_visible(False)
 
         # set proper distance from plot
         self.dist = 18
