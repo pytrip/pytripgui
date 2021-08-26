@@ -71,7 +71,7 @@ class VoiManager:
                 data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, z_offset])
 
                 # translating positions in mm into pixel positions
-                data_pixels = self._plane_points_idx([data], vdx.ctx, vdx.projection_selector.plane)
+                data_pixels = self._plane_points_idx(data, vdx.ctx, vdx.projection_selector.plane)
 
                 if _c.contour_closed:
                     xy = np.concatenate((data_pixels, [data_pixels[0]]), axis=0)
@@ -152,18 +152,23 @@ class VoiManager:
 
         results = deepcopy(points)
 
-        for point, result in zip(points, results):
-            if plane == "Transversal":
-                result[:, 0] = point[:, 0] * ct_pixsize_inv
-                result[:, 1] = point[:, 1] * ct_pixsize_inv
-            elif plane == "Sagittal":
-                result[:, 1] = (-point[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
-                result[:, 2] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
-            elif plane == "Coronal":
-                result[:, 0] = (-point[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
-                result[:, 2] = (-point[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+        if plane == "Transversal":
+            results[:, 0] = points[:, 0] * ct_pixsize_inv
+            results[:, 1] = points[:, 1] * ct_pixsize_inv
+        elif plane == "Sagittal":
+            results[:, 1] = (-points[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pixsize_inv
+            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
+        elif plane == "Coronal":
+            results[:, 0] = (-points[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pixsize_inv
+            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slicedist_inv
 
-        return result
+        return results
+
+    # def _convert_contour(self, ):
+    #
+    #
+    # def __convert_point(self, point, plane):
+    #     pass
 
     def _plot_poi(self, x, y, color='#00ff00', legend=''):
         # TODO not reworked yet
