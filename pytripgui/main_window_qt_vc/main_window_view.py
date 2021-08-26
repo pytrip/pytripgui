@@ -159,6 +159,14 @@ class MainWindowQtView:
         self.ui.actionAdd_Patient.triggered.connect(callback)
 
     @property
+    def action_add_vois(self):
+        return None
+
+    @action_add_vois.setter
+    def action_add_vois(self, callback):
+        self.ui.actionAdd_VOIs.triggered.connect(callback)
+
+    @property
     def action_create_field(self):
         return None
 
@@ -173,6 +181,9 @@ class MainWindowQtView:
     @action_execute_plan.setter
     def action_execute_plan(self, callback):
         self.ui.actionExecute_Plan.triggered.connect(callback)
+
+    def action_add_vois_set_enable(self, enabled):
+        self.ui.actionAdd_VOIs.setEnabled(enabled)
 
     def action_create_field_set_enable(self, enabled):
         self.ui.actionCreate_field.setEnabled(enabled)

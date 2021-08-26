@@ -45,6 +45,7 @@ class MainWindowController:
         self.view.add_new_plan_callback = self.app_callback.on_add_new_plan
         self.view.trip_config_callback = self.app_callback.on_trip98_config
         self.view.action_add_patient = self.app_callback.on_add_patient
+        self.view.action_add_vois = self.app_callback.on_add_vois
         self.view.action_create_field = self.app_callback.on_create_field
         self.view.action_execute_plan = self.app_callback.on_execute_selected_plan
         self.view.action_open_tree = self.app_callback.patient_tree_show

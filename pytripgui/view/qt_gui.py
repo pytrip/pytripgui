@@ -126,3 +126,12 @@ class EmptyPatientDialog(QtWidgets.QDialog):
         uic.loadUi(ui_path, self)
 
         self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+
+
+class AddVOIsDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(AddVOIsDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'add_vois.ui')
+        uic.loadUi(ui_path, self)
+
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
