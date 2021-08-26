@@ -36,7 +36,7 @@ class CoordinateInfo(Axes3D):
 
         # wireframe and surface parameters
         self._alpha: float = 0.4
-        self._wireframe_color: str = 'white'
+        self._wireframe_color: str = 'grey'
         self._transversal_color: str = 'lime'
         self._sagittal_color: str = 'red'
         self._coronal_color: str = 'cyan'
@@ -143,21 +143,36 @@ class CoordinateInfo(Axes3D):
     def _plot_transversal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         # plot full color if this is current plane
         if is_current_plane:
+            # set alpha back to normal
+            self.zaxis.line.set_alpha(1)
+            self.zaxis.label.set_alpha(1)
             return self.plot_surface(self._x, self.y, ones, color=self._transversal_color)
 
+        # change axis alpha
+        self.zaxis.line.set_alpha(self._alpha)
+        # change axis label alpha
+        self.zaxis.label.set_alpha(self._alpha)
         # plot partially transparent if it is not current plane
         return self.plot_surface(self._x, self.y, ones, alpha=self._alpha, color=self._transversal_color)
 
     def _plot_sagittal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         if is_current_plane:
+            self.xaxis.line.set_alpha(1)
+            self.xaxis.label.set_alpha(1)
             return self.plot_surface(ones, self._x, self.y, color=self._sagittal_color)
 
+        self.xaxis.line.set_alpha(self._alpha)
+        self.xaxis.label.set_alpha(self._alpha)
         return self.plot_surface(ones, self._x, self.y, alpha=self._alpha, color=self._sagittal_color)
 
     def _plot_coronal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         if is_current_plane:
+            self.yaxis.line.set_alpha(1)
+            self.yaxis.label.set_alpha(1)
             return self.plot_surface(self._x, ones, self.y, color=self._coronal_color)
 
+        self.yaxis.line.set_alpha(self._alpha)
+        self.yaxis.label.set_alpha(self._alpha)
         return self.plot_surface(self._x, ones, self.y, alpha=self._alpha, color=self._coronal_color)
 
 
