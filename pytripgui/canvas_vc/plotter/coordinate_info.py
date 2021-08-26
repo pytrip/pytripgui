@@ -28,10 +28,12 @@ class CoordinateInfo(Axes3D):
 
     def __init__(self, fig, rect, **kwargs):
         super().__init__(fig, rect, **kwargs)
+
         # variables to ease wireframe plotting
         r = [-1, 1]
         self._x, self.y = np.meshgrid(r, r)
         self._one = np.ones(4).reshape(2, 2)
+
         # wireframe and surface parameters
         self._alpha: float = 0.2
         self._wireframe_color: str = 'black'
@@ -43,11 +45,16 @@ class CoordinateInfo(Axes3D):
         self.set_xlabel('x')
         self.set_ylabel('y')
         self.set_zlabel('z')
+
         # remove grid and axes ticks
         self.grid(False)
         self.set_xticks([])
         self.set_yticks([])
         self.set_zticks([])
+
+        # set proper distance from plot
+        self.dist = 18
+
         # plot cubic frame
         self.plot_wireframe(self._x, self.y, self._one, alpha=self._alpha, color=self._wireframe_color)
         self.plot_wireframe(self._x, self.y, -self._one, alpha=self._alpha, color=self._wireframe_color)
@@ -55,10 +62,17 @@ class CoordinateInfo(Axes3D):
         self.plot_wireframe(self._x, self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
         self.plot_wireframe(self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
         self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
-        # plot arrows for axis indicators
 
-        # set proper distance from plot
-        self.dist = 18
+        # plot arrows for axis indicators
+        indicator_params = [(self.xaxis.line, '>', [1], self._sagittal_color),
+                            (self.yaxis.line, '>', [0], self._coronal_color),
+                            (self.zaxis.line, '^', [1], self._transversal_color)]
+        for line, marker, position, color in indicator_params:
+            line.set_marker(marker)
+            line.set_markevery(position)
+            line.set_markerfacecolor(color)
+            line.set_color(color)
+            line.set_clip_on(False)
 
         # set default last plane
         self._last_plane: str = 'DEFAULT_PLANE'
@@ -66,6 +80,7 @@ class CoordinateInfo(Axes3D):
         self._data_set: bool = False
         # set default surfaces
         self._surfaces: Dict[str, Optional[Poly3DCollection]] = {'Transversal': None, 'Sagittal': None, 'Coronal': None}
+        # set actions to be done depending on surface type
         self._actions: Dict[str, Callable] = {
             'Transversal': self._plot_transversal,
             'Sagittal': self._plot_sagittal,
