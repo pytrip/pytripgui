@@ -366,6 +366,12 @@
                          <height>20</height>
                         </size>
                        </property>
+                       <property name="toolTip">
+                        <string>Must be a multiple of Pixel size</string>
+                       </property>
+                       <property name="toolTipDuration">
+                        <number>0</number>
+                       </property>
                        <property name="text">
                         <string/>
                        </property>
@@ -489,6 +495,12 @@
                          <width>60</width>
                          <height>20</height>
                         </size>
+                       </property>
+                       <property name="toolTip">
+                        <string>Must be a multiple of Pixel size</string>
+                       </property>
+                       <property name="toolTipDuration">
+                        <number>0</number>
                        </property>
                        <property name="text">
                         <string/>
@@ -727,6 +739,12 @@
                      <height>20</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>Must be a multiple of Distance between slices</string>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>0</number>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -926,6 +944,13 @@
                      <height>20</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>(Width/Number of pixels along X) must be equal to
+(Height/Number of pixels along Y)</string>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>0</number>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -988,7 +1013,10 @@
                     </size>
                    </property>
                    <property name="toolTip">
-                    <string/>
+                    <string>(Width/Number of pixels along X) must be equal to (Height/Number of pixels along Y)</string>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>0</number>
                    </property>
                    <property name="text">
                     <string/>
@@ -1114,6 +1142,13 @@
                      <height>20</height>
                     </size>
                    </property>
+                   <property name="toolTip">
+                    <string>(Width/Number of pixels along X) must be equal to
+(Height/Number of pixels along Y)</string>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>0</number>
+                   </property>
                    <property name="text">
                     <string/>
                    </property>
@@ -1176,7 +1211,10 @@
                     </size>
                    </property>
                    <property name="toolTip">
-                    <string/>
+                    <string>(Width/Number of pixels along X) must be equal to (Height/Number of pixels along Y)</string>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>0</number>
                    </property>
                    <property name="text">
                     <string/>
