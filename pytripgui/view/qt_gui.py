@@ -1,6 +1,7 @@
 import os
 
 from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import Qt
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -87,6 +88,7 @@ class UiAddPatient(QtWidgets.QDialog):
         self.createEmpty_pushButton.clicked.connect(self._create_empty_internal_callback)
 
     def _create_empty_internal_callback(self):
+        self.hide()
         self._create_empty_callback()
         self.reject()
 
@@ -115,3 +117,12 @@ class UiAddPatient(QtWidgets.QDialog):
     def _on_open_dicom_internal_callback(self):
         self._open_dicom_callback()
         self.reject()
+
+
+class EmptyPatientDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(EmptyPatientDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'empty_patient.ui')
+        uic.loadUi(ui_path, self)
+
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)

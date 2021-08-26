@@ -1,5 +1,6 @@
 import logging
 
+from pytrip import DosCube, LETCube
 from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
 
 logger = logging.getLogger(__name__)
@@ -16,19 +17,9 @@ class CanvasController:
         self._setup_ui_callbacks()
 
         self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
-        self._ui.internal_events.on_display_filter_change += self._display_filter_has_changed_callback
 
     def _perspective_has_changed_callback(self):
         self._model.projection_selector.plane = self._ui.perspective
-        self.clear_view()
-        self.update_canvas_view()
-        self._ui.draw()
-
-    def _display_filter_has_changed_callback(self):
-        if self._model is None:
-            return
-
-        self._model.display_filter = self._ui.display_filter
         self.clear_view()
         self.update_canvas_view()
         self._ui.draw()
@@ -60,8 +51,6 @@ class CanvasController:
         self._ui.clear()
 
     def update_canvas_view(self):
-        self._ui.reset_radiobuttons()
-
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
@@ -70,7 +59,6 @@ class CanvasController:
                 self._ui.plot_voi(self._model.vdx)
 
         if self._model.dose:
-            self._ui.enable_dose()
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "DOS"):
                 self._model.display_filter = "DOS"
@@ -78,14 +66,11 @@ class CanvasController:
                 self._ui.plot_dos(self._model.dose)
 
         if self._model.let:
-            self._ui.enable_let()
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "LET"):
                 self._model.display_filter = "LET"
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
-
-        self._ui.display_filter = self._model.display_filter
 
         self._ui.max_position = self._model.projection_selector.last_slice_no
         self._ui.position = self._model.projection_selector.current_slice_no
@@ -101,7 +86,7 @@ class CanvasController:
             self._model.set_ctx(patient.ctx)
             self._model.set_vdx()
 
-        if patient.vdx.vois:
+        if patient.vdx and patient.vdx.vois:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
 
@@ -109,7 +94,7 @@ class CanvasController:
         self.update_canvas_view()
         self._ui.draw()
 
-    def set_simulation_results(self, simulation_results, state):
+    def set_simulation_results(self, simulation_results, simulation_item, state):
         self._ui.clear()
         self.set_patient(simulation_results.patient, state)
 
@@ -120,6 +105,12 @@ class CanvasController:
                 self._model.set_dose(simulation_results.dose)
             if simulation_results.let:
                 self._model.set_let(simulation_results.let)
+
+        if isinstance(simulation_item, DosCube):
+            self._model.display_filter = "DOS"
+        elif isinstance(simulation_item, LETCube):
+            self._model.display_filter = "LET"
+
         self.update_canvas_view()
         self._ui.draw()
 

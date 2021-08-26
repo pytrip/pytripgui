@@ -2,6 +2,8 @@ from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
 from pytripgui.field_vc.field_cont import FieldController
+from pytripgui.empty_patient_vc.empty_patient_view import EmptyPatientQtView
+from pytripgui.empty_patient_vc.empty_patient_cont import EmptyPatientController
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 
 from pytripgui.tree_vc.tree_items import PatientItem, PlanItem, FieldItem
@@ -30,6 +32,11 @@ class AppCallback:
         self.chart = Charts(self.parent_gui)
 
         self.settings = SettingsController(self.app_model)
+
+    def add_empty_patient(self):
+        patient = PatientItem()
+        if self.open_empty_patient_callback(patient):
+            self.app_model.patient_tree.add_new_item(None, patient)
 
     def on_open_voxelplan(self):
         patient = PatientItem()
@@ -115,10 +122,6 @@ class AppCallback:
         dialog.on_open_dicom = self.on_open_dicom
         dialog.show()
 
-    def add_empty_patient(self):
-        patient = PatientItem()
-        self.app_model.patient_tree.add_new_item(None, patient)
-
     def on_create_field(self):
         field = FieldItem()
         save_field = self.edit_field(field)
@@ -182,16 +185,41 @@ class AppCallback:
             return item
         return None
 
+    def open_empty_patient_callback(self, patient_item):
+
+        patient = patient_item.data
+
+        view = EmptyPatientQtView(self.parent_gui.ui)
+        controller = EmptyPatientController(patient, view)
+        view.show()
+
+        if not controller.is_accepted:
+            return False
+
+        patient = controller.model
+
+        if not self.app_model.viewcanvases:
+            self.app_model.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
+
+        self.app_model.viewcanvases.set_patient(patient)
+        return True
+
     def open_voxelplan_callback(self, patient_item):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, extension = os.path.splitext(path)
+        filename, _ = os.path.splitext(path)
 
-        if filename == "":
+        if not filename:
             return False
 
         patient = patient_item.data
         patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        patient.open_vdx(filename + ".vdx")  # Todo catch exceptions
+        try:
+            patient.open_vdx(filename + ".vdx")  # Todo catch more exceptions
+        except FileNotFoundError:
+            logger.warning("Loaded patient has no VOI data")
+            # TODO add empty vdx init if needed
+            patient.vdx = None
 
         if not self.app_model.viewcanvases:
             self.app_model.viewcanvases = ViewCanvases()
@@ -201,10 +229,13 @@ class AppCallback:
         return True
 
     def open_dicom_callback(self, patient_item):
+        logger.debug("Open DICOM start")
         dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
 
         if not dir_name:
             return False
+
+        logger.debug("Open DICOM by patient start")
 
         patient = patient_item.data
         patient.open_dicom(dir_name)  # Todo catch exceptions
@@ -216,6 +247,62 @@ class AppCallback:
         self.app_model.viewcanvases.set_patient(patient)
         return True
 
+    def export_patient_voxelplan_callback(self, patient_item):
+        """
+        Export patient cube to Voxelplan format (.hed, .ctx, .vdx) with the selected name.
+
+        Parameters:
+        patient_item (PatientItem): Patient tree item containing the patient's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Voxelplan export start.")
+        full_path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
+
+        if not full_path:
+            return False
+
+        path_base, extension = os.path.splitext(full_path)
+        path, basename = os.path.split(path_base)
+        logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
+
+        patient_item.data.ctx.write(os.path.join(path, basename + patient_item.data.ctx.data_file_extension))
+        if patient_item.data.vdx:
+            patient_item.data.vdx.write(os.path.join(path, basename + patient_item.data.vdx.data_file_extension))
+        else:
+            logger.warning("Exported patient has no VOI.")
+
+        logger.debug("Voxelplan export finished.")
+        return True
+
+    def export_patient_dicom_callback(self, patient_item):
+        """
+        Export patient cube to DICOM format in the selected folder.
+
+        Parameters:
+        patient_item (PatientItem): Patient tree item containing the patient's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("DICOM export start.")
+        full_path = self.parent_gui.browse_folder_path("Export patient to DICOM")
+
+        if not full_path:
+            return False
+
+        logger.info("DICOM export to: " + full_path)
+
+        patient_item.data.ctx.write_dicom(full_path)
+        if patient_item.data.vdx:
+            patient_item.data.vdx.write_dicom(full_path)
+        else:
+            logger.warning("Exported patient has no VOI.")
+
+        logger.debug("DICOM export finished.")
+        return True
+
     def one_click_callback(self):
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
@@ -225,7 +312,7 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
+            self.app_model.viewcanvases.set_simulation_results(top_item.data, item.data, top_item.state)
             if top_item.state is None:
                 top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(top_item.data)
@@ -250,6 +337,13 @@ class AppCallback:
             # set state of plot when plotting first time
             if state_item.state is None:
                 state_item.state = self.app_model.viewcanvases.get_gui_state()
+
+            # hide VOI list
+            if not data_item.data.vdx or not data_item.data.vdx.vois:
+                logger.debug("no VOI data present, hiding VOI list control")
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(True)
+            else:
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
     def patient_tree_show(self):
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)

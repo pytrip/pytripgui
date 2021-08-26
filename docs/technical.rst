@@ -4,8 +4,6 @@ pytripgui
 
 .. image:: https://img.shields.io/pypi/v/pytripgui.svg
         :target: https://pypi.python.org/pypi/pytrip98gui
-.. image:: https://img.shields.io/travis/pytrip/pytripgui.svg
-        :target: https://travis-ci.org/pytrip/pytripgui
 
 
 .. image:: https://readthedocs.org/projects/pytripgui/badge/?version=latest
@@ -24,17 +22,13 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - |travis| |appveyor|
+      - |appveyor|
     * - package
       - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
 
 .. |docs| image:: https://readthedocs.org/projects/pytripgui/badge/?style=flat
     :target: https://readthedocs.org/projects/pytripgui
     :alt: Documentation Status
-
-.. |travis| image:: https://travis-ci.org/pytrip/pytripgui.svg?branch=master
-    :alt: Travis-CI Build Status
-    :target: https://travis-ci.org/pytrip/pytripgui
 
 .. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/grzanka/pytripgui?branch=master&svg=true
     :alt: Appveyor Build Status
@@ -43,6 +37,10 @@ Overview
 .. |version| image:: https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat
     :alt: PyPI Package latest release
     :target: https://pypi.python.org/pypi/pytrip98gui
+
+.. |ghactions| image:: https://github.com/pytrip/pytripgui/actions/workflows/test.yml/badge.svg
+    :alt: Github Actions
+    :target: https://github.com/pytrip/pytripgui/actions/workflows/test.yml
 
 .. |downloads| image:: https://img.shields.io/pypi/dm/pytrip98gui.svg?style=flat
     :alt: PyPI Package monthly downloads
@@ -62,8 +60,6 @@ Overview
 
 .. end-badges
 
-Overv.io issue board: https://overv.io/pytrip/pytripgui/
-
 
 Installation
 ============
@@ -76,7 +72,7 @@ Latest unstable version, directly GIT repository, using::
 
     pip install git+https://github.com/pytrip/pytripgui.git
 
-To unistall, simply use::
+To uninstall, simply use::
 
     pip uninstall pytrip98gui
 
