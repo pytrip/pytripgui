@@ -17,10 +17,10 @@ class EmptyPatientController:
         self._set_validators()
         self._validate_tabs()
 
-        self.parameters = dict.fromkeys(
-            ["width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
-             "pixel_size"]
-        )
+        self.parameters = dict.fromkeys([
+            "width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
+            "pixel_size"
+        ])
 
     def _setup_callbacks(self):
         self.view.accept_buttons.accepted.disconnect()
@@ -94,18 +94,16 @@ class EmptyPatientController:
         validator = QRegularExpressionValidator(Regex.INT_POSITIVE.value)
         enable_validation_list(
             validator,
-            [dim[1]["slice_number"], dim[2]["slice_number"], dim[2]["pixel_number_x"], dim[2]["pixel_number_y"]]
-        )
+            [dim[1]["slice_number"], dim[2]["slice_number"], dim[2]["pixel_number_x"], dim[2]["pixel_number_y"]])
 
         validator = QRegularExpressionValidator(Regex.FLOAT.value)
         self.view.slice_offset.enable_validation(validator)
 
         validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
-        enable_validation_list(
-            validator,
-            [dim[0]["slice_distance"], dim[0]["pixel_size"], dim[1]["depth"], dim[2]["slice_distance"],
-             dim[2]["pixel_size"]]
-        )
+        enable_validation_list(validator, [
+            dim[0]["slice_distance"], dim[0]["pixel_size"], dim[1]["depth"], dim[2]["slice_distance"],
+            dim[2]["pixel_size"]
+        ])
 
         validator = MultipleOfRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
         validator.set_multiple_of(dim[0]["pixel_size"])
