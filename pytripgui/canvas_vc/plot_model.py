@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from numpy import unravel_index
 
@@ -14,18 +15,17 @@ logger = logging.getLogger(__name__)
 class PlotModel:
     def __init__(self, projection_selector=ProjectionSelector()):
 
-        self.vdx = None  # cube is also in the main_model, but here this is specific for plotting.
-        # self.vois = []  # list of actual vois to be plotted (this may be fewer than vois in the self.vdx)
+        self.vdx: Optional[Vdx] = None  # cube is also in the main_model, but here this is specific for plotting.
 
         self.projection_selector = projection_selector
         self.display_filter = ""
-        self.dose = None
-        self.let = None
-        self.ctx = None
+        self.dose: Optional[Dos] = None
+        self.let: Optional[Let] = None
+        self.ctx: Optional[Ctx] = None
 
         # These are used by getters and setters, must come after the other values are initialized.
         self.cube = None
-        self.slice_pos_mm = 0.0
+        self.slice_pos_mm: float = 0.0
 
     def set_ctx(self, ctx):
         self.ctx = Ctx(self.projection_selector)

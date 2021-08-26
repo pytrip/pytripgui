@@ -66,7 +66,7 @@ class CanvasController:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
             if self._model.vdx:
-                # TODO this does work, but is not fully reworked yet
+                # TODO this does work, but is not fully reworked yet - POI plotting is deprecated
                 self._ui.plot_voi(self._model.vdx)
 
         if self._model.dose:
@@ -90,10 +90,6 @@ class CanvasController:
         self._ui.max_position = self._model.projection_selector.last_slice_no
         self._ui.position = self._model.projection_selector.current_slice_no
         self._ui.perspective = self._model.projection_selector.plane
-        # if self._model.vdx:
-        #     Vdx.plot(self)
-        # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
-        #     ViewCanvasTextCont().plot(self)
 
     def set_patient(self, patient, state):
         self._ui.clear()
@@ -108,7 +104,6 @@ class CanvasController:
         if patient.vdx.vois:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            # self._on_update_voi()
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
