@@ -202,6 +202,7 @@ class VoiManager:
         if vdx.projection_selector.plane == "Coronal":
             # "Coronal"  (xz)
             return data[:, 0], data[:, 2]
+        raise ValueError("Wrong plane string in voi manager")
 
     @staticmethod
     def _get_current_slice(vdx: Vdx, voi: Voi) -> Optional[Slice]:
