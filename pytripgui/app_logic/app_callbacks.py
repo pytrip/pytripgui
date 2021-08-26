@@ -312,7 +312,7 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(top_item.data, top_item.state)
+            self.app_model.viewcanvases.set_simulation_results(top_item.data, item.data, top_item.state)
             if top_item.state is None:
                 top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(top_item.data)
