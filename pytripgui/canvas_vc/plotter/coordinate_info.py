@@ -1,6 +1,11 @@
+from typing import Dict, List, Optional, Callable
+
 import numpy as np
 from matplotlib.projections import register_projection
 from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+from pytripgui.canvas_vc.objects.ctx import Ctx
 
 
 class CoordinateInfo(Axes3D):
@@ -25,14 +30,15 @@ class CoordinateInfo(Axes3D):
         super().__init__(fig, rect, **kwargs)
         # variables to ease wireframe plotting
         r = [-1, 1]
-        self.x, self.y = np.meshgrid(r, r)
-        self.one = np.ones(4).reshape(2, 2)
+        self._x, self.y = np.meshgrid(r, r)
+        self._one = np.ones(4).reshape(2, 2)
         # wireframe and surface parameters
-        self.alpha = 0.2
-        self.wireframe_color = 'black'
-        self.transversal_color = 'g'
-        self.sagittal_color = 'r'
-        self.coronal_color = 'b'
+        self._alpha: float = 0.2
+        self._wireframe_color: str = 'black'
+        self._transversal_color: str = 'g'
+        self._sagittal_color: str = 'r'
+        self._coronal_color: str = 'b'
+
         # set plot labels
         self.set_xlabel('x')
         self.set_ylabel('y')
@@ -43,27 +49,30 @@ class CoordinateInfo(Axes3D):
         self.set_yticks([])
         self.set_zticks([])
         # plot cubic frame
-        self.plot_wireframe(self.x, self.y, self.one, alpha=self.alpha, color=self.wireframe_color)
-        self.plot_wireframe(self.x, self.y, -self.one, alpha=self.alpha, color=self.wireframe_color)
-        self.plot_wireframe(self.x, -self.one, self.y, alpha=self.alpha, color=self.wireframe_color)
-        self.plot_wireframe(self.x, self.one, self.y, alpha=self.alpha, color=self.wireframe_color)
-        self.plot_wireframe(self.one, self.x, self.y, alpha=self.alpha, color=self.wireframe_color)
-        self.plot_wireframe(-self.one, self.x, self.y, alpha=self.alpha, color=self.wireframe_color)
+        self.plot_wireframe(self._x, self.y, self._one, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self.y, -self._one, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, -self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
+        # plot arrows for axis indicators
+
         # set proper distance from plot
         self.dist = 18
+
         # set default last plane
-        self._last_plane = 'DEFAULT_PLANE'
+        self._last_plane: str = 'DEFAULT_PLANE'
         # flag that tells if plot should be initialized or updated
-        self._data_set = False
+        self._data_set: bool = False
         # set default surfaces
-        self._surfaces = {'Transversal': None, 'Sagittal': None, 'Coronal': None}
-        self._actions = {
+        self._surfaces: Dict[str, Optional[Poly3DCollection]] = {'Transversal': None, 'Sagittal': None, 'Coronal': None}
+        self._actions: Dict[str, Callable] = {
             'Transversal': self._plot_transversal,
             'Sagittal': self._plot_sagittal,
             'Coronal': self._plot_coronal
         }
 
-    def update_info(self, data):
+    def update_info(self, data: Ctx) -> None:
         """
         Updates positions of surfaces.
 
@@ -75,9 +84,9 @@ class CoordinateInfo(Axes3D):
         data : Ctx - object that has projection_selector
 
         """
-        current_plane = data.projection_selector.plane
-        current_slices = data.projection_selector.get_current_slices()
-        last_slices = data.projection_selector.get_last_slices()
+        current_plane: str = data.projection_selector.plane
+        current_slices: Dict[str, int] = data.projection_selector.get_current_slices()
+        last_slices: Dict[str, int] = data.projection_selector.get_last_slices()
 
         # initialize whole plot if necessary
         if not self._data_set:
@@ -98,31 +107,32 @@ class CoordinateInfo(Axes3D):
 
         self._last_plane = current_plane
 
-    def _plot_plane(self, plane, current_slices, last_slices, current_plane):
+    def _plot_plane(self, plane: str, current_slices: Dict[str, int], last_slices: Dict[str, int],
+                    current_plane: str) -> None:
         # rescale from [0...last slice] to [-1...1]
-        ones = np.multiply(self.one, 2 * current_slices[plane] / last_slices[plane]) - 1
+        ones = np.multiply(self._one, 2 * current_slices[plane] / last_slices[plane]) - 1
         # plot proper plane
         self._surfaces[plane] = self._actions[plane](ones, current_plane == plane)
 
-    def _plot_transversal(self, ones, is_current_plane):
+    def _plot_transversal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         # plot full color if this is current plane
         if is_current_plane:
-            return self.plot_surface(self.x, self.y, ones, color=self.transversal_color)
+            return self.plot_surface(self._x, self.y, ones, color=self._transversal_color)
 
         # plot partially transparent if it is not current plane
-        return self.plot_surface(self.x, self.y, ones, alpha=self.alpha, color=self.transversal_color)
+        return self.plot_surface(self._x, self.y, ones, alpha=self._alpha, color=self._transversal_color)
 
-    def _plot_sagittal(self, ones, is_current_plane):
+    def _plot_sagittal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         if is_current_plane:
-            return self.plot_surface(ones, self.x, self.y, color=self.sagittal_color)
+            return self.plot_surface(ones, self._x, self.y, color=self._sagittal_color)
 
-        return self.plot_surface(ones, self.x, self.y, alpha=self.alpha, color=self.sagittal_color)
+        return self.plot_surface(ones, self._x, self.y, alpha=self._alpha, color=self._sagittal_color)
 
-    def _plot_coronal(self, ones, is_current_plane):
+    def _plot_coronal(self, ones: List[List[int]], is_current_plane: bool) -> Poly3DCollection:
         if is_current_plane:
-            return self.plot_surface(self.x, ones, self.y, color=self.coronal_color)
+            return self.plot_surface(self._x, ones, self.y, color=self._coronal_color)
 
-        return self.plot_surface(self.x, ones, self.y, alpha=self.alpha, color=self.coronal_color)
+        return self.plot_surface(self._x, ones, self.y, alpha=self._alpha, color=self._coronal_color)
 
 
 register_projection(CoordinateInfo)
