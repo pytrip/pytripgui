@@ -33,10 +33,10 @@ class CoordinateInfo(Axes3D):
 
         # variables to ease wireframe plotting
         r = [-1, 1]
-        self._x, self.y = np.meshgrid(r, r)
+        self._x, self._y = np.meshgrid(r, r)
         self._one = np.ones(4).reshape(2, 2)
         # wireframe and surface parameters
-        self._alpha: float = 0.5
+        self._inactive_plane_alpha: float = 0.5
         self._wireframe_color: str = 'grey'
         # set surfaces' colors
         self._colors: Dict[str, str] = {'Transversal': 'limegreen', 'Sagittal': 'orangered', 'Coronal': 'royalblue'}
@@ -75,12 +75,12 @@ class CoordinateInfo(Axes3D):
         # set proper distance from plot
         self.dist = 18
         # plot cubic frame
-        self.plot_wireframe(self._x, self.y, self._one, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, self.y, -self._one, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, -self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._x, self._one, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
-        self.plot_wireframe(-self._one, self._x, self.y, alpha=self._alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self._y, self._one, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self._y, -self._one, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, -self._one, self._y, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._x, self._one, self._y, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
+        self.plot_wireframe(self._one, self._x, self._y, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
+        self.plot_wireframe(-self._one, self._x, self._y, alpha=self._inactive_plane_alpha, color=self._wireframe_color)
         # plot arrows for axis indicators
         # indicators should be in order in which xyz_axis ale colors are ordered
         indicators = [('^', [1]), ('>', [1]), ('>', [0])]
@@ -133,7 +133,7 @@ class CoordinateInfo(Axes3D):
         ones = np.multiply(self._one, 2 * current_slices[plane] / last_slices[plane]) - 1
 
         # get proper vector by rotating base one
-        xyz = deque([self._x, self.y, ones])
+        xyz = deque([self._x, self._y, ones])
         xyz.rotate(self._rotations[plane])
         x, y, z = xyz
 
@@ -147,7 +147,7 @@ class CoordinateInfo(Axes3D):
         alpha: float = 1.0
         if not is_current_plane:
             # plot partially transparent if it is not current plane
-            alpha = self._alpha
+            alpha = self._inactive_plane_alpha
 
         # change axis alpha
         axis.line.set_alpha(alpha)
