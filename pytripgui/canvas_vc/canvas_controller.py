@@ -52,11 +52,11 @@ class CanvasController:
 
     def update_canvas_view(self):
         if self._model.ctx:
-            if self._model.vdx:
-                # TODO this does not work
-                self._model.vdx.plot(self._ui._plotter)
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
+            if self._model.vdx:
+                # TODO this does work, but is not fully reworked yet - POI plotting is deprecated
+                self._ui.plot_voi(self._model.vdx)
 
         if self._model.dose:
             if (self._model.display_filter == "") | \
@@ -75,10 +75,6 @@ class CanvasController:
         self._ui.max_position = self._model.projection_selector.last_slice_no
         self._ui.position = self._model.projection_selector.current_slice_no
         self._ui.perspective = self._model.projection_selector.plane
-        # if self._model.vdx:
-        #     Vdx.plot(self)
-        # if self._model.cube:  # if any CTX/DOS/LET cube is present, add the text decorators
-        #     ViewCanvasTextCont().plot(self)
 
     def set_patient(self, patient, state):
         self._ui.clear()
@@ -93,18 +89,14 @@ class CanvasController:
         if patient.vdx and patient.vdx.vois:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            self._on_update_voi()
 
         self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
         self._ui.draw()
 
     def set_simulation_results(self, simulation_results, simulation_item, state):
-        self.set_patient(simulation_results.patient, None)
         self._ui.clear()
-        if state is None:
-            state = ProjectionSelector()
-        self._model = PlotModel(state)
+        self.set_patient(simulation_results.patient, state)
 
         self._model.set_ctx(simulation_results.patient.ctx)
 
@@ -124,8 +116,9 @@ class CanvasController:
 
     def _on_update_voi(self):
         if self._model.vdx:
-            self._model.vdx.vois = self._ui.voi_list.checked_items()
+            self._model.vdx.voi_list = self._ui.voi_list.checked_items()
         self.update_canvas_view()
+        self._ui.update()
 
     def get_projection_selector(self):
         return self._model.projection_selector

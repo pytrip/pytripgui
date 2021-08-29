@@ -88,6 +88,9 @@ class CanvasView:
         self._plotter.plot_ctx(data)
         self._enable_perspective_selector()
 
+    def plot_voi(self, vdx):
+        self._plotter.plot_voi(vdx)
+
     def draw(self):
         self._plotter.draw()
 
@@ -95,6 +98,7 @@ class CanvasView:
         self._plotter.update()
 
     def clear(self):
+        self._plotter.remove_voi()
         self._plotter.remove_dos()
         self._plotter.remove_let()
         self._plotter.remove_ctx()
