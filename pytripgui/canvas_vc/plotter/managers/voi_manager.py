@@ -182,8 +182,10 @@ class VoiManager:
 
     @staticmethod
     def _get_color(voi: Voi) -> [float, float, float]:
-        # color in voi is stored as [a, b, c] where a,b,c are floats from 0.0 to 1.0
-        return voi.get_color()
+        # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
+        # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
+        color = np.array(voi.get_color()) / 255.0
+        return color
 
     @staticmethod
     def _get_plot_data(vdx: Vdx, data):
