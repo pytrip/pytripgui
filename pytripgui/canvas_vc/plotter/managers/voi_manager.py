@@ -1,5 +1,4 @@
 import logging
-import random
 from copy import deepcopy
 from typing import Optional, Dict, List
 
@@ -95,7 +94,7 @@ class VoiManager:
                     # check if number of already plotted contour is less than the number of contour in VOI
                     # if it is less, plot current contour and append that plot to array stored under VOI's name
                     if len(self._plotted_voi[voi.name]) < number_of_contours:
-                        (line, ) = self._axes.plot(x, y, color=contour_color, zorder=100, scalex=False, scaley=False)
+                        (line,) = self._axes.plot(x, y, color=contour_color, zorder=100, scalex=False, scaley=False)
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
 
