@@ -1,5 +1,7 @@
 # validation page for appveyor config: https://ci.appveyor.com/tools/validate-yaml
 
+image: Visual Studio 2019
+
 # we are not building Visual Studio project, so default build step is off
 build: off
 
