@@ -7,7 +7,7 @@ environment:
   matrix:
 
      - platform: x64
-       PYTHON: "C:\\Python38-x64"
+       PYTHON: "C:\\Python34-x64"
 
 install:
   # If there is a newer build queued for the same PR, cancel this one.
@@ -42,7 +42,7 @@ build_script:
 # install pyinstaller
   - python -m pip install pyinstaller
 # newer pydicom doesn't work
-  - python -m pip install "pydicom==2.1.2"
+#  - python -m pip install "pydicom==2.1.2"
 # check python packages list and theirs version
   - pip list
 # generate installer
