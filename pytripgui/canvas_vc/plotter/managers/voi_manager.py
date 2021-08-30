@@ -186,7 +186,6 @@ class VoiManager:
         # color in voi is stored as [a, b, c] where a,b,c are floats from 0.0 to 1.0
         return voi.get_color()
 
-
     @staticmethod
     def _get_plot_data(vdx: Vdx, data):
         if vdx.projection_selector.plane == "Transversal":
