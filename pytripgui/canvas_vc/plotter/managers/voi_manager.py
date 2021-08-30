@@ -184,7 +184,7 @@ class VoiManager:
     def _get_color(voi: Voi) -> (float, float, float):
         # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
         # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
-        color = tuple(c/255.0 for c in voi.get_color())
+        color = tuple(c / 255.0 for c in voi.get_color())
         return color
 
     @staticmethod
