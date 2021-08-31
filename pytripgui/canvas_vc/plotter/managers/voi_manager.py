@@ -1,5 +1,4 @@
 import logging
-import random
 from copy import deepcopy
 from typing import Optional, Dict, List
 
@@ -49,7 +48,7 @@ class VoiManager:
                 continue
 
             # randomly pick color defined in pytrip
-            contour_color = self._get_color(voi, random.randint(0, len(voi.colors)))
+            contour_color = self._get_color(voi)
 
             # number of contours to check few conditions
             number_of_contours = len(current_slice.contours)
@@ -182,12 +181,10 @@ class VoiManager:
         del self._plotted_voi[name]
 
     @staticmethod
-    def _get_color(voi: Voi, i: int) -> [float, float, float]:
-        # TODO if colors are implemented properly in pytrip - change this method
-        i = i % len(voi.colors)
+    def _get_color(voi: Voi) -> (float, float, float):
         # color in voi is stored as [a, b, c] where a,b,c are numbers from 0 to 255
         # dividing by 255.0 to have float values from 0.0 to 1.0 to adapt to matplotlib colors
-        color = np.array(voi.get_color(i)) / 255.0
+        color = tuple(c / 255.0 for c in voi.get_color())
         return color
 
     @staticmethod
