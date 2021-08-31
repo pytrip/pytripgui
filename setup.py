@@ -26,7 +26,7 @@ install_requires = [
     'pytrip98~=3.4',
     'anytree~=2.8',
     'paramiko~=2.7',
-    'Events~=0.3',
+    'Events~=0.4',
     "PyQt5<5.10 ; python_version<'3.8'",
     "PyQt5>=5.15 ; python_version>='3.8'",
     "PyQtChart<5.10 ; python_version<'3.8'",
