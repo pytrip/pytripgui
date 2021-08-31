@@ -10,6 +10,7 @@ class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
+
     def __init__(self, model, ui):
         self._model = model
         self._ui = ui
@@ -17,10 +18,15 @@ class CanvasController:
         self._setup_ui_callbacks()
 
         self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
+        self._ui.set_position_changed_callback(self.set_current_slice_no)
 
     def _perspective_has_changed_callback(self):
         self._model.projection_selector.plane = self._ui.perspective
         self.clear_view()
+
+        # we need to change max, min and current values of slider, depending on perspective
+        self._update_slider_values(position_safe=True, perspective_safe=False)
+
         self.update_canvas_view()
         self._ui.draw()
 
@@ -38,12 +44,12 @@ class CanvasController:
         else:
             self._model.projection_selector.prev_slice()
 
-        self.update_canvas_view()
-        self._ui.update()
+        # scrolling increments or decrements current slice number which is used to set value on slider
+        # and that slider emits event that invokes callback - set_current_slice_no
+        self._ui.position = self._model.projection_selector.current_slice_no
 
     def set_current_slice_no(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
-
         self.update_canvas_view()
         self._ui.update()
 
@@ -51,6 +57,7 @@ class CanvasController:
         self._ui.clear()
 
     def update_canvas_view(self):
+        print('slice number currently processed in update: ', self._model.projection_selector.current_slice_no)
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
@@ -72,10 +79,6 @@ class CanvasController:
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-        self._ui.max_position = self._model.projection_selector.last_slice_no
-        self._ui.position = self._model.projection_selector.current_slice_no
-        self._ui.perspective = self._model.projection_selector.plane
-
     def set_patient(self, patient, state):
         self._ui.clear()
         if state is None:
@@ -90,9 +93,37 @@ class CanvasController:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
 
-        self._ui.set_position_changed_callback(self.set_current_slice_no)
         self.update_canvas_view()
+
+        self._update_slider_values(position_safe=True, perspective_safe=True)
+
         self._ui.draw()
+
+    def _update_slider_values(self, position_safe: bool, perspective_safe: bool):
+        """
+        Updates min, max and current values of ui slider.
+        Can be "safe" position-callback-wise and perspective-callback-wise,
+            which means that callback will not be invoked id proper flag is set
+
+        :param bool position_safe: if set, position change callback will be suppressed
+        :param bool perspective_safe: if set, perspective change callback will be suppressed
+        """
+        # remove event listeners
+        if position_safe:
+            self._ui.remove_position_changed_callback(self.set_current_slice_no)
+        if perspective_safe:
+            self._ui.internal_events.on_perspective_change -= self._perspective_has_changed_callback
+
+        # set parameters
+        self._ui.max_position = self._model.projection_selector.last_slice_no
+        self._ui.position = self._model.projection_selector.current_slice_no
+        self._ui.perspective = self._model.projection_selector.plane
+
+        # add event listeners back
+        if position_safe:
+            self._ui.set_position_changed_callback(self.set_current_slice_no)
+        if perspective_safe:
+            self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
 
     def set_simulation_results(self, simulation_results, simulation_item, state):
         self._ui.clear()
