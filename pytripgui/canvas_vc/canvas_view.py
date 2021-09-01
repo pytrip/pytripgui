@@ -79,6 +79,10 @@ class CanvasView:
         self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
 
     def set_position_changed_callback(self, callback):
+        # event is emitted every time value od slider is changed, for example:
+        #   when slider value is set by controller
+        #   when user scrolls slider
+        #   when user stops dragging slider - thanks to disabled tracking
         self._ui.position_slider.valueChanged.connect(callback)
 
     def remove_position_changed_callback(self, callback):
