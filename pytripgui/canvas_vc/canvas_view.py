@@ -29,6 +29,9 @@ class CanvasView:
         self._internal_events_setup()
         self.voi_list_set_visibility(visible=True)
 
+        # "If tracking is disabled, the slider emits the valueChanged() signal only when the user releases the slider."
+        self._ui.position_slider.setTracking(False)
+
     def _internal_events_setup(self):
 
         self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_visibility)
@@ -76,7 +79,14 @@ class CanvasView:
         self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
 
     def set_position_changed_callback(self, callback):
-        self._ui.position_slider.sliderMoved.connect(callback)
+        # event is emitted every time value od slider is changed, for example:
+        #   when slider value is set by controller
+        #   when user scrolls slider
+        #   when user stops dragging slider - thanks to disabled tracking
+        self._ui.position_slider.valueChanged.connect(callback)
+
+    def remove_position_changed_callback(self, callback):
+        self._ui.position_slider.valueChanged.disconnect(callback)
 
     def plot_let(self, data):
         self._plotter.plot_let(data)

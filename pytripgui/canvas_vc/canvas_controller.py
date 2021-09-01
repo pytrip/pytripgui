@@ -16,41 +16,49 @@ class CanvasController:
 
         self._setup_ui_callbacks()
 
-        self._ui.internal_events.on_perspective_change += self._perspective_has_changed_callback
-
-    def _perspective_has_changed_callback(self):
-        self._model.projection_selector.plane = self._ui.perspective
-        self.clear_view()
-        self.update_canvas_view()
-        self._ui.draw()
-
     def _setup_ui_callbacks(self):
-        self._ui.set_plotter_click_callback(self.on_click)
-        self._ui.set_plotter_wheel_callback(self.on_mouse_wheel)
+        # callback for events emitted by clicking on canvas
+        self._ui.set_plotter_click_callback(self._on_click)
+        # callback for events emitted by scrolling mouse wheel
+        self._ui.set_plotter_wheel_callback(self._on_mouse_wheel)
+        # callback for events emitted by changing perspective between transversal, sagittal and coronal
+        self._ui.internal_events.on_perspective_change += self._on_perspective_change
+        # callback for events emitted by changing position of slider
+        self._ui.set_position_changed_callback(self._on_slider_position_change)
 
-    def on_click(self, event):
+    def _on_click(self, event):
         # TODO - add popup menu if needed
         pass
 
-    def on_mouse_wheel(self, event):
+    def _on_mouse_wheel(self, event):
         if event.button == "up":
             self._model.projection_selector.next_slice()
         else:
             self._model.projection_selector.prev_slice()
 
-        self.update_canvas_view()
-        self._ui.update()
+        # scrolling increments or decrements current slice number which is used to set value on slider
+        # and that slider emits event that invokes callback - set_current_slice_no
+        self._ui.position = self._model.projection_selector.current_slice_no
 
-    def set_current_slice_no(self, slice_no):
+    def _on_perspective_change(self):
+        self._model.projection_selector.plane = self._ui.perspective
+        self.clear_view()
+
+        # we need to update max and current values of slider, which depend on perspective
+        self._safely_update_slider()
+
+        self._update_canvas_view()
+        self._ui.draw()
+
+    def _on_slider_position_change(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
-
-        self.update_canvas_view()
+        self._update_canvas_view()
         self._ui.update()
 
     def clear_view(self):
         self._ui.clear()
 
-    def update_canvas_view(self):
+    def _update_canvas_view(self):
         if self._model.ctx:
             self._model.ctx.prepare_data_to_plot()
             self._ui.plot_ctx(self._model.ctx)
@@ -72,10 +80,6 @@ class CanvasController:
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-        self._ui.max_position = self._model.projection_selector.last_slice_no
-        self._ui.position = self._model.projection_selector.current_slice_no
-        self._ui.perspective = self._model.projection_selector.plane
-
     def set_patient(self, patient, state):
         self._ui.clear()
         if state is None:
@@ -90,9 +94,36 @@ class CanvasController:
             self._ui.voi_list.event_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
 
-        self._ui.set_position_changed_callback(self.set_current_slice_no)
-        self.update_canvas_view()
+        self._update_canvas_view()
+
+        self._safely_update_slider()
+        self._safely_update_perspective()
+
         self._ui.draw()
+
+    def _safely_update_slider(self):
+        """
+        Safely updates max and current values of ui slider by suppressing position change callback.
+        """
+        # remove event listener
+        self._ui.remove_position_changed_callback(self._on_slider_position_change)
+        # set stored height of slider
+        self._ui.max_position = self._model.projection_selector.last_slice_no
+        # set stored position of slider
+        self._ui.position = self._model.projection_selector.current_slice_no
+        # add event listener back
+        self._ui.set_position_changed_callback(self._on_slider_position_change)
+
+    def _safely_update_perspective(self):
+        """
+        Safely updates ui perspective by suppressing perspective change callback.
+        """
+        # remove event listener
+        self._ui.internal_events.on_perspective_change -= self._on_perspective_change
+        # set stored perspective
+        self._ui.perspective = self._model.projection_selector.plane
+        # add event listener back
+        self._ui.internal_events.on_perspective_change += self._on_perspective_change
 
     def set_simulation_results(self, simulation_results, simulation_item, state):
         self._ui.clear()
@@ -111,13 +142,13 @@ class CanvasController:
         elif isinstance(simulation_item, LETCube):
             self._model.display_filter = "LET"
 
-        self.update_canvas_view()
+        self._update_canvas_view()
         self._ui.draw()
 
     def _on_update_voi(self):
         if self._model.vdx:
             self._model.vdx.voi_list = self._ui.voi_list.checked_items()
-        self.update_canvas_view()
+        self._update_canvas_view()
         self._ui.update()
 
     def get_projection_selector(self):
