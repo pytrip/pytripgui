@@ -89,10 +89,10 @@ class CanvasController:
         self._ui.clear()
 
         if state:
-            # restore state
-            self._gui_state = state
             # recreate model with stored positions in each plane
             self._model = PlotModel(state.projection_selector)
+            # restore state
+            self._gui_state = state
         else:
             # create new model
             self._model = PlotModel(ProjectionSelector())
