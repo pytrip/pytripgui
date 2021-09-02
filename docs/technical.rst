@@ -99,11 +99,14 @@ Features
 History
 -------
 
+* earliest mention of the pytrip project dates back to 2010 http://willworkforscience.blogspot.com/2010/12/happy-new-year.html
+
 * 2012-2013 pytrip code with experimental GUI is developed by Niels Bassler and Jakob Toftegaard, code is hosted in SVN repository at Aarhus University (https://svn.nfit.au.dk/trac/pytrip)
 
   * state of the code in late 2013 can be seen here: https://github.com/pytrip/pytrip/commit/54e2d00d41138431c1c2b69cc6136f87cf4831b8
   * pytrip works with python 2.x, GUI is based on wxwidgets library
   * pytrip (including experimental GUI) was denoted at v0.1
+  * functionality of GUI at that moment can be seen in video https://www.youtube.com/embed/6ZqcJ6OZ598
 
 * 2014-2016 pytrip code (including GUI) is publicly available as a SourceForge project (https://sourceforge.net/projects/pytrip/)
 
@@ -112,6 +115,16 @@ History
 * 28.08.2016 pytrip (including GUI) is migrated to GIT at Github repository (https://github.com/pytrip/pytrip)
 
   * pytripgui is extracted to a separate project (https://github.com/pytrip/pytripgui)
+  * Leszek Grzanka joins developer team
+
+* 8.05.2018 pytripgui is migrated from wxwidgets to Qt5 framework (https://github.com/pytrip/pytripgui/commit/cb27fc909d132ce5f7a5e0be5df2dbbfd64e6c1d)
+
+  * GUI shifts completely from python 2.x to python 3.x
+
+* 04.2019 Lukasz Jelen joins developer team, introducing MVC architecture in the project
+
+* 06.2021 Arkadiusz Cwikla, Joanna Fortuna, Michal Krawczyk and Mateusz Lawczyk join project (part of bachelor thesis at AGH University)
+
 
 Credits
 -------
