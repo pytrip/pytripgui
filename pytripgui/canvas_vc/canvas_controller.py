@@ -1,6 +1,9 @@
 import logging
 
 from pytrip import DosCube, LETCube
+
+from pytripgui.canvas_vc.canvas_view import CanvasView
+from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
 
 logger = logging.getLogger(__name__)
@@ -10,9 +13,11 @@ class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
-    def __init__(self, model, ui):
-        self._model = model
-        self._ui = ui
+    def __init__(self, model: PlotModel, ui: CanvasView):
+        self._model: PlotModel = model
+        self._ui: CanvasView = ui
+
+        self._gui_state: PatientGuiState = PatientGuiState()
 
         self._setup_ui_callbacks()
 
@@ -80,19 +85,35 @@ class CanvasController:
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-    def set_patient(self, patient, state):
+    def set_patient(self, patient, state: PatientGuiState):
         self._ui.clear()
-        if state is None:
-            state = ProjectionSelector()
-        self._model = PlotModel(state)
+
+        if state:
+            # recreate model with stored positions in each plane
+            self._model = PlotModel(state.projection_selector)
+            # restore state
+            self._gui_state = state
+        else:
+            # create new model
+            self._model = PlotModel(ProjectionSelector())
+            # create new gui state object
+            self._gui_state = PatientGuiState()
+            self._gui_state.projection_selector = self._model.projection_selector
 
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
             self._model.set_vdx()
 
         if patient.vdx and patient.vdx.vois:
-            self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
+            # fill ui voi list with VOIs from patient
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+            if state:
+                # restore ticked VOIs
+                self._ui.voi_list.tick_checkboxes(state.ticked_voi_list, lambda item: item.name)
+                # add ticked VOIs to model
+                self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
+            # set callback to react on ui voi list updates
+            self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
 
         self._update_canvas_view()
 
@@ -147,9 +168,11 @@ class CanvasController:
 
     def _on_update_voi(self):
         if self._model.vdx:
-            self._model.vdx.voi_list = self._ui.voi_list.checked_items()
+            self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
+            # update gui state object
+            self._gui_state.ticked_voi_list = self._model.vdx.voi_list
         self._update_canvas_view()
         self._ui.update()
 
-    def get_projection_selector(self):
-        return self._model.projection_selector
+    def get_gui_state(self) -> PatientGuiState:
+        return self._gui_state

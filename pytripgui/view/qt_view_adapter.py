@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QValidator
 from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
@@ -150,11 +152,11 @@ class ListWidget:
         self.on_list_item_clicked_callback = lambda: None
         self._ui.itemClicked.connect(self._on_item_clicked)
 
-    def fill(self, items, lambda_names):
+    def fill(self, items, get_name: Callable):
         self._ui.clear()
         self._items.clear()
         for item in items:
-            q_item = QListWidgetItem(lambda_names(item))
+            q_item = QListWidgetItem(get_name(item))
             q_item.setData(Qt.UserRole, item)
             if self._checkable:
                 q_item.setCheckState(Qt.Unchecked)
@@ -173,7 +175,7 @@ class ListWidget:
             self._items.append(q_item)
             self._ui.addItem(q_item)
 
-    def checked_items(self):
+    def ticked_items(self):
         selected = []
         if not self._checkable:
             return selected
@@ -183,6 +185,12 @@ class ListWidget:
             if widget.checkState() == Qt.Checked:
                 selected.append(widget.data(Qt.UserRole))
         return selected
+
+    def tick_checkboxes(self, items, get_name: Callable):
+        item_names = [get_name(item) for item in items]
+        for item in self._items:
+            if get_name(item.data(Qt.UserRole)) in item_names:
+                item.setCheckState(Qt.Checked)
 
     def _on_item_clicked(self, item):
         # change check state of item that was clicked

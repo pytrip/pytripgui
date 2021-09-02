@@ -17,4 +17,4 @@ class ViewCanvases:
         self.plot_cont.set_simulation_results(simulation_results, simulation_item, state)
 
     def get_gui_state(self):
-        return self.plot_cont.get_projection_selector()
+        return self.plot_cont.get_gui_state()
