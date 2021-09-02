@@ -108,12 +108,12 @@ class CanvasController:
             # fill ui voi list with VOIs from patient
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
             if state:
-                # restore checked VOIs
-                self._ui.voi_list.tick_checkboxes(state.checked_voi_list, lambda item: item.name)
-                # add checked VOIs to model
+                # restore ticked VOIs
+                self._ui.voi_list.tick_checkboxes(state.ticked_voi_list, lambda item: item.name)
+                # add ticked VOIs to model
                 self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
             # set callback to react on ui voi list updates
-            self._ui.voi_list.event_callback = self._on_update_voi
+            self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
 
         self._update_canvas_view()
 
@@ -170,7 +170,7 @@ class CanvasController:
         if self._model.vdx:
             self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
             # update gui state object
-            self._gui_state.checked_voi_list = self._model.vdx.voi_list
+            self._gui_state.ticked_voi_list = self._model.vdx.voi_list
         self._update_canvas_view()
         self._ui.update()
 

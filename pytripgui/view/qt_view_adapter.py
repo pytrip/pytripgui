@@ -187,12 +187,10 @@ class ListWidget:
         return selected
 
     def tick_checkboxes(self, items, get_name: Callable):
-        items_to_be_ticked = [
-            list_item for list_item in self._items
-            if get_name(list_item.data(Qt.UserRole)) in [get_name(item) for item in items]
-        ]
-        for item in items_to_be_ticked:
-            item.setCheckState(Qt.Checked)
+        item_names = [get_name(item) for item in items]
+        for item in self._items:
+            if get_name(item.data(Qt.UserRole)) in item_names:
+                item.setCheckState(Qt.Checked)
 
     def _on_item_clicked(self, item):
         # change check state of item that was clicked

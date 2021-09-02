@@ -12,4 +12,4 @@ class PatientGuiState:
     """
     def __init__(self):
         self.projection_selector: Optional[ProjectionSelector] = None
-        self.checked_voi_list: List = []
+        self.ticked_voi_list: List = []
