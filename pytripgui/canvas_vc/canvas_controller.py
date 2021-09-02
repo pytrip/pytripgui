@@ -88,7 +88,7 @@ class CanvasController:
     def set_patient(self, patient, state: PatientGuiState):
         self._ui.clear()
 
-        if state and state.projection_selector:
+        if state:
             # restore state
             self._gui_state = state
             # recreate model with stored positions in each plane
@@ -107,11 +107,11 @@ class CanvasController:
         if patient.vdx and patient.vdx.vois:
             # fill ui voi list with VOIs from patient
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            if state and state.checked_voi_list:
+            if state:
                 # restore checked VOIs
-                self._ui.voi_list.check_items(state.checked_voi_list, lambda item: item.name)
+                self._ui.voi_list.tick_checkboxes(state.checked_voi_list, lambda item: item.name)
                 # add checked VOIs to model
-                self._model.vdx.voi_list = self._ui.voi_list.checked_items()
+                self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
             # set callback to react on ui voi list updates
             self._ui.voi_list.event_callback = self._on_update_voi
 
@@ -168,7 +168,7 @@ class CanvasController:
 
     def _on_update_voi(self):
         if self._model.vdx:
-            self._model.vdx.voi_list = self._ui.voi_list.checked_items()
+            self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
             # update gui state object
             self._gui_state.checked_voi_list = self._model.vdx.voi_list
         self._update_canvas_view()

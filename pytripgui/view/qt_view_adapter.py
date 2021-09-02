@@ -1,3 +1,5 @@
+from typing import Callable
+
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QValidator
 from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
@@ -150,18 +152,18 @@ class ListWidget:
         self.event_callback = lambda: None
         self._ui.itemClicked.connect(self._update_event)
 
-    def fill(self, items, lambda_names):
+    def fill(self, items, get_name: Callable):
         self._ui.clear()
         self._items.clear()
         for item in items:
-            q_item = QListWidgetItem(lambda_names(item))
+            q_item = QListWidgetItem(get_name(item))
             q_item.setData(Qt.UserRole, item)
             if self._checkable:
                 q_item.setCheckState(Qt.Unchecked)
             self._items.append(q_item)
             self._ui.addItem(q_item)
 
-    def checked_items(self):
+    def ticked_items(self):
         selected = []
         if not self._checkable:
             return selected
@@ -172,13 +174,13 @@ class ListWidget:
                 selected.append(widget.data(Qt.UserRole))
         return selected
 
-    def check_items(self, items, lambda_names):
-        to_be_checked = [
+    def tick_checkboxes(self, items, get_name: Callable):
+        items_to_be_ticked = [
             list_item for list_item in self._items
-            if lambda_names(list_item.data(Qt.UserRole)) in [lambda_names(item) for item in items]
+            if get_name(list_item.data(Qt.UserRole)) in [get_name(item) for item in items]
         ]
-        for list_item in to_be_checked:
-            list_item.setCheckState(Qt.Checked)
+        for item in items_to_be_ticked:
+            item.setCheckState(Qt.Checked)
 
     def _update_event(self):
         self.event_callback()
