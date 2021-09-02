@@ -169,7 +169,7 @@ class ListWidget:
             #   in that case user DOES NOT see the change of checkbox status
             #   checkbox is checked by first callback and unchecked by second one or the other way around
             #       and list of checked items DOES NOT change, which could unpleasant for user
-            q_item.setFlags(q_item.flags() & ~ Qt.ItemIsUserCheckable)
+            q_item.setFlags(q_item.flags() & ~Qt.ItemIsUserCheckable)
             self._items.append(q_item)
             self._ui.addItem(q_item)
 
