@@ -158,18 +158,18 @@ class ListWidget:
             q_item.setData(Qt.UserRole, item)
             if self._checkable:
                 q_item.setCheckState(Qt.Unchecked)
-            # remove from default item flags flag that allows user to directly check item's checkbox
-            # checkbox status is controlled by _on_item_clicked callback only
-            # so wherever user clicks on list item, checkbox status will be changed
-            # without removing that flag:
-            #   - user clicks wherever excluding checkbox - works great
-            #   - user clicks on checkbox - it launches two callbacks:
-            #       - first - which is allowed by ItemIsUserCheckable flag - checks/unchecks checkbox directly
-            #       - second - defined by us - _on_item_clicked - also checks/unchecks checkbox, but after the first one
-            #   in that case user DOES NOT see the change of checkbox status
-            #   checkbox is checked by first callback and unchecked by second one or the other way around
-            #       and list of checked items DOES NOT change, which could unpleasant for user
+            # From 'default item flags' remove flag allowing user to directly change item's checkbox status.
+            # The status is exclusively controlled by _on_item_clicked callback,
+            #   so if user clicks within list item boundaries (not only checkbox), the status will be changed.
             q_item.setFlags(q_item.flags() & ~Qt.ItemIsUserCheckable)
+            # Leaving ItemIsUserCheckable flag enabled, causes problems when user clicks on checkbox
+            #   - two callbacks are launched:
+            #     - first - controlled by the flag - checks/unchecks checkbox directly,
+            #     - second - defined by us (_on_item_clicked) also checks/unchecks checkbox.
+            #   In that case user DOES NOT see the change of checkbox status, because
+            #       checkbox is checked by first callback and unchecked by second one (or the other way around)
+            #       and list of checked items effectively stays unchanged,
+            #       while causing side effects (eg. invocation of on_list_item_clicked_callback).
             self._items.append(q_item)
             self._ui.addItem(q_item)
 
