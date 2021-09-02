@@ -66,6 +66,3 @@ class TreeController:
 
     def _export_dose_dicom_callback(self):
         self.export_dose_dicom_callback(self._view.selected_item)
-
-
-
