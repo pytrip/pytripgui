@@ -172,6 +172,12 @@ class ListWidget:
                 selected.append(widget.data(Qt.UserRole))
         return selected
 
+    def check_items(self, items, lambda_names):
+        to_be_checked = [list_item for list_item in self._items if
+                         lambda_names(list_item.data(Qt.UserRole)) in [lambda_names(item) for item in items]]
+        for list_item in to_be_checked:
+            list_item.setCheckState(Qt.Checked)
+
     def _update_event(self):
         self.event_callback()
 

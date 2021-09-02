@@ -202,7 +202,9 @@ class AppCallback:
             self.app_model.viewcanvases = ViewCanvases()
             self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
 
-        self.app_model.viewcanvases.set_patient(patient)
+        # someone needs to test this, but I think it's unnecessary,
+        #   because after that callback another event is emitted, which sets patient one more time
+        # self.app_model.viewcanvases.set_patient(patient)
         return True
 
     def open_voxelplan_callback(self, patient_item):
