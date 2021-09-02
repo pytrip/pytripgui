@@ -85,7 +85,6 @@ class PatientItem(TreeItem):
 
 
 class SimulationResultItem(TreeItem):
-
     def __repr__(self):
         if self.data:
             return self.data.__str__()
