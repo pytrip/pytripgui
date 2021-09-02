@@ -58,7 +58,7 @@ build_script:
 # installer
 # generate single dir installation
 # add InnoSetup to PATH
-  - set PATH="C:\Program Files (x86)\Inno Setup 6";%PATH%star
+  - set PATH="C:\Program Files (x86)\Inno Setup 6";%PATH%
 # make windows installer
   - iscc win_innosetup.iss
 
