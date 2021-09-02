@@ -10,7 +10,6 @@ class PatientGuiState:
         - which VOIs user picked to be shown
         etc.
     """
-
     def __init__(self):
         self.projection_selector: Optional[ProjectionSelector] = None
         self.checked_voi_list: Optional[List] = None

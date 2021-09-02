@@ -13,7 +13,6 @@ class CanvasController:
     """
     This class holds all logic for plotting the canvas, which are shared among subclasses such as Ctx, Vdx etc.
     """
-
     def __init__(self, model: PlotModel, ui: CanvasView):
         self._model: PlotModel = model
         self._ui: CanvasView = ui

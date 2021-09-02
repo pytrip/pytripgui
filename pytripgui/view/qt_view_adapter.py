@@ -173,8 +173,10 @@ class ListWidget:
         return selected
 
     def check_items(self, items, lambda_names):
-        to_be_checked = [list_item for list_item in self._items if
-                         lambda_names(list_item.data(Qt.UserRole)) in [lambda_names(item) for item in items]]
+        to_be_checked = [
+            list_item for list_item in self._items
+            if lambda_names(list_item.data(Qt.UserRole)) in [lambda_names(item) for item in items]
+        ]
         for list_item in to_be_checked:
             list_item.setCheckState(Qt.Checked)
 
