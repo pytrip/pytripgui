@@ -216,6 +216,42 @@ class AppCallback:
         self.app_model.viewcanvases.set_patient(patient)
         return True
 
+    def export_dose_voxelplan_callback(self, result_item):
+        # TODO docstring
+        logger.debug("Export DoseCube to Voxelplan")
+        dose_cube = result_item.data
+        # patient = result_item.parent.data
+        full_path = self.parent_gui.save_file_path("Export Dose to Voxelplan", "Voxelplan (*.hed)")
+
+        if not full_path:
+            return False
+
+        path_base, extension = os.path.splitext(full_path)
+        path, basename = os.path.split(path_base)
+        logger.info("Voxelplan export to: " + path + " with basename: " + basename)
+
+        dose_cube.write(os.path.join(path, basename))
+
+        logger.debug("Voxelplan export finished.")
+        return True
+
+    def export_dose_dicom_callback(self, result_item):
+        # TODO
+        logger.debug("Export DoseCube to DICOM")
+        dose_cube = result_item.data
+
+        full_path = self.parent_gui.browse_folder_path("Export Dose to DICOM")
+
+        if not full_path:
+            return False
+
+        logger.info("DICOM export to: " + full_path)
+
+        dose_cube.write_dicom(full_path)
+
+        logger.debug("DICOM export finished.")
+        return True
+
     def one_click_callback(self):
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
