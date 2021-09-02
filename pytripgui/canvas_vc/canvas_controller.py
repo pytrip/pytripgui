@@ -91,7 +91,7 @@ class CanvasController:
             self._model.set_vdx()
 
         if patient.vdx and patient.vdx.vois:
-            self._ui.voi_list.event_callback = self._on_update_voi
+            self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
 
         self._update_canvas_view()

@@ -147,8 +147,8 @@ class ListWidget:
         self._items = []
         self._checkable = checkable
 
-        self.event_callback = lambda: None
-        self._ui.itemClicked.connect(self._update_event)
+        self.on_list_item_clicked_callback = lambda: None
+        self._ui.itemClicked.connect(self._on_item_clicked)
 
     def fill(self, items, lambda_names):
         self._ui.clear()
@@ -158,6 +158,18 @@ class ListWidget:
             q_item.setData(Qt.UserRole, item)
             if self._checkable:
                 q_item.setCheckState(Qt.Unchecked)
+            # remove from default item flags flag that allows user to directly check item's checkbox
+            # checkbox status is controlled by _on_item_clicked callback only
+            # so wherever user clicks on list item, checkbox status will be changed
+            # without removing that flag:
+            #   - user clicks wherever excluding checkbox - works great
+            #   - user clicks on checkbox - it launches two callbacks:
+            #       - first - which is allowed by ItemIsUserCheckable flag - checks/unchecks checkbox directly
+            #       - second - defined by us - _on_item_clicked - also checks/unchecks checkbox, but after the first one
+            #   in that case user DOES NOT see the change of checkbox status
+            #   checkbox is checked by first callback and unchecked by second one or the other way around
+            #       and list of checked items DOES NOT change, which could unpleasant for user
+            q_item.setFlags(q_item.flags() & ~ Qt.ItemIsUserCheckable)
             self._items.append(q_item)
             self._ui.addItem(q_item)
 
@@ -172,8 +184,11 @@ class ListWidget:
                 selected.append(widget.data(Qt.UserRole))
         return selected
 
-    def _update_event(self):
-        self.event_callback()
+    def _on_item_clicked(self, item):
+        # change check state of item that was clicked
+        item.setCheckState(Qt.Unchecked if item.checkState() == Qt.Checked else Qt.Checked)
+        # invoke callback
+        self.on_list_item_clicked_callback()
 
 
 class TableWidget:
