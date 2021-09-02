@@ -33,9 +33,9 @@ class PatientModel:
         if 'images' in self.dcm:
             self.ctx = pt.CtxCube()
             self.ctx.read_dicom(self.dcm)
+            self.name = self.ctx.basename
 
         if 'rtss' in self.dcm:
             self.vdx = pt.VdxCube(self.ctx)
             self.vdx.read_dicom(self.dcm)
-
-        self.name = self.ctx.basename
+            self.name = self.vdx.basename

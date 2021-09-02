@@ -39,9 +39,15 @@ class PatientTree:
     def app_callback(self, app_callback):
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback
         self.patient_tree_cont.edit_item_callback = app_callback.edit_item_callback
+        
         self.patient_tree_cont.open_voxelplan_callback = app_callback.open_voxelplan_callback
+        self.patient_tree_cont.open_dicom_callback = app_callback.open_dicom_callback
+        
+        self.patient_tree_cont.export_patient_voxelplan_callback = app_callback.export_patient_voxelplan_callback
+        self.patient_tree_cont.export_patient_dicom_callback = app_callback.export_patient_dicom_callback
         self.patient_tree_cont.export_dose_voxelplan_callback = app_callback.export_dose_voxelplan_callback
         self.patient_tree_cont.export_dose_dicom_callback = app_callback.export_dose_dicom_callback
+        
         self.patient_tree_cont.execute_plan_callback = app_callback.on_execute_selected_plan
         self.patient_tree_cont.one_click_callback = app_callback.one_click_callback
 

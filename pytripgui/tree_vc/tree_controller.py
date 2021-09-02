@@ -12,6 +12,9 @@ class TreeController:
         self.new_item_callback = None
         self.edit_item_callback = None
         self.open_voxelplan_callback = None
+        self.export_voxelplan_callback = None
+        self.export_patient_voxelplan_callback = None
+        self.export_patient_dicom_callback = None
         self.execute_plan_callback = None
         self.one_click_callback = None
         self.export_dose_voxelplan_callback = None
@@ -23,6 +26,9 @@ class TreeController:
         self._view.internal_events.on_add_child += self._add_new_item_callback
         self._view.internal_events.on_edit_selected_item += self._edit_selected_item_callback
         self._view.internal_events.on_open_voxelplan += self._open_voxelplan_callback
+        self._view.internal_events.on_export_voxelplan += self._export_voxelplan_callback
+        self._view.internal_events.on_export_patient_voxelplan += self._export_patient_voxelplan_callback
+        self._view.internal_events.on_export_patient_dicom += self._export_patient_dicom_callback
         self._view.internal_events.on_delete += self._delete_callback
         self._view.internal_events.on_execute += self._execute_callback
         self._view.internal_events.on_click += self._on_click_callback
@@ -53,6 +59,15 @@ class TreeController:
 
     def _open_voxelplan_callback(self):
         self.open_voxelplan_callback(self._view.selected_item)
+
+    def _export_voxelplan_callback(self):
+        self.export_voxelplan_callback(self._view.selected_item)
+
+    def _export_patient_voxelplan_callback(self):
+        self.export_patient_voxelplan_callback(self._view.selected_item)
+
+    def _export_patient_dicom_callback(self):
+        self.export_patient_dicom_callback(self._view.selected_item)
 
     def _execute_callback(self):
         if self.execute_plan_callback:

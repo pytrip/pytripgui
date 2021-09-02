@@ -13,8 +13,8 @@ class ViewCanvases:
     def set_patient(self, patient, state=None):
         self.plot_cont.set_patient(patient, state)
 
-    def set_simulation_results(self, simulation_results, state=None):
-        self.plot_cont.set_simulation_results(simulation_results, state)
+    def set_simulation_results(self, simulation_results, simulation_item, state=None):
+        self.plot_cont.set_simulation_results(simulation_results, simulation_item, state)
 
     def get_gui_state(self):
-        return self.plot_cont.get_projection_selector()
+        return self.plot_cont.get_gui_state()

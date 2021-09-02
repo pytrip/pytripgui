@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class CanvasView:
     def __init__(self, parent=None):
-        self.internal_events = Events(('on_perspective_change', 'on_display_filter_change', 'on_change_slice_position'))
+        self.internal_events = Events(('on_perspective_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
         self._plotter = MplPlotter()
@@ -27,18 +27,17 @@ class CanvasView:
         self._ui.updateGeometry()
 
         self._internal_events_setup()
-        self.vois_tree_set_enabled(True)
+        self.voi_list_set_visibility(visible=True)
+
+        # "If tracking is disabled, the slider emits the valueChanged() signal only when the user releases the slider."
+        self._ui.position_slider.setTracking(False)
 
     def _internal_events_setup(self):
 
-        self._ui.voiList_checkBox.stateChanged.connect(self.vois_tree_set_enabled)
+        self._ui.voiList_checkBox.stateChanged.connect(self.voi_list_set_visibility)
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
-
-        self._ui.Dose_radioButton.released.connect(self.internal_events.on_display_filter_change)
-        self._ui.LET_radioButton.released.connect(self.internal_events.on_display_filter_change)
-        self._ui.None_radioButton.released.connect(self.internal_events.on_display_filter_change)
 
     def widget(self):
         return self._ui
@@ -79,36 +78,15 @@ class CanvasView:
             raise Exception("Cannot find given perspective to select")
         self._ui.perspective_comboBox.setCurrentIndex(index_of_element)
 
-    @property
-    def display_filter(self):
-        if self._ui.Dose_radioButton.isChecked():
-            return "DOS"
-        if self._ui.LET_radioButton.isChecked():
-            return "LET"
-        return "None"
-
-    @display_filter.setter
-    def display_filter(self, display_filter):
-        if display_filter == "DOS":
-            self._ui.Dose_radioButton.setChecked(True)
-        elif display_filter == "LET":
-            self._ui.LET_radioButton.setChecked(True)
-        else:
-            self._ui.None_radioButton.setChecked(True)
-
-    def enable_let(self):
-        self._ui.LET_radioButton.setEnabled(True)
-
-    def enable_dose(self):
-        self._ui.Dose_radioButton.setEnabled(True)
-
-    def reset_radiobuttons(self):
-        self._ui.LET_radioButton.setEnabled(False)
-        self._ui.Dose_radioButton.setEnabled(False)
-        self._ui.None_radioButton.setChecked(True)
-
     def set_position_changed_callback(self, callback):
-        self._ui.position_slider.sliderMoved.connect(callback)
+        # event is emitted every time value od slider is changed, for example:
+        #   when slider value is set by controller
+        #   when user scrolls slider
+        #   when user stops dragging slider - thanks to disabled tracking
+        self._ui.position_slider.valueChanged.connect(callback)
+
+    def remove_position_changed_callback(self, callback):
+        self._ui.position_slider.valueChanged.disconnect(callback)
 
     def plot_let(self, data):
         self._plotter.plot_let(data)
@@ -120,6 +98,9 @@ class CanvasView:
         self._plotter.plot_ctx(data)
         self._enable_perspective_selector()
 
+    def plot_voi(self, vdx):
+        self._plotter.plot_voi(vdx)
+
     def draw(self):
         self._plotter.draw()
 
@@ -127,6 +108,7 @@ class CanvasView:
         self._plotter.update()
 
     def clear(self):
+        self._plotter.remove_voi()
         self._plotter.remove_dos()
         self._plotter.remove_let()
         self._plotter.remove_ctx()
@@ -134,10 +116,36 @@ class CanvasView:
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
 
-    def vois_tree_set_enabled(self, state):
-        if state:
+    def voi_list_set_visibility(self, visible: bool = True) -> None:
+        """
+        Method that handles displaying and hiding the VOI list.
+
+        Parameters:
+        visible(bool): Whether the list should be shown.
+        """
+        if visible:
             self._ui.voi_listWidget.show()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
         else:
             self._ui.voi_listWidget.hide()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)
+
+    def voi_list_empty(self, empty: bool = True) -> None:
+        """
+        Method that handles displaying and hiding the VOI list and its checkBox when VOI data is unavailable.
+
+        Parameters:
+        empty(bool): Whether the list is empty and should be hidden.
+        """
+        voi_list = self._ui.voi_listWidget
+        checkbox = self._ui.voiList_checkBox
+
+        if empty:
+            voi_list.hide()
+            checkbox.hide()
+        else:
+            checkbox.show()
+            if checkbox.isChecked():
+                voi_list.show()
+            else:
+                voi_list.hide()

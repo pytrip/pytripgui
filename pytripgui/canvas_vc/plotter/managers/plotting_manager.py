@@ -8,6 +8,7 @@ from pytripgui.canvas_vc.plotter.bars import BarProjection
 from pytripgui.canvas_vc.plotter.coordinate_info import CoordinateInfo
 from pytripgui.canvas_vc.plotter.images import CtxImage, DoseImage, LetImage
 from pytripgui.canvas_vc.plotter.managers import PlacementManager, BlitManager
+from pytripgui.canvas_vc.plotter.managers.voi_manager import VoiManager
 '''
 This class was created to remove extra responsibilities from mpl_plotter.
 It hides how things are plotted, if they are present and how they are removed.
@@ -32,7 +33,7 @@ class PlottingManager:
         self.placement_manager = PlacementManager(self.figure)
         self.blit_manager = blit_manager
         # main plot
-        self.axes = self._initialize_axes()
+        self.axes: Axes = self._initialize_axes()
         # plot with information about slices position
         self.info_axes = None
         # CTX
@@ -47,6 +48,9 @@ class PlottingManager:
 
         # painting background color
         self.figure.patch.set_facecolor('black')
+
+        # plotting VOIs
+        self._voi_manager: VoiManager = VoiManager(self.axes, self.blit_manager)
 
     def _initialize_axes(self) -> Axes:
         axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
@@ -171,3 +175,9 @@ class PlottingManager:
             self.blit_manager.add_artist(self.info_axes)
         else:
             self.info_axes.update_info(data)
+
+    def plot_voi(self, vdx):
+        self._voi_manager.plot_voi(vdx)
+
+    def remove_voi(self):
+        self._voi_manager.remove_voi()
