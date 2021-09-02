@@ -76,11 +76,9 @@ exclude = [
     "Qt5Svg.dll",
     "Qt5WebSockets.dll",
     "tcl86t.dll",
-    "tk86t.dll",
-    "ucrtbase.dll"
+    "tk86t.dll"
 ]
 exclude_startswith = [
-    "api-ms-win",
     "PyQt5\\Qt5\\plugins\\imageformats",
     "PyQt5\\Qt5\\plugins\\iconengines"
 ]
