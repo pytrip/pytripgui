@@ -26,7 +26,6 @@ class TreeController:
         self._view.internal_events.on_add_child += self._add_new_item_callback
         self._view.internal_events.on_edit_selected_item += self._edit_selected_item_callback
         self._view.internal_events.on_open_voxelplan += self._open_voxelplan_callback
-        self._view.internal_events.on_export_voxelplan += self._export_voxelplan_callback
         self._view.internal_events.on_export_patient_voxelplan += self._export_patient_voxelplan_callback
         self._view.internal_events.on_export_patient_dicom += self._export_patient_dicom_callback
         self._view.internal_events.on_delete += self._delete_callback
