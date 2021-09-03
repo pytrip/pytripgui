@@ -10,7 +10,6 @@ class Ctx:
         self.cube = None
         self.data_to_plot = None
 
-        self.ctx = None  # cube is also in the main_model, but here this is specific for plotting.
         self.contrast_ct = [-500, 2000]
         self.projection_selector = selector
 
