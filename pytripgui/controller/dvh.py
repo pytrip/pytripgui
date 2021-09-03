@@ -29,7 +29,7 @@ class Dvh:
         pm.dvhs.append(dvh)
         if not dvh.x or not dvh.y:
             return
-        self.update_plotdvh()
+        self.update_plot_dvh()
 
     def add_dvh_dos(self, dos, voi):
         """
@@ -39,7 +39,7 @@ class Dvh:
 
         dvh = self._calc_dvh(dos, voi)
         pm.dvhs.append(dvh)
-        self.update_plotdvh()
+        self.update_plot_dvh()
 
     @staticmethod
     def _calc_dvh(dos, voi):
@@ -50,15 +50,18 @@ class Dvh:
         logger.debug("Processing VOI '{:s}'...".format(voi.name))
         return VolHist(dos, voi)
 
-    def update_plotdvh(self):
+    def update_plot_dvh(self):
         """
         """
         # TODO: clear plot
-        axes = self.fig.axes
+        dvhs = self.model.plot.dvhs
+        if dvhs:
+            axes = self.fig.axes
 
-        for dvh in self.model.plot.dvhs:
-            axes.plot(dvh.x, dvh.y, label=dvh.name)
-        axes.set_xlabel(dvh.xlabel)
-        axes.set_ylabel(dvh.ylabel)
+            for dvh in dvhs:
+                axes.plot(dvh.x, dvh.y, label=dvh.name)
+            # labels are the same for each item in 'self.model.plot.dvhs' list
+            axes.set_xlabel(dvhs[0].xlabel)
+            axes.set_ylabel(dvhs[0].ylabel)
 
-        self.fig.show()
+            self.fig.show()
