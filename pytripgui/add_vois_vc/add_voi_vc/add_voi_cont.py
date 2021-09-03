@@ -14,10 +14,7 @@ class AddVOIController:
         self.is_accepted = False
         self._setup_callbacks()
 
-        self.voi_types = {
-            "Spherical": SphericalVOIWidget,
-            "Cuboidal": CuboidalVOIWidget
-        }
+        self.voi_types = {"Spherical": SphericalVOIWidget, "Cuboidal": CuboidalVOIWidget}
         self._reload_voi()
 
     def _setup_callbacks(self):
@@ -47,12 +44,7 @@ class AddVOIController:
 
         ctx = self.model
         if isinstance(voi_widget, SphericalVOIWidget):
-            voi = create_sphere(
-                cube=ctx,
-                name=voi_widget.name,
-                center=voi_widget.center,
-                radius=voi_widget.radius
-            )
+            voi = create_sphere(cube=ctx, name=voi_widget.name, center=voi_widget.center, radius=voi_widget.radius)
         elif isinstance(voi_widget, CuboidalVOIWidget):
             voi = create_cube(
                 cube=ctx,
