@@ -1,10 +1,12 @@
 import logging
+from typing import Optional
 
 from pytrip import DosCube, LETCube
 
 from pytripgui.canvas_vc.canvas_view import CanvasView
 from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.canvas_vc.plot_model import PlotModel, ProjectionSelector
+from pytripgui.plan_executor.patient_model import PatientModel
 
 logger = logging.getLogger(__name__)
 
@@ -85,9 +87,17 @@ class CanvasController:
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-    def set_patient(self, patient, state: PatientGuiState):
+    def set_patient(self, patient: PatientModel, state: PatientGuiState):
+        """
+        Sets patient data (CTX and VDX) to be displayed on canvas
+            and restores GUI state (slider height, its position in each plane and ticked VOIs) if it exists.
+
+        :param PatientModel patient: object with patient data (CTX and VDX)
+        :param PatientGuiState state: object with stored data about user interactions with GUI
+        """
         self._ui.clear()
 
+        # GUI state can be None if patient data is added first time
         if state:
             # recreate model with stored positions in each plane
             self._model = PlotModel(state.projection_selector)
@@ -100,10 +110,12 @@ class CanvasController:
             self._gui_state = PatientGuiState()
             self._gui_state.projection_selector = self._model.projection_selector
 
+        # load CTX data to plot model
         if patient.ctx:
             self._model.set_ctx(patient.ctx)
             self._model.set_vdx()
 
+        # load VDX data to plot model
         if patient.vdx and patient.vdx.vois:
             # fill ui voi list with VOIs from patient
             self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
@@ -115,11 +127,13 @@ class CanvasController:
             # set callback to react on ui voi list updates
             self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
 
+        # update data to be displayed with loaded data
         self._update_canvas_view()
 
         self._safely_update_slider()
         self._safely_update_perspective()
 
+        # display updated data
         self._ui.draw()
 
     def _safely_update_slider(self):
