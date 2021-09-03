@@ -66,8 +66,19 @@ Ready to contribute? Here's how to set up `pytripgui` for local development.
 
 3. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development::
 
-    $ mkvirtualenv pytripgui
     $ cd pytripgui/
+    $ python -m venv directory_to_create_venv
+
+Activate newly created virtual environment, on Linux::
+
+    $ source directory_to_create_venv/bin/activate
+
+On Windows::
+
+    $ directory_to_create_venv\Scripts\activate.bat
+
+Finally install all dependencies needed by your package to develop the code::
+
     $ python setup.py develop
 
 4. Create a branch for local development::

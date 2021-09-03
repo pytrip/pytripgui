@@ -8,7 +8,7 @@ pytripgui can make treatment plans using local or remote TRiP98 package.
 TRiP98 package is not included here, if you need it, go first to TRiP98 webpage
 http://bio.gsi.de/DOCS/TRiP98/NEW/DOCS/trip98.html
 
-pytripgui works under Linux operating system with necessary packages installed, see installation instructions below.
+pytripgui works under most popular operating systems with necessary packages installed, see installation instructions below.
 
 Quick installation guide
 ------------------------
@@ -32,7 +32,7 @@ Start it by calling::
 
     $ pytripgui
 
-pytripgui currently works in Linux with Python 3.5-3.7. Windows is partially supported.
+pytripgui currently works in Linux, Windows and macOS with Python 3.5-3.9.
 
 
 pytripgui dedicated to python2 users is not supported anymore, if you really know what to do,
