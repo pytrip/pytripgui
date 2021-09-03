@@ -269,7 +269,7 @@ class AppCallback:
         if not full_path:
             return False
 
-        path_base, extension = os.path.splitext(full_path)
+        path_base, _extension = os.path.splitext(full_path)
         path, basename = os.path.split(path_base)
         logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
 
