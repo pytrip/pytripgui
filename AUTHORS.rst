@@ -10,4 +10,12 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Jakob Toftegaard
+* Niels Bassler
+* Toke Printz
+* Leszek Grzanka
+* Lukasz Jelen
+* Arkadiusz Cwikla
+* Joanna Fortuna
+* Michal Krawczyk
+* Mateusz Łaszczyk
