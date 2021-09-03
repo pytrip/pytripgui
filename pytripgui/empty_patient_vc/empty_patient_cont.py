@@ -7,6 +7,8 @@ from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube
 
+from pytripgui.utils.regex import Regex
+
 
 class EmptyPatientController:
     def __init__(self, model, view):
@@ -229,15 +231,6 @@ class PixelSizeValidator(QRegularExpressionValidator):
         if self._pixel_size_validation is not None and self._pixel_size_validation():
             return QValidator.Acceptable, string, pos
         return QValidator.Intermediate, string, pos
-
-
-class Regex(Enum):
-    STRING = QRegularExpression(r"\w+")
-    INT = QRegularExpression(r"-?\d+")
-    INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
-    FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
-    FLOAT_POSITIVE = QRegularExpression(r"(\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*))")
-    FLOAT_UNSIGNED = QRegularExpression(r"0+|((\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*)))")
 
 
 def enable_validation_list(validator, items):

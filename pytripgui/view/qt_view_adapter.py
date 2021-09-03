@@ -20,6 +20,9 @@ class LineEdit:
     def clear(self):
         self._ui.clear()
 
+    def set_enabled(self, enabled):
+        self._ui.setEnabled(enabled)
+
     def emit_on_text_change(self, callback):
         """
         When user have changed text in UI, callback will be called with new text:
@@ -271,4 +274,4 @@ class Label:
 
     @text.setter
     def text(self, text):
-        self._ui.setText(text)
+        self._ui.setText(str(text))
