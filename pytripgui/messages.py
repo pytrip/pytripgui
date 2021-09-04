@@ -8,9 +8,9 @@ PyTRiP Version: {}
     Leszek Grzanka
     Toke Printz
     Łukasz Jeleń
-    Arkadiusz Cwikła
+    Arkadiusz Ćwikła
     Joanna Fortuna
-    Michal Krawczyk
+    Michał Krawczyk
     Mateusz Łaszczyk
 """.format(pytripgui_version, pytrip_version)
 
