@@ -14,6 +14,9 @@ from pytripgui.canvas_vc.plotter.managers import BlitManager
 
 logger = logging.getLogger(__name__)
 
+# set matplotlib logging level to ERROR, in order not to pollute our log space
+logging.getLogger('matplotlib').setLevel(logging.ERROR)
+
 
 class VoiManager:
     def __init__(self, axes: Axes, blit_manager: BlitManager):
