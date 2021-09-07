@@ -39,7 +39,7 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude="tests"),
     url='https://github.com/pytrip/pytripgui',
     license='GPL',
-    author='Niels Bassler et el.',
+    author='Niels Bassler et al.',
     author_email='bassler@clin.au.dk',
     maintainer='Leszek Grzanka et al.',
     maintainer_email='grzanka@agh.edu.pl',
