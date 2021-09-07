@@ -33,9 +33,9 @@ class LineEdit:
     def enable_validation(self, validator, custom_validation=None):
         self._ui.setValidator(validator)
         if custom_validation:
-            self._ui.textChanged.connect(lambda: custom_validation())
+            self._ui.textChanged.connect(custom_validation)
         else:
-            self._ui.textChanged.connect(lambda: self.validate())
+            self._ui.textChanged.connect(self.validate)
 
     def disable_validation(self):
         self._ui.textChanged.disconnect()
