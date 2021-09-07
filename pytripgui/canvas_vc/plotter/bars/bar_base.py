@@ -1,3 +1,4 @@
+import logging
 from abc import ABC
 
 from matplotlib import pyplot as plt
@@ -10,6 +11,9 @@ This class and its subclasses were made to remove extra responsibilities from mp
 This class holds basic logic and parameters that are shared between all of its subclasses.
 If it is needed, subclasses can change those parameters - like dos_bar does.
 """
+
+# set matplotlib logging level to ERROR, in order not to pollute our log space
+logging.getLogger('matplotlib').setLevel(logging.ERROR)
 
 
 class BarBase(ABC, Axes):
