@@ -36,7 +36,7 @@ install_requires = [
 setuptools.setup(
     name='pytrip98gui',
     version=git_version(),
-    packages=setuptools.find_packages(exclude="tests"),
+    packages=setuptools.find_packages(exclude=["tests", "tests.*"]),
     url='https://github.com/pytrip/pytripgui',
     license='GPL',
     author='Niels Bassler et al.',
