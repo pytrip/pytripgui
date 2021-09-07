@@ -120,13 +120,7 @@ jobs:
         python setup.py bdist_wheel
         # makes source package
         python setup.py sdist
-
-    # just for test
-    - uses: actions/upload-artifact@v2
-      with:
-          path: ./dist/*.whl
-          if-no-files-found: error
-
+        
     - name: Publish packages to pypi
       uses: pypa/gh-action-pypi-publish@v1.4.2
       if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
