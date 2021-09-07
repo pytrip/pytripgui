@@ -39,8 +39,10 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude="tests"),
     url='https://github.com/pytrip/pytripgui',
     license='GPL',
-    author='Jakob Toftegaard, Niels Bassler, Leszek Grzanka',
-    author_email='leszek.grzanka@gmail.com',
+    author='Niels Bassler et al.',
+    author_email='bassler@clin.au.dk',
+    maintainer='Leszek Grzanka et al.',
+    maintainer_email='grzanka@agh.edu.pl',
     description='PyTRiP GUI',
     long_description=readme + '\n',
     classifiers=[
