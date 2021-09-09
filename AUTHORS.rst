@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Leszek Grzanka <leszek.grzanka@gmail.com>
+* Leszek Grzanka <leszek.grzanka@ifj.edu.pl>
 
 Contributors
 ------------
@@ -14,8 +14,8 @@ Contributors
 * Niels Bassler
 * Toke Printz
 * Leszek Grzanka
-* Lukasz Jelen
-* Arkadiusz Cwikla
+* Łukasz Jeleń
+* Arkadiusz Ćwikła
 * Joanna Fortuna
-* Michal Krawczyk
+* Michał Krawczyk
 * Mateusz Łaszczyk

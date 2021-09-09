@@ -125,9 +125,9 @@ History
 
   * GUI shifts completely from python 2.x to python 3.x
 
-* 04.2019 Lukasz Jelen joins developer team, introducing MVC architecture in the project
+* 04.2019 Łukasz Jeleń joins developer team, introducing MVC architecture in the project
 
-* 06.2021 Arkadiusz Cwikla, Joanna Fortuna, Michal Krawczyk and Mateusz Łaszczyk join project (part of a bachelor thesis at the AGH University)
+* 06.2021 Arkadiusz Ćwikła, Joanna Fortuna, Michał Krawczyk and Mateusz Łaszczyk join project (part of a bachelor thesis at the AGH University)
 
 
 Credits
