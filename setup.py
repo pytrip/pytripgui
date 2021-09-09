@@ -58,7 +58,7 @@ setuptools.setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering :: Medical Science Apps.',
         'Topic :: Scientific/Engineering :: Physics',
-        'Environment :: MacOS X',
+        'Operating System :: MacOS :: MacOS X',
         'Operating System :: POSIX :: Linux',
         'Operating System :: Microsoft :: Windows :: Windows 10',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
