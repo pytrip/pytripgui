@@ -10,9 +10,9 @@ from PyQt5.QtCore import QTimer
 class GuiExecutor:
     GUI_UPDATE_RATE_MS = 10  # GUI update rate during trip98 execution [ms]
 
-    def __init__(self, trip_config, patient, plan, result_callback, partnt_view):
+    def __init__(self, trip_config, patient, plan, result_callback, parent_view):
         if not plan.data.fields:
-            partnt_view.show_info(*InfoMessages["addOneField"])
+            parent_view.show_info(*InfoMessages["addOneField"])
             return
 
         self.result_callback = result_callback
@@ -21,7 +21,7 @@ class GuiExecutor:
         self._gui_update_timer = QTimer()
         self._thread = ThreadedExecutor(plan, patient, trip_config)
 
-        self._ui = ExecutorQtView(partnt_view)
+        self._ui = ExecutorQtView(parent_view)
 
     def show(self):
         self._ui.show()

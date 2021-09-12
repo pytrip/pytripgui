@@ -1,3 +1,6 @@
+from typing import Optional
+
+from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
@@ -6,7 +9,7 @@ from pytripgui.empty_patient_vc.empty_patient_view import EmptyPatientQtView
 from pytripgui.empty_patient_vc.empty_patient_cont import EmptyPatientController
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 
-from pytripgui.tree_vc.tree_items import PatientItem, PlanItem, FieldItem
+from pytripgui.tree_vc.tree_items import PatientItem, PlanItem, FieldItem, TreeItem
 from pytripgui.tree_vc.tree_items import SimulationResultItem
 
 from pytripgui.messages import InfoMessages
@@ -33,22 +36,22 @@ class AppCallback:
 
         self.settings = SettingsController(self.app_model)
 
-    def add_empty_patient(self):
+    def add_empty_patient(self) -> None:
         patient = PatientItem()
         if self.open_empty_patient_callback(patient):
-            self.app_model.patient_tree.add_new_item(None, patient)
+            self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
-    def on_open_voxelplan(self):
+    def on_open_voxelplan(self) -> None:
         patient = PatientItem()
         if self.open_voxelplan_callback(patient):
-            self.app_model.patient_tree.add_new_item(None, patient)
+            self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
-    def on_open_dicom(self):
+    def on_open_dicom(self) -> None:
         patient = PatientItem()
         if self.open_dicom_callback(patient):
-            self.app_model.patient_tree.add_new_item(None, patient)
+            self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
-    def on_execute_selected_plan(self):
+    def on_execute_selected_plan(self) -> None:
         item = self.app_model.patient_tree.selected_item()
         if isinstance(item, FieldItem):
             plan = item.parent
@@ -60,20 +63,21 @@ class AppCallback:
 
         patient = self.app_model.patient_tree.selected_item_patient()
 
-        trip_config = ExecuteConfigView(self.app_model.trip_configs, self.parent_gui.ui)
+        trip_config = ExecuteConfigView(model=self.app_model.trip_configs, ui=self.parent_gui.ui)
         trip_config.show()
         if not trip_config.config:
             return
 
-        executor = GuiExecutor(trip_config.config, patient, plan, self._execute_finish_callback, self.parent_gui.ui)
+        executor = GuiExecutor(trip_config=trip_config.config, patient=patient, plan=plan,
+                               result_callback=self._execute_finish_callback, parent_view=self.parent_gui.ui)
 
         executor.start()
         executor.show()
 
-    def _execute_finish_callback(self, item):
-        self.app_model.patient_tree.add_new_item(None, item)
+    def _execute_finish_callback(self, item: TreeItem) -> None:
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=item)
 
-    def on_add_new_plan(self):
+    def on_add_new_plan(self) -> None:
         selected_patient = self.app_model.patient_tree.selected_item_patient()
         if not selected_patient:
             self.parent_gui.show_info(*InfoMessages["addNewPatient"])
@@ -81,7 +85,7 @@ class AppCallback:
 
         self.new_item_callback(selected_patient)
 
-    def on_kernels_configurator(self):
+    def on_kernels_configurator(self) -> None:
         """
         Kernel dialog opened from window->settings->kernel
         """
@@ -97,7 +101,7 @@ class AppCallback:
         if controller.user_clicked_save:
             self.settings.save()
 
-    def on_trip98_config(self):
+    def on_trip98_config(self) -> None:
         """
         Config menu opened from window->Settings->TRiP98 Config
         """
@@ -115,14 +119,14 @@ class AppCallback:
             self.app_model.trip_configs = controller.model
             self.settings.save()
 
-    def on_add_patient(self):
+    def on_add_patient(self) -> None:
         dialog = UiAddPatient(self.parent_gui.ui)
         dialog.on_create_empty = self.add_empty_patient
         dialog.on_open_voxelplan = self.on_open_voxelplan
         dialog.on_open_dicom = self.on_open_dicom
         dialog.show()
 
-    def on_create_field(self):
+    def on_create_field(self) -> None:
         field = FieldItem()
         save_field = self.edit_field(field)
         if save_field:
@@ -131,19 +135,19 @@ class AppCallback:
                 selected_plan = selected_item
             elif isinstance(selected_item, FieldItem):
                 selected_plan = selected_item.parent
-            self.app_model.patient_tree.add_new_item(selected_plan, field)
+            self.app_model.patient_tree.add_new_item(parent_item=selected_plan, item=field)
 
-    def new_item_callback(self, parent):
+    def new_item_callback(self, parent: Optional[TreeItem]) -> None:
         if parent is None:
             self.add_empty_patient()
         elif isinstance(parent, PatientItem):
             plan = self.edit_plan(PlanItem(), parent)
-            self.app_model.patient_tree.add_new_item(parent, plan)
+            self.app_model.patient_tree.add_new_item(parent_item=parent, item=plan)
         elif isinstance(parent, PlanItem):
             field = self.edit_field(FieldItem())
-            self.app_model.patient_tree.add_new_item(parent, field)
+            self.app_model.patient_tree.add_new_item(parent_item=parent, item=field)
 
-    def edit_item_callback(self, item, patient):
+    def edit_item_callback(self, item: TreeItem, patient: PatientItem) -> None:
         if isinstance(item, PatientItem):
             return
         if isinstance(item, PlanItem):
@@ -151,12 +155,12 @@ class AppCallback:
         elif isinstance(item, FieldItem):
             self.edit_field(item)
 
-    def edit_plan(self, item, patient):
+    def edit_plan(self, item: PlanItem, patient: PatientItem) -> Optional[PlanItem]:
         logger.debug("edit_plan()".format())
 
         if not patient.data.vdx:
             self.parent_gui.show_info(*InfoMessages["loadCtxVdx"])
-            return False
+            return None
 
         if not item.data.basename:
             item.data.basename = patient.data.name
@@ -171,7 +175,7 @@ class AppCallback:
             return item
         return None
 
-    def edit_field(self, item):
+    def edit_field(self, item: FieldItem) -> Optional[FieldItem]:
         logger.debug("edit_field()".format())
 
         view = FieldQtView(self.parent_gui.ui)
@@ -185,7 +189,7 @@ class AppCallback:
             return item
         return None
 
-    def open_empty_patient_callback(self, patient_item):
+    def open_empty_patient_callback(self, patient_item: PatientItem) -> bool:
 
         patient = patient_item.data
 
@@ -207,7 +211,7 @@ class AppCallback:
         # self.app_model.viewcanvases.set_patient(patient)
         return True
 
-    def open_voxelplan_callback(self, patient_item):
+    def open_voxelplan_callback(self, patient_item: PatientItem) -> bool:
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         filename, _ = os.path.splitext(path)
 
@@ -232,7 +236,7 @@ class AppCallback:
         # self.app_model.viewcanvases.set_patient(patient)
         return True
 
-    def open_dicom_callback(self, patient_item):
+    def open_dicom_callback(self, patient_item: PatientItem) -> bool:
         logger.debug("Open DICOM start")
         dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
 
@@ -253,7 +257,7 @@ class AppCallback:
         # self.app_model.viewcanvases.set_patient(patient)
         return True
 
-    def export_patient_voxelplan_callback(self, patient_item):
+    def export_patient_voxelplan_callback(self, patient_item: PatientItem) -> bool:
         """
         Export patient cube to Voxelplan format (.hed, .ctx, .vdx) with the selected name.
 
@@ -282,7 +286,7 @@ class AppCallback:
         logger.debug("Voxelplan export finished.")
         return True
 
-    def export_patient_dicom_callback(self, patient_item):
+    def export_patient_dicom_callback(self, patient_item: PatientItem) -> bool:
         """
         Export patient cube to DICOM format in the selected folder.
 
@@ -309,7 +313,7 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
-    def one_click_callback(self):
+    def one_click_callback(self) -> None:
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
@@ -318,10 +322,10 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(top_item.data, item.data, top_item.state)
+            self.app_model.viewcanvases.set_simulation_results(simulation_results=top_item.data, simulation_item=item.data, state=top_item.state)
             if top_item.state is None:
                 top_item.state = self.app_model.viewcanvases.get_gui_state()
-            self.chart.set_simulation_result(top_item.data)
+            self.chart.set_simulation_result(simulation_result=top_item.data)
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self._show_patient(top_item, top_item)
@@ -332,13 +336,13 @@ class AppCallback:
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
-            if self.is_executable(item):
-                self.parent_gui.action_execute_plan_set_enable(True)
             self._show_patient(top_item, item)
+        if self.is_executable(item):
+            self.parent_gui.action_execute_plan_set_enable(True)
 
-    def _show_patient(self, data_item, state_item):
+    def _show_patient(self, data_item: PatientItem, state_item: PatientGuiState) -> None:
         if self.app_model.viewcanvases:
-            self.app_model.viewcanvases.set_patient(data_item.data, state_item.state)
+            self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
 
             # set state of plot when plotting first time
             if state_item.state is None:
@@ -351,11 +355,11 @@ class AppCallback:
             else:
                 self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
-    def patient_tree_show(self):
+    def patient_tree_show(self) -> None:
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
 
     @staticmethod
-    def is_executable(item):
+    def is_executable(item: TreeItem) -> bool:
         if isinstance(item, PlanItem):
             if item.has_children():
                 return True
