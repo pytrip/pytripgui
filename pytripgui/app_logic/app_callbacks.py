@@ -309,33 +309,52 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
-    def export_dose_voxelplan_callback(self, result_item):
-        # TODO docstring
+    def export_dose_voxelplan_callback(self, result_item: SimulationResultItem):
+        """
+        Export dose cube to Voxelplan format with the selected name.
+
+        Parameters:
+        result_item (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
         logger.debug("Export DoseCube to Voxelplan")
         dose_cube = result_item.data
-        # patient = result_item.parent.data
         full_path = self.parent_gui.save_file_path("Export Dose to Voxelplan", "Voxelplan (*.hed)")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         path_base, extension = os.path.splitext(full_path)
         path, basename = os.path.split(path_base)
         logger.info("Voxelplan export to: " + path + " with basename: " + basename)
 
-        dose_cube.write(os.path.join(path, basename))
+        dose_cube.write(path_base)
 
         logger.debug("Voxelplan export finished.")
         return True
 
-    def export_dose_dicom_callback(self, result_item):
-        # TODO
+    def export_dose_dicom_callback(self, result_item: SimulationResultItem):
+        """
+        Export dose cube to DICOM format in the selected folder.
+
+        Parameters:
+        result_item (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
         logger.debug("Export DoseCube to DICOM")
         dose_cube = result_item.data
 
         full_path = self.parent_gui.browse_folder_path("Export Dose to DICOM")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         logger.info("DICOM export to: " + full_path)
