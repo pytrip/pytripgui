@@ -2,7 +2,6 @@ import math
 from decimal import Decimal
 from enum import Enum
 
-from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube
@@ -159,10 +158,10 @@ class EmptyPatientController:
         pixel_number_y = int(dim["pixel_number_y"].text)
         if math.isclose(width / pixel_number_x, height / pixel_number_y, abs_tol=1e-3):
             for field in fields:
-                field.highlight_border(False)
+                field.reset_border()
             return True
         for field in fields:
-            field.highlight_border(True)
+            field.highlight_border()
         return False
 
     def _set_model_from_view(self):

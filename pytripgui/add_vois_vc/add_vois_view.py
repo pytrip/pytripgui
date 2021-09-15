@@ -12,7 +12,6 @@ class AddVOIsQtView:
     def __init__(self, parent=None):
         self._ui = AddVOIsDialog(parent)
         self.name = Label(self._ui.name_label)
-        self.hu_value = Label(self._ui.hUValue_label)
         self.width = Label(self._ui.width_label)
         self.height = Label(self._ui.height_label)
         self.depth = Label(self._ui.depth_label)

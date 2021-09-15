@@ -7,7 +7,7 @@ from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidg
 logger = logging.getLogger(__name__)
 
 
-class AddVOIController:
+class AddSingleVOIController:
     def __init__(self, model, view):
         self.model = model
         self.view = view
@@ -59,13 +59,10 @@ class AddVOIController:
             return False
 
         # validate containment in ctx
-        # TODO show information somewhere about improper containment
-        if voi.is_fully_contained():
-            voi_widget.highlight_border(False)
-            return True
-        else:
-            voi_widget.highlight_border(True)
+        if not voi.is_fully_contained():
+            self.view.info.text = "VOI isn't fully contained in the given patient."
             return False
+        return True
 
     def get_voi_widget(self):
         return self.view.voi_layout.itemAt(0).widget()

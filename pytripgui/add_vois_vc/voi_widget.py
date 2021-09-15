@@ -38,14 +38,7 @@ class VOIWidget(QtWidgets.QFrame):
         return [float(field.text) for field in self._center]
 
     def validate(self):
-        return self._name.validate() and \
-               validate_list(self._center)
-
-    def highlight_border(self, highlight=False):
-        if highlight:
-            self.setStyleSheet("#VOI { border: 1px solid red }")
-        else:
-            self.setStyleSheet("#VOI { border: 1px solid black }")
+        return self._name.validate() and validate_list(self._center)
 
     def disable_fields(self):
         self._name.set_enabled(False)
@@ -55,7 +48,8 @@ class VOIWidget(QtWidgets.QFrame):
 
 class SphericalVOIWidget(VOIWidget):
     def __init__(self):
-        super().__init__("view//spherical_voi.ui")
+        path = os.path.join(os.path.curdir, "view", "spherical_voi.ui")
+        super().__init__(path)
 
         self._radius = LineEdit(self.radius_lineEdit)
 
@@ -68,8 +62,7 @@ class SphericalVOIWidget(VOIWidget):
         return float(self._radius.text)
 
     def validate(self):
-        return super().validate() and \
-               self._radius.validate()
+        return super().validate() and self._radius.validate()
 
     def disable_fields(self):
         super().disable_fields()
@@ -78,7 +71,8 @@ class SphericalVOIWidget(VOIWidget):
 
 class CuboidalVOIWidget(VOIWidget):
     def __init__(self):
-        super().__init__("view//cuboidal_voi.ui")
+        path = os.path.join(os.path.curdir, "view", "cuboidal_voi.ui")
+        super().__init__(path)
 
         self._width = LineEdit(self.width_lineEdit)
         self._height = LineEdit(self.height_lineEdit)
@@ -106,8 +100,7 @@ class CuboidalVOIWidget(VOIWidget):
         return [float(i.text) for i in self._dims]
 
     def validate(self):
-        return super().validate() and \
-               validate_list(self._dims)
+        return super().validate() and validate_list(self._dims)
 
     def disable_fields(self):
         super().disable_fields()

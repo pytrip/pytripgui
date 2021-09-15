@@ -1,10 +1,14 @@
+import os
+
+from PyQt5 import QtWidgets, uic
 from pytrip.vdx import create_sphere, create_cube
 
 import logging
 
-from pytripgui.add_vois_vc.add_voi_vc.add_voi_cont import AddVOIController
-from pytripgui.add_vois_vc.add_voi_vc.add_voi_view import AddVOIQtView
+from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_cont import AddSingleVOIController
+from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_view import AddSingleVOIQtView
 from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget
+from pytripgui.view.qt_view_adapter import PushButton
 
 logger = logging.getLogger(__name__)
 
@@ -30,8 +34,8 @@ class AddVOIsController:
         self.view.accept()
 
     def _create_add_voi_dialog(self):
-        view = AddVOIQtView()
-        controller = AddVOIController(self.model.ctx, view)
+        view = AddSingleVOIQtView()
+        controller = AddSingleVOIController(self.model.ctx, view)
 
         view.show()
 
@@ -40,15 +44,14 @@ class AddVOIsController:
 
         voi_widget = controller.get_voi_widget()
         voi_widget.disable_fields()
-        self.view.voi_scroll_area.widget().layout().insertWidget(0, voi_widget)
+        list_element_voi = ListElementVOI(voi_widget)
+        self.view.voi_scroll_area.widget().layout().insertWidget(0, list_element_voi)
 
     def _set_view_from_model(self):
         ctx = self.model.ctx
         view = self.view
 
         view.name.text = ctx.patient_name
-        # TODO extracting hounsfield can't really be done naturally (need to be done from the cube values)
-        view.hu_value.text = 0
         view.width.text = ctx.dimx * ctx.pixel_size
         view.height.text = ctx.dimy * ctx.pixel_size
         view.depth.text = ctx.slice_number * ctx.slice_distance
@@ -88,3 +91,19 @@ class AddVOIsController:
                 logger.debug("VOI widget unrecognised")
                 return
             vdx.add_voi(voi)
+
+
+class ListElementVOI(QtWidgets.QFrame):
+    def __init__(self, voi_widget):
+        super().__init__()
+        path = os.path.join(os.path.curdir, "view", "list_element_voi.ui")
+        uic.loadUi(path, self)
+
+        self._remove_button = PushButton(self.remove_pushButton)
+        self._remove_button.emit_on_click(self._remove_self)
+
+        self.voi_space.insertWidget(0, voi_widget)
+
+    def _remove_self(self):
+        self.parent().layout().removeWidget(self)
+        self.close()

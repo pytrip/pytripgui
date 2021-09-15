@@ -1,4 +1,4 @@
-from pytripgui.view.qt_view_adapter import ComboBox
+from pytripgui.view.qt_view_adapter import ComboBox, Label
 from pytripgui.view.qt_gui import AddVOIDialog
 
 import logging
@@ -6,13 +6,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class AddVOIQtView:
+class AddSingleVOIQtView:
     """
     """
     def __init__(self, parent=None):
         self._ui = AddVOIDialog(parent)
         self.voi_combobox = ComboBox(self._ui.VOI_comboBox)
         self.voi_layout = self._ui.VOI_layout
+
+        self.info = Label(self._ui.info_label)
 
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
