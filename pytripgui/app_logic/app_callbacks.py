@@ -138,6 +138,16 @@ class AppCallback:
             self.app_model.patient_tree.add_new_item(parent_item=selected_plan, item=field)
 
     def new_item_callback(self, parent: Optional[TreeItem]) -> None:
+        """
+        Adds a new tree item. Its type is inferred from the type of the parent item
+        using the hierarchy of PatientItem > PlanItem > FieldItem.
+
+        Parameters:
+        parent (Optional[TreeItem]): A parent item the new item will belong to, or None if a new patient is to be added.
+
+        Returns:
+        Nothing
+        """
         if parent is None:
             self.add_empty_patient()
         elif isinstance(parent, PatientItem):
@@ -148,6 +158,12 @@ class AppCallback:
             self.app_model.patient_tree.add_new_item(parent_item=parent, item=field)
 
     def edit_item_callback(self, item: TreeItem, patient: PatientItem) -> None:
+        """
+        Handles an edit action on any TreeItem with its specific behavior by triggering a dedicated callback.
+
+        Returns:
+        Nothing
+        """
         if isinstance(item, PatientItem):
             return
         if isinstance(item, PlanItem):
@@ -156,6 +172,18 @@ class AppCallback:
             self.edit_field(item)
 
     def edit_plan(self, item: PlanItem, patient: PatientItem) -> Optional[PlanItem]:
+        """
+        Open a plan configuration window, allowing a user to interactively change a plan's parameters.
+
+        Parameters:
+        item (PlanItem): the plan item that will be edited.
+        patient (PatientItem): the patient this plan is related to.
+
+        Returns:
+        PlanItem: the plan item with newly edited parameters
+            or
+        Nothing: when changes were cancelled or failed
+        """
         logger.debug("edit_plan()".format())
 
         if not patient.data.vdx:
@@ -176,6 +204,17 @@ class AppCallback:
         return None
 
     def edit_field(self, item: FieldItem) -> Optional[FieldItem]:
+        """
+        Open a field configuration window, allowing a user to interactively change a field's parameters.
+
+        Parameters:
+        item (FieldItem): the field item that will be edited.
+
+        Returns:
+        FieldItem: the field item with newly edited parameters
+            or
+        Nothing: when changes were cancelled or failed
+        """
         logger.debug("edit_field()".format())
 
         view = FieldQtView(self.parent_gui.ui)
@@ -190,7 +229,15 @@ class AppCallback:
         return None
 
     def open_empty_patient_callback(self, patient_item: PatientItem) -> bool:
+        """
+        Open an empty patient creation window, allowing the user to interactively set patient parameters.
 
+        Parameters:
+        patient_item (PatientItem): Patient item that will contain the newly created patient.
+
+        Returns:
+        bool: Whether empty patient creation was successful.
+        """
         patient = patient_item.data
 
         view = EmptyPatientQtView(self.parent_gui.ui)
@@ -212,6 +259,16 @@ class AppCallback:
         return True
 
     def open_voxelplan_callback(self, patient_item: PatientItem) -> bool:
+        """
+        Open a file name selection window, then load patient data from Voxelplan files
+        with the selected path and basename.
+
+        Parameters:
+        patient_item (PatientItem): The patient item to load Vocelplan data into.
+
+        Returns:
+        bool: Whether loading Voxelplan data was successful.
+        """
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         filename, _ = os.path.splitext(path)
 
@@ -237,6 +294,15 @@ class AppCallback:
         return True
 
     def open_dicom_callback(self, patient_item: PatientItem) -> bool:
+        """
+        Open a folder selection window, then load patient data from DICOM files in the selected folder.
+
+        Parameters:
+        patient_item (PatientItem): The patient item to load DICOM data into.
+
+        Returns:
+        bool: Whether loading DICOM data was successful.
+        """
         logger.debug("Open DICOM start")
         dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
 
@@ -314,6 +380,13 @@ class AppCallback:
         return True
 
     def one_click_callback(self) -> None:
+        """
+        Handles a click action on any TreeItem with its specific behavior.
+        This includes displaying the correct data in the canvas and enabling the correct UI buttons.
+
+        Returns:
+        Nothing
+        """
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
@@ -322,7 +395,8 @@ class AppCallback:
         top_item = self.app_model.patient_tree.selected_item_patient()
 
         if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(simulation_results=top_item.data, simulation_item=item.data, state=top_item.state)
+            self.app_model.viewcanvases.set_simulation_results(simulation_results=top_item.data,
+                                                               simulation_item=item.data, state=top_item.state)
             if top_item.state is None:
                 top_item.state = self.app_model.viewcanvases.get_gui_state()
             self.chart.set_simulation_result(simulation_result=top_item.data)
@@ -341,6 +415,16 @@ class AppCallback:
             self.parent_gui.action_execute_plan_set_enable(True)
 
     def _show_patient(self, data_item: PatientItem, state_item: PatientGuiState) -> None:
+        """
+        Displays the data of a patient in the canvas according to the GUI state provided.
+
+        Parameters:
+        data_item (PatientItem): The patient tree item to display.
+        state_item (PatientGuiState): The GUI state data of the selected patient.
+
+        Returns:
+        Nothing.
+        """
         if self.app_model.viewcanvases:
             self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
 
@@ -356,14 +440,32 @@ class AppCallback:
                 self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
     def patient_tree_show(self) -> None:
+        """
+        Updates the visibility of the patient tree according to the "View -> Patient Tree" setting.
+
+        Returns:
+        Nothing
+        """
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
 
     @staticmethod
     def is_executable(item: TreeItem) -> bool:
+        """
+        Assert whether an item on the patient tree can be executed.
+        Execution is possible on plans which have
+
+        Parameters:
+        item (TreeItem): The patient tree item in question.
+
+        Returns:
+        bool: Whether the item can be executed.
+        """
         if isinstance(item, PlanItem):
+            # a plan which has children - fields
             if item.has_children():
                 return True
         elif isinstance(item, FieldItem):
+            # a field item belonging to a plan
             return True
-
+        # not a plan or a plan without fields
         return False
