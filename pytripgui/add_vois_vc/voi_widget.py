@@ -48,7 +48,7 @@ class VOIWidget(QtWidgets.QFrame):
 
 class SphericalVOIWidget(VOIWidget):
     def __init__(self):
-        path = os.path.join(os.path.curdir, "view", "spherical_voi.ui")
+        path = os.path.join("view", "spherical_voi.ui")
         super().__init__(path)
 
         self._radius = LineEdit(self.radius_lineEdit)
@@ -71,7 +71,7 @@ class SphericalVOIWidget(VOIWidget):
 
 class CuboidalVOIWidget(VOIWidget):
     def __init__(self):
-        path = os.path.join(os.path.curdir, "view", "cuboidal_voi.ui")
+        path = os.path.join("view", "cuboidal_voi.ui")
         super().__init__(path)
 
         self._width = LineEdit(self.width_lineEdit)

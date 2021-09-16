@@ -140,7 +140,7 @@ class AddVOIsDialog(QtWidgets.QDialog):
 class AddVOIDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(AddVOIDialog, self).__init__(parent)
-        ui_path = os.path.join(current_directory, 'add_voi.ui')
+        ui_path = os.path.join(current_directory, 'add_single_voi.ui')
         uic.loadUi(ui_path, self)
 
         self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)

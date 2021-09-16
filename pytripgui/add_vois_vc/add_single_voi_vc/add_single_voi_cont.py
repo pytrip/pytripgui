@@ -44,7 +44,12 @@ class AddSingleVOIController:
 
         ctx = self.model
         if isinstance(voi_widget, SphericalVOIWidget):
-            voi = create_sphere(cube=ctx, name=voi_widget.name, center=voi_widget.center, radius=voi_widget.radius)
+            voi = create_sphere(
+                cube=ctx,
+                name=voi_widget.name,
+                center=voi_widget.center,
+                radius=voi_widget.radius
+            )
         elif isinstance(voi_widget, CuboidalVOIWidget):
             voi = create_cube(
                 cube=ctx,

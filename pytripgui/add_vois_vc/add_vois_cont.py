@@ -1,4 +1,5 @@
 import os
+import sys
 
 from PyQt5 import QtWidgets, uic
 from pytrip.vdx import create_sphere, create_cube
@@ -67,9 +68,12 @@ class AddVOIsController:
         ctx = self.model.ctx
         vdx = self.model.vdx
 
-        voi_widgets = self.view.voi_scroll_area.widget().layout()
-        for index in range(voi_widgets.count() - 1):
-            voi_widget = voi_widgets.itemAt(index).widget()
+        list_vois = self.view.voi_scroll_area.widget().layout()
+        # iterating over every element of the list of vois while ignoring a trailing vertical spacer
+        for index in range(list_vois.count() - 1):
+            # the actual voi widget is embedded in the list element, we need to shell it
+            list_voi_element = list_vois.itemAt(index).widget()
+            voi_widget = list_voi_element.voi_space.itemAt(0).widget()
 
             if isinstance(voi_widget, SphericalVOIWidget):
                 voi = create_sphere(
@@ -96,7 +100,7 @@ class AddVOIsController:
 class ListElementVOI(QtWidgets.QFrame):
     def __init__(self, voi_widget):
         super().__init__()
-        path = os.path.join(os.path.curdir, "view", "list_element_voi.ui")
+        path = os.path.join(sys.path[0], "view", "list_element_voi.ui")
         uic.loadUi(path, self)
 
         self._remove_button = PushButton(self.remove_pushButton)
