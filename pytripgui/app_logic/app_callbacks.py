@@ -87,7 +87,7 @@ class AppCallback:
 
     def on_kernels_configurator(self) -> None:
         """
-        Kernel dialog opened from window->settings->kernel
+        Open the beam kernel configuration dialog window.
         """
         from pytripgui.kernel_vc import KernelController
 
@@ -103,7 +103,10 @@ class AppCallback:
 
     def on_trip98_config(self) -> None:
         """
-        Config menu opened from window->Settings->TRiP98 Config
+        Open the TRiP98 configuration dialog window and if successful, save the resulting configuration.
+
+        Returns:
+        None
         """
         logger.debug("TRiP config menu()")
 
@@ -120,6 +123,12 @@ class AppCallback:
             self.settings.save()
 
     def on_add_patient(self) -> None:
+        """
+        Open a dialog window allowing the user to select the type of patient they want to add.
+
+        Returns:
+        None
+        """
         dialog = UiAddPatient(self.parent_gui.ui)
         dialog.on_create_empty = self.add_empty_patient
         dialog.on_open_voxelplan = self.on_open_voxelplan
@@ -127,6 +136,14 @@ class AppCallback:
         dialog.show()
 
     def on_create_field(self) -> None:
+        """
+        Create a new field item, then call the edit_field callback to let the user interactively set its parameters.
+        If this is successful, add this new field item to the patient tree, under the currently selected plan,
+        or the plan that the currently selected field item belongs to.
+
+        Returns:
+        None
+        """
         field = FieldItem()
         save_field = self.edit_field(field)
         if save_field:
@@ -146,7 +163,7 @@ class AppCallback:
         parent (Optional[TreeItem]): A parent item the new item will belong to, or None if a new patient is to be added.
 
         Returns:
-        Nothing
+        None
         """
         if parent is None:
             self.add_empty_patient()
@@ -159,10 +176,10 @@ class AppCallback:
 
     def edit_item_callback(self, item: TreeItem, patient: PatientItem) -> None:
         """
-        Handles an edit action on any TreeItem with its specific behavior by triggering a dedicated callback.
+        Handles an edit action on any TreeItem with its specific behavior by invoking a dedicated callback.
 
         Returns:
-        Nothing
+        None
         """
         if isinstance(item, PatientItem):
             return
@@ -182,7 +199,7 @@ class AppCallback:
         Returns:
         PlanItem: the plan item with newly edited parameters
             or
-        Nothing: when changes were cancelled or failed
+        None: when changes were cancelled or failed
         """
         logger.debug("edit_plan()".format())
 
@@ -213,7 +230,7 @@ class AppCallback:
         Returns:
         FieldItem: the field item with newly edited parameters
             or
-        Nothing: when changes were cancelled or failed
+        None: when changes were cancelled or failed
         """
         logger.debug("edit_field()".format())
 
@@ -385,7 +402,7 @@ class AppCallback:
         This includes displaying the correct data in the canvas and enabling the correct UI buttons.
 
         Returns:
-        Nothing
+        None
         """
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
@@ -423,7 +440,7 @@ class AppCallback:
         state_item (PatientGuiState): The GUI state data of the selected patient.
 
         Returns:
-        Nothing.
+        None.
         """
         if self.app_model.viewcanvases:
             self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
@@ -444,7 +461,7 @@ class AppCallback:
         Updates the visibility of the patient tree according to the "View -> Patient Tree" setting.
 
         Returns:
-        Nothing
+        None
         """
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
 
