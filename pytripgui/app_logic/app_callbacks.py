@@ -255,7 +255,8 @@ class AppCallback:
 
     def export_patient_voxelplan_callback(self, patient_item):
         """
-        Export patient cube to Voxelplan format (.hed, .ctx, .vdx) with the selected name.
+        Open a file name selection window, then export the patient cube to Voxelplan format (.hed, .ctx, .vdx)
+        with the selected name.
 
         Parameters:
         patient_item (PatientItem): Patient tree item containing the patient's data
@@ -267,6 +268,8 @@ class AppCallback:
         full_path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         path_base, _extension = os.path.splitext(full_path)
@@ -284,7 +287,7 @@ class AppCallback:
 
     def export_patient_dicom_callback(self, patient_item):
         """
-        Export patient cube to DICOM format in the selected folder.
+        Open a folder selection window, then export patient cube to DICOM format in the selected folder.
 
         Parameters:
         patient_item (PatientItem): Patient tree item containing the patient's data
@@ -296,6 +299,8 @@ class AppCallback:
         full_path = self.parent_gui.browse_folder_path("Export patient to DICOM")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         logger.info("DICOM export to: " + full_path)
@@ -305,6 +310,61 @@ class AppCallback:
             patient_item.data.vdx.write_dicom(full_path)
         else:
             logger.warning("Exported patient has no VOI.")
+
+        logger.debug("DICOM export finished.")
+        return True
+
+    def export_dose_voxelplan_callback(self, simulation_result: SimulationResultItem):
+        """
+        Open a file name selection window, then export dose cube to Voxelplan format with the selected name.
+
+        Parameters:
+        simulation_result (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export DoseCube to Voxelplan")
+        dose_cube = simulation_result.data
+        full_path = self.parent_gui.save_file_path("Export Dose to Voxelplan", "Voxelplan (*.hed)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        path_base, extension = os.path.splitext(full_path)
+        path, basename = os.path.split(path_base)
+        logger.info("Voxelplan export to: " + path + " with basename: " + basename)
+
+        dose_cube.write(path_base)
+
+        logger.debug("Voxelplan export finished.")
+        return True
+
+    def export_dose_dicom_callback(self, simulation_result: SimulationResultItem):
+        """
+        Open a folder selection window, then export dose cube to DICOM format in the selected folder.
+
+        Parameters:
+        simulation_result (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export DoseCube to DICOM")
+        dose_cube = simulation_result.data
+
+        full_path = self.parent_gui.browse_folder_path("Export Dose to DICOM")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        logger.info("DICOM export to: " + full_path)
+
+        dose_cube.write_dicom(full_path)
 
         logger.debug("DICOM export finished.")
         return True

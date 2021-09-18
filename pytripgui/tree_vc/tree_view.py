@@ -23,9 +23,9 @@ class TreeView(QTreeView):
         """
         Those events should only be subscribed by TreeController
         """
-        self.internal_events = Events(
-            ('on_add_child', 'on_edit_selected_item', 'on_open_voxelplan', 'on_open_dicom', 'on_execute', 'on_delete',
-             'on_export_voxelplan', 'on_export_patient_voxelplan', 'on_export_patient_dicom', 'on_click'))
+        self.internal_events = Events(('on_add_child', 'on_edit_selected_item', 'on_open_voxelplan', 'on_open_dicom',
+                                       'on_execute', 'on_delete', 'on_click', 'on_export_patient_voxelplan',
+                                       'on_export_patient_dicom', 'on_export_dose_voxelplan', 'on_export_dose_dicom'))
         """
         This field should be only used by TreeController
         """
@@ -72,7 +72,8 @@ class TreeView(QTreeView):
         elif isinstance(self.selected_item, SimulationResultItem):
             if isinstance(self.selected_item.data, SimulationResults):
                 return
-            popup_menu.addAction("Export Voxelplan", self.internal_events.on_export_voxelplan)
+            popup_menu.addAction("Export Voxelplan", self.internal_events.on_export_dose_voxelplan)
+            popup_menu.addAction("Export DICOM", self.internal_events.on_export_dose_dicom)
         else:
             return
 

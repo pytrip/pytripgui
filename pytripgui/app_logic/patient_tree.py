@@ -21,7 +21,6 @@ class PatientTree:
         self.patient_tree_view.setModel(self.patient_tree_model)
         self.patient_tree_cont = TreeController(self.patient_tree_model, self.patient_tree_view)
 
-        self.patient_tree_view.internal_events.on_export_voxelplan = self._export_cube_callback
         self._parent_view = parent_view
 
         self.widget = QDockWidget()
@@ -39,10 +38,15 @@ class PatientTree:
     def app_callback(self, app_callback):
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback
         self.patient_tree_cont.edit_item_callback = app_callback.edit_item_callback
+
         self.patient_tree_cont.open_voxelplan_callback = app_callback.open_voxelplan_callback
         self.patient_tree_cont.open_dicom_callback = app_callback.open_dicom_callback
+
         self.patient_tree_cont.export_patient_voxelplan_callback = app_callback.export_patient_voxelplan_callback
         self.patient_tree_cont.export_patient_dicom_callback = app_callback.export_patient_dicom_callback
+        self.patient_tree_cont.export_dose_voxelplan_callback = app_callback.export_dose_voxelplan_callback
+        self.patient_tree_cont.export_dose_dicom_callback = app_callback.export_dose_dicom_callback
+
         self.patient_tree_cont.execute_plan_callback = app_callback.on_execute_selected_plan
         self.patient_tree_cont.one_click_callback = app_callback.one_click_callback
 
@@ -54,10 +58,3 @@ class PatientTree:
 
     def selected_item(self):
         return self.patient_tree_view.selected_item
-
-    def _export_cube_callback(self):
-        item = self.selected_item()
-        path = self._gui.browse_folder_path("Select output directory")
-        if path:
-            path += item.data.basename
-            item.data.write(path)
