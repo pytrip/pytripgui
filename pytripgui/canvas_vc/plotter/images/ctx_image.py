@@ -11,9 +11,11 @@ class CtxImage(PatientImageBase):
         self.zorder = 1
 
     def plot(self, data: Ctx) -> None:
+        extent = self.calculate_extent(data)
         self._image = self._axes.imshow(data.data_to_plot,
                                         cmap=self._colormap,
                                         vmin=data.contrast_ct[0],
                                         vmax=data.contrast_ct[1],
                                         aspect=data.aspect,
+                                        extent=extent,
                                         zorder=self.zorder)

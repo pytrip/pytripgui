@@ -53,3 +53,22 @@ class PatientImageBase(ABC):
         Returns True if image is present and False if image is absent
         """
         return self._image is not None
+
+    @staticmethod
+    def calculate_extent(data):
+        """
+        Returns extent for passed data.
+        """
+        # get minimal X, Y and Z coordinates
+        min_x_mm, min_y_mm, min_z_mm = data.cube.indices_to_pos([0, 0, 0])
+        # get maximal X, Y and Z coordinates
+        max_x_mm, max_y_mm, max_z_mm = data.cube.indices_to_pos([data.cube.dimx, data.cube.dimy, data.cube.dimz - 1])
+        plane = data.projection_selector.plane
+        # depending on plane, return proper list those above
+        # extent=[horizontal_min,horizontal_max,vertical_min,vertical_max]
+        if plane == "Transversal":
+            return [min_x_mm, max_x_mm, min_y_mm, max_y_mm]
+        elif plane == "Sagittal":
+            return [min_y_mm, max_y_mm, min_z_mm, max_z_mm]
+        elif plane == "Coronal":
+            return [min_x_mm, max_x_mm, min_z_mm, max_z_mm]
