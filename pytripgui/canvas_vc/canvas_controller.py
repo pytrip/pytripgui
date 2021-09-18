@@ -86,10 +86,20 @@ class CanvasController:
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
 
-    def set_patient(self, patient: PatientModel, state: PatientGuiState):
+    def set_model_data_and_update_view(self, patient: PatientModel, state: PatientGuiState = None):
         """
-        Sets patient data (CTX and VDX) to be displayed on canvas
-            and restores GUI state (slider height, its position in each plane and ticked VOIs) if it exists.
+        Sets patient data (CTX and VDX) to be displayed on canvas,
+            restores GUI state (slider height, its position in each plane and ticked VOIs) if present
+            and updates whole canvas view.
+
+        If GUI state object is absent
+            this method will create new object that holds information about GUI state with default values.
+
+        Without restoring GUI state
+            user, after every change of displayed patient, will have to manually:
+                - change slider position in each perspective back,
+                - tick VOIs back
+            which can be frustrating and can be done automatically, as it is by saving and restoring GUI state.
 
         :param PatientModel patient: object with patient data (CTX and VDX)
         :param PatientGuiState state: object with stored data about user interactions with GUI
@@ -161,7 +171,7 @@ class CanvasController:
 
     def set_simulation_results(self, simulation_results, simulation_item, state):
         self._ui.clear()
-        self.set_patient(simulation_results.patient, state)
+        self.set_model_data_and_update_view(simulation_results.patient, state)
 
         self._model.set_ctx(simulation_results.patient.ctx)
 

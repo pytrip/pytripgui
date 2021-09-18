@@ -11,7 +11,7 @@ class ViewCanvases:
         return self.viewcanvas_view.widget()
 
     def set_patient(self, patient, state=None):
-        self.plot_cont.set_patient(patient, state)
+        self.plot_cont.set_model_data_and_update_view(patient, state)
 
     def set_simulation_results(self, simulation_results, simulation_item, state=None):
         self.plot_cont.set_simulation_results(simulation_results, simulation_item, state)
