@@ -1,15 +1,12 @@
-import os
-import sys
-
 from PyQt5 import QtWidgets, uic
-from pytrip.vdx import create_sphere, create_cube
-
+from pathlib import Path
 import logging
 
 from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_cont import AddSingleVOIController
 from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_view import AddSingleVOIQtView
 from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget
 from pytripgui.view.qt_view_adapter import PushButton
+from pytrip.vdx import create_sphere, create_cube
 
 logger = logging.getLogger(__name__)
 
@@ -100,8 +97,8 @@ class AddVOIsController:
 class ListElementVOI(QtWidgets.QFrame):
     def __init__(self, voi_widget):
         super().__init__()
-        path = os.path.join(sys.path[0], "view", "list_element_voi.ui")
-        uic.loadUi(path, self)
+        widget_path = Path(Path(__file__).parent, "widgets", "list_element_voi.ui").resolve()
+        uic.loadUi(widget_path, self)
 
         self._remove_button = PushButton(self.remove_pushButton)
         self._remove_button.emit_on_click(self._remove_self)

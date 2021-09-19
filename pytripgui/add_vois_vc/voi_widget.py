@@ -1,18 +1,16 @@
-import os
-import sys
-
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QRegularExpressionValidator
+from pathlib import Path
 
 from pytripgui.utils.regex import Regex
 from pytripgui.view.qt_view_adapter import LineEdit
 
 
 class VOIWidget(QtWidgets.QFrame):
-    def __init__(self, file):
+    def __init__(self, widget_file):
         super().__init__()
-        path = os.path.join(sys.path[0], file)
-        uic.loadUi(path, self)
+        widget_path = Path(Path(__file__).parent, "widgets", widget_file).resolve()
+        uic.loadUi(widget_path, self)
 
         self._name = LineEdit(self.name_lineEdit)
         self._center = [
@@ -48,8 +46,7 @@ class VOIWidget(QtWidgets.QFrame):
 
 class SphericalVOIWidget(VOIWidget):
     def __init__(self):
-        path = os.path.join("view", "spherical_voi.ui")
-        super().__init__(path)
+        super().__init__("spherical_voi.ui")
 
         self._radius = LineEdit(self.radius_lineEdit)
 
@@ -71,8 +68,7 @@ class SphericalVOIWidget(VOIWidget):
 
 class CuboidalVOIWidget(VOIWidget):
     def __init__(self):
-        path = os.path.join("view", "cuboidal_voi.ui")
-        super().__init__(path)
+        super().__init__("cuboidal_voi.ui")
 
         self._width = LineEdit(self.width_lineEdit)
         self._height = LineEdit(self.height_lineEdit)
