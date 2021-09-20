@@ -1,12 +1,10 @@
 import logging
-from copy import deepcopy
 from typing import Optional, Dict, List
 
 import matplotlib.colors
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
-from pytrip import CtxCube
 from pytrip.vdx import Slice, Voi
 
 from pytripgui.canvas_vc.objects.vdx import Vdx
