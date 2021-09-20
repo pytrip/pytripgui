@@ -14,9 +14,12 @@ class DoseImage(PatientImageBase):
         self.zorder = 5
 
     def plot(self, data: Dos) -> None:
+        extent = self.calculate_extent(data)
         self._image = self._axes.imshow(data.data_to_plot,
                                         cmap=self._colormap,
                                         vmax=data.max_dose,
                                         aspect=data.aspect,
+                                        extent=extent,
+                                        origin='lower',
                                         zorder=self.zorder,
                                         interpolation='none')

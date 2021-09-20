@@ -53,10 +53,17 @@ class PlottingManager:
         self._voi_manager: VoiManager = VoiManager(self.axes, self.blit_manager)
 
     def _initialize_axes(self) -> Axes:
-        axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
-        axes.grid(False)
-        axes.set_xticks([])
-        axes.set_yticks([])
+        axes: Axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
+        color: str = 'white'
+        # set ticks color
+        axes.tick_params(axis='x', colors=color)
+        axes.tick_params(axis='y', colors=color)
+        # set labels color
+        axes.xaxis.label.set_color(color)
+        axes.yaxis.label.set_color(color)
+        # set axis color
+        axes.spines['bottom'].set_color(color)
+        axes.spines['left'].set_color(color)
         return axes
 
     def remove_dos(self) -> None:

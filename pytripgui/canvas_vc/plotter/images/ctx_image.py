@@ -18,4 +18,22 @@ class CtxImage(PatientImageBase):
                                         vmax=data.contrast_ct[1],
                                         aspect=data.aspect,
                                         extent=extent,
+                                        origin='lower',
                                         zorder=self.zorder)
+        self._set_labels(data)
+
+    def _set_labels(self, data: Ctx):
+        plane = data.projection_selector.plane
+        # "Transversal" (xy)
+        if plane == "Transversal":
+            self._axes.set_xlabel('x [mm]')
+            self._axes.set_ylabel('y [mm]')
+        # "Sagittal" (yz)
+        elif plane == "Sagittal":
+            self._axes.set_xlabel('y [mm]')
+            self._axes.set_ylabel('z [mm]')
+        # "Coronal"  (xz)
+        elif plane == "Coronal":
+            self._axes.set_xlabel('x [mm]')
+            self._axes.set_ylabel('z [mm]')
+
