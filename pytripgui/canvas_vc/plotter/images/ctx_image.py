@@ -36,4 +36,3 @@ class CtxImage(PatientImageBase):
         elif plane == "Coronal":
             self._axes.set_xlabel('x [mm]')
             self._axes.set_ylabel('z [mm]')
-
