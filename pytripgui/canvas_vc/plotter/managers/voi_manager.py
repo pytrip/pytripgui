@@ -180,18 +180,19 @@ class VoiManager:
         color = tuple(c / 255.0 for c in voi.get_color())
         return color
 
-    @staticmethod
-    def _get_plot_data(vdx: Vdx, data):
-        if vdx.projection_selector.plane == "Transversal":
+    def _get_plot_data(self, vdx: Vdx, data):
+        plane = vdx.projection_selector.plane
+        if plane == "Transversal":
             # "Transversal" (xy)
             return data[:, 0], data[:, 1]
-        if vdx.projection_selector.plane == "Sagittal":
+        if plane == "Sagittal":
             # "Sagittal" (yz)
             return data[:, 1], data[:, 2]
-        if vdx.projection_selector.plane == "Coronal":
+        if plane == "Coronal":
             # "Coronal"  (xz)
             return data[:, 0], data[:, 2]
-        raise ValueError("Wrong plane string in voi manager")
+
+        raise ValueError("Wrong plane string - " + plane + " - in " + type(self).__name__)
 
     @staticmethod
     def _get_current_slice(vdx: Vdx, voi: Voi) -> Optional[Slice]:

@@ -20,6 +20,7 @@ class PatientImageBase(ABC):
 
     Method plot(data) must be implemented in subclasses, because it strongly depends on type of shown image
     """
+
     def __init__(self, axes):
         """
         Parameters
@@ -60,8 +61,7 @@ class PatientImageBase(ABC):
         """
         return self._image is not None
 
-    @staticmethod
-    def calculate_extent(data: PlotDataBase):
+    def calculate_extent(self, data: PlotDataBase):
         """
         Returns extent for passed data.
         """
@@ -78,8 +78,10 @@ class PatientImageBase(ABC):
         if plane == "Transversal":
             return [min_x_mm, max_x_mm, min_y_mm, max_y_mm]
         # "Sagittal" (yz)
-        elif plane == "Sagittal":
+        if plane == "Sagittal":
             return [min_y_mm, max_y_mm, min_z_mm, max_z_mm]
         # "Coronal"  (xz)
-        elif plane == "Coronal":
+        if plane == "Coronal":
             return [min_x_mm, max_x_mm, min_z_mm, max_z_mm]
+
+        raise ValueError("Wrong plane string - " + plane + " - in " + type(self).__name__)
