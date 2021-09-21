@@ -63,7 +63,7 @@ class VoiManager:
             # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
                 # getting data to plot directly, without any conversions, subtracting offsets and so on
-                # stored in terms of millimeters
+                # stored in units of millimeters
                 data_mm = np.array(_c.contour)
 
                 # closing contour
