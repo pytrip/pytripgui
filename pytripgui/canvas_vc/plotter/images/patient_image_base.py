@@ -80,7 +80,7 @@ class PatientImageBase(ABC):
         # "Sagittal" (yz)
         if plane == "Sagittal":
             return [min_y_mm, max_y_mm, min_z_mm, max_z_mm]
-        # "Coronal"  (xz)
+        # "Coronal" (xz)
         if plane == "Coronal":
             return [min_x_mm, max_x_mm, min_z_mm, max_z_mm]
 
