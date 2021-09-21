@@ -73,7 +73,7 @@ class PatientImageBase(ABC):
         max_x_mm, max_y_mm, max_z_mm = cube.indices_to_pos([cube.dimx, cube.dimy, cube.dimz - 1])
         plane = data.projection_selector.plane
         # depending on plane, return proper list those above
-        # extent=[horizontal_min,horizontal_max,vertical_min,vertical_max]
+        # extent = [horizontal_min, horizontal_max, vertical_min, vertical_max]
         # "Transversal" (xy)
         if plane == "Transversal":
             return [min_x_mm, max_x_mm, min_y_mm, max_y_mm]
