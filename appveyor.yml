@@ -69,19 +69,6 @@ build_script:
 # clean build directory
   - rd /s /q build
 
-test_script:
-# testing
-# install needed dependencies
-  - python -m pip install --upgrade -r tests\\requirements-test.txt
-  - pip list
-# remove source directory, to be sure that we use only wheel package for testing
-  - rd /s /q pytripgui
-  - del setup.py
-# install wheel package via pip, as we do not know the wheel filename in advance, we loop over all *.whl files in dist directory
-  - ps: Get-ChildItem -Path dist\ -Recurse -Include *.whl | foreach-object { echo $_ | Out-Host ; python -m pip install $_}
-# run tests
-  - pytest
-
 # upload artifacts
 artifacts:
   - path: 'dist\*whl'

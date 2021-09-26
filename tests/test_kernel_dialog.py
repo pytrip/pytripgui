@@ -1,7 +1,5 @@
 import logging
 
-import pytest
-
 from pytripgui.kernel_vc import KernelController
 from pytripgui.kernel_vc import KernelQtView
 from pytrip.tripexecuter import KernelModel
@@ -23,14 +21,13 @@ class TestKernelDialog:
     kernels.append(ker)
 
     @staticmethod
-    @pytest.mark.skip(reason="needs to be fixed, non-Widget passed to addWidget method")
     def test_basics(qtbot):
 
         view = KernelQtView()
         controller = KernelController(TestKernelDialog.kernels, view)
         controller.set_view_from_model()
 
-        qtbot.addWidget(view)
+        qtbot.addWidget(view.ui)
         view.ui.show()
         assert view.ui.isVisible()
 

@@ -26,11 +26,12 @@ logger = logging.getLogger(__name__)
 
 
 class AppCallback:
-    def __init__(self, app_model, parent_gui):
-        self.app_model = app_model
-        self.parent_gui = parent_gui
-        self.chart = Charts(self.parent_gui)
+    def __init__(self, app_controller):
+        self.app_model = app_controller.model
+        self.parent_gui = app_controller.view
+        self.app_controller = app_controller
 
+        self.chart = Charts(self.parent_gui)
         self.settings = SettingsController(self.app_model)
 
     def add_empty_patient(self):
@@ -39,14 +40,14 @@ class AppCallback:
             self.app_model.patient_tree.add_new_item(None, patient)
 
     def on_open_voxelplan(self):
-        patient = PatientItem()
-        if self.open_voxelplan_callback(patient):
-            self.app_model.patient_tree.add_new_item(None, patient)
+        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
+        logger.debug("Open Voxelplan: " + path)
+        self.app_controller.open_voxelplan(path)
 
     def on_open_dicom(self):
-        patient = PatientItem()
-        if self.open_dicom_callback(patient):
-            self.app_model.patient_tree.add_new_item(None, patient)
+        dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
+        logger.debug("Open DICOM: " + dir_path)
+        self.app_controller.open_dicom(dir_path)
 
     def on_execute_selected_plan(self):
         item = self.app_model.patient_tree.selected_item()
@@ -197,52 +198,6 @@ class AppCallback:
             return False
 
         patient = controller.model
-
-        if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
-
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
-        return True
-
-    def open_voxelplan_callback(self, patient_item):
-        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, _ = os.path.splitext(path)
-
-        if not filename:
-            return False
-
-        patient = patient_item.data
-        patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        try:
-            patient.open_vdx(filename + ".vdx")  # Todo catch more exceptions
-        except FileNotFoundError:
-            logger.warning("Loaded patient has no VOI data")
-            # TODO add empty vdx init if needed
-            patient.vdx = None
-
-        if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
-
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
-        return True
-
-    def open_dicom_callback(self, patient_item):
-        logger.debug("Open DICOM start")
-        dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
-
-        if not dir_name:
-            return False
-
-        logger.debug("Open DICOM by patient start")
-
-        patient = patient_item.data
-        patient.open_dicom(dir_name)  # Todo catch exceptions
 
         if not self.app_model.viewcanvases:
             self.app_model.viewcanvases = ViewCanvases()

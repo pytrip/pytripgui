@@ -25,7 +25,7 @@ class TreeModel(QAbstractItemModel):
         return 1  # Only one column is supported
 
     def rowCount(self, parent=None, *args, **kwargs):
-        if not parent.isValid():
+        if not parent or not parent.isValid():
             logger.debug("rowCount() for: {}".format("root"))
             return self._root_item.row_count()
         name = parent.internalPointer().__repr__()
@@ -33,7 +33,7 @@ class TreeModel(QAbstractItemModel):
         return parent.internalPointer().row_count()
 
     def hasChildren(self, parent=None, *args, **kwargs):
-        if not parent.isValid():
+        if not parent or not parent.isValid():
             logger.debug("hasChildren() for: {}".format("root"))
             return self._root_item.has_children()
         name = parent.internalPointer().__repr__()
