@@ -8,6 +8,7 @@
   recursive-exclude pytripgui *.pyc
   exclude .gitkeep
   exclude .gitconfig
+  exclude pytest.ini
   exclude tox.ini
   exclude appveyor.yml
   exclude .deepsource.toml

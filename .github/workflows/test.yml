@@ -81,7 +81,7 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e ${{ matrix.tox-env }}
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e ${{ matrix.tox-env }} --log-cli-level=10
 
     - name: Regular test with tox (Windows)
       if: ${{ runner.os == 'Windows' }}      
