@@ -39,8 +39,8 @@ class PatientTree:
         self.patient_tree_cont.new_item_callback = app_callback.new_item_callback
         self.patient_tree_cont.edit_item_callback = app_callback.edit_item_callback
 
-        self.patient_tree_cont.open_voxelplan_callback = app_callback.open_voxelplan_callback
-        self.patient_tree_cont.open_dicom_callback = app_callback.open_dicom_callback
+        self.patient_tree_cont.open_voxelplan_callback = app_callback.on_open_voxelplan
+        self.patient_tree_cont.open_dicom_callback = app_callback.on_open_dicom
 
         self.patient_tree_cont.export_patient_voxelplan_callback = app_callback.export_patient_voxelplan_callback
         self.patient_tree_cont.export_patient_dicom_callback = app_callback.export_patient_dicom_callback

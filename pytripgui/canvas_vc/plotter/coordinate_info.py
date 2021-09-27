@@ -29,7 +29,8 @@ class CoordinateInfo(Axes3D):
     name: str = 'CoordinateInfo'
 
     def __init__(self, fig, rect, **kwargs):
-        super().__init__(fig, rect, **kwargs)
+        super().__init__(fig, rect, auto_add_to_figure=False, **kwargs)
+        fig.add_axes(self)
 
         # variables to ease wireframe plotting
         r = [-1, 1]

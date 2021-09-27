@@ -57,7 +57,7 @@ class TreeController:
         self.edit_item_callback(self._view.selected_item, self._view.selected_item_patient)
 
     def _open_voxelplan_callback(self):
-        self.open_voxelplan_callback(self._view.selected_item)
+        self.open_voxelplan_callback()
 
     def _export_voxelplan_callback(self):
         self.export_voxelplan_callback(self._view.selected_item)

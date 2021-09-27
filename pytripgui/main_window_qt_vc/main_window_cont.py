@@ -1,10 +1,14 @@
 import logging
 
+from pytripgui.app_logic.viewcanvas import ViewCanvases
 from pytripgui.messages import InfoMessages
 
 from pytripgui.app_logic.patient_tree import PatientTree
 from pytripgui.app_logic.app_callbacks import AppCallback
 import sys
+import os
+
+from pytripgui.tree_vc.tree_items import PatientItem
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +30,7 @@ class MainWindowController:
         """
         TODO: some description here
         """
-        self.app_callback = AppCallback(self.model, self.view)
+        self.app_callback = AppCallback(self)
 
         self.model.patient_tree = PatientTree(self.view, self.view.ui)
         self.model.patient_tree.app_callback(self.app_callback)
@@ -44,6 +48,63 @@ class MainWindowController:
 
         self.view.about_callback = self.on_about
         self.view.exit_callback = self.on_exit
+
+    def open_voxelplan(self, path):
+        """
+        Opens Voxelplan
+        :param path: path to .hed file
+        :return: True if voxelplan is opened, False otherwise
+        """
+        filename, _ = os.path.splitext(path)
+        if not filename:
+            return False
+
+        patient = PatientItem()
+        patient_data = patient.data
+        try:
+            patient_data.open_ctx(path)
+        except FileNotFoundError as e:
+            logger.error(str(e))
+            return False
+        try:
+            patient_data.open_vdx(filename + ".vdx")  # Todo catch more exceptions
+        except FileNotFoundError:
+            logger.warning("Loaded patient has no VOI data")
+            # TODO add empty vdx init if needed
+            patient_data.vdx = None
+
+        if not self.model.viewcanvases:
+            self.model.viewcanvases = ViewCanvases()
+            self.view.add_widget(self.model.viewcanvases.widget())
+
+        # someone needs to test this, but I think it's unnecessary,
+        #   because after that callback another event is emitted, which sets patient one more time
+        # self.app_model.viewcanvases.set_patient(patient)
+        self.model.patient_tree.add_new_item(None, patient)
+        return True
+
+    def open_dicom(self, path):
+        """
+        Opens Dicom
+        :param path: path to dicom directory
+        :return: True if dicom is opened, False otherwise
+        """
+        if not path:
+            return False
+
+        patient = PatientItem()
+        patient_data = patient.data
+        patient_data.open_dicom(path)  # Todo catch exceptions
+
+        if not self.model.viewcanvases:
+            self.model.viewcanvases = ViewCanvases()
+            self.view.add_widget(self.model.viewcanvases.widget())
+
+        # someone needs to test this, but I think it's unnecessary,
+        #   because after that callback another event is emitted, which sets patient one more time
+        # self.app_model.viewcanvases.set_patient(patient)
+        self.model.patient_tree.add_new_item(None, patient)
+        return True
 
     def on_about(self):
         """

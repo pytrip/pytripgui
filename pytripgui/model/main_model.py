@@ -1,5 +1,8 @@
 import logging
 
+from pytripgui.app_logic.patient_tree import PatientTree
+from pytripgui.app_logic.viewcanvas import ViewCanvases
+
 logger = logging.getLogger(__name__)
 
 
@@ -15,8 +18,8 @@ class MainModel:
         self.trip_configs = []
         self.kernels = []  # placeholder for KernelModels
 
-        self.viewcanvases = None
-        self.patient_tree = None
+        self.viewcanvases: ViewCanvases = None
+        self.patient_tree: PatientTree = None
         self.settings = SettingsModel(self)
 
 
