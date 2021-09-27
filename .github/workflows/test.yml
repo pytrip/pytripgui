@@ -43,13 +43,15 @@ jobs:
     if: "github.repository == 'pytrip/pytripgui' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        tox-env: [py37, py38, packaging]
+        tox-env: [py37, py38, py39, packaging]
         platform: [ubuntu-latest, windows-latest]
         include:
           - tox-env: py37
             python-version: 3.7
           - tox-env: py38
             python-version: 3.8
+          - tox-env: py39
+            python-version: 3.9
           - tox-env: packaging
             python-version: 3.8
 
