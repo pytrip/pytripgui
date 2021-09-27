@@ -1,18 +1,18 @@
 import logging
-import sys
 
 import pytest
+from pytrip.tripexecuter import KernelModel
+from pytrip.tripexecuter import Projectile
 
 from pytripgui.kernel_vc import KernelController
 from pytripgui.kernel_vc import KernelQtView
-from pytrip.tripexecuter import KernelModel
-from pytrip.tripexecuter import Projectile
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
-class TestKernelDialog:
+@pytest.fixture
+def kernels():
     kernels = []
     # Kernel 1
     ker = KernelModel()
@@ -22,33 +22,31 @@ class TestKernelDialog:
     ker = KernelModel()
     ker.projectile = Projectile("H")
     kernels.append(ker)
+    yield kernels
 
-    @staticmethod
-    @pytest.mark.skipif((sys.version_info[0] == 3) and (sys.version_info[1] == 7),
-                        reason="fails on python 3.7 for unknown reasons")
-    def test_basics(qtbot):
 
-        view = KernelQtView()
-        controller = KernelController(TestKernelDialog.kernels, view)
-        controller.set_view_from_model()
+def test_basics(qtbot, kernels):
+    view = KernelQtView()
+    controller = KernelController(kernels, view)
+    controller.set_view_from_model()
 
-        qtbot.addWidget(view.ui)
-        view.ui.show()
-        assert view.ui.isVisible()
+    qtbot.addWidget(view.ui)
+    view.ui.show()
+    assert view.ui.isVisible()
 
-        # selecting kernel to edit
-        current_kernel_index = 1
-        view.ui.beamKernel_comboBox.setCurrentIndex(current_kernel_index)
-        assert view.projectile_symbol == TestKernelDialog.kernels[current_kernel_index].projectile.iupac
+    # selecting kernel to edit
+    current_kernel_index = 1
+    view.ui.beamKernel_comboBox.setCurrentIndex(current_kernel_index)
+    assert view.projectile_symbol == kernels[current_kernel_index].projectile.iupac
 
-        # setting new name
-        new_kernel_name = "Proton"
-        view.kernel_name = new_kernel_name
+    # setting new name
+    new_kernel_name = "Proton"
+    view.kernel_name = new_kernel_name
 
-        # clicking "OK"
-        view.ui.accept_buttonBox.accepted.emit()
-        assert not view.ui.isVisible()
-        assert controller.user_clicked_save
+    # clicking "OK"
+    view.ui.accept_buttonBox.accepted.emit()
+    assert not view.ui.isVisible()
+    assert controller.user_clicked_save
 
-        # checking if new name was saved
-        assert TestKernelDialog.kernels[current_kernel_index].name == new_kernel_name
+    # checking if new name was saved
+    assert kernels[current_kernel_index].name == new_kernel_name
