@@ -39,7 +39,7 @@ def test_basics(qtbot, window):
 
 def test_open_voxelplan(qtbot, window, voxelplan_file):
     model, view, _ = window
-#    qtbot.addWidget(view.ui)
+    qtbot.addWidget(view.ui)
 
     directory, file = voxelplan_file
 
@@ -66,7 +66,7 @@ def test_open_voxelplan(qtbot, window, voxelplan_file):
 
 def test_create_plan_and_field(qtbot, window, voxelplan_file):
     _, view, controller = window
-#    qtbot.addWidget(view.ui)
+    qtbot.addWidget(view.ui)
 
     directory, file = voxelplan_file
     controller.open_voxelplan(directory + file)
