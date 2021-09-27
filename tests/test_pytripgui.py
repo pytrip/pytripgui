@@ -1,8 +1,12 @@
 import logging
+import os.path
 
 import pytest
 from PyQt5 import QtCore, QtWidgets
 import pyautogui
+
+from pytrip.ctx import CtxCube
+from pytrip.vdx import create_sphere, VdxCube
 
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 from pytripgui.main_window_qt_vc import MainWindowQtView, MainWindowController
@@ -21,11 +25,18 @@ def window():
     yield model, view, controller
 
 
-@pytest.fixture
-def voxelplan_file():
-    directory = "tests/testdata/"
-    file = "test.hed"
-    yield directory, file
+@pytest.fixture(scope="session")
+def voxelplan_header_path(tmpdir_factory):
+    ctx = CtxCube()
+    ctx.create_empty_cube(value=0, dimx=100, dimy=100, dimz=25, pixel_size=1, slice_distance=2, slice_offset=0)
+    file_obj = tmpdir_factory.mktemp("data").join("patient")
+    patient_base_path = str(file_obj)
+    ctx.write(patient_base_path)
+    vdx = VdxCube(cube=ctx)
+    voi = create_sphere(cube=ctx, name="target", center=[50, 50, 25], radius=10)
+    vdx.add_voi(voi)
+    vdx.write(patient_base_path + '.vdx')
+    yield patient_base_path + '.hed'
 
 
 def test_basics(qtbot, window):
@@ -37,17 +48,17 @@ def test_basics(qtbot, window):
     assert view.ui.windowTitle() == 'PyTRiPGUI'
 
 
-def test_open_voxelplan(qtbot, window, voxelplan_file):
+def test_open_voxelplan(qtbot, window, voxelplan_header_path):
     model, view, _ = window
     qtbot.addWidget(view.ui)
 
-    directory, file = voxelplan_file
+    patient_dir, header_basename = os.path.split(voxelplan_header_path)
 
     def handle_file_dialog():
         dialog = view.ui.findChild(QtWidgets.QFileDialog)
-        dialog.setDirectory(QtCore.QDir(directory))
+        dialog.setDirectory(QtCore.QDir(patient_dir))
 
-        pyautogui.typewrite(file)
+        pyautogui.typewrite(header_basename)
         pyautogui.press("enter")
 
         #  solution when option QFileDialog.DontUseNativeDialog is on
@@ -64,12 +75,11 @@ def test_open_voxelplan(qtbot, window, voxelplan_file):
     assert len(model.patient_tree.selected_item_patient().data.vdx.vois) == 1
 
 
-def test_create_plan_and_field(qtbot, window, voxelplan_file):
+def test_create_plan_and_field(qtbot, window, voxelplan_header_path):
     _, view, controller = window
     qtbot.addWidget(view.ui)
 
-    directory, file = voxelplan_file
-    controller.open_voxelplan(directory + file)
+    controller.open_voxelplan(voxelplan_header_path)
 
     def handle_plan_dialog():
         dialog = view.ui.findChild(UiPlanDialog)
