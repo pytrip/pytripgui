@@ -3,7 +3,9 @@
   include GPL_LICENSE.txt
   include requirements.txt
   recursive-include docs *.rst
+  recursive-exclude docs *.py
   graft pytripgui
+  recursive-exclude pytripgui *.pyc
   exclude .gitkeep
   exclude .gitconfig
   exclude tox.ini
