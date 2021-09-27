@@ -9,6 +9,7 @@
   exclude .gitkeep
   exclude .gitconfig
   exclude tox.ini
+  exclude pytest.ini
   exclude appveyor.yml
   exclude .deepsource.toml
   exclude *.iss
