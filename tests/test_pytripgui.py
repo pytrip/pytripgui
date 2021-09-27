@@ -2,6 +2,7 @@ import logging
 
 import pytest
 from PyQt5 import QtCore, QtWidgets
+import pyautogui
 
 from pytripgui.app_logic.viewcanvas import ViewCanvases
 from pytripgui.main_window_qt_vc import MainWindowQtView, MainWindowController
@@ -28,7 +29,7 @@ def voxelplan_file():
 
 
 def test_basics(qtbot, window):
-    model, view, controller = window
+    _, view, _ = window
     qtbot.addWidget(view.ui)
     view.ui.show()
 
@@ -37,7 +38,7 @@ def test_basics(qtbot, window):
 
 
 def test_open_voxelplan(qtbot, window, voxelplan_file):
-    model, view, controller = window
+    model, view, _ = window
     qtbot.addWidget(view.ui)
 
     directory, file = voxelplan_file
@@ -46,7 +47,6 @@ def test_open_voxelplan(qtbot, window, voxelplan_file):
         dialog = view.ui.findChild(QtWidgets.QFileDialog)
         dialog.setDirectory(QtCore.QDir(directory))
 
-        import pyautogui
         pyautogui.typewrite(file)
         pyautogui.press("enter")
 
@@ -65,7 +65,7 @@ def test_open_voxelplan(qtbot, window, voxelplan_file):
 
 
 def test_create_plan_and_field(qtbot, window, voxelplan_file):
-    model, view, controller = window
+    _, view, controller = window
     qtbot.addWidget(view.ui)
 
     directory, file = voxelplan_file
@@ -80,8 +80,8 @@ def test_create_plan_and_field(qtbot, window, voxelplan_file):
         ok_button = dialog.accept_buttonBox.findChildren(QtWidgets.QPushButton)[0]
         qtbot.mouseClick(ok_button, QtCore.Qt.LeftButton)
 
-    assert view.ui.actionNew_Plan.isEnabled() == True
-    assert view.ui.actionCreate_field.isEnabled() == False
+    assert view.ui.actionNew_Plan.isEnabled() is True
+    assert view.ui.actionCreate_field.isEnabled() is False
     QtCore.QTimer.singleShot(1000, handle_plan_dialog)
     view.ui.actionNew_Plan.trigger()
 
@@ -93,6 +93,6 @@ def test_create_plan_and_field(qtbot, window, voxelplan_file):
         ok_button = dialog.accept_ButtonBox.findChildren(QtWidgets.QPushButton)[0]
         qtbot.mouseClick(ok_button, QtCore.Qt.LeftButton)
 
-    assert view.ui.actionCreate_field.isEnabled() == True
+    assert view.ui.actionCreate_field.isEnabled() is True
     QtCore.QTimer.singleShot(1000, handle_field_dialog)
     view.ui.actionCreate_field.trigger()

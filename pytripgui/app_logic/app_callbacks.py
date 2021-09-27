@@ -41,12 +41,12 @@ class AppCallback:
 
     def on_open_voxelplan(self):
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        logger.debug("Open Voxelplan: " + path)
+        logger.debug("Open Voxelplan: {}".format(path))
         self.app_controller.open_voxelplan(path)
 
     def on_open_dicom(self):
         dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
-        logger.debug("Open DICOM: " + dir_path)
+        logger.debug("Open DICOM: {}".format(dir_path))
         self.app_controller.open_dicom(dir_path)
 
     def on_execute_selected_plan(self):

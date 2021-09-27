@@ -61,7 +61,11 @@ class MainWindowController:
 
         patient = PatientItem()
         patient_data = patient.data
-        patient_data.open_ctx(filename + ".ctx")  # Todo catch exceptions
+        try:
+            patient_data.open_ctx(path)
+        except FileNotFoundError as e:
+            logger.error(str(e))
+            return False
         try:
             patient_data.open_vdx(filename + ".vdx")  # Todo catch more exceptions
         except FileNotFoundError:
