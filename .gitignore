@@ -251,3 +251,20 @@ dmypy.json
 cython_debug/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
+
+
+# IDEs
+.idea
+.vscode
+.settings
+.project
+
+# virtualenvs
+venv*
+
+# pyinstaller output
+build
+dist
+
+# Inno Setup output
+Output
