@@ -1,8 +1,8 @@
 # generated file
 pytripgui/VERSION
 
-# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm
+# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,visualstudiocode
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -250,21 +250,31 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# End of https://www.toptal.com/developers/gitignore/api/python,pycharm
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Local History for Visual Studio Code
+.history/
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# End of https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudiocode
 
 
 # IDEs
 .idea
 .vscode
-.settings
-.project
 
 # virtualenvs
 venv*
-
-# pyinstaller output
-build
-dist
 
 # Inno Setup output
 Output
