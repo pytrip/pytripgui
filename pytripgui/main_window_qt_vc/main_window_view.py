@@ -59,11 +59,10 @@ class MainWindowQtView:
         dialog.setOptions(QFileDialog.ShowDirsOnly)
         dialog.exec_()
 
-        # only one directory can be selected in dialog window,
-        # but the selectedFiles method only returns a list, so [0] is selected
-        selected_path = dialog.selectedFiles()[0]
-
         if dialog.result() == QFileDialog.Accepted:
+            # only one directory can be selected in dialog window,
+            # but the selectedFiles method only returns a list, so [0] is selected
+            selected_path = dialog.selectedFiles()[0]
             return selected_path
         return ""
 
