@@ -29,11 +29,12 @@ logger = logging.getLogger(__name__)
 
 
 class AppCallback:
-    def __init__(self, app_model, parent_gui):
-        self.app_model = app_model
-        self.parent_gui = parent_gui
-        self.chart = Charts(self.parent_gui)
+    def __init__(self, app_controller):
+        self.app_model = app_controller.model
+        self.parent_gui = app_controller.view
+        self.app_controller = app_controller
 
+        self.chart = Charts(self.parent_gui)
         self.settings = SettingsController(self.app_model)
 
     def add_empty_patient(self) -> None:
@@ -50,27 +51,27 @@ class AppCallback:
 
     def on_open_voxelplan(self) -> None:
         """
-        Creates a new PatientItem and calls the open_dicom_callback on it to load DICOM patient data.
-        If opening is sucessful, adds this patient to the patient tree.
-
+        Displays a file selection dialog window, allowing the user to select a .hed file to load,
+        then attempts to create a patient with Voxelplan data loaded from that file.  
+        
         Returns:
         None
         """
-        patient = PatientItem()
-        if self.open_voxelplan_callback(patient):
-            self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
+        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
+        logger.debug("Open Voxelplan: {}".format(path))
+        self.app_controller.open_voxelplan(path)
 
     def on_open_dicom(self) -> None:
         """
-        Creates a new PatientItem and calls the open_dicom_callback on it to load Voxelplan patient data.
-        If opening is sucessful, adds this patient to the patient tree.
-
+        Displays a directory selection dialog window, allowing the user to select a folder,
+        then attempts to create a patient with DICOM data loaded from that folder.  
+        
         Returns:
         None
         """
-        patient = PatientItem()
-        if self.open_dicom_callback(patient):
-            self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
+        dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
+        logger.debug("Open DICOM: {}".format(dir_path))
+        self.app_controller.open_dicom(dir_path)
 
     def on_execute_selected_plan(self) -> None:
         """
@@ -323,74 +324,10 @@ class AppCallback:
         # self.app_model.viewcanvases.set_patient(patient)
         return True
 
-    def open_voxelplan_callback(self, patient_item: PatientItem) -> bool:
-        """
-        Open a file name selection window, then load patient data from Voxelplan files
-        with the selected path and basename.
-
-        Parameters:
-        patient_item (PatientItem): The patient item to load Vocelplan data into.
-
-        Returns:
-        bool: Whether loading Voxelplan data was successful.
-        """
-        path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
-        filename, _ = os.path.splitext(path)
-
-        if not filename:
-            return False
-
-        patient = patient_item.data
-        patient.open_ctx(filename + ".ctx")  # Todo catch exceptions
-        try:
-            patient.open_vdx(filename + ".vdx")  # Todo catch more exceptions
-        except FileNotFoundError:
-            logger.warning("Loaded patient has no VOI data")
-            # TODO add empty vdx init if needed
-            patient.vdx = None
-
-        if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
-
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
-        return True
-
-    def open_dicom_callback(self, patient_item: PatientItem) -> bool:
-        """
-        Open a folder selection window, then load patient data from DICOM files in the selected folder.
-
-        Parameters:
-        patient_item (PatientItem): The patient item to load DICOM data into.
-
-        Returns:
-        bool: Whether loading DICOM data was successful.
-        """
-        logger.debug("Open DICOM start")
-        dir_name = self.parent_gui.browse_folder_path("Open DICOM folder")
-
-        if not dir_name:
-            return False
-
-        logger.debug("Open DICOM by patient start")
-
-        patient = patient_item.data
-        patient.open_dicom(dir_name)  # Todo catch exceptions
-
-        if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
-
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
-        return True
-
     def export_patient_voxelplan_callback(self, patient_item: PatientItem) -> bool:
         """
-        Export patient cube to Voxelplan format (.hed, .ctx, .vdx) with the selected name.
+        Open a file name selection window, then export the patient cube to Voxelplan format (.hed, .ctx, .vdx)
+        with the selected name.
 
         Parameters:
         patient_item (PatientItem): Patient tree item containing the patient's data
@@ -402,6 +339,8 @@ class AppCallback:
         full_path = self.parent_gui.save_file_path("Export patient to Voxelplan", "Voxelplan (*.hed)")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         path_base, _extension = os.path.splitext(full_path)
@@ -419,7 +358,7 @@ class AppCallback:
 
     def export_patient_dicom_callback(self, patient_item: PatientItem) -> bool:
         """
-        Export patient cube to DICOM format in the selected folder.
+        Open a folder selection window, then export patient cube to DICOM format in the selected folder.
 
         Parameters:
         patient_item (PatientItem): Patient tree item containing the patient's data
@@ -431,6 +370,8 @@ class AppCallback:
         full_path = self.parent_gui.browse_folder_path("Export patient to DICOM")
 
         if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
             return False
 
         logger.info("DICOM export to: " + full_path)
@@ -444,7 +385,62 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
-    def one_click_callback(self) -> None:
+    def export_dose_voxelplan_callback(self, simulation_result: SimulationResultItem):
+        """
+        Open a file name selection window, then export dose cube to Voxelplan format with the selected name.
+
+        Parameters:
+        simulation_result (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export DoseCube to Voxelplan")
+        dose_cube = simulation_result.data
+        full_path = self.parent_gui.save_file_path("Export Dose to Voxelplan", "Voxelplan (*.hed)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        path_base, extension = os.path.splitext(full_path)
+        path, basename = os.path.split(path_base)
+        logger.info("Voxelplan export to: " + path + " with basename: " + basename)
+
+        dose_cube.write(path_base)
+
+        logger.debug("Voxelplan export finished.")
+        return True
+
+    def export_dose_dicom_callback(self, simulation_result: SimulationResultItem):
+        """
+        Open a folder selection window, then export dose cube to DICOM format in the selected folder.
+
+        Parameters:
+        simulation_result (SimulationResultItem): Tree item containing the dose cube's data
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export DoseCube to DICOM")
+        dose_cube = simulation_result.data
+
+        full_path = self.parent_gui.browse_folder_path("Export Dose to DICOM")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        logger.info("DICOM export to: " + full_path)
+
+        dose_cube.write_dicom(full_path)
+
+        logger.debug("DICOM export finished.")
+        return True
+
+    def one_click_callback(self):
         """
         Handles a click action on any TreeItem with its specific behavior.
         This includes displaying the correct data in the canvas and enabling the correct UI buttons.

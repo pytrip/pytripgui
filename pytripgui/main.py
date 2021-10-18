@@ -26,15 +26,19 @@ def main(args=None):
     # parser.add_argument("--vdx", help="VdxCube", type=str, nargs='?')
     parser.add_argument("--dos", help="DosCube", type=str, nargs='?')
     parser.add_argument("--let", help="LETCube", type=str, nargs='?')
-    args = parser.parse_args(sys.argv[1:])
+    parsed_args = parser.parse_args(sys.argv[1:])
 
     # set logging level
-    if args.verbosity == 1:
+    if parsed_args.verbosity == 1:
         logging.basicConfig(level=logging.INFO)
-    elif args.verbosity > 1:
+    elif parsed_args.verbosity > 1:
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig()
+
+    if parsed_args.verbosity <= 3:
+        # set PyQt5 logging level to ERROR, in order not to pollute our log space
+        logging.getLogger('PyQt5').setLevel(logging.ERROR)
 
     # all these objects need to be saved as variables, otherwise they will be garbage collected before app execution
     app = QApplication(sys.argv)

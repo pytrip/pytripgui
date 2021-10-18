@@ -18,4 +18,5 @@ class DoseImage(PatientImageBase):
                                         cmap=self._colormap,
                                         vmax=data.max_dose,
                                         aspect=data.aspect,
-                                        zorder=self.zorder)
+                                        zorder=self.zorder,
+                                        interpolation='none')
