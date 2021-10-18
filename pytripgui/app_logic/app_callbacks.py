@@ -52,8 +52,8 @@ class AppCallback:
     def on_open_voxelplan(self) -> None:
         """
         Displays a file selection dialog window, allowing the user to select a .hed file to load,
-        then attempts to create a patient with Voxelplan data loaded from that file.  
-        
+        then attempts to create a patient with Voxelplan data loaded from that file.
+
         Returns:
         None
         """
@@ -64,8 +64,8 @@ class AppCallback:
     def on_open_dicom(self) -> None:
         """
         Displays a directory selection dialog window, allowing the user to select a folder,
-        then attempts to create a patient with DICOM data loaded from that folder.  
-        
+        then attempts to create a patient with DICOM data loaded from that folder.
+
         Returns:
         None
         """
