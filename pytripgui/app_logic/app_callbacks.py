@@ -37,21 +37,53 @@ class AppCallback:
         self.settings = SettingsController(self.app_model)
 
     def add_empty_patient(self) -> None:
+        """
+        Creates a new PatientItem and calls the open_empty_patient_callback on it to create an empty patient.
+        If opening is sucessful, adds this patient to the patient tree.
+
+        Returns:
+        None
+        """
         patient = PatientItem()
         if self.open_empty_patient_callback(patient):
             self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
     def on_open_voxelplan(self) -> None:
+        """
+        Creates a new PatientItem and calls the open_dicom_callback on it to load DICOM patient data.
+        If opening is sucessful, adds this patient to the patient tree.
+
+        Returns:
+        None
+        """
         patient = PatientItem()
         if self.open_voxelplan_callback(patient):
             self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
     def on_open_dicom(self) -> None:
+        """
+        Creates a new PatientItem and calls the open_dicom_callback on it to load Voxelplan patient data.
+        If opening is sucessful, adds this patient to the patient tree.
+
+        Returns:
+        None
+        """
         patient = PatientItem()
         if self.open_dicom_callback(patient):
             self.app_model.patient_tree.add_new_item(parent_item=None, item=patient)
 
     def on_execute_selected_plan(self) -> None:
+        """
+        Displays a popup window to select a TRiP configuration to use during plan execution,
+        then executes the selected PlanItem selected on the tree, or the plan to which the selected Fielditem belongs.
+        If the TRiP configuration selection is aborted, so is the execution.
+
+        Raises:
+        TypeError: if the selected item is neither a plan nor a field
+
+        Returns:
+        None
+        """
         item = self.app_model.patient_tree.selected_item()
         if isinstance(item, FieldItem):
             plan = item.parent
@@ -75,9 +107,22 @@ class AppCallback:
         executor.show()
 
     def _execute_finish_callback(self, item: TreeItem) -> None:
+        """
+        Add a new item to the patient tree, containing the plan execution results.
+
+        Returns:
+        None
+        """
         self.app_model.patient_tree.add_new_item(parent_item=None, item=item)
 
     def on_add_new_plan(self) -> None:
+        """
+        Add a new plan item to the patient tree, belonging to the currently selected patient.
+        If no patient is selected, display an error popup.
+
+        Returns:
+        None
+        """
         selected_patient = self.app_model.patient_tree.selected_item_patient()
         if not selected_patient:
             self.parent_gui.show_info(*InfoMessages["addNewPatient"])
@@ -87,7 +132,10 @@ class AppCallback:
 
     def on_kernels_configurator(self) -> None:
         """
-        Open the beam kernel configuration dialog window.
+        Open the beam kernel configuration dialog window and if user chose to, save the resulting configuration.
+
+        Returns:
+        None
         """
         from pytripgui.kernel_vc import KernelController
 
@@ -103,7 +151,7 @@ class AppCallback:
 
     def on_trip98_config(self) -> None:
         """
-        Open the TRiP98 configuration dialog window and if successful, save the resulting configuration.
+        Open the TRiP98 configuration dialog window and if user chose to, save the resulting configuration.
 
         Returns:
         None
