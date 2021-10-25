@@ -1,5 +1,7 @@
 from typing import Optional
 
+from pytrip import DosCube, dicomhelper
+
 from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
@@ -440,14 +442,14 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
-    def import_dose_voxelplan_callback(self) -> None:
+    def import_dose_voxelplan_callback(self) -> bool:
         logger.debug("Import DoseCube from Voxelplan")
 
         selected_patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
         if not selected_patient:
             # no patient related to the current selection
             self.parent_gui.show_info(*InfoMessages["addNewPatient"])
-            return
+            return False
 
         full_path = self.parent_gui.browse_file_path("Import Dose from Voxelplan", "Voxelplan dose (*.dos)")
 
@@ -461,10 +463,11 @@ class AppCallback:
         path_base, _extension = os.path.splitext(full_path)
         dir_path, plan_basename = os.path.split(path_base)
 
-        item = SimulationResultItem()
+        result_item = SimulationResultItem()
         from pytripgui.plan_executor.simulation_results import SimulationResults
         plan = PlanItem()
-        # turn off the default import flags:
+        # turn off the import flags to create a SimulationResults object
+        # without importing data with a default configuration:
         plan.data.want_phys_dose = False
         plan.data.want_bio_dose = False
         plan.data.want_dlet = False
@@ -479,17 +482,65 @@ class AppCallback:
         # we're not using the default import method from SimulationResults,
         # so that we're not limited to .phys.dos or .bio.dos,
         # but rather the user's file of choice
-        item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
-        item.data._import_dos(full_path)
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+        result_item.data._import_dos(full_path)
 
-        # parent_item=selected_patient to
-        self.app_model.patient_tree.add_new_item(parent_item=None, item=item)
+        # parent_item=selected_patient to set simulation result as a child of the patient
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
 
         logger.debug("Voxelplan import finished.")
         return True
 
-    def import_dose_dicom_callback(self):
-        return False
+    def import_dose_dicom_callback(self) -> bool:
+        logger.debug("Import DoseCube from DICOM")
+
+        selected_patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
+        if not selected_patient:
+            # no patient related to the current selection
+            self.parent_gui.show_info(*InfoMessages["addNewPatient"])
+            return False
+
+        dicom_dir = self.parent_gui.browse_folder_path("Import Dose from DICOM")
+
+        if not dicom_dir:
+            # file browsing was cancelled or failed, so no directory path was selected
+            # returning False to signify a failed import
+            return False
+
+        logger.info("DICOM import from: " + dicom_dir)
+        _dir_path, plan_basename = os.path.split(dicom_dir)
+
+        result_item = SimulationResultItem()
+        from pytripgui.plan_executor.simulation_results import SimulationResults
+        plan = PlanItem()
+
+        # turn off the import flags to create a SimulationResults object
+        # without importing data with a default configuration:
+        plan.data.want_phys_dose = False
+        plan.data.want_bio_dose = False
+        plan.data.want_dlet = False
+        plan.data.want_rst = False
+        plan.data.want_tlet = False
+
+        plan.basename = plan_basename
+        plan.data.basename = plan_basename
+        plan.data.basename = plan_basename
+        plan.data.working_dir = dicom_dir
+
+        # we're not using the default import method from SimulationResults,
+        # because it relies on data in the Voxelplan format (*.dos)
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+
+        dos = DosCube(selected_patient.data.ctx)
+        dcm = dicomhelper.read_dicom_dir(dicom_dir)
+        dos.read_dicom(dcm)
+        result_item.data.dose = dos
+
+        # parent_item=selected_patient to set simulation result as a child of the patient
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
+
+        logger.debug("DICOM import finished.")
+        return True
 
     def one_click_callback(self):
         """

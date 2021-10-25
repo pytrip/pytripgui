@@ -89,4 +89,4 @@ class TreeController:
         self.import_dose_voxelplan_callback()
 
     def _import_dose_dicom_callback(self):
-        self.import_dose_dicom_callback(self._view.selected_item)
+        self.import_dose_dicom_callback()
