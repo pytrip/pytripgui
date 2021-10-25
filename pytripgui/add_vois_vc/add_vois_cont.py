@@ -58,8 +58,16 @@ class AddVOIsController:
         view.pixel_number_y.text = ctx.dimy
         view.slice_number.text = ctx.slice_number
         view.slice_distance.text = ctx.slice_distance
-        # TODO offsets
+        view.x_offset.text = ctx.xoffset
+        view.y_offset.text = ctx.yoffset
         view.slice_offset.text = ctx.zoffset
+
+        view.x_min.text = ctx.xoffset
+        view.x_max.text = ctx.xoffset + ctx.dimx * ctx.pixel_size
+        view.y_min.text = ctx.yoffset
+        view.y_max.text = ctx.yoffset + ctx.dimy * ctx.pixel_size
+        view.z_min.text = ctx.zoffset
+        view.z_max.text = ctx.zoffset + ctx.slice_number * ctx.slice_distance
 
     def _set_model_from_view(self):
         ctx = self.model.ctx
