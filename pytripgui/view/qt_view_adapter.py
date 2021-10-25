@@ -59,6 +59,16 @@ class LineEdit:
             self._ui.setStyleSheet("")
 
 
+class LineEditMath(LineEdit):
+    @property
+    def text(self):
+        return self._ui.text().replace(",", ".")
+
+    @text.setter
+    def text(self, text):
+        self._ui.setText(str(text))
+
+
 class PushButton:
     def __init__(self, push_button):
         self._ui = push_button
