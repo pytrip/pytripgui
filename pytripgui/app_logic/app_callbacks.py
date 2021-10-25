@@ -3,6 +3,7 @@ from typing import Optional
 from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
+from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
@@ -464,7 +465,6 @@ class AppCallback:
         dir_path, plan_basename = os.path.split(path_base)
 
         result_item = SimulationResultItem()
-        from pytripgui.plan_executor.simulation_results import SimulationResults
         plan = PlanItem()
         # turn off the import flags to create a SimulationResults object
         # without importing data with a default configuration:
@@ -511,7 +511,6 @@ class AppCallback:
         _dir_path, plan_basename = os.path.split(dicom_dir)
 
         result_item = SimulationResultItem()
-        from pytripgui.plan_executor.simulation_results import SimulationResults
         plan = PlanItem()
 
         # turn off the import flags to create a SimulationResults object
