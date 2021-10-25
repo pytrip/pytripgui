@@ -58,6 +58,27 @@ class TreeItem(NodeMixin):
         children.remove(child)
         self.children = children
 
+    def is_executable(self) -> bool:
+        """
+        Assert whether an item on the patient tree can be executed.
+        Execution is possible on plans which have at least one field.
+
+        Parameters:
+        item (TreeItem): The patient tree item in question.
+
+        Returns:
+        bool: Whether the item can be executed.
+        """
+        if isinstance(self, PlanItem):
+            # a plan which has children - fields
+            if self.has_children():
+                return True
+        elif isinstance(self, FieldItem):
+            # a field item belonging to a plan
+            return True
+        # not a plan or a plan without fields
+        return False
+
 
 class PatientList(TreeItem):
     """

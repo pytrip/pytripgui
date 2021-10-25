@@ -472,7 +472,7 @@ class AppCallback:
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             self._show_patient(top_item, item)
-        if self.is_executable(item):
+        if item.is_executable():
             self.parent_gui.action_execute_plan_set_enable(True)
 
     def _show_patient(self, data_item: PatientItem, state_item: PatientGuiState) -> None:
@@ -508,25 +508,3 @@ class AppCallback:
         None
         """
         self.app_model.patient_tree.set_visible(self.parent_gui.action_open_tree_checked)
-
-    @staticmethod
-    def is_executable(item: TreeItem) -> bool:
-        """
-        Assert whether an item on the patient tree can be executed.
-        Execution is possible on plans which have
-
-        Parameters:
-        item (TreeItem): The patient tree item in question.
-
-        Returns:
-        bool: Whether the item can be executed.
-        """
-        if isinstance(item, PlanItem):
-            # a plan which has children - fields
-            if item.has_children():
-                return True
-        elif isinstance(item, FieldItem):
-            # a field item belonging to a plan
-            return True
-        # not a plan or a plan without fields
-        return False
