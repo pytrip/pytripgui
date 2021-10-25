@@ -440,6 +440,57 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
+    def import_dose_voxelplan_callback(self) -> None:
+        logger.debug("Import DoseCube from Voxelplan")
+
+        selected_patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
+        if not selected_patient:
+            # no patient related to the current selection
+            self.parent_gui.show_info(*InfoMessages["addNewPatient"])
+            return
+
+        full_path = self.parent_gui.browse_file_path("Import Dose from Voxelplan", "Voxelplan dose (*.dos)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no file path was selected
+            # returning False to signify a failed import
+            return False
+
+        logger.info("Voxelplan import from: " + full_path)
+
+        path_base, _extension = os.path.splitext(full_path)
+        dir_path, plan_basename = os.path.split(path_base)
+
+        item = SimulationResultItem()
+        from pytripgui.plan_executor.simulation_results import SimulationResults
+        plan = PlanItem()
+        # turn off the default import flags:
+        plan.data.want_phys_dose = False
+        plan.data.want_bio_dose = False
+        plan.data.want_dlet = False
+        plan.data.want_rst = False
+        plan.data.want_tlet = False
+
+        plan.basename = plan_basename
+        plan.data.basename = plan_basename
+        plan.data.basename = plan_basename
+        plan.data.working_dir = dir_path
+
+        # we're not using the default import method from SimulationResults,
+        # so that we're not limited to .phys.dos or .bio.dos,
+        # but rather the user's file of choice
+        item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+        item.data._import_dos(full_path)
+
+        # parent_item=selected_patient to
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=item)
+
+        logger.debug("Voxelplan import finished.")
+        return True
+
+    def import_dose_dicom_callback(self):
+        return False
+
     def one_click_callback(self):
         """
         Handles a click action on any TreeItem with its specific behavior.
