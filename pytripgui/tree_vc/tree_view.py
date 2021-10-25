@@ -63,7 +63,8 @@ class TreeView(QTreeView):
         elif isinstance(self.selected_item, PlanItem):
             popup_menu.addAction("Add new Field", self.internal_events.on_add_child)
             popup_menu.addSeparator()
-            popup_menu.addAction("Execute", self.internal_events.on_execute)
+            execute_action = popup_menu.addAction("Execute", self.internal_events.on_execute)
+            execute_action.setEnabled(self.selected_item.is_executable())
             popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
             popup_menu.addAction("Delete", self.internal_events.on_delete)
         elif isinstance(self.selected_item, FieldItem):
