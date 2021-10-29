@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal
 from enum import Enum
 
 from PyQt5.QtCore import QRegularExpression
@@ -200,11 +201,9 @@ class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
         if not self._multiple_of_line_edit.text:
             return QValidator.Acceptable, string, pos
 
-        string = string.replace(",", ".")
-        if string.endswith("."):
-            string = string[:-1]
-        string_num = float(string)
-        multiple_of = float(self._multiple_of_line_edit.text)
+        string_num = string.replace(",", ".")
+        string_num = Decimal(string)
+        multiple_of = Decimal(self._multiple_of_line_edit.text)
 
         if multiple_of and \
                 ((multiple_of < 1 and math.isclose(abs(round(string_num / multiple_of, 0) - string_num / multiple_of),

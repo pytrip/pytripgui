@@ -1,4 +1,4 @@
-from pytripgui.view.qt_view_adapter import LineEdit, TabWidget
+from pytripgui.view.qt_view_adapter import LineEdit, TabWidget, LineEditMath
 from pytripgui.view.qt_gui import EmptyPatientDialog
 
 import logging
@@ -12,29 +12,29 @@ class EmptyPatientQtView:
     def __init__(self, parent=None):
         self._ui = EmptyPatientDialog(parent)
         self.name = LineEdit(self._ui.name_lineEdit)
-        self.hu_value = LineEdit(self._ui.hUValue_lineEdit)
-        self.slice_offset = LineEdit(self._ui.sliceOffset_lineEdit)
+        self.hu_value = LineEditMath(self._ui.hUValue_lineEdit)
+        self.slice_offset = LineEditMath(self._ui.sliceOffset_lineEdit)
 
         self.dimensions_tabs = TabWidget(self._ui.dimensions_tabWidget)
         self.dimensions_fields = [{
-            "width": LineEdit(self._ui.width_lineEdit_1),
-            "height": LineEdit(self._ui.height_lineEdit_1),
-            "depth": LineEdit(self._ui.depth_lineEdit_1),
-            "slice_distance": LineEdit(self._ui.sliceDistance_lineEdit_1),
-            "pixel_size": LineEdit(self._ui.pixelSize_lineEdit_1),
+            "width": LineEditMath(self._ui.width_lineEdit_1),
+            "height": LineEditMath(self._ui.height_lineEdit_1),
+            "depth": LineEditMath(self._ui.depth_lineEdit_1),
+            "slice_distance": LineEditMath(self._ui.sliceDistance_lineEdit_1),
+            "pixel_size": LineEditMath(self._ui.pixelSize_lineEdit_1),
         }, {
-            "width": LineEdit(self._ui.width_lineEdit_2),
-            "height": LineEdit(self._ui.height_lineEdit_2),
-            "depth": LineEdit(self._ui.depth_lineEdit_2),
-            "slice_number": LineEdit(self._ui.sliceNumber_lineEdit_2),
-            "pixel_number_x": LineEdit(self._ui.pixelNumberX_lineEdit_2),
-            "pixel_number_y": LineEdit(self._ui.pixelNumberY_lineEdit_2),
+            "width": LineEditMath(self._ui.width_lineEdit_2),
+            "height": LineEditMath(self._ui.height_lineEdit_2),
+            "depth": LineEditMath(self._ui.depth_lineEdit_2),
+            "slice_number": LineEditMath(self._ui.sliceNumber_lineEdit_2),
+            "pixel_number_x": LineEditMath(self._ui.pixelNumberX_lineEdit_2),
+            "pixel_number_y": LineEditMath(self._ui.pixelNumberY_lineEdit_2),
         }, {
-            "slice_number": LineEdit(self._ui.sliceNumber_lineEdit_3),
-            "slice_distance": LineEdit(self._ui.sliceDistance_lineEdit_3),
-            "pixel_number_x": LineEdit(self._ui.pixelNumberX_lineEdit_3),
-            "pixel_number_y": LineEdit(self._ui.pixelNumberY_lineEdit_3),
-            "pixel_size": LineEdit(self._ui.pixelSize_lineEdit_3),
+            "slice_number": LineEditMath(self._ui.sliceNumber_lineEdit_3),
+            "slice_distance": LineEditMath(self._ui.sliceDistance_lineEdit_3),
+            "pixel_number_x": LineEditMath(self._ui.pixelNumberX_lineEdit_3),
+            "pixel_number_y": LineEditMath(self._ui.pixelNumberY_lineEdit_3),
+            "pixel_size": LineEditMath(self._ui.pixelSize_lineEdit_3),
         }]
 
         self.accept = self._ui.accept
