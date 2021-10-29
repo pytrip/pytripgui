@@ -556,6 +556,7 @@ class AppCallback:
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
+        self.parent_gui.import_dose_cube_set_enabled(False)
 
         item = self.app_model.patient_tree.selected_item()
         top_item = self.app_model.patient_tree.selected_item_patient()
@@ -569,14 +570,17 @@ class AppCallback:
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self._show_patient(top_item, top_item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             self._show_patient(top_item, item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             self._show_patient(top_item, item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
         if self.is_executable(item):
             self.parent_gui.action_execute_plan_set_enable(True)
 

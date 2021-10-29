@@ -38,6 +38,9 @@ class MainWindowController:
         # main window callbacks
         self.view.open_voxelplan_callback = self.app_callback.on_open_voxelplan
         self.view.open_dicom_callback = self.app_callback.on_open_dicom
+        self.view.import_dose_voxelplan_callback = self.app_callback.import_dose_voxelplan_callback
+        self.view.import_dose_dicom_callback = self.app_callback.import_dose_dicom_callback
+        # self.view.import_let_callback = self.app_callback.on_import_let
         self.view.open_kernels_configurator_callback = self.app_callback.on_kernels_configurator
         self.view.add_new_plan_callback = self.app_callback.on_add_new_plan
         self.view.trip_config_callback = self.app_callback.on_trip98_config

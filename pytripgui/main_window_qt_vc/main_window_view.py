@@ -87,6 +87,30 @@ class MainWindowQtView:
         self.ui.actionOpen_Dicom.triggered.connect(callback)
 
     @property
+    def import_dose_voxelplan_callback(self):
+        return None
+
+    @import_dose_voxelplan_callback.setter
+    def import_dose_voxelplan_callback(self, callback):
+        self.ui.actionImportDoseCube_Voxelplan.triggered.connect(callback)
+
+    @property
+    def import_dose_dicom_callback(self):
+        return None
+
+    @import_dose_dicom_callback.setter
+    def import_dose_dicom_callback(self, callback):
+        self.ui.actionImportDoseCube_Dicom.triggered.connect(callback)
+
+    @property
+    def import_let_callback(self):
+        return None
+
+    @import_let_callback.setter
+    def import_let_callback(self, callback):
+        self.ui.menuImportLETCube.triggered.connect(callback)
+
+    @property
     def open_kernels_configurator_callback(self):
         return None
 
@@ -158,6 +182,9 @@ class MainWindowQtView:
 
     def action_execute_plan_set_enable(self, enabled):
         self.ui.actionExecute_Plan.setEnabled(enabled)
+
+    def import_dose_cube_set_enabled(self, enabled):
+        self.ui.menuImportDoseCube.setEnabled(enabled)
 
     @property
     def action_open_tree(self):
