@@ -464,26 +464,19 @@ class AppCallback:
         path_base, _extension = os.path.splitext(full_path)
         dir_path, plan_basename = os.path.split(path_base)
 
-        result_item = SimulationResultItem()
-        plan = PlanItem()
-        # turn off the import flags to create a SimulationResults object
-        # without importing data with a default configuration:
-        plan.data.want_phys_dose = False
-        plan.data.want_bio_dose = False
-        plan.data.want_dlet = False
-        plan.data.want_rst = False
-        plan.data.want_tlet = False
-
-        plan.basename = plan_basename
-        plan.data.basename = plan_basename
-        plan.data.basename = plan_basename
-        plan.data.working_dir = dir_path
+        result_item: SimulationResultItem = SimulationResultItem()
+        plan = self._setup_imported_plan(plan_basename, dir_path)
 
         # we're not using the default import method from SimulationResults,
         # so that we're not limited to .phys.dos or .bio.dos,
         # but rather the user's file of choice
         result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
         result_item.data._import_dos(full_path)
+
+        # add dose item as child of Simulation
+        dose_item = SimulationResultItem()
+        dose_item.data = result_item.data.dose
+        result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
         self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
@@ -511,20 +504,7 @@ class AppCallback:
         _dir_path, plan_basename = os.path.split(dicom_dir)
 
         result_item = SimulationResultItem()
-        plan = PlanItem()
-
-        # turn off the import flags to create a SimulationResults object
-        # without importing data with a default configuration:
-        plan.data.want_phys_dose = False
-        plan.data.want_bio_dose = False
-        plan.data.want_dlet = False
-        plan.data.want_rst = False
-        plan.data.want_tlet = False
-
-        plan.basename = plan_basename
-        plan.data.basename = plan_basename
-        plan.data.basename = plan_basename
-        plan.data.working_dir = dicom_dir
+        plan = self._setup_imported_plan(plan_basename, dicom_dir)
 
         # we're not using the default import method from SimulationResults,
         # because it relies on data in the Voxelplan format (*.dos)
@@ -535,11 +515,35 @@ class AppCallback:
         dos.read_dicom(dcm)
         result_item.data.dose = dos
 
+        # add dose item as child of Simulation
+        dose_item = SimulationResultItem()
+        dose_item.data = result_item.data.dose
+        result_item.add_child(dose_item)
+
         # parent_item=selected_patient to set simulation result as a child of the patient
         self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
 
         logger.debug("DICOM import finished.")
         return True
+
+    @staticmethod
+    def _setup_imported_plan(basename: str, working_dir: str):
+        plan = PlanItem()
+
+        # turn off the import flags to create a SimulationResults object
+        # without importing data with a default configuration:
+        plan.data.want_phys_dose = False
+        plan.data.want_bio_dose = False
+        plan.data.want_dlet = False
+        plan.data.want_rst = False
+        plan.data.want_tlet = False
+
+        plan.basename = basename
+        plan.data.basename = basename
+        plan.data.basename = basename
+        plan.data.working_dir = working_dir
+
+        return plan
 
     def one_click_callback(self):
         """

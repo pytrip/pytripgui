@@ -84,7 +84,7 @@
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Import</string>
