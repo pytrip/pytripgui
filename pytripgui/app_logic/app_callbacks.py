@@ -1,6 +1,9 @@
 from typing import Optional
 
+from pytrip import DosCube, dicomhelper
+
 from pytripgui.canvas_vc.gui_state import PatientGuiState
+from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
@@ -440,6 +443,108 @@ class AppCallback:
         logger.debug("DICOM export finished.")
         return True
 
+    def import_dose_voxelplan_callback(self) -> bool:
+        logger.debug("Import DoseCube from Voxelplan")
+
+        selected_patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
+        if not selected_patient:
+            # no patient related to the current selection
+            self.parent_gui.show_info(*InfoMessages["addNewPatient"])
+            return False
+
+        full_path = self.parent_gui.browse_file_path("Import Dose from Voxelplan", "Voxelplan dose (*.dos)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no file path was selected
+            # returning False to signify a failed import
+            return False
+
+        logger.info("Voxelplan import from: " + full_path)
+
+        path_base, _extension = os.path.splitext(full_path)
+        dir_path, plan_basename = os.path.split(path_base)
+
+        result_item: SimulationResultItem = SimulationResultItem()
+        plan = self._setup_imported_plan(plan_basename, dir_path)
+
+        # we're not using the default import method from SimulationResults,
+        # so that we're not limited to .phys.dos or .bio.dos,
+        # but rather the user's file of choice
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+        result_item.data._import_dos(full_path)
+
+        # add dose item as child of Simulation
+        dose_item = SimulationResultItem()
+        dose_item.data = result_item.data.dose
+        result_item.add_child(dose_item)
+
+        # parent_item=selected_patient to set simulation result as a child of the patient
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
+
+        logger.debug("Voxelplan import finished.")
+        return True
+
+    def import_dose_dicom_callback(self) -> bool:
+        logger.debug("Import DoseCube from DICOM")
+
+        selected_patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
+        if not selected_patient:
+            # no patient related to the current selection
+            self.parent_gui.show_info(*InfoMessages["addNewPatient"])
+            return False
+
+        dicom_dir = self.parent_gui.browse_folder_path("Import Dose from DICOM")
+
+        if not dicom_dir:
+            # file browsing was cancelled or failed, so no directory path was selected
+            # returning False to signify a failed import
+            return False
+
+        logger.info("DICOM import from: " + dicom_dir)
+        _dir_path, plan_basename = os.path.split(dicom_dir)
+
+        result_item = SimulationResultItem()
+        plan = self._setup_imported_plan(plan_basename, dicom_dir)
+
+        # we're not using the default import method from SimulationResults,
+        # because it relies on data in the Voxelplan format (*.dos)
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+
+        dos = DosCube(selected_patient.data.ctx)
+        dcm = dicomhelper.read_dicom_dir(dicom_dir)
+        dos.read_dicom(dcm)
+        result_item.data.dose = dos
+
+        # add dose item as child of Simulation
+        dose_item = SimulationResultItem()
+        dose_item.data = result_item.data.dose
+        result_item.add_child(dose_item)
+
+        # parent_item=selected_patient to set simulation result as a child of the patient
+        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
+
+        logger.debug("DICOM import finished.")
+        return True
+
+    @staticmethod
+    def _setup_imported_plan(basename: str, working_dir: str):
+        plan = PlanItem()
+
+        # turn off the import flags to create a SimulationResults object
+        # without importing data with a default configuration:
+        plan.data.want_phys_dose = False
+        plan.data.want_bio_dose = False
+        plan.data.want_dlet = False
+        plan.data.want_rst = False
+        plan.data.want_tlet = False
+
+        plan.basename = basename
+        plan.data.basename = basename
+        plan.data.basename = basename
+        plan.data.working_dir = working_dir
+
+        return plan
+
     def one_click_callback(self):
         """
         Handles a click action on any TreeItem with its specific behavior.
@@ -451,6 +556,7 @@ class AppCallback:
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
+        self.parent_gui.import_dose_cube_set_enabled(False)
 
         item = self.app_model.patient_tree.selected_item()
         top_item = self.app_model.patient_tree.selected_item_patient()
@@ -464,14 +570,18 @@ class AppCallback:
         elif isinstance(item, PatientItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self._show_patient(top_item, top_item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             self._show_patient(top_item, item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
             self._show_patient(top_item, item)
+            self.parent_gui.import_dose_cube_set_enabled(True)
+
         if item.is_executable():
             self.parent_gui.action_execute_plan_set_enable(True)
 

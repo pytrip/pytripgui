@@ -19,6 +19,8 @@ class TreeController:
         self.one_click_callback = None
         self.export_dose_voxelplan_callback = None
         self.export_dose_dicom_callback = None
+        self.import_dose_voxelplan_callback = None
+        self.import_dose_dicom_callback = None
 
         # internal
         self._tree_model = model
@@ -33,6 +35,8 @@ class TreeController:
         self._view.internal_events.on_click += self._on_click_callback
         self._view.internal_events.on_export_dose_voxelplan += self._export_dose_voxelplan_callback
         self._view.internal_events.on_export_dose_dicom += self._export_dose_dicom_callback
+        self._view.internal_events.on_import_dose_voxelplan += self._import_dose_voxelplan_callback
+        self._view.internal_events.on_import_dose_dicom += self._import_dose_dicom_callback
 
     def _delete_callback(self):
         parent = self._view.selected_q_item.parent()
@@ -80,3 +84,9 @@ class TreeController:
 
     def _export_dose_dicom_callback(self):
         self.export_dose_dicom_callback(self._view.selected_item)
+
+    def _import_dose_voxelplan_callback(self):
+        self.import_dose_voxelplan_callback()
+
+    def _import_dose_dicom_callback(self):
+        self.import_dose_dicom_callback()

@@ -84,13 +84,55 @@
     </widget>
     <widget class="QMenu" name="menuImport">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="title">
       <string>Import</string>
      </property>
-     <addaction name="actionDoseCube"/>
-     <addaction name="actionLETCube"/>
+     <widget class="QMenu" name="menuImportDoseCube">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="title">
+       <string>DoseCube</string>
+      </property>
+      <action name="actionImportDoseCube_Voxelplan">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>From Voxelplan</string>
+       </property>
+      </action>
+      <action name="actionImportDoseCube_Dicom">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>From DICOM</string>
+       </property>
+      </action>
+      <addaction name="actionImportDoseCube_Voxelplan"/>
+      <addaction name="actionImportDoseCube_Dicom"/>
+     </widget>
+     <action name="menuImportLETCube">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>LETCube</string>
+      </property>
+     </action>
+     <action name="action_exec">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Plan (.exec)</string>
+   </property>
+  </action>
+     <addaction name="menuImportDoseCube"/>
+     <addaction name="menuImportLETCube"/>
      <addaction name="action_exec"/>
     </widget>
     <addaction name="menuNew"/>
@@ -218,30 +260,6 @@
   <action name="actionTRiP98_Config">
    <property name="text">
     <string>TRiP98 Config</string>
-   </property>
-  </action>
-  <action name="actionDoseCube">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>DoseCube</string>
-   </property>
-  </action>
-  <action name="actionLETCube">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>LETCube</string>
-   </property>
-  </action>
-  <action name="action_exec">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Plan (.exec)</string>
    </property>
   </action>
   <action name="actionNew_Plan">
