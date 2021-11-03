@@ -8,9 +8,10 @@ logger = logging.getLogger(__name__)
 
 
 class AddSingleVOIController:
-    def __init__(self, model, view):
+    def __init__(self, model, view, used_voi_names):
         self.model = model
         self.view = view
+        self.used_voi_names = used_voi_names
         self.is_accepted = False
         self._setup_callbacks()
 
@@ -40,6 +41,11 @@ class AddSingleVOIController:
         voi_widget = self.view.voi_layout.itemAt(0).widget()
         # validate fields
         if not voi_widget.validate():
+            return False
+
+        # check if name isn't already being used
+        if voi_widget.name.lower() in self.used_voi_names:
+            self.view.info.text = "This name is already being used by another VOI."
             return False
 
         ctx = self.model

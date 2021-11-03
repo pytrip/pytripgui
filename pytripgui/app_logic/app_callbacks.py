@@ -201,7 +201,9 @@ class AppCallback:
         view.show()
 
         if controller.is_accepted:
-            self.app_model.viewcanvases.update_voi_list(selected_patient.data, selected_patient.state)
+            if selected_patient.data.vdx and selected_patient.data.vdx.vois:
+                self.app_model.viewcanvases.update_voi_list(selected_patient.data, selected_patient.state)
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
     def on_create_field(self) -> None:
         """

@@ -20,6 +20,9 @@ class AddVOIsController:
 
         self._set_view_from_model()
 
+        # used for rejecting repeated voi names
+        self.existing_vois_names = [voi.name.lower() for voi in self.model.vdx.vois]
+
     def _setup_callbacks(self):
         self.view.accept_buttons.accepted.disconnect()
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
@@ -33,17 +36,23 @@ class AddVOIsController:
 
     def _create_add_voi_dialog(self):
         view = AddSingleVOIQtView()
-        controller = AddSingleVOIController(self.model.ctx, view)
+
+        # get VOI names that are already being used by the about to be added VOIs
+        list_vois = self.view.voi_scroll_area.widget().layout()
+        list_vois_names = []
+        for index in range(list_vois.count() - 1):
+            list_voi_element = list_vois.itemAt(index).widget()
+            voi_widget = list_voi_element.voi_space.itemAt(0).widget()
+            list_vois_names.append(voi_widget.name.lower())
+        controller = AddSingleVOIController(self.model.ctx, view, self.existing_vois_names + list_vois_names)
 
         view.show()
 
-        if not controller.is_accepted:
-            return
-
-        voi_widget = controller.get_voi_widget()
-        voi_widget.disable_fields()
-        list_element_voi = ListElementVOI(voi_widget)
-        self.view.voi_scroll_area.widget().layout().insertWidget(0, list_element_voi)
+        if controller.is_accepted:
+            voi_widget = controller.get_voi_widget()
+            voi_widget.disable_fields()
+            list_element_voi = ListElementVOI(voi_widget)
+            self.view.voi_scroll_area.widget().layout().insertWidget(0, list_element_voi)
 
     def _set_view_from_model(self):
         ctx = self.model.ctx
