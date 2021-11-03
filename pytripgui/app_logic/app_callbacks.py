@@ -196,9 +196,12 @@ class AppCallback:
             return
 
         view = AddVOIsQtView(self.parent_gui.ui)
-        AddVOIsController(selected_patient.data, view)
+        controller = AddVOIsController(selected_patient.data, view)
 
         view.show()
+
+        if controller.is_accepted:
+            self.app_model.viewcanvases.update_voi_list(selected_patient.data, selected_patient.state)
 
     def on_create_field(self) -> None:
         """
