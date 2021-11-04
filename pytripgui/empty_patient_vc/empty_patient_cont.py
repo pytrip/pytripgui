@@ -201,8 +201,7 @@ class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
         if not self._multiple_of_line_edit.text:
             return QValidator.Acceptable, string, pos
 
-        string_num = string.replace(",", ".")
-        string_num = Decimal(string)
+        string_num = Decimal(string.replace(",", "."))
         multiple_of = Decimal(self._multiple_of_line_edit.text)
 
         if multiple_of and \
