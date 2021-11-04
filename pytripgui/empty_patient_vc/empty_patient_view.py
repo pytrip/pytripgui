@@ -40,9 +40,9 @@ class EmptyPatientQtView:
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
 
-    def show(self):
+    def show(self) -> None:
         self._ui.show()
         self._ui.exec_()
 
-    def exit(self):
+    def exit(self) -> None:
         self._ui.close()
