@@ -1,6 +1,5 @@
 import math
 from decimal import Decimal
-from enum import Enum
 
 from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
