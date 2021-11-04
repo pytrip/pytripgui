@@ -19,11 +19,11 @@ class AddSingleVOIQtView:
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
 
-    def show(self):
+    def show(self) -> None:
         self._ui.show()
         # try to not cover vital info of parent dialog (patient limits)
         self._ui.move(self._ui.pos().x(), 1.3 * self._ui.pos().y())
         self._ui.exec_()
 
-    def exit(self):
+    def exit(self) -> None:
         self._ui.close()

@@ -23,18 +23,18 @@ class AddVOIsController:
         # used for rejecting repeated voi names
         self.existing_vois_names = [voi.name.lower() for voi in self.model.vdx.vois]
 
-    def _setup_callbacks(self):
+    def _setup_callbacks(self) -> None:
         self.view.accept_buttons.accepted.disconnect()
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
 
         self.view.add_voi_button.emit_on_click(lambda: self._create_add_voi_dialog())
 
-    def _save_and_exit(self):
+    def _save_and_exit(self) -> None:
         self._set_model_from_view()
         self.is_accepted = True
         self.view.accept()
 
-    def _create_add_voi_dialog(self):
+    def _create_add_voi_dialog(self) -> None:
         view = AddSingleVOIQtView()
 
         # get VOI names that are already being used by the about to be added VOIs
@@ -54,7 +54,7 @@ class AddVOIsController:
             list_element_voi = ListElementVOI(voi_widget)
             self.view.voi_scroll_area.widget().layout().insertWidget(0, list_element_voi)
 
-    def _set_view_from_model(self):
+    def _set_view_from_model(self) -> None:
         ctx = self.model.ctx
         view = self.view
 
@@ -78,7 +78,7 @@ class AddVOIsController:
         view.z_min.text = ctx.zoffset
         view.z_max.text = ctx.zoffset + ctx.slice_number * ctx.slice_distance
 
-    def _set_model_from_view(self):
+    def _set_model_from_view(self) -> None:
         ctx = self.model.ctx
         vdx = self.model.vdx
 
@@ -122,6 +122,6 @@ class ListElementVOI(QtWidgets.QFrame):
 
         self.voi_space.insertWidget(0, voi_widget)
 
-    def _remove_self(self):
+    def _remove_self(self) -> None:
         self.parent().layout().removeWidget(self)
         self.close()

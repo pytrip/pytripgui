@@ -35,10 +35,10 @@ class VOIWidget(QtWidgets.QFrame):
     def center(self):
         return [float(field.text) for field in self._center]
 
-    def validate(self):
+    def validate(self) -> bool:
         return self._name.validate() and validate_list(self._center)
 
-    def disable_fields(self):
+    def disable_fields(self) -> None:
         self._name.set_enabled(False)
         for field in self._center:
             field.set_enabled(False)
@@ -58,10 +58,10 @@ class SphericalVOIWidget(VOIWidget):
     def radius(self):
         return float(self._radius.text)
 
-    def validate(self):
+    def validate(self) -> bool:
         return super().validate() and self._radius.validate()
 
-    def disable_fields(self):
+    def disable_fields(self) -> None:
         super().disable_fields()
         self._radius.set_enabled(False)
 
@@ -80,36 +80,36 @@ class CuboidalVOIWidget(VOIWidget):
         validate_list(self._dims)
 
     @property
-    def width(self):
+    def width(self) -> float:
         return float(self._width.text)
 
     @property
-    def height(self):
+    def height(self) -> float:
         return float(self._height.text)
 
     @property
-    def depth(self):
+    def depth(self) -> float:
         return float(self._depth.text)
 
     @property
-    def dims(self):
+    def dims(self) -> list:
         return [float(i.text) for i in self._dims]
 
-    def validate(self):
+    def validate(self) -> bool:
         return super().validate() and validate_list(self._dims)
 
-    def disable_fields(self):
+    def disable_fields(self) -> None:
         super().disable_fields()
         for field in self._dims:
             field.set_enabled(False)
 
 
-def enable_validation_list(validator, items):
+def enable_validation_list(validator: QRegularExpressionValidator, items: list) -> None:
     for item in items:
         item.enable_validation(validator)
 
 
-def validate_list(items):
+def validate_list(items: list) -> bool:
     result = True
     for item in items:
         if not item.validate():

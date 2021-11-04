@@ -2,7 +2,7 @@ from pytrip.vdx import create_sphere, create_cube
 
 import logging
 
-from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget
+from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget, VOIWidget
 
 logger = logging.getLogger(__name__)
 
@@ -18,18 +18,18 @@ class AddSingleVOIController:
         self.voi_types = {"Spherical": SphericalVOIWidget, "Cuboidal": CuboidalVOIWidget}
         self._reload_voi()
 
-    def _setup_callbacks(self):
+    def _setup_callbacks(self) -> None:
         self.view.accept_buttons.accepted.disconnect()
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
 
         self.view.voi_combobox.emit_on_item_change(self._reload_voi)
 
-    def _save_and_exit(self):
+    def _save_and_exit(self) -> None:
         if self._validate_voi():
             self.is_accepted = True
             self.view.accept()
 
-    def _reload_voi(self):
+    def _reload_voi(self) -> None:
         voi_type = self.view.voi_combobox.current_text
         if voi_type in self.voi_types:
             if self.view.voi_layout.count():
@@ -37,7 +37,7 @@ class AddSingleVOIController:
             voi = self.voi_types[voi_type]
             self.view.voi_layout.insertWidget(0, voi())
 
-    def _validate_voi(self):
+    def _validate_voi(self) -> bool:
         voi_widget = self.view.voi_layout.itemAt(0).widget()
         # validate fields
         if not voi_widget.validate():
@@ -70,5 +70,5 @@ class AddSingleVOIController:
             return False
         return True
 
-    def get_voi_widget(self):
+    def get_voi_widget(self) -> VOIWidget:
         return self.view.voi_layout.itemAt(0).widget()
