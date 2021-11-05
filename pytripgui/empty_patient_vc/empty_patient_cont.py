@@ -1,11 +1,11 @@
 import math
 from decimal import Decimal
-from enum import Enum
 
-from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube
+
+from pytripgui.utils.regex import Regex
 
 
 class EmptyPatientController:
@@ -157,10 +157,10 @@ class EmptyPatientController:
         pixel_number_y = int(dim["pixel_number_y"].text)
         if math.isclose(width / pixel_number_x, height / pixel_number_y, abs_tol=1e-3):
             for field in fields:
-                field.highlight_border(False)
+                field.reset_border()
             return True
         for field in fields:
-            field.highlight_border(True)
+            field.highlight_border()
         return False
 
     def _set_model_from_view(self):
@@ -229,15 +229,6 @@ class PixelSizeValidator(QRegularExpressionValidator):
         if self._pixel_size_validation is not None and self._pixel_size_validation():
             return QValidator.Acceptable, string, pos
         return QValidator.Intermediate, string, pos
-
-
-class Regex(Enum):
-    STRING = QRegularExpression(r"\w+")
-    INT = QRegularExpression(r"-?\d+")
-    INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
-    FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
-    FLOAT_POSITIVE = QRegularExpression(r"(\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*))")
-    FLOAT_UNSIGNED = QRegularExpression(r"0+|((\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*)))")
 
 
 def enable_validation_list(validator, items):

@@ -182,6 +182,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionAdd_Patient"/>
+   <addaction name="actionAdd_VOIs"/>
    <addaction name="actionNew_Plan"/>
    <addaction name="actionCreate_field"/>
    <addaction name="actionExecute_Plan"/>
@@ -382,6 +383,18 @@
    </property>
    <property name="toolTip">
     <string>open tree widget</string>
+   </property>
+  </action>
+  <action name="actionAdd_VOIs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset>
+     <normaloff>../res/add_vois.png</normaloff>../res/add_vois.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add VOIs</string>
    </property>
   </action>
  </widget>

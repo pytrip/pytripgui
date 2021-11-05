@@ -20,6 +20,9 @@ class LineEdit:
     def clear(self):
         self._ui.clear()
 
+    def set_enabled(self, enabled):
+        self._ui.setEnabled(enabled)
+
     def emit_on_text_change(self, callback):
         """
         When user have changed text in UI, callback will be called with new text:
@@ -44,19 +47,16 @@ class LineEdit:
         if self._ui.validator():
             state = self._ui.validator().validate(self._ui.text(), 0)[0]
             if state == QValidator.Acceptable:
-                self.highlight_border(False)
+                self.reset_border()
                 return True
-            else:
-                self.highlight_border(True)
-                return False
-
+            self.highlight_border()
         return False
 
-    def highlight_border(self, highlight=False):
-        if highlight:
-            self._ui.setStyleSheet("border: 1px solid red")
-        else:
-            self._ui.setStyleSheet("")
+    def highlight_border(self):
+        self._ui.setStyleSheet("border: 1px solid red")
+
+    def reset_border(self):
+        self._ui.setStyleSheet("")
 
 
 class LineEditMath(LineEdit):
@@ -98,7 +98,7 @@ class ComboBox:
     def emit_on_item_change(self, callback):
         self._on_item_change_user_callback = callback
 
-    def _on_item_change_callback(self, current_item):
+    def _on_item_change_callback(self):
         if self._on_item_change_user_callback:
             self._on_item_change_user_callback()
         self.last_index = self.current_index
@@ -271,4 +271,4 @@ class Label:
 
     @text.setter
     def text(self, text):
-        self._ui.setText(text)
+        self._ui.setText(str(text))
