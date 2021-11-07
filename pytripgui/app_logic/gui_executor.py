@@ -16,6 +16,8 @@ class GuiExecutor:
             return
 
         self.result_callback = result_callback
+        self.patient = patient
+
         self.done = False  # True when object can be removed from memory
 
         self._gui_update_timer = QTimer()
@@ -61,4 +63,4 @@ class GuiExecutor:
             let_item.data = item.data.let
             item.add_child(let_item)
 
-        self.result_callback(item)
+        self.result_callback(item, self.patient)
