@@ -581,8 +581,8 @@ class AppCallback:
 
         item = self.app_model.patient_tree.selected_item()
         patient_item = self.app_model.patient_tree.selected_item_patient()
-        logger.debug("Item clicked: "+str(item))
-        logger.debug("Parent of item clicked: "+str(item.parent))
+        logger.debug("Item clicked: " + str(item))
+        logger.debug("Parent of item clicked: " + str(item.parent))
 
         if isinstance(item, SimulationResultItem):
             # SimulationResultItem is a class shared by TreeItems containing Simulations and those containing Cubes
