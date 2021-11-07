@@ -126,15 +126,7 @@ class CanvasController:
 
         # load VDX data to plot model
         if patient.vdx and patient.vdx.vois:
-            # fill ui voi list with VOIs from patient
-            self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
-            if state:
-                # restore ticked VOIs
-                self._ui.voi_list.tick_checkboxes(state.ticked_voi_list, lambda item: item.name)
-                # add ticked VOIs to model
-                self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
-            # set callback to react on ui voi list updates
-            self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
+            self.update_voi_list(patient, state)
 
         # update data to be displayed with loaded data
         self._update_canvas_view()
@@ -144,6 +136,21 @@ class CanvasController:
 
         # display updated data
         self._ui.draw()
+
+    def update_voi_list(self, patient: PatientModel, state: PatientGuiState = None):
+        """
+        Updates the UI element "voi_list" with regards to newly added VOIs to the patient, while preserving its current
+        state (ticked checkboxes).
+        """
+        # fill ui voi list with VOIs from patient
+        self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+        if state:
+            # restore ticked VOIs
+            self._ui.voi_list.tick_checkboxes(state.ticked_voi_list, lambda item: item.name)
+            # add ticked VOIs to model
+            self._model.vdx.voi_list = self._ui.voi_list.ticked_items()
+        # set callback to react on ui voi list updates
+        self._ui.voi_list.on_list_item_clicked_callback = self._on_update_voi
 
     def _safely_update_slider(self):
         """

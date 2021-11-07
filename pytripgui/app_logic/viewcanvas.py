@@ -16,5 +16,8 @@ class ViewCanvases:
     def set_simulation_results(self, simulation_results, simulation_item, state=None):
         self.plot_cont.set_simulation_results(simulation_results, simulation_item, state)
 
+    def update_voi_list(self, patient, state=None):
+        self.plot_cont.update_voi_list(patient, state)
+
     def get_gui_state(self):
         return self.plot_cont.get_gui_state()

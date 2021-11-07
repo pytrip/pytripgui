@@ -1,11 +1,11 @@
 import math
 from decimal import Decimal
-from enum import Enum
 
-from PyQt5.QtCore import QRegularExpression
 from PyQt5.QtGui import QValidator, QRegularExpressionValidator
 from pytrip.ctx import CtxCube
 from pytrip.vdx import VdxCube
+
+from pytripgui.utils.regex import Regex
 
 
 class EmptyPatientController:
@@ -23,20 +23,20 @@ class EmptyPatientController:
             "pixel_size"
         ])
 
-    def _setup_callbacks(self):
+    def _setup_callbacks(self) -> None:
         self.view.accept_buttons.accepted.disconnect()
         self.view.accept_buttons.accepted.connect(self._save_and_exit)
 
         self.view.dimensions_tabs.emit_on_tab_change(self._convert_tab_contents)
 
-    def _save_and_exit(self):
+    def _save_and_exit(self) -> None:
         if self._validate_all():
             self._calculate_fields(self.view.dimensions_tabs.current_index)
             self._set_model_from_view()
             self.is_accepted = True
             self.view.accept()
 
-    def _convert_tab_contents(self):
+    def _convert_tab_contents(self) -> None:
         fields = self.view.dimensions_fields
         tabs = self.view.dimensions_tabs
         prev_index = tabs.previous_index
@@ -51,11 +51,11 @@ class EmptyPatientController:
 
         tabs.update_previous_index()
 
-    def _clear_tab(self, index):
+    def _clear_tab(self, index) -> None:
         for field in self.view.dimensions_fields[index].values():
             field.clear()
 
-    def _calculate_fields(self, index):
+    def _calculate_fields(self, index: int) -> None:
         p = self.parameters
         prev = self.view.dimensions_fields[index]
         if index == 0:
@@ -86,7 +86,7 @@ class EmptyPatientController:
             p["pixel_number_y"] = int(prev["pixel_number_y"].text)
             p["pixel_size"] = float(prev["pixel_size"].text)
 
-    def _set_validators(self):
+    def _set_validators(self) -> None:
         dim = self.view.dimensions_fields
 
         validator = QRegularExpressionValidator(Regex.INT.value)
@@ -124,27 +124,27 @@ class EmptyPatientController:
         validator.set_additional_validation(self._validate_pixel_size)
         enable_validation_list(validator, [dim[1]["pixel_number_x"], dim[1]["pixel_number_y"]])
 
-    def _validate_all(self):
+    def _validate_all(self) -> bool:
         return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index)
 
-    def _validate_general_parameters(self):
+    def _validate_general_parameters(self) -> bool:
         return self.view.hu_value.validate() and self.view.slice_offset.validate()
 
-    def _validate_tabs(self):
+    def _validate_tabs(self) -> bool:
         result = True
         for index in range(len(self.view.dimensions_fields)):
             if not self._validate_tab(index):
                 result = False
         return result
 
-    def _validate_tab(self, index):
+    def _validate_tab(self, index) -> bool:
         result = True
         for field in self.view.dimensions_fields[index].values():
             if not field.validate():
                 result = False
         return result
 
-    def _validate_pixel_size(self):
+    def _validate_pixel_size(self) -> bool:
         dim = self.view.dimensions_fields[1]
         fields = [dim["width"], dim["pixel_number_x"], dim["height"], dim["pixel_number_y"]]
         # check if any of the fields are empty
@@ -157,13 +157,13 @@ class EmptyPatientController:
         pixel_number_y = int(dim["pixel_number_y"].text)
         if math.isclose(width / pixel_number_x, height / pixel_number_y, abs_tol=1e-3):
             for field in fields:
-                field.highlight_border(False)
+                field.reset_border()
             return True
         for field in fields:
-            field.highlight_border(True)
+            field.highlight_border()
         return False
 
-    def _set_model_from_view(self):
+    def _set_model_from_view(self) -> None:
         ctx = CtxCube()
 
         ctx.create_empty_cube(dimx=self.parameters["pixel_number_x"],
@@ -187,10 +187,10 @@ class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
         super().__init__(regex)
         self._multiple_of_line_edit = None
 
-    def set_multiple_of(self, value):
+    def set_multiple_of(self, value: float) -> None:
         self._multiple_of_line_edit = value
 
-    def validate(self, string, pos):
+    def validate(self, string: str, pos: int) -> tuple:
         result = super().validate(string, pos)
         if result[0] != QValidator.Acceptable:
             return result
@@ -201,8 +201,7 @@ class MultipleOfRegularExpressionValidator(QRegularExpressionValidator):
         if not self._multiple_of_line_edit.text:
             return QValidator.Acceptable, string, pos
 
-        string_num = string.replace(",", ".")
-        string_num = Decimal(string)
+        string_num = Decimal(string.replace(",", "."))
         multiple_of = Decimal(self._multiple_of_line_edit.text)
 
         if multiple_of and \
@@ -218,10 +217,10 @@ class PixelSizeValidator(QRegularExpressionValidator):
         super().__init__(regex)
         self._pixel_size_validation = None
 
-    def set_additional_validation(self, validation):
+    def set_additional_validation(self, validation: classmethod) -> None:
         self._pixel_size_validation = validation
 
-    def validate(self, string, pos):
+    def validate(self, string: str, pos: int) -> tuple:
         result = super().validate(string, pos)
         if result[0] != QValidator.Acceptable:
             return result
@@ -231,21 +230,12 @@ class PixelSizeValidator(QRegularExpressionValidator):
         return QValidator.Intermediate, string, pos
 
 
-class Regex(Enum):
-    STRING = QRegularExpression(r"\w+")
-    INT = QRegularExpression(r"-?\d+")
-    INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
-    FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
-    FLOAT_POSITIVE = QRegularExpression(r"(\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*))")
-    FLOAT_UNSIGNED = QRegularExpression(r"0+|((\d*[1-9]\d*([,\.]\d{0,3})?)|(\d*[,\.](?=\d{1,3}$)(\d*[1-9]\d*)))")
-
-
-def enable_validation_list(validator, items):
+def enable_validation_list(validator: QRegularExpressionValidator, items: list) -> None:
     for item in items:
         item.enable_validation(validator)
 
 
-def validate_list(items):
+def validate_list(items: list) -> bool:
     result = True
     for item in items:
         if not item.validate():

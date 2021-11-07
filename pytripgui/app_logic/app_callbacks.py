@@ -4,6 +4,8 @@ from pytrip import DosCube, dicomhelper, LETCube
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.plan_executor.simulation_results import SimulationResults
+from pytripgui.add_vois_vc import AddVOIsController
+from pytripgui.add_vois_vc.add_vois_view import AddVOIsQtView
 from pytripgui.plan_vc.plan_view import PlanQtView
 from pytripgui.plan_vc.plan_cont import PlanController
 from pytripgui.field_vc.field_view import FieldQtView
@@ -186,6 +188,22 @@ class AppCallback:
         dialog.on_open_voxelplan = self.on_open_voxelplan
         dialog.on_open_dicom = self.on_open_dicom
         dialog.show()
+
+    def on_add_vois(self):
+        selected_patient = self.app_model.patient_tree.selected_item_patient()
+        if not selected_patient:
+            self.parent_gui.show_info(*InfoMessages["addNewPatient"])
+            return
+
+        view = AddVOIsQtView(self.parent_gui.ui)
+        controller = AddVOIsController(selected_patient.data, view)
+
+        view.show()
+
+        if controller.is_accepted:
+            if selected_patient.data.vdx and selected_patient.data.vdx.vois:
+                self.app_model.viewcanvases.update_voi_list(selected_patient.data, selected_patient.state)
+                self.app_model.viewcanvases.viewcanvas_view.voi_list_empty(False)
 
     def on_create_field(self) -> None:
         """
@@ -555,6 +573,7 @@ class AppCallback:
         None
         """
 
+        self.parent_gui.action_add_vois_set_enable(False)
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
         self.parent_gui.action_execute_plan_set_enable(False)
@@ -584,6 +603,7 @@ class AppCallback:
 
             self.chart.set_simulation_result(simulation_result=parent_item.data)
         elif isinstance(item, PatientItem):
+            self.parent_gui.action_add_vois_set_enable(True)
             self.parent_gui.action_create_plan_set_enable(True)
             self._show_patient(patient_item, patient_item)
             self.parent_gui.import_dose_cube_set_enabled(True)
