@@ -6,4 +6,4 @@ PyQtChart<5.10 ; python_version < '3.8'
 anytree~=2.8
 Events~=0.4
 cryptography==3.2.1 ; python_version < '3.8'
-paramiko~=2.7
+paramiko~=2.8
