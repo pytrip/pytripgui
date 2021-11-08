@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pytrip import DosCube, dicomhelper, LETCube
+from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
 from pytripgui.plan_executor.simulation_results import SimulationResults
