@@ -4,7 +4,7 @@ from PyQt5.QtCore import QRegularExpression
 
 
 class Regex(Enum):
-    STRING = QRegularExpression(r"\w+")
+    STRING = QRegularExpression(r"\w+[\s\w]*")
     INT = QRegularExpression(r"-?\d*")
     INT_POSITIVE = QRegularExpression(r"\d*[1-9]\d*")
     FLOAT = QRegularExpression(r"-?((\d+([,\.]\d{0,3})?)|(\d*[,\.]\d{1,3}))")
