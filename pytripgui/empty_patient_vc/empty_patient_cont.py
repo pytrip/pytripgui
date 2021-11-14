@@ -16,7 +16,6 @@ class EmptyPatientController:
         self._setup_callbacks()
 
         self._set_validators()
-        self._validate_tabs()
 
         self.parameters = dict.fromkeys([
             "width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
@@ -89,6 +88,9 @@ class EmptyPatientController:
     def _set_validators(self) -> None:
         dim = self.view.dimensions_fields
 
+        validator = QRegularExpressionValidator(Regex.STRING.value)
+        self.view.name.enable_validation(validator)
+
         validator = QRegularExpressionValidator(Regex.INT.value)
         self.view.hu_value.enable_validation(validator)
 
@@ -128,7 +130,7 @@ class EmptyPatientController:
         return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index)
 
     def _validate_general_parameters(self) -> bool:
-        return self.view.hu_value.validate() and self.view.slice_offset.validate()
+        return self.view.name.validate() and self.view.hu_value.validate() and self.view.slice_offset.validate()
 
     def _validate_tabs(self) -> bool:
         result = True
