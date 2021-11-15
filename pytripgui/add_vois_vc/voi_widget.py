@@ -100,6 +100,34 @@ class CuboidalVOIWidget(VOIWidget):
             field.set_enabled(False)
 
 
+class CylindricalVOIWidget(VOIWidget):
+    def __init__(self):
+        super().__init__("cylindrical_voi.ui")
+
+        self._radius = LineEdit(self.radius_lineEdit)
+        self._depth = LineEdit(self.depth_lineEdit)
+
+        validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
+        self._radius.enable_validation(validator)
+        self._depth.enable_validation(validator)
+
+    @property
+    def radius(self):
+        return float(self._radius.text)
+
+    @property
+    def depth(self):
+        return float(self._depth.text)
+
+    def validate(self) -> bool:
+        return super().validate() and self._radius.validate() and self._depth.validate()
+
+    def disable_fields(self) -> None:
+        super().disable_fields()
+        self._radius.set_enabled(False)
+        self._depth.set_enabled(False)
+
+
 def enable_validation_list(validator: QRegularExpressionValidator, items: list) -> None:
     for item in items:
         item.enable_validation(validator)

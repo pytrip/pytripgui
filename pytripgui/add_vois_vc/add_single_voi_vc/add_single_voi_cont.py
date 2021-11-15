@@ -1,8 +1,8 @@
-from pytrip.vdx import create_sphere, create_cube
+from pytrip.vdx import create_sphere, create_cube, create_cylinder
 
 import logging
 
-from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget, VOIWidget
+from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget, VOIWidget, CylindricalVOIWidget
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +15,8 @@ class AddSingleVOIController:
         self.is_accepted = False
         self._setup_callbacks()
 
-        self.voi_types = {"Spherical": SphericalVOIWidget, "Cuboidal": CuboidalVOIWidget}
+        self.voi_types = {"Spherical": SphericalVOIWidget, "Cuboidal": CuboidalVOIWidget,
+                          "Cylindrical": CylindricalVOIWidget}
         self._reload_voi()
 
     def _setup_callbacks(self) -> None:
@@ -49,15 +50,29 @@ class AddSingleVOIController:
             return False
 
         ctx = self.model
+        center_no_offsets = [a - b for (a, b) in zip(voi_widget.center, [ctx.xoffset, ctx.yoffset, ctx.zoffset])]
         if isinstance(voi_widget, SphericalVOIWidget):
-            voi = create_sphere(cube=ctx, name=voi_widget.name, center=voi_widget.center, radius=voi_widget.radius)
+            voi = create_sphere(
+                cube=ctx,
+                name=voi_widget.name,
+                center=center_no_offsets,
+                radius=voi_widget.radius
+            )
         elif isinstance(voi_widget, CuboidalVOIWidget):
             voi = create_cube(
                 cube=ctx,
                 name=voi_widget.name,
-                center=voi_widget.center,
+                center=center_no_offsets,
                 width=voi_widget.width,
                 height=voi_widget.height,
+                depth=voi_widget.depth,
+            )
+        elif isinstance(voi_widget, CylindricalVOIWidget):
+            voi = create_cylinder(
+                cube=ctx,
+                name=voi_widget.name,
+                center=center_no_offsets,
+                radius=voi_widget.radius,
                 depth=voi_widget.depth,
             )
         else:

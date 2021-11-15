@@ -16,6 +16,7 @@ class EmptyPatientController:
         self._setup_callbacks()
 
         self._set_validators()
+        self._validate_tabs()
 
         self.parameters = dict.fromkeys([
             "width", "height", "depth", "slice_distance", "slice_number", "pixel_number_x", "pixel_number_y",
@@ -100,6 +101,8 @@ class EmptyPatientController:
             [dim[1]["slice_number"], dim[2]["slice_number"], dim[2]["pixel_number_x"], dim[2]["pixel_number_y"]])
 
         validator = QRegularExpressionValidator(Regex.FLOAT.value)
+        self.view.xoffset.enable_validation(validator)
+        self.view.yoffset.enable_validation(validator)
         self.view.slice_offset.enable_validation(validator)
 
         validator = QRegularExpressionValidator(Regex.FLOAT_POSITIVE.value)
@@ -130,7 +133,8 @@ class EmptyPatientController:
         return self._validate_general_parameters() and self._validate_tab(self.view.dimensions_tabs.current_index)
 
     def _validate_general_parameters(self) -> bool:
-        return self.view.name.validate() and self.view.hu_value.validate() and self.view.slice_offset.validate()
+        return self.view.name.validate() and self.view.hu_value.validate() and self.view.xoffset.validate() and\
+               self.view.yoffset.validate() and self.view.slice_offset.validate()
 
     def _validate_tabs(self) -> bool:
         result = True
@@ -171,6 +175,8 @@ class EmptyPatientController:
         ctx.create_empty_cube(dimx=self.parameters["pixel_number_x"],
                               dimy=self.parameters["pixel_number_y"],
                               dimz=self.parameters["slice_number"],
+                              xoffset=float(self.view.xoffset.text),
+                              yoffset=float(self.view.yoffset.text),
                               slice_offset=float(self.view.slice_offset.text),
                               slice_distance=self.parameters["slice_distance"],
                               pixel_size=self.parameters["pixel_size"],

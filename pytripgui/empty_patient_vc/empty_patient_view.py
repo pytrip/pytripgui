@@ -13,7 +13,6 @@ class EmptyPatientQtView:
         self._ui = EmptyPatientDialog(parent)
         self.name = LineEdit(self._ui.name_lineEdit)
         self.hu_value = LineEditMath(self._ui.hUValue_lineEdit)
-        self.slice_offset = LineEditMath(self._ui.sliceOffset_lineEdit)
 
         self.dimensions_tabs = TabWidget(self._ui.dimensions_tabWidget)
         self.dimensions_fields = [{
@@ -36,6 +35,10 @@ class EmptyPatientQtView:
             "pixel_number_y": LineEditMath(self._ui.pixelNumberY_lineEdit_3),
             "pixel_size": LineEditMath(self._ui.pixelSize_lineEdit_3),
         }]
+
+        self.xoffset = LineEditMath(self._ui.xOffset_lineEdit)
+        self.yoffset = LineEditMath(self._ui.yOffset_lineEdit)
+        self.slice_offset = LineEditMath(self._ui.sliceOffset_lineEdit)
 
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
