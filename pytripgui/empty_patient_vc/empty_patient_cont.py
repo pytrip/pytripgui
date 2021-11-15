@@ -133,7 +133,7 @@ class EmptyPatientController:
 
     def _validate_general_parameters(self) -> bool:
         return self.view.name.validate() and self.view.hu_value.validate() and self.view.xoffset.validate() and\
-               self.view.yoffset.validate() and self.view.slice_offset.validate()
+            self.view.yoffset.validate() and self.view.slice_offset.validate()
 
     def _validate_tab(self, index) -> bool:
         result = True
