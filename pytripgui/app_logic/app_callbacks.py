@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Union
 
+import pytrip.tripexecuter
 from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
@@ -542,6 +543,39 @@ class AppCallback:
         self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
 
         logger.debug("DICOM import finished.")
+        return True
+
+    def export_plan_exec_callback(self, item: Union[PlanItem, FieldItem]) -> bool:
+        """
+        Open a file name selection window, then export the plan to an .exec file with the selected name.
+
+        Parameters:
+        item (Union[PlanItem, FieldItem]): Tree item containing the plan's data or one of its fields
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export plan .exec file.")
+        if isinstance(item, PlanItem):
+            plan_item = item
+        else:
+            # field's parent is a plan
+            plan_item = item.parent
+
+        plan: pytrip.tripexecuter.Plan = plan_item.data
+
+        full_path = self.parent_gui.save_file_path("Export plan", "Plan file (*.exec)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        logger.info("Plan export to: " + full_path)
+
+        plan.save_exec(full_path)
+
+        logger.debug("Plan export finished.")
         return True
 
     @staticmethod
