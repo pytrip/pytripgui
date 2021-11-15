@@ -46,6 +46,7 @@ class PatientTree:
         self.patient_tree_cont.export_patient_dicom_callback = app_callback.export_patient_dicom_callback
         self.patient_tree_cont.export_dose_voxelplan_callback = app_callback.export_dose_voxelplan_callback
         self.patient_tree_cont.export_dose_dicom_callback = app_callback.export_dose_dicom_callback
+        self.patient_tree_cont.export_plan_callback = app_callback.export_plan_exec_callback
 
         self.patient_tree_cont.import_dose_voxelplan_callback = app_callback.import_dose_voxelplan_callback
         self.patient_tree_cont.import_dose_dicom_callback = app_callback.import_dose_dicom_callback
