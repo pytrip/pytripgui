@@ -35,8 +35,8 @@ class GuiExecutor:
             self._ui.enable_ok_button()
             self.done = True
 
-        while not self._thread.std_out_queue.empty():
-            text = self._thread.std_out_queue.get(False)
+        while not self._thread.logger.empty():
+            text = self._thread.logger.get()
             self._ui.append_log(text)
 
     def start(self):

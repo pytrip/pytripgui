@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class PlanExecutor:
-    def __init__(self, trip_config, listener=None):
+    def __init__(self, trip_config, logger=None):
         self.trip_config = trip_config
-        self.listener = listener
+        self.logger = logger
 
     def check_config(self):
         # TODO replace with function that actually runs trip, and collect returned errors
@@ -34,19 +34,17 @@ class PlanExecutor:
             te.servername = self.trip_config.host_name
             te.username = self.trip_config.user_name
             te.password = self.trip_config.password
-            print(self.trip_config.pkey_path)
             te.pkey_path = self.trip_config.pkey_path
             te.remote_base_dir = self.trip_config.wdir_remote_path + '/'
 
         te.trip_bin_path = self.trip_config.trip_path + '/' + 'TRiP98'
 
-        if self.listener:
-            te.add_log_listener(self.listener)
+        if self.logger:
+            te.add_executor_logger(self.logger)
 
         try:
             te.execute(plan)
         except BaseException as e:
-            self.listener.write(e.__str__())
             logger.error(e.__str__())
             sys.exit(-1)
 
