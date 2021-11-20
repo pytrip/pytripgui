@@ -5,39 +5,47 @@ from pytrip.tripexecuter import ExecutorLogger
 
 class HtmlExecutorLogger(ExecutorLogger):
     def __init__(self):
-        self.queue = Queue()
+        self._queue = Queue()
+
+        self._info_tag = "<b>{}</b>"  # bold
+        self._red_font = "<font color=\"Red\">{}</font>"
+        self._error_tag = self._red_font.format("<b>{}</b>")  # red and bold
 
     def info(self, text):
-        self.queue.put("<b>{}</b>".format(text))
+        self._queue.put(self._info_tag.format(text))
 
     def log(self, text):
         text = self._format_tags(text)
         text = self._format_ansi(text)
         text = self._format_colors(text)
-        self.queue.put(text)
+        self._queue.put(text)
 
     def error(self, text):
-        self.queue.put("<font color=\"Red\"><b>{}</b></font>".format(text))
+        self._queue.put(self._error_tag.format(text))
 
     def empty(self):
-        return self.queue.empty()
+        return self._queue.empty()
 
     def get(self):
-        return self.queue.get(block=False)
+        return self._queue.get(block=False)
 
     def _format_tags(self, text):
+        """ Changes '<' and '>' in tags to html entities
+        """
         text = text.replace("<E>", "&lt;E&gt;")  # error
         text = text.replace("<I>", "&lt;I&gt;")  # info
         text = text.replace("<D>", "&lt;D&gt;")  # debug
         return text
 
     def _format_colors(self, text):
+        """ Changes lines with <E> from TRiP98 result to red color
+        """
         if "&lt;E&gt;" in text:
-            text = "<font color=\"Red\">{}</font>".format(text)
+            text = self._red_font.format(text)
         return text
 
     def _format_ansi(self, text):
-        """Remove ansi excape sequences
+        """ Remove ansi escape sequences
         """
         import re
         return re.sub(r"\033\[[0-9]+m", "", text)

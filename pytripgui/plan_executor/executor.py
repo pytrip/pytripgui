@@ -43,7 +43,7 @@ class PlanExecutor:
             te.add_executor_logger(self.logger)
 
         try:
-            te.execute(plan)
+            te.execute(plan, use_default_logger=False)
         except BaseException as e:
             logger.error(e.__str__())
             sys.exit(-1)
