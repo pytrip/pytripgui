@@ -33,14 +33,15 @@ class HtmlExecutorLogger(ExecutorLogger):
         """ Changes '<' and '>' in tags to html entities
         """
         text = text.replace("<E>", "&lt;E&gt;")  # error
+        text = text.replace("<SYS>", "&lt;SYS&gt;")  # system
         text = text.replace("<I>", "&lt;I&gt;")  # info
         text = text.replace("<D>", "&lt;D&gt;")  # debug
         return text
 
     def _format_colors(self, text):
-        """ Changes lines with <E> from TRiP98 result to red color
+        """ Changes lines with <E> or <SYS> to red color
         """
-        if "&lt;E&gt;" in text:
+        if "&lt;E&gt;" in text or "&lt;SYS&gt;" in text:
             text = self._red_font.format(text)
         return text
 
