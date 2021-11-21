@@ -23,7 +23,7 @@ with open('README.rst') as readme_file:
 
 # install_requires is list of dependencies needed by pip when running `pip install`
 install_requires = [
-    'pytrip98~=3.4',
+    'pytrip98~=3.6',
     'anytree~=2.8',
     'paramiko~=2.8',
     'Events~=0.4',
@@ -69,7 +69,8 @@ setuptools.setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9'
+        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10'
     ],
     package_data={'pytripgui': ['res/*', 'view/*.ui', 'VERSION']},
     install_requires=install_requires,

@@ -4,7 +4,7 @@ name: Python application
 on:
   push:
     branches: [ master ]
-    tags: '*'
+    tags: ['*']
   pull_request:
     branches: [ master ]
   release:
@@ -13,7 +13,7 @@ on:
     
 jobs:
   smoke_test:
-    if: "github.repository == 'pytrip/pytripgui' && !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
+    if: "&& !contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest        
     steps:
     - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Install dependencies
       run: |
@@ -36,7 +36,7 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py38
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py39
          
          
   normal_test:
