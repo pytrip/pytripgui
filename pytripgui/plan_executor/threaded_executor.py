@@ -1,13 +1,14 @@
 from threading import Thread
 from queue import Queue
 from pytripgui.plan_executor.executor import PlanExecutor
+from pytripgui.plan_executor.html_executor_logger import HtmlExecutorLogger
 
 
 class ThreadedExecutor(Thread):
     def __init__(self, plan, patient, trip_config):
         super().__init__()
 
-        self.std_out_queue = Queue()
+        self.logger = HtmlExecutorLogger()
         self.item_queue = Queue()
 
         self.patient = patient
@@ -23,9 +24,6 @@ class ThreadedExecutor(Thread):
             self.item_queue.put(sim_results)
 
     def _execute_plan(self, plan, patient):
-        plan_executor = PlanExecutor(self.trip_config, self)
+        plan_executor = PlanExecutor(self.trip_config, self.logger)
         item = plan_executor.execute(patient.data, plan.data)
         return item
-
-    def write(self, text):
-        self.std_out_queue.put(text)
