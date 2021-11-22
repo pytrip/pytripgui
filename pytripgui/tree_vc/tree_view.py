@@ -26,7 +26,7 @@ class TreeView(QTreeView):
         self.internal_events = Events(('on_add_child', 'on_edit_selected_item', 'on_open_voxelplan', 'on_open_dicom',
                                        'on_execute', 'on_delete', 'on_click', 'on_export_patient_voxelplan',
                                        'on_export_patient_dicom', 'on_export_dose_voxelplan', 'on_export_dose_dicom',
-                                       'on_import_dose_voxelplan', 'on_import_dose_dicom'))
+                                       'on_export_plan', 'on_import_dose_voxelplan', 'on_import_dose_dicom'))
         """
         This field should be only used by TreeController
         """
@@ -70,9 +70,11 @@ class TreeView(QTreeView):
             execute_action.setEnabled(self.selected_item.is_executable())
             popup_menu.addAction("Edit", self.internal_events.on_edit_selected_item)
             popup_menu.addAction("Delete", self.internal_events.on_delete)
+            popup_menu.addAction("Export", self.internal_events.on_export_plan)
         elif isinstance(self.selected_item, FieldItem):
             popup_menu.addAction("Edit selected Field", self.internal_events.on_edit_selected_item)
             popup_menu.addAction("Delete selected Field", self.internal_events.on_delete)
+            popup_menu.addAction("Export plan", self.internal_events.on_export_plan)
         elif isinstance(self.selected_item, SimulationResultItem):
             if isinstance(self.selected_item.data, SimulationResults):
                 return

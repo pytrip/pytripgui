@@ -45,7 +45,7 @@
      <x>0</x>
      <y>0</y>
      <width>942</width>
-     <height>22</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTools">
@@ -72,16 +72,6 @@
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuNew">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="title">
-      <string>New</string>
-     </property>
-     <addaction name="actionCT_Cube"/>
-     <addaction name="actionROI"/>
-    </widget>
     <widget class="QMenu" name="menuImport">
      <property name="enabled">
       <bool>true</bool>
@@ -124,18 +114,17 @@
       </property>
      </action>
      <action name="action_exec">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Plan (.exec)</string>
-   </property>
-  </action>
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Plan (.exec)</string>
+      </property>
+     </action>
      <addaction name="menuImportDoseCube"/>
      <addaction name="menuImportLETCube"/>
      <addaction name="action_exec"/>
     </widget>
-    <addaction name="menuNew"/>
     <addaction name="actionOpen_Dicom"/>
     <addaction name="actionOpen_Voxelplan"/>
     <addaction name="menuImport"/>

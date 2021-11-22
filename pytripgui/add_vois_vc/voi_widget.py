@@ -21,11 +21,9 @@ class VOIWidget(QtWidgets.QFrame):
 
         validator = QRegularExpressionValidator(Regex.STRING.value)
         self._name.enable_validation(validator)
-        self._name.validate()
 
         validator = QRegularExpressionValidator(Regex.FLOAT.value)
         enable_validation_list(validator, self._center)
-        validate_list(self._center)
 
     @property
     def name(self):
@@ -52,7 +50,6 @@ class SphericalVOIWidget(VOIWidget):
 
         validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
         self._radius.enable_validation(validator)
-        self._radius.validate()
 
     @property
     def radius(self):
@@ -77,7 +74,6 @@ class CuboidalVOIWidget(VOIWidget):
 
         validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
         enable_validation_list(validator, self._dims)
-        validate_list(self._dims)
 
     @property
     def width(self) -> float:

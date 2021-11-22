@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Union
 
+import pytrip.tripexecuter
 from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
@@ -112,14 +113,14 @@ class AppCallback:
         executor.start()
         executor.show()
 
-    def _execute_finish_callback(self, item: TreeItem) -> None:
+    def _execute_finish_callback(self, item: TreeItem, patient: PatientItem = None) -> None:
         """
         Add a new item to the patient tree, containing the plan execution results.
 
         Returns:
         None
         """
-        self.app_model.patient_tree.add_new_item(parent_item=None, item=item)
+        self.app_model.patient_tree.add_new_item(parent_item=patient, item=item)
 
     def on_add_new_plan(self) -> None:
         """
@@ -492,12 +493,13 @@ class AppCallback:
         result_item.data._import_dos(full_path)
 
         # add dose item as child of Simulation
-        dose_item = SimulationResultItem()
+        dose_item: SimulationResultItem = SimulationResultItem()
         dose_item.data = result_item.data.dose
         result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
-        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
+        # parent_item=None to set simulation result as a independent item
+        self.app_model.patient_tree.add_new_item(parent_item=selected_patient, item=result_item)
 
         logger.debug("Voxelplan import finished.")
         return True
@@ -539,9 +541,42 @@ class AppCallback:
         result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
-        self.app_model.patient_tree.add_new_item(parent_item=None, item=result_item)
+        self.app_model.patient_tree.add_new_item(parent_item=selected_patient, item=result_item)
 
         logger.debug("DICOM import finished.")
+        return True
+
+    def export_plan_exec_callback(self, item: Union[PlanItem, FieldItem]) -> bool:
+        """
+        Open a file name selection window, then export the plan to an .exec file with the selected name.
+
+        Parameters:
+        item (Union[PlanItem, FieldItem]): Tree item containing the plan's data or one of its fields
+
+        Returns:
+        bool: Whether export was successful
+        """
+        logger.debug("Export plan .exec file.")
+        if isinstance(item, PlanItem):
+            plan_item = item
+        else:
+            # field's parent is a plan
+            plan_item = item.parent
+
+        plan: pytrip.tripexecuter.Plan = plan_item.data
+
+        full_path = self.parent_gui.save_file_path("Export plan", "Plan file (*.exec)")
+
+        if not full_path:
+            # file browsing was cancelled or failed, so no destination was selected for the files
+            # returning False to signify a failed export
+            return False
+
+        logger.info("Plan export to: " + full_path)
+
+        plan.save_exec(full_path)
+
+        logger.debug("Plan export finished.")
         return True
 
     @staticmethod
@@ -571,6 +606,7 @@ class AppCallback:
         Returns:
         None
         """
+
         self.parent_gui.action_add_vois_set_enable(False)
         self.parent_gui.action_create_field_set_enable(False)
         self.parent_gui.action_create_plan_set_enable(False)
@@ -578,28 +614,42 @@ class AppCallback:
         self.parent_gui.import_dose_cube_set_enabled(False)
 
         item = self.app_model.patient_tree.selected_item()
-        top_item = self.app_model.patient_tree.selected_item_patient()
+        patient_item = self.app_model.patient_tree.selected_item_patient()
+        logger.debug("Item clicked: " + str(item))
+        logger.debug("Parent of item clicked: " + str(item.parent))
 
-        if isinstance(top_item, SimulationResultItem):
-            self.app_model.viewcanvases.set_simulation_results(simulation_results=top_item.data,
-                                                               simulation_item=item.data, state=top_item.state)
-            if top_item.state is None:
-                top_item.state = self.app_model.viewcanvases.get_gui_state()
-            self.chart.set_simulation_result(simulation_result=top_item.data)
+        if isinstance(item, SimulationResultItem):
+            # SimulationResultItem is a class shared by TreeItems containing Simulations and those containing Cubes
+            # we need to find out which was clicked, so we inspect their data field
+            if isinstance(item.data, SimulationResults):
+                # selected item is the top item of simulation results
+                parent_item = item
+                item = item.children[0]
+            else:
+                # selected item is a simulation result item (e.g. DoseCube)
+                parent_item = item.parent
+
+            if parent_item.state is None:
+                parent_item.state = self.app_model.viewcanvases.get_gui_state()
+
+            self.app_model.viewcanvases.set_simulation_results(simulation_results=parent_item.data,
+                                                               simulation_item=item.data, state=parent_item.state)
+
+            self.chart.set_simulation_result(simulation_result=parent_item.data)
         elif isinstance(item, PatientItem):
             self.parent_gui.action_add_vois_set_enable(True)
             self.parent_gui.action_create_plan_set_enable(True)
-            self._show_patient(top_item, top_item)
+            self._show_patient(patient_item, patient_item)
             self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, PlanItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
-            self._show_patient(top_item, item)
+            self._show_patient(patient_item, item)
             self.parent_gui.import_dose_cube_set_enabled(True)
         elif isinstance(item, FieldItem):
             self.parent_gui.action_create_plan_set_enable(True)
             self.parent_gui.action_create_field_set_enable(True)
-            self._show_patient(top_item, item)
+            self._show_patient(patient_item, item)
             self.parent_gui.import_dose_cube_set_enabled(True)
 
         if item.is_executable():
