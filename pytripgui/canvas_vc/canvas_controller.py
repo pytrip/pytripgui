@@ -184,8 +184,26 @@ class CanvasController:
 
         if simulation_results:
             if simulation_results.dose:
+                # local fix for pytrip bug
+                # in dose header file there is no information about offsets and slice positions
+                # so offsets are set to 0 and slice_pos is generated
+                # to make plotter work properly with extent we have to have that offsets and slice_pos
+                # because extent calculation is based on those values
+                # TODO: remove after it is fixed in pytrip
+                simulation_results.dose.xoffset = simulation_results.patient.ctx.xoffset
+                simulation_results.dose.yoffset = simulation_results.patient.ctx.yoffset
+                simulation_results.dose.zoffset = simulation_results.patient.ctx.zoffset
+                simulation_results.dose.slice_pos = simulation_results.patient.ctx.slice_pos
+                # end of local fix
                 self._model.set_dose(simulation_results.dose)
             if simulation_results.let:
+                # same as the higher one
+                # TODO: remove after it is fixed in pytrip
+                simulation_results.let.xoffset = simulation_results.patient.ctx.xoffset
+                simulation_results.let.yoffset = simulation_results.patient.ctx.yoffset
+                simulation_results.let.zoffset = simulation_results.patient.ctx.zoffset
+                simulation_results.let.slice_pos = simulation_results.patient.ctx.slice_pos
+                # end of local fix
                 self._model.set_let(simulation_results.let)
 
         if isinstance(simulation_item, DosCube):
