@@ -1,12 +1,10 @@
 import logging
-from copy import deepcopy
 from typing import Optional, Dict, List
 
 import matplotlib.colors
 import numpy as np
 from matplotlib.axes import Axes
 from matplotlib.lines import Line2D
-from pytrip import CtxCube
 from pytrip.vdx import Slice, Voi
 
 from pytripgui.canvas_vc.objects.vdx import Vdx
@@ -33,7 +31,8 @@ class VoiManager:
         """
 
         # remove VOI that should not be plotted or updated
-        voi_names_to_remove = [name for name in self._plotted_voi if name not in [voi.name for voi in vdx.voi_list]]
+        current_voi_names = [voi.name for voi in vdx.voi_list]
+        voi_names_to_remove = [name for name in self._plotted_voi if name not in current_voi_names]
         for name in voi_names_to_remove:
             self._remove_all_voi_plots(name)
 
@@ -50,7 +49,7 @@ class VoiManager:
                 # continue to the next VOI
                 continue
 
-            # randomly pick color defined in pytrip
+            # pick color defined in pytrip
             contour_color = self._get_color(voi)
 
             # number of contours to check few conditions
@@ -63,24 +62,15 @@ class VoiManager:
 
             # for a given VOI, the slice viewed may consist of multiple Contours.
             for i, _c in enumerate(current_slice.contours):
-                # TODO change it after it is fixed in pytrip
-                # zoffset is set to 0.0 in most cubes, which is wrong
-                # because of that fact, next line calculates the zoffset as it should be done in CtxCube
-                # I wonder if substracting slice_distance in needed,
-                #   but i think it fits better if you look on plotted contours
-                z_offset = min(vdx.ctx.slice_pos) - vdx.ctx.slice_distance  # slice_pos contains z positions in mm
-
-                # contours are in [[x0,y0,z0], [x1,y1,z1], ... [xn,yn,zn]] (mm), we need to remove offsets
-                data = np.array(_c.contour) - np.array([vdx.ctx.xoffset, vdx.ctx.yoffset, z_offset])
-
-                # translating positions in mm into pixel positions
-                data_pixels = self._plane_points_idx(data, vdx.ctx, vdx.projection_selector.plane)
+                # getting data to plot directly, without any conversions, subtracting offsets and so on
+                # stored in units of millimeters
+                data_mm = np.array(_c.contour)
 
                 # closing contour
                 if _c.contour_closed:
-                    xy = np.concatenate((data_pixels, [data_pixels[0]]), axis=0)
+                    xy = np.concatenate((data_mm, [data_mm[0]]), axis=0)
                 else:
-                    xy = data_pixels
+                    xy = data_mm
 
                 # plotting in terms of pixels
                 if _c.number_of_points() == 1:
@@ -190,18 +180,19 @@ class VoiManager:
         color = tuple(c / 255.0 for c in voi.get_color())
         return color
 
-    @staticmethod
-    def _get_plot_data(vdx: Vdx, data):
-        if vdx.projection_selector.plane == "Transversal":
+    def _get_plot_data(self, vdx: Vdx, data):
+        plane = vdx.projection_selector.plane
+        if plane == "Transversal":
             # "Transversal" (xy)
             return data[:, 0], data[:, 1]
-        if vdx.projection_selector.plane == "Sagittal":
+        if plane == "Sagittal":
             # "Sagittal" (yz)
             return data[:, 1], data[:, 2]
-        if vdx.projection_selector.plane == "Coronal":
+        if plane == "Coronal":
             # "Coronal"  (xz)
             return data[:, 0], data[:, 2]
-        raise ValueError("Wrong plane string in voi manager")
+
+        raise ValueError("Wrong plane string - " + plane + " - in " + type(self).__name__)
 
     @staticmethod
     def _get_current_slice(vdx: Vdx, voi: Voi) -> Optional[Slice]:
@@ -224,32 +215,3 @@ class VoiManager:
         elif vdx.projection_selector.plane == "Coronal":
             _slice = voi.get_2d_slice(voi.coronal, positions_mm[1])
         return _slice
-
-    @staticmethod
-    def _plane_points_idx(points, ctx: CtxCube, plane: str):
-        """
-        Convert a points in a 3D cube in terms of [mm, mm, mm] to the current plane in terms of [idx,idx].
-
-        :param points: INPUT: list of points in [[x0,y0,z0],[x1,y1,z1], ...[xn,yn,zn]] (mm) format
-                       OUTPUT: list of points pseudo-2D format.
-        :param ctx: CtxCube
-        :param plane: string that represents current plane
-
-        """
-
-        ct_pix_size_inv = 1.0 / ctx.pixel_size
-        ct_slice_dist_inv = 1.0 / ctx.slice_distance
-
-        results = deepcopy(points)
-
-        if plane == "Transversal":
-            results[:, 0] = points[:, 0] * ct_pix_size_inv
-            results[:, 1] = points[:, 1] * ct_pix_size_inv
-        elif plane == "Sagittal":
-            results[:, 1] = (-points[:, 1] + ctx.pixel_size * ctx.dimy) * ct_pix_size_inv
-            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
-        elif plane == "Coronal":
-            results[:, 0] = (-points[:, 0] + ctx.pixel_size * ctx.dimx) * ct_pix_size_inv
-            results[:, 2] = (-points[:, 2] + ctx.slice_distance * ctx.dimz) * ct_slice_dist_inv
-
-        return results

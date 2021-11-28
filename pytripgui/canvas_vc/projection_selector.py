@@ -28,9 +28,9 @@ class ProjectionSelector:
         if self.plane == "Transversal":
             return data.cube[self.current_slice_no, ::, ::]
         if self.plane == "Sagittal":
-            return data.cube[::-1, ::-1, self.current_slice_no]
+            return data.cube[::, ::, self.current_slice_no]
         if self.plane == "Coronal":
-            return data.cube[::-1, self.current_slice_no, ::-1]
+            return data.cube[::, self.current_slice_no, ::]
 
     def get_current_slices(self):
         return {

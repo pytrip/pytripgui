@@ -4,6 +4,8 @@ import numpy as np
 
 import logging
 
+from pytripgui.canvas_vc.objects.data_base import PlotDataBase
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,19 +18,15 @@ class DoseAxisType(Enum):
     abs = 2
 
 
-class Dos:
+class Dos(PlotDataBase):
     def __init__(self, selector):
-        self.aspect = 1.0  # aspect ratio of plot
+        super().__init__(selector)
 
-        self.cube = None  # Placeholder for DosCube() object to be plotted. Only one (!) dose cube can be plotted.
-        self.data_to_plot = None
         self.dose_axis = DoseAxisType.auto
 
         self.dos_scale = None
         self.min_dose = 0
         self.max_dose = None
-
-        self.projection_selector = selector
 
     def prepare_data_to_plot(self):
         if not self.cube:
@@ -59,9 +57,3 @@ class Dos:
         if self.dose_axis == DoseAxisType.auto and self.cube.target_dose != 0.0:
             return DoseAxisType.abs
         return self.dose_axis
-
-    def _set_aspect(self):
-        if self.projection_selector.plane == "Transversal":
-            self.aspect = 1.0
-        else:
-            self.aspect = self.cube.slice_distance / self.cube.pixel_size

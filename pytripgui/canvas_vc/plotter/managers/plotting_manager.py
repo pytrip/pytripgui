@@ -53,10 +53,17 @@ class PlottingManager:
         self._voi_manager: VoiManager = VoiManager(self.axes, self.blit_manager)
 
     def _initialize_axes(self) -> Axes:
-        axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
-        axes.grid(False)
-        axes.set_xticks([])
-        axes.set_yticks([])
+        axes: Axes = self.figure.add_subplot(self.placement_manager.get_main_plot_place())
+        color: str = 'white'
+        # set ticks color
+        axes.tick_params(axis='x', colors=color)
+        axes.tick_params(axis='y', colors=color)
+        # set labels color
+        axes.xaxis.label.set_color(color)
+        axes.yaxis.label.set_color(color)
+        # set axis color
+        axes.spines['bottom'].set_color(color)
+        axes.spines['left'].set_color(color)
         return axes
 
     def remove_dos(self) -> None:
@@ -146,7 +153,9 @@ class PlottingManager:
     def plot_ctx(self, data: Ctx) -> None:
         """
         Plots CTX image and CTX bar if not present, adds image to BlitManager.
-        In opposite case, updates CTX image data.
+            In opposite case, updates CTX image data.
+
+        Sets proper labels based on current perspective.
 
         Plots information about slices positions if not present, adds plot to BlitManager.
         In opposite case, updates plot data.
@@ -154,6 +163,7 @@ class PlottingManager:
         Changes WILL NOT be visible until BlitManager updates them.
         """
         self._plot_coordinate_info(data)
+        self._set_labels(data)
         if not self.ctx.is_present():
             self.ctx.plot(data)
             self.blit_manager.add_artist(self.ctx.get())
@@ -181,3 +191,21 @@ class PlottingManager:
 
     def remove_voi(self):
         self._voi_manager.remove_voi()
+
+    def _set_labels(self, data: Ctx):
+        """
+        Sets proper axis labels for current perspective.
+        """
+        plane = data.projection_selector.plane
+        # "Transversal" (xy)
+        if plane == "Transversal":
+            self.axes.set_xlabel('x [mm]')
+            self.axes.set_ylabel('y [mm]')
+        # "Sagittal" (yz)
+        elif plane == "Sagittal":
+            self.axes.set_xlabel('y [mm]')
+            self.axes.set_ylabel('z [mm]')
+        # "Coronal"  (xz)
+        elif plane == "Coronal":
+            self.axes.set_xlabel('x [mm]')
+            self.axes.set_ylabel('z [mm]')

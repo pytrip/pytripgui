@@ -14,8 +14,11 @@ class LetImage(PatientImageBase):
         self.zorder = 10
 
     def plot(self, data: Let) -> None:
+        extent = self.calculate_extent(data)
         self._image = self._axes.imshow(data.data_to_plot,
                                         cmap=self._colormap,
                                         vmax=data.max_let,
                                         aspect=data.aspect,
+                                        extent=extent,
+                                        origin='lower',
                                         zorder=self.zorder)
