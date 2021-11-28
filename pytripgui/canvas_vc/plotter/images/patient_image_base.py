@@ -76,12 +76,12 @@ class PatientImageBase(ABC):
         # extent = [horizontal_min, horizontal_max, vertical_min, vertical_max]
         # "Transversal" (xy)
         if plane == "Transversal":
-            return [min_x_mm, max_x_mm, min_y_mm, max_y_mm]
+            return min_x_mm, max_x_mm, min_y_mm, max_y_mm
         # "Sagittal" (yz)
         if plane == "Sagittal":
-            return [min_y_mm, max_y_mm, min_z_mm, max_z_mm]
+            return min_y_mm, max_y_mm, min_z_mm, max_z_mm
         # "Coronal" (xz)
         if plane == "Coronal":
-            return [min_x_mm, max_x_mm, min_z_mm, max_z_mm]
+            return min_x_mm, max_x_mm, min_z_mm, max_z_mm
 
         raise ValueError("Wrong plane string - " + plane + " - in " + type(self).__name__)
