@@ -30,30 +30,21 @@ jobs:
         pip install -r tests/requirements-test.txt
         sudo apt install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
 
-    - name: Smoke test with tox
+    - name: Smoke tests
       env:
         QT_DEBUG_PLUGINS: 1
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e py39
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m pytest tests
          
          
   normal_test:
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
-        tox-env: [py37, py38, py39, packaging]
+        python-version: ['3.7', '3.8', '3.9', '3.10']
         platform: [ubuntu-latest, windows-latest]
-        include:
-          - tox-env: py37
-            python-version: 3.7
-          - tox-env: py38
-            python-version: 3.8
-          - tox-env: py39
-            python-version: 3.9
-          - tox-env: packaging
-            python-version: 3.8
 
     runs-on: ${{ matrix.platform }}
     needs: [smoke_test]
@@ -77,20 +68,20 @@ jobs:
       run: |
         sudo apt install -y libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0
 
-    - name: Regular test with tox (Linux)
+    - name: Regular test (Linux)
       if: ${{ runner.os == 'Linux' }}      
       env:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m tox -e ${{ matrix.tox-env }}
+        sudo catchsegv xvfb-run --auto-servernum `which python` -m pytest tests/
 
-    - name: Regular test with tox (Windows)
+    - name: Regular test (Windows)
       if: ${{ runner.os == 'Windows' }}      
       env:
         QT_DEBUG_PLUGINS: 1
       run: |         
-        tox -e ${{ matrix.tox-env }}
+        pytest tests/
 
   make_and_upload_package:
     if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"

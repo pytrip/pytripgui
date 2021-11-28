@@ -6,4 +6,3 @@ pytest-qt  ; python_version >= '3.8'
 pytest-qt<4.0 ; python_version < '3.8'
 pytest-xvfb
 pyautogui
-tox
