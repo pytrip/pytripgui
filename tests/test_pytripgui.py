@@ -1,5 +1,6 @@
 import logging
 import os.path
+import sys
 
 import pytest
 from PyQt5 import QtCore, QtWidgets
@@ -48,6 +49,7 @@ def test_basics(qtbot, window):
     assert view.ui.windowTitle() == 'PyTRiPGUI'
 
 
+@pytest.mark.xfail(sys.version_info < (3,7), reason="issue on matplotlib with python 3.6 or older")
 def test_open_voxelplan(qtbot, window, voxelplan_header_path):
     model, view, _ = window
     qtbot.addWidget(view.ui)
@@ -75,6 +77,7 @@ def test_open_voxelplan(qtbot, window, voxelplan_header_path):
     assert len(model.patient_tree.selected_item_patient().data.vdx.vois) == 1
 
 
+@pytest.mark.xfail(sys.version_info < (3,7), reason="issue on matplotlib with python 3.6 or older")
 def test_create_plan_and_field(qtbot, window, voxelplan_header_path):
     _, view, controller = window
     qtbot.addWidget(view.ui)
