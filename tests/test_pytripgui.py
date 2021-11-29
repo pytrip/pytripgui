@@ -1,5 +1,6 @@
 import logging
 import os.path
+import sys
 
 import pytest
 from PyQt5 import QtCore, QtWidgets
