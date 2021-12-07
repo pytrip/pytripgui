@@ -1,9 +1,12 @@
+import threading
 from typing import Optional, Union
 
 import pytrip.tripexecuter
+from PyQt5.QtCore import QThread
 from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
+from pytripgui.loading_file_vc.loading_file_view import LoadingFileView
 from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytripgui.add_vois_vc import AddVOIsController
 from pytripgui.add_vois_vc.add_vois_view import AddVOIsQtView
@@ -63,9 +66,20 @@ class AppCallback:
         Returns:
         None
         """
+
+        def inline_thread_method():
+            app_controller.open_voxelplan(path)
+            progress_dialog.set_info_label_text('udalo sie')
+            progress_dialog._ui.ok_button.setEnabled(True)
+
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         logger.debug("Open Voxelplan: {}".format(path))
-        self.app_controller.open_voxelplan(path)
+        progress_dialog = LoadingFileView(self.parent_gui.ui)
+        app_controller = self.app_controller
+        t = QThread()
+        t.started.connect(inline_thread_method)
+        t.start()
+        progress_dialog.show()
 
     def on_open_dicom(self) -> None:
         """
@@ -666,6 +680,10 @@ class AppCallback:
         Returns:
         None.
         """
+        if not self.app_model.viewcanvases:
+            self.app_model.viewcanvases = ViewCanvases()
+            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
+
         if self.app_model.viewcanvases:
             self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
 

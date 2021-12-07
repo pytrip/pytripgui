@@ -1,6 +1,7 @@
 import logging
 
 from pytripgui.app_logic.viewcanvas import ViewCanvases
+from pytripgui.loading_file_vc.loading_file_view import LoadingFileView
 from pytripgui.messages import InfoMessages
 
 from pytripgui.app_logic.patient_tree import PatientTree
@@ -52,6 +53,7 @@ class MainWindowController:
 
         self.view.about_callback = self.on_about
         self.view.exit_callback = self.on_exit
+
 
     def open_voxelplan(self, path):
         """
