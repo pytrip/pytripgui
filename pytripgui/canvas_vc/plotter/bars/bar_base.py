@@ -31,6 +31,7 @@ class BarBase(ABC, Axes):
         self.cb_fontsize = 8  # fontsize of colourbar labels
         self.label = 'DEFAULT_LABEL'
         self.bar = None
+        self.set_aspect(30)
 
     def plot_bar(self, data, **kwargs):
         """
@@ -40,6 +41,7 @@ class BarBase(ABC, Axes):
         cb.set_label(self.label, color=self.fg_color, fontsize=self.cb_fontsize)
         cb.outline.set_edgecolor(self.bg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color)
+        cb.ax.yaxis.set_label_position('left')
         plt.setp(plt.getp(cb.ax.axes, 'yticklabels'), color=self.fg_color)
         cb.ax.yaxis.set_tick_params(color=self.fg_color, labelsize=self.cb_fontsize)
         self.bar = cb
@@ -49,3 +51,4 @@ class BarBase(ABC, Axes):
         Clears whole axes, removes bar.
         """
         self.cla()
+        self.remove()

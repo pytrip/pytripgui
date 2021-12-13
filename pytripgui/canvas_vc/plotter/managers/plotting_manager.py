@@ -183,8 +183,7 @@ class PlottingManager:
             self.info_axes = self.figure.add_subplot(self.placement_manager.get_coord_info_place(),
                                                      projection=CoordinateInfo.name)
             self.blit_manager.add_artist(self.info_axes)
-        else:
-            self.info_axes.update_info(data)
+        self.info_axes.update_info(data)
 
     def plot_voi(self, vdx):
         self._voi_manager.plot_voi(vdx)
