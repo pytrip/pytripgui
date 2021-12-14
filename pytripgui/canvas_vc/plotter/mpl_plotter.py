@@ -29,7 +29,7 @@ class MplPlotter(FigureCanvas):
         if blit_manager will be created before figure is initialized
         dummy figure will be used and restoring background will work improperly
         """
-        self.figure: Figure = Figure(figsize=(width, height), dpi=dpi, tight_layout=True)
+        self.figure: Figure = Figure(figsize=(width, height), dpi=dpi, constrained_layout=True)
         self.blit_manager: BlitManager = BlitManager(self)
         self.plotting_manager: PlottingManager = PlottingManager(self.figure, self.blit_manager)
 

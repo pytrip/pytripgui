@@ -112,7 +112,7 @@ class CoordinateInfo(Axes3D):
         # initialize whole plot if necessary
         if not self._data_set:
             for plane in self._surfaces:
-                self._plot_plane(plane, current_slices, last_slices, False)
+                self._plot_plane(plane, current_slices, last_slices, plane == current_plane)
 
             self._data_set = True
 

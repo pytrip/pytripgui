@@ -27,28 +27,29 @@ class Dos(PlotDataBase):
         self.dos_scale = None
         self.min_dose = 0
         self.max_dose = None
+        self.factor = 1.0
+        self._max_dose_from_cube = None
 
     def prepare_data_to_plot(self):
         if not self.cube:
             return
 
+        if self._max_dose_from_cube is None:
+            self._max_dose_from_cube = np.amax(self.cube.cube)
+
         self.dos_scale = self._get_proposed_scale()
         self._set_aspect()
 
-        factor = None
         if self.dos_scale == DoseAxisType.abs:
-            factor = 1000 / self.cube.target_dose
-        if self.dos_scale == DoseAxisType.rel:
-            factor = 10
+            self.factor = 1000.0 / self.cube.target_dose
+        elif self.dos_scale == DoseAxisType.rel:
+            self.factor = 10.0
 
-        if factor is not None:
-            self.max_dose = np.amax(self.cube.cube) / float(factor)
-        else:
-            self.max_dose = np.amax(self.cube.cube)
+        self.max_dose = self._max_dose_from_cube / self.factor
 
         dos_data = self.projection_selector.get_projection(self.cube)
 
-        self.data_to_plot = dos_data / float(factor)
+        self.data_to_plot = dos_data / self.factor
         self.data_to_plot[self.data_to_plot <= self.min_dose] = self.min_dose
 
     def _get_proposed_scale(self):

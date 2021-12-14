@@ -1,5 +1,7 @@
 import logging
 
+import numpy as np
+
 from pytripgui.canvas_vc.objects.data_base import PlotDataBase
 
 logger = logging.getLogger(__name__)
@@ -15,6 +17,9 @@ class Let(PlotDataBase):
     def prepare_data_to_plot(self):
         if self.cube is None:
             return
+
+        if self.max_let is None:
+            self.max_let = np.amax(self.cube.cube)
 
         self._set_aspect()
         self.data_to_plot = self.projection_selector.get_projection(self.cube)
