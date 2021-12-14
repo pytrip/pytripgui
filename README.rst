@@ -1,14 +1,14 @@
 Overview
 ========
 
-**pytripgui** is graphical user interface (GUI) built around TRiP98 planning system and pytrip package.
+**pytripgui** is the graphical user interface (GUI) built around TRiP98 planning system and pytrip package.
 It is capable of visualising patient CT data, dose and LET overlays.
-pytripgui can make treatment plans using local or remote TRiP98 package.
+pytripgui can make treatment plans using the local or remote TRiP98 package.
 
 TRiP98 package is not included here, if you need it, go first to TRiP98 webpage
 http://bio.gsi.de/DOCS/TRiP98/NEW/DOCS/trip98.html
 
-pytripgui works under most popular operating systems with necessary packages installed, see installation instructions below.
+pytripgui works under the most popular operating systems with necessary packages installed, see installation instructions below.
 
 Quick installation guide
 ------------------------
