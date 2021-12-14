@@ -43,6 +43,11 @@
          <string>Cuboidal</string>
         </property>
        </item>
+       <item>
+        <property name="text">
+         <string>Cylindrical</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
