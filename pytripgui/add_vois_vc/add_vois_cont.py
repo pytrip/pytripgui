@@ -4,9 +4,10 @@ import logging
 
 from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_cont import AddSingleVOIController
 from pytripgui.add_vois_vc.add_single_voi_vc.add_single_voi_view import AddSingleVOIQtView
-from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget, CylindricalVOIWidget
+from pytripgui.add_vois_vc.voi_widget import SphericalVOIWidget, CuboidalVOIWidget, CylindricalVOIWidget,\
+    CustomVOIWidget
 from pytripgui.view.qt_view_adapter import PushButton
-from pytrip.vdx import create_sphere, create_cube, create_cylinder
+from pytrip.vdx import create_sphere, create_cube, create_cylinder, create_custom_voi
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +91,14 @@ class AddVOIsController:
             voi_widget = list_voi_element.voi_space.itemAt(0).widget()
             center_no_offsets = [a - b for (a, b) in zip(voi_widget.center, [ctx.xoffset, ctx.yoffset, ctx.zoffset])]
 
-            if isinstance(voi_widget, SphericalVOIWidget):
+            if isinstance(voi_widget, CustomVOIWidget):
+                voi = create_custom_voi(
+                    cube=ctx,
+                    name=voi_widget.name,
+                    center=center_no_offsets,
+                    slices=voi_widget.slices
+                )
+            elif isinstance(voi_widget, SphericalVOIWidget):
                 voi = create_sphere(
                     cube=ctx,
                     name=voi_widget.name,

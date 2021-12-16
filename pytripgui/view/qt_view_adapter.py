@@ -76,6 +76,9 @@ class PushButton:
     def emit_on_click(self, callback):
         self._ui.clicked.connect(callback)
 
+    def set_enabled(self, enabled):
+        self._ui.setEnabled(enabled)
+
 
 class ComboBox:
     def __init__(self, combo_box):

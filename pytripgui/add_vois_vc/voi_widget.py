@@ -3,7 +3,7 @@ from PyQt5.QtGui import QRegularExpressionValidator
 from pathlib import Path
 
 from pytripgui.utils.regex import Regex
-from pytripgui.view.qt_view_adapter import LineEdit
+from pytripgui.view.qt_view_adapter import LineEdit, LineEditMath
 
 
 class VOIWidget(QtWidgets.QFrame):
@@ -14,9 +14,9 @@ class VOIWidget(QtWidgets.QFrame):
 
         self._name = LineEdit(self.name_lineEdit)
         self._center = [
-            LineEdit(self.centerX_lineEdit),
-            LineEdit(self.centerY_lineEdit),
-            LineEdit(self.centerZ_lineEdit)
+            LineEditMath(self.centerX_lineEdit),
+            LineEditMath(self.centerY_lineEdit),
+            LineEditMath(self.centerZ_lineEdit)
         ]
 
         validator = QRegularExpressionValidator(Regex.STRING.value)
@@ -46,7 +46,7 @@ class SphericalVOIWidget(VOIWidget):
     def __init__(self):
         super().__init__("spherical_voi.ui")
 
-        self._radius = LineEdit(self.radius_lineEdit)
+        self._radius = LineEditMath(self.radius_lineEdit)
 
         validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
         self._radius.enable_validation(validator)
@@ -67,9 +67,9 @@ class CuboidalVOIWidget(VOIWidget):
     def __init__(self):
         super().__init__("cuboidal_voi.ui")
 
-        self._width = LineEdit(self.width_lineEdit)
-        self._height = LineEdit(self.height_lineEdit)
-        self._depth = LineEdit(self.depth_lineEdit)
+        self._width = LineEditMath(self.width_lineEdit)
+        self._height = LineEditMath(self.height_lineEdit)
+        self._depth = LineEditMath(self.depth_lineEdit)
         self._dims = [self._width, self._height, self._depth]
 
         validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
@@ -104,8 +104,8 @@ class CylindricalVOIWidget(VOIWidget):
     def __init__(self):
         super().__init__("cylindrical_voi.ui")
 
-        self._radius = LineEdit(self.radius_lineEdit)
-        self._depth = LineEdit(self.depth_lineEdit)
+        self._radius = LineEditMath(self.radius_lineEdit)
+        self._depth = LineEditMath(self.depth_lineEdit)
 
         validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
         self._radius.enable_validation(validator)
@@ -126,6 +126,48 @@ class CylindricalVOIWidget(VOIWidget):
         super().disable_fields()
         self._radius.set_enabled(False)
         self._depth.set_enabled(False)
+
+
+class CustomVOIWidget(VOIWidget):
+    def __init__(self):
+        super().__init__("custom_voi.ui")
+
+        self._width_height = LineEditMath(self.widthHeight_lineEdit)
+        self._depth = LineEditMath(self.depth_lineEdit)
+        self._dims = [self._width_height, self._depth]
+
+        validator = QRegularExpressionValidator(Regex.FLOAT_UNSIGNED.value)
+        enable_validation_list(validator, self._dims)
+
+        self._slices = []
+
+    @property
+    def width_height(self) -> float:
+        return float(self._width_height.text)
+
+    @property
+    def depth(self) -> float:
+        return float(self._depth.text)
+
+    @property
+    def dims(self) -> list:
+        return [float(i.text) for i in self._dims]
+
+    @property
+    def slices(self) -> list:
+        return self._slices
+
+    @slices.setter
+    def slices(self, slices):
+        self._slices = slices
+
+    def validate(self) -> bool:
+        return super().validate() and validate_list(self._dims)
+
+    def disable_fields(self) -> None:
+        super().disable_fields()
+        for field in self._dims:
+            field.set_enabled(False)
 
 
 def enable_validation_list(validator: QRegularExpressionValidator, items: list) -> None:

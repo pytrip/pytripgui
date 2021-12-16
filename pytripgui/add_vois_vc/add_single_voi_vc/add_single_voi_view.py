@@ -1,3 +1,5 @@
+from PyQt5.QtWidgets import QDialog
+
 from pytripgui.view.qt_view_adapter import ComboBox, Label
 from pytripgui.view.qt_gui import AddVOIDialog
 
@@ -18,6 +20,9 @@ class AddSingleVOIQtView:
 
         self.accept = self._ui.accept
         self.accept_buttons = self._ui.accept_buttonBox
+
+    def get_ui(self) -> QDialog:
+        return self._ui
 
     def show(self) -> None:
         self._ui.show()
