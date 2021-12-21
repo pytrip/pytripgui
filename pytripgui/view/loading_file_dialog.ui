@@ -6,26 +6,39 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>429</width>
-    <height>407</height>
+    <width>300</width>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Loading files</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>
+  <widget class="QLabel" name="info_label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>20</y>
+     <width>200</width>
+     <height>60</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+  </widget>
   <widget class="QDialogButtonBox" name="ok_button">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>340</y>
-     <width>156</width>
-     <height>23</height>
+     <x>120</x>
+     <y>80</y>
+     <width>60</width>
+     <height>60</height>
     </rect>
    </property>
    <property name="standardButtons">
@@ -33,32 +46,6 @@
    </property>
    <property name="centerButtons">
     <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="info_label">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>150</y>
-     <width>121</width>
-     <height>81</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="animation_label">
-   <property name="geometry">
-    <rect>
-     <x>60</x>
-     <y>120</y>
-     <width>131</width>
-     <height>141</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

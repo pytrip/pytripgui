@@ -156,4 +156,7 @@ class LoadingFileDialog(QtWidgets.QDialog):
 
         self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint | Qt.WindowStaysOnTopHint)
 
+        self.setModal(True)
+
+        self.info_label.setAlignment(Qt.AlignCenter)
         self.ok_button.accepted.connect(self.accept)

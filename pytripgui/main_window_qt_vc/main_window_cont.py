@@ -54,7 +54,6 @@ class MainWindowController:
         self.view.about_callback = self.on_about
         self.view.exit_callback = self.on_exit
 
-
     def open_voxelplan(self, path):
         """
         Opens Voxelplan
@@ -78,15 +77,7 @@ class MainWindowController:
             logger.warning("Loaded patient has no VOI data")
             # TODO add empty vdx init if needed
             patient_data.vdx = None
-
-        if not self.model.viewcanvases:
-            self.model.viewcanvases = ViewCanvases()
-            self.view.add_widget(self.model.viewcanvases.widget())
-
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
-        self.model.patient_tree.add_new_item(None, patient)
+        self._add_new_item(None, patient)
         return True
 
     def open_dicom(self, path):
@@ -102,6 +93,10 @@ class MainWindowController:
         patient_data = patient.data
         patient_data.open_dicom(path)  # Todo catch exceptions
 
+        self._add_new_item(None, patient)
+        return True
+
+    def _add_new_item(self, item_list_parent, item):
         if not self.model.viewcanvases:
             self.model.viewcanvases = ViewCanvases()
             self.view.add_widget(self.model.viewcanvases.widget())
@@ -109,7 +104,7 @@ class MainWindowController:
         # someone needs to test this, but I think it's unnecessary,
         #   because after that callback another event is emitted, which sets patient one more time
         # self.app_model.viewcanvases.set_patient(patient)
-        self.model.patient_tree.add_new_item(None, patient)
+        self.model.patient_tree.add_new_item(item_list_parent, item)
         return True
 
     def on_about(self):

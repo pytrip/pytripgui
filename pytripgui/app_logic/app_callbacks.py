@@ -67,18 +67,21 @@ class AppCallback:
         None
         """
 
-        def inline_thread_method():
-            app_controller.open_voxelplan(path)
-            progress_dialog.set_info_label_text('udalo sie')
-            progress_dialog._ui.ok_button.setEnabled(True)
+        # def inline_thread_method():
+        #     app_controller.open_voxelplan(path)
+        #     progress_dialog.set_info_label_text('udalo sie')
+        #     progress_dialog._ui.ok_button.setEnabled(True)
 
+        # app_controller = self.app_controller
+        # t = QThread()
+        # t.started.connect(inline_thread_method)
+        # t.start()
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         logger.debug("Open Voxelplan: {}".format(path))
-        progress_dialog = LoadingFileView(self.parent_gui.ui)
-        app_controller = self.app_controller
-        t = QThread()
-        t.started.connect(inline_thread_method)
-        t.start()
+        # progress_dialog = LoadingFileView(path, self.app_controller.open_voxelplan, self.app_controller, parent=None)
+        progress_dialog = LoadingFileView(file_path=path, load_function=self.app_controller.open_voxelplan,
+                                          parent=self.parent_gui.ui, window_title="Open Voxelplan",
+                                          progress_message="Reading files, please wait...")
         progress_dialog.show()
 
     def on_open_dicom(self) -> None:
@@ -91,7 +94,11 @@ class AppCallback:
         """
         dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
         logger.debug("Open DICOM: {}".format(dir_path))
-        self.app_controller.open_dicom(dir_path)
+        # self.app_controller.open_dicom(dir_path)
+        progress_dialog = LoadingFileView(file_path=dir_path, load_function=self.app_controller.open_dicom,
+                                          parent=self.parent_gui.ui, window_title="Open DICOM",
+                                          progress_message="Reading files, please wait...")
+        progress_dialog.show()
 
     def on_execute_selected_plan(self) -> None:
         """
