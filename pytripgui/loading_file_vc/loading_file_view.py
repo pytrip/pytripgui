@@ -5,9 +5,9 @@ from pytripgui.view.qt_gui import LoadingFileDialog
 
 
 class LoadingFileView:
-    def __init__(self, file_path, load_function, parent=None, window_title=None,
+    def __init__(self, parent=None, window_title=None,
                  progress_message=None, finish_message=None):
-        # default text strings
+        # define default text strings
         if not window_title:
             window_title = "Loading..."
         if not progress_message:
@@ -16,10 +16,8 @@ class LoadingFileView:
             finish_message = "Loading complete."
 
         self._ui: QDialog = LoadingFileDialog(parent)
-        self.file_path = file_path
-        self.load_function = load_function
 
-        # setting window text
+        # set window text
         self.set_window_title(window_title)
         self.set_info_label_text(progress_message)
         self.finish_message = finish_message
@@ -34,23 +32,13 @@ class LoadingFileView:
         self._ui.show()
         # we need to process events to let UI init take effect
         QApplication.processEvents()
-        self.start()
 
-    def start(self):
-        # execute the loading function (e.g. opening DICOM)
-        loaded = self.load_function(self.file_path)
-        if loaded:
-            self._update_finished()
-        else:
-            # if the user canceled opening, instantly close the loading window without waiting for confirmation
-            self._ui.destroy()
+    def ok_button_set_enabled(self, enabled):
+        self._ui.ok_button.setEnabled(enabled)
 
-    def _update_finished(self):
+    def update_finished(self):
         self.set_info_label_text(self.finish_message)
-        self._ui.ok_button.setEnabled(True)
+        self.ok_button_set_enabled(True)
 
-
-class LoadingFileController:
-    # TODO split VC responsibility
-    def __init__(self):
-        self._view = LoadingFileView()
+    def reject(self):
+        self._ui.reject()

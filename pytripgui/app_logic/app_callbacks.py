@@ -6,6 +6,7 @@ from PyQt5.QtCore import QThread
 from pytrip import DosCube, dicomhelper
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
+from pytripgui.loading_file_vc.loading_file_controller import LoadingFileController
 from pytripgui.loading_file_vc.loading_file_view import LoadingFileView
 from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytripgui.add_vois_vc import AddVOIsController
@@ -69,10 +70,10 @@ class AppCallback:
 
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         logger.debug("Open Voxelplan: {}".format(path))
-        progress_dialog = LoadingFileView(file_path=path, load_function=self.app_controller.open_voxelplan,
-                                          parent=self.parent_gui.ui, window_title="Open Voxelplan",
-                                          progress_message="Reading files, please wait...")
-        progress_dialog.show()
+        progress_dialog = LoadingFileController(file_path=path, load_function=self.app_controller.open_voxelplan,
+                                                parent=self.parent_gui.ui, window_title="Open Voxelplan",
+                                                progress_message="Reading files, please wait...")
+        progress_dialog.start()
 
     def on_open_dicom(self) -> None:
         """
@@ -85,10 +86,10 @@ class AppCallback:
         dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
         logger.debug("Open DICOM: {}".format(dir_path))
         # self.app_controller.open_dicom(dir_path)
-        progress_dialog = LoadingFileView(file_path=dir_path, load_function=self.app_controller.open_dicom,
-                                          parent=self.parent_gui.ui, window_title="Open DICOM",
-                                          progress_message="Reading files, please wait...")
-        progress_dialog.show()
+        progress_dialog = LoadingFileController(file_path=dir_path, load_function=self.app_controller.open_dicom,
+                                                parent=self.parent_gui.ui, window_title="Open DICOM",
+                                                progress_message="Reading files, please wait...")
+        progress_dialog.start()
 
     def on_execute_selected_plan(self) -> None:
         """
