@@ -1,5 +1,6 @@
 from typing import Callable
 
+import numpy as np
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QValidator, QImage, QPixmap, QIcon
 from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
@@ -169,8 +170,8 @@ class ListWidget:
             name = get_name(item)
             q_item = QListWidgetItem(name)
             if get_color:
-                import numpy as np
-                image = np.full(shape=(10, 10, 3), fill_value=get_color(item), dtype=np.uint8)
+                size = 13
+                image = np.full(shape=(size, size, 3), fill_value=get_color(item), dtype=np.uint8)
                 image = QImage(image.data, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
                 pixmap = QPixmap(image)
                 q_item.setIcon(QIcon(pixmap))
