@@ -102,6 +102,7 @@ class UiAddPatient(QtWidgets.QDialog):
         self.openVoxelplan_pushButton.clicked.connect(self._on_open_voxelplan_internal_callback)
 
     def _on_open_voxelplan_internal_callback(self):
+        self.hide()
         self._open_voxelplan_callback()
         self.reject()
 
@@ -115,6 +116,7 @@ class UiAddPatient(QtWidgets.QDialog):
         self.openDicom_pushButton.clicked.connect(self._on_open_dicom_internal_callback)
 
     def _on_open_dicom_internal_callback(self):
+        self.hide()
         self._open_dicom_callback()
         self.reject()
 
@@ -144,3 +146,17 @@ class AddVOIDialog(QtWidgets.QDialog):
         uic.loadUi(ui_path, self)
 
         self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+
+
+class LoadingFileDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(LoadingFileDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'loading_file_dialog.ui')
+        uic.loadUi(ui_path, self)
+
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint | Qt.WindowStaysOnTopHint)
+
+        self.setModal(True)
+
+        self.info_label.setAlignment(Qt.AlignCenter)
+        self.ok_button.accepted.connect(self.accept)
