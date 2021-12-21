@@ -143,7 +143,7 @@ class CanvasController:
         state (ticked checkboxes).
         """
         # fill ui voi list with VOIs from patient
-        self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name)
+        self._ui.voi_list.fill(patient.vdx.vois, lambda item: item.name, lambda item: item.color)
         if state:
             # restore ticked VOIs
             self._ui.voi_list.tick_checkboxes(state.ticked_voi_list, lambda item: item.name)
