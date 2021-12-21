@@ -23,6 +23,9 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
+; auto - depending on install mode it will be 'common' (admin mode) or 'user' (non-admin mode)
+; pf - Program Files
+; commonpf and userpf consts expand to different paths that user has access to
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputBaseFilename={#MyAppName}_{#MyAppVersion}_{#MyAppPlatform}_setup
