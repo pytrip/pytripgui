@@ -18,7 +18,7 @@ class CanvasView:
         self.internal_events = Events(('on_perspective_change', 'on_change_slice_position'))
 
         self._ui = UiViewCanvas(parent)
-        self._plotter = MplPlotter(None)
+        self._plotter = MplPlotter()
 
         # TODO probably move the ui element it out to a separate file
         self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)

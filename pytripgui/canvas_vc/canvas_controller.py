@@ -45,6 +45,7 @@ class CanvasController:
         # scrolling increments or decrements current slice number which is used to set value on slider
         # and that slider emits event that invokes callback - set_current_slice_no
         self._ui.position = self._model.projection_selector.current_slice_no
+        self._ui.data_sample.update_sample(event)
 
     def _on_perspective_change(self):
         self._model.projection_selector.plane = self._ui.perspective
