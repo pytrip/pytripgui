@@ -1,7 +1,7 @@
 from typing import Callable
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QValidator
+from PyQt5.QtGui import QValidator, QImage, QPixmap, QIcon
 from PyQt5.QtWidgets import QMessageBox, QListWidgetItem
 
 
@@ -162,11 +162,18 @@ class ListWidget:
         self.on_list_item_clicked_callback = lambda: None
         self._ui.itemClicked.connect(self._on_item_clicked)
 
-    def fill(self, items, get_name: Callable):
+    def fill(self, items, get_name: Callable, get_color: Callable = None):
         self._ui.clear()
         self._items.clear()
         for item in items:
-            q_item = QListWidgetItem(get_name(item))
+            name = get_name(item)
+            q_item = QListWidgetItem(name)
+            if get_color is not None:
+                import numpy as np
+                image = np.full(shape=(10, 10, 3), fill_value=get_color(item), dtype=np.uint8)
+                image = QImage(image.data, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
+                pixmap = QPixmap(image)
+                q_item.setIcon(QIcon(pixmap))
             q_item.setData(Qt.UserRole, item)
             if self._checkable:
                 q_item.setCheckState(Qt.Unchecked)
