@@ -70,7 +70,7 @@ class AppCallback:
 
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         logger.debug("Open Voxelplan: {}".format(path))
-        progress_dialog = LoadingFileController(file_path=path, load_function=self.app_controller.open_voxelplan,
+        progress_dialog = LoadingFileController(load_function=self.app_controller.open_voxelplan, function_args=(path,),
                                                 parent=self.parent_gui.ui, window_title="Open Voxelplan",
                                                 progress_message="Reading files, please wait...")
         progress_dialog.start()
@@ -86,7 +86,7 @@ class AppCallback:
         dir_path = self.parent_gui.browse_folder_path("Open DICOM folder")
         logger.debug("Open DICOM: {}".format(dir_path))
         # self.app_controller.open_dicom(dir_path)
-        progress_dialog = LoadingFileController(file_path=dir_path, load_function=self.app_controller.open_dicom,
+        progress_dialog = LoadingFileController(load_function=self.app_controller.open_dicom, function_args=(dir_path,),
                                                 parent=self.parent_gui.ui, window_title="Open DICOM",
                                                 progress_message="Reading files, please wait...")
         progress_dialog.start()
@@ -379,6 +379,17 @@ class AppCallback:
 
         path_base, _extension = os.path.splitext(full_path)
         path, basename = os.path.split(path_base)
+
+        progress_dialog = LoadingFileController(load_function=self._export_patient_voxelplan,
+                                                function_args=(path, basename, patient_item),
+                                                parent=self.parent_gui.ui, window_title="Export to Voxelplan",
+                                                progress_message="Saving files, please wait...",
+                                                finish_message="Export complete.")
+        progress_dialog.start()
+        return True
+
+    @staticmethod
+    def _export_patient_voxelplan(path, basename, patient_item):
         logger.info("Voxelplan export to: " + path + " with plan basename: " + basename)
 
         patient_item.data.ctx.write(os.path.join(path, basename + patient_item.data.ctx.data_file_extension))
@@ -388,7 +399,6 @@ class AppCallback:
             logger.warning("Exported patient has no VOI.")
 
         logger.debug("Voxelplan export finished.")
-        return True
 
     def export_patient_dicom_callback(self, patient_item: PatientItem) -> bool:
         """
@@ -408,6 +418,17 @@ class AppCallback:
             # returning False to signify a failed export
             return False
 
+        progress_dialog = LoadingFileController(load_function=self._export_patient_dicom,
+                                                function_args=(full_path, patient_item),
+                                                parent=self.parent_gui.ui, window_title="Export to DICOM",
+                                                progress_message="Saving files, please wait...",
+                                                finish_message="Export complete.")
+        progress_dialog.start()
+        return True
+
+    @staticmethod
+    def _export_patient_dicom(full_path, patient_item):
+
         logger.info("DICOM export to: " + full_path)
 
         patient_item.data.ctx.write_dicom(full_path)
@@ -417,7 +438,6 @@ class AppCallback:
             logger.warning("Exported patient has no VOI.")
 
         logger.debug("DICOM export finished.")
-        return True
 
     def export_dose_voxelplan_callback(self, simulation_result: SimulationResultItem):
         """
@@ -442,7 +462,12 @@ class AppCallback:
         path, basename = os.path.split(path_base)
         logger.info("Voxelplan export to: " + path + " with basename: " + basename)
 
-        dose_cube.write(path_base)
+        progress_dialog = LoadingFileController(load_function=dose_cube.write,
+                                                function_args=(path_base,),
+                                                parent=self.parent_gui.ui, window_title="Export to Voxelplan",
+                                                progress_message="Saving files, please wait...",
+                                                finish_message="Export complete.")
+        progress_dialog.start()
 
         logger.debug("Voxelplan export finished.")
         return True
@@ -469,7 +494,12 @@ class AppCallback:
 
         logger.info("DICOM export to: " + full_path)
 
-        dose_cube.write_dicom(full_path)
+        progress_dialog = LoadingFileController(load_function=dose_cube.write_dicom,
+                                                function_args=(full_path,),
+                                                parent=self.parent_gui.ui, window_title="Export to DICOM",
+                                                progress_message="Saving files, please wait...",
+                                                finish_message="Export complete.")
+        progress_dialog.start()
 
         logger.debug("DICOM export finished.")
         return True
@@ -492,6 +522,17 @@ class AppCallback:
 
         logger.info("Voxelplan import from: " + full_path)
 
+        progress_dialog = LoadingFileController(load_function=self._import_dose_voxelplan,
+                                                function_args=(full_path, selected_patient),
+                                                parent=self.parent_gui.ui, window_title="Import from Voxelplan",
+                                                progress_message="Loading files, please wait...",
+                                                finish_message="Import complete.")
+        progress_dialog.start()
+
+        logger.debug("Voxelplan import finished.")
+        return True
+
+    def _import_dose_voxelplan(self, full_path, selected_patient):
         path_base, _extension = os.path.splitext(full_path)
         dir_path, plan_basename = os.path.split(path_base)
 
@@ -513,9 +554,6 @@ class AppCallback:
         # parent_item=None to set simulation result as a independent item
         self.app_model.patient_tree.add_new_item(parent_item=selected_patient, item=result_item)
 
-        logger.debug("Voxelplan import finished.")
-        return True
-
     def import_dose_dicom_callback(self) -> bool:
         logger.debug("Import DoseCube from DICOM")
 
@@ -533,6 +571,18 @@ class AppCallback:
             return False
 
         logger.info("DICOM import from: " + dicom_dir)
+
+        progress_dialog = LoadingFileController(load_function=self._import_dose_dicom,
+                                                function_args=(dicom_dir, selected_patient),
+                                                parent=self.parent_gui.ui, window_title="Import from DICOM",
+                                                progress_message="Loading files, please wait...",
+                                                finish_message="Import complete.")
+        progress_dialog.start()
+
+        logger.debug("DICOM import finished.")
+        return True
+
+    def _import_dose_dicom(self, dicom_dir, selected_patient):
         _dir_path, plan_basename = os.path.split(dicom_dir)
 
         result_item = SimulationResultItem()
@@ -554,9 +604,6 @@ class AppCallback:
 
         # parent_item=selected_patient to set simulation result as a child of the patient
         self.app_model.patient_tree.add_new_item(parent_item=selected_patient, item=result_item)
-
-        logger.debug("DICOM import finished.")
-        return True
 
     def export_plan_exec_callback(self, item: Union[PlanItem, FieldItem]) -> bool:
         """
@@ -586,8 +633,12 @@ class AppCallback:
 
         logger.info("Plan export to: " + full_path)
 
-        plan.save_exec(full_path)
-
+        progress_dialog = LoadingFileController(load_function=plan.save_exec,
+                                                function_args=(full_path,),
+                                                parent=self.parent_gui.ui, window_title="Exporting plan",
+                                                progress_message="Saving files, please wait...",
+                                                finish_message="Export complete.")
+        progress_dialog.start()
         logger.debug("Plan export finished.")
         return True
 

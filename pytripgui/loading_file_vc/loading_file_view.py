@@ -20,7 +20,7 @@ class LoadingFileView:
         # set window text
         self.set_window_title(window_title)
         self.set_info_label_text(progress_message)
-        self.finish_message = finish_message
+        self._finish_message = finish_message
 
     def set_info_label_text(self, text):
         self._ui.info_label.setText(text)
@@ -33,12 +33,12 @@ class LoadingFileView:
         # we need to process events to let UI init take effect
         QApplication.processEvents()
 
-    def ok_button_set_enabled(self, enabled):
+    def _ok_button_set_enabled(self, enabled):
         self._ui.ok_button.setEnabled(enabled)
 
     def update_finished(self):
-        self.set_info_label_text(self.finish_message)
-        self.ok_button_set_enabled(True)
+        self.set_info_label_text(self._finish_message)
+        self._ok_button_set_enabled(True)
 
     def reject(self):
         self._ui.reject()
