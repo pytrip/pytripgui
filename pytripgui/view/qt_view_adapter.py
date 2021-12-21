@@ -168,7 +168,7 @@ class ListWidget:
         for item in items:
             name = get_name(item)
             q_item = QListWidgetItem(name)
-            if get_color is not None:
+            if get_color:
                 import numpy as np
                 image = np.full(shape=(10, 10, 3), fill_value=get_color(item), dtype=np.uint8)
                 image = QImage(image.data, image.shape[1], image.shape[0], image.strides[0], QImage.Format_RGB888)
