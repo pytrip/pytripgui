@@ -55,6 +55,7 @@ class CanvasController:
 
         self._update_canvas_view()
         self._ui.draw()
+        self._ui.data_sample.update_perspective(self._model.projection_selector.plane)
 
     def _on_slider_position_change(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
@@ -72,6 +73,8 @@ class CanvasController:
                 # TODO this does work, but is not fully reworked yet - POI plotting is deprecated
                 self._ui.plot_voi(self._model.vdx)
 
+            self._ui.data_sample.update_mode_data("Ctx", self._model.projection_selector.current_slice_no)
+
         if self._model.dose:
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "DOS"):
@@ -79,12 +82,16 @@ class CanvasController:
                 self._model.dose.prepare_data_to_plot()
                 self._ui.plot_dos(self._model.dose)
 
+                self._ui.data_sample.update_mode_data("Dose", self._model.dose)
+
         if self._model.let:
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "LET"):
                 self._model.display_filter = "LET"
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
+
+                self._ui.data_sample.update_mode_data("Let", self._model.let)
 
     def set_model_data_and_update_view(self, patient: PatientModel, state: PatientGuiState = None):
         """
@@ -127,6 +134,9 @@ class CanvasController:
         # load VDX data to plot model
         if patient.vdx and patient.vdx.vois:
             self.update_voi_list(patient, state)
+
+        # update data sample with the new cube
+        self._ui.data_sample.update_cube(self._model.ctx.cube)
 
         # update data to be displayed with loaded data
         self._update_canvas_view()

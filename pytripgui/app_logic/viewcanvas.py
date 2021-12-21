@@ -3,8 +3,8 @@ from pytripgui.canvas_vc.canvas_controller import CanvasController
 
 
 class ViewCanvases:
-    def __init__(self):
-        self.viewcanvas_view = CanvasView()
+    def __init__(self, parent):
+        self.viewcanvas_view = CanvasView(parent)
         self.plot_cont = CanvasController(None, self.viewcanvas_view)
 
     def widget(self):
