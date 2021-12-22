@@ -28,20 +28,17 @@ class PlotModel:
         self.slice_pos_mm: float = 0.0
 
     def set_ctx(self, ctx):
-        self.ctx = Ctx(self.projection_selector)
-        self.ctx.cube = ctx
+        self.ctx = Ctx(ctx, self.projection_selector)
         if not self.projection_selector.is_loaded():
             self.projection_selector.load_slices_count(ctx)
 
     def set_let(self, let):
-        self.let = Let(self.projection_selector)
-        self.let.cube = let
+        self.let = Let(let, self.projection_selector)
         if not self.projection_selector.is_loaded():
             self.projection_selector.load_slices_count(let)
 
     def set_dose(self, dose):
-        self.dose = Dos(self.projection_selector)
-        self.dose.cube = dose
+        self.dose = Dos(dose, self.projection_selector)
         if not self.projection_selector.is_loaded():
             self.projection_selector.load_slices_count(dose)
 
@@ -51,4 +48,4 @@ class PlotModel:
             self.projection_selector._coronal_slice_no = max_item_index[1]
 
     def set_vdx(self):
-        self.vdx = Vdx(self.projection_selector, self.ctx.cube)
+        self.vdx = Vdx(self.ctx.cube, self.projection_selector)

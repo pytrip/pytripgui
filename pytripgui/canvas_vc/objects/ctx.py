@@ -1,13 +1,16 @@
 import logging
 
+from pytrip import Cube
+
 from pytripgui.canvas_vc.objects.data_base import PlotDataBase
+from pytripgui.canvas_vc.projection_selector import ProjectionSelector
 
 logger = logging.getLogger(__name__)
 
 
 class Ctx(PlotDataBase):
-    def __init__(self, selector):
-        super().__init__(selector)
+    def __init__(self, cube: Cube, selector: ProjectionSelector):
+        super().__init__(cube, selector)
 
         self.contrast_ct = [-500, 2000]
 

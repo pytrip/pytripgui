@@ -46,7 +46,8 @@ class PatientImageBase(ABC):
         """
         Updates data in plotted image.
         """
-        self._image.set_data(data.data_to_plot)
+        if self._image:
+            self._image.set_data(data.data_to_plot)
 
     def remove(self) -> None:
         """

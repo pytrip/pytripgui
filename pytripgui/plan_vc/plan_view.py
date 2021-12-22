@@ -295,5 +295,6 @@ class PlanQtView:
         self.ui.targetTissue_comboBox.setDisabled(True)
         self.ui.residialTissue_comboBox.setDisabled(True)
         self.ui.residialTissue_label.setDisabled(True)
+        self.ui.rasterScanFile_checkBox.setDisabled(True)
         self.ui.beamsEyeDoseView_checkBox.setDisabled(True)
         self.ui.beamsEyeLETdViewcheckBox.setDisabled(True)
