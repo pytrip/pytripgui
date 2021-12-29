@@ -21,7 +21,7 @@ class DataSample(QtWidgets.QWidget):
 
         self.mode: DataSample.Mode = self.Mode.ctx
         self.perspective: DataSample.Perspective = self.Perspective.transversal
-        self.data: ndarray = ndarray(None)
+        self.data: ndarray = ndarray(shape=())
         self.cube: CtxCube = CtxCube()
         self.x_offset: float = 0
         self.y_offset: float = 0
