@@ -100,10 +100,10 @@ class DataSample(QtWidgets.QWidget):
         elif self.mode == self.Mode.let:
             self.doseletDescription_label.setText("LET:")
             self.doseletUnit_label.setText("keV / µm")
-            
+
     def update_slice_no(self, slice_no: int) -> None:
         self.slice_no = slice_no
-        
+
     def update_doselet_data(self, data: ndarray) -> None:
         self.data = data
 

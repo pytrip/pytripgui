@@ -722,9 +722,7 @@ class AppCallback:
         Returns:
         None.
         """
-        if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
-            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
+        self.app_model.viewcanvases.widget().show()
 
         if self.app_model.viewcanvases:
             self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
