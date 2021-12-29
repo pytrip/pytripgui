@@ -85,7 +85,6 @@ class DataSample(QtWidgets.QWidget):
         else:
             y = math.floor((ydata - self.y_offset) / self.cube.slice_distance)
 
-        print("YX: ", y, ", ", x)
         self.doseletData_label.setText(str(self.data[y][x]))
 
     def update_cube(self, cube: CtxCube) -> None:
