@@ -1,38 +1,40 @@
 import math
 from enum import Enum
 from pathlib import Path
+from matplotlib.axes import Axes
+from matplotlib.backend_bases import MouseEvent
+from numpy import ndarray
 
 from PyQt5 import QtWidgets, uic
 
-# TODO maybe show mouse-overed VOIs that have been selected in the VOI list;
-#  hovering over the diagram in the upper right corner causes problems;
-#  bug with interface breaking sometimes occurs after switching patients;
-#  add some comments; some UI tweaks
+from pytrip import CtxCube
+from pytripgui.view.qt_gui import UiMainWindow
 
 
 class DataSample(QtWidgets.QWidget):
-    def __init__(self, parent):
+    def __init__(self, parent: UiMainWindow, axes: Axes):
         super().__init__(parent)
-        ui_path = Path(Path(__file__).parent.parent, "view", "data_sample.ui").resolve()
+        ui_path = Path(Path(__file__).parent, "data_sample.ui").resolve()
         uic.loadUi(ui_path, self)
+
+        self.axes: Axes = axes
+
+        self.mode: DataSample.Mode = self.Mode.ctx
+        self.perspective: DataSample.Perspective = self.Perspective.transversal
+        self.data: ndarray = ndarray(None)
+        self.cube: CtxCube = CtxCube()
+        self.x_offset: float = 0
+        self.y_offset: float = 0
+        self.z_offset: float = 0
+        self.slice_no: int = 0
 
         self.position_widget.hide()
         self.doselet_widget.hide()
 
-        self.mode = self.Mode.ctx
-        self.perspective = self.Perspective.transveral
-        self.data = None
-        self.cube = None
-        self.x_offset = 0
-        self.y_offset = 0
-        self.z_offset = 0
-        self.slice = 0
+    def update_perspective(self, perspective_name: str) -> None:
+        self.perspective = self.Perspective(perspective_name)
 
-    def update_perspective(self, perspective_name=None):
-        if perspective_name:
-            self.perspective = self.Perspective(perspective_name)
-
-        if self.perspective == self.Perspective.transveral:
+        if self.perspective == self.Perspective.transversal:
             self.x_offset = self.cube.xoffset
             self.y_offset = self.cube.yoffset
         elif self.perspective == self.Perspective.sagittal:
@@ -42,33 +44,32 @@ class DataSample(QtWidgets.QWidget):
             self.x_offset = self.cube.xoffset
             self.y_offset = self.cube.zoffset
 
-    def update_sample(self, event):
-        if event.xdata:
-            self.update_position(event)
+    def update_sample(self, event: MouseEvent) -> None:
+        if event.xdata and event.inaxes == self.axes:
+            self.update_position(event.xdata, event.ydata)
             self.position_widget.show()
 
             if self.mode != self.Mode.ctx:
-                self.update_doselet(event)
+                self.update_doselet(event.xdata, event.ydata)
                 self.doselet_widget.show()
         else:
             self.position_widget.hide()
             self.doselet_widget.hide()
 
-    def update_position(self, event):
-        if self.perspective == self.Perspective.transveral:
-            x_position = event.xdata
-            y_position = event.ydata
-            z_position = self.slice * self.cube.slice_distance
+    def update_position(self, xdata: float, ydata: float) -> None:
+        if self.perspective == self.Perspective.transversal:
+            x_position = xdata
+            y_position = ydata
+            z_position = self.slice_no * self.cube.slice_distance
         elif self.perspective == self.Perspective.sagittal:
-            x_position = self.slice * self.cube.pixel_size
-            y_position = event.xdata
-            z_position = event.ydata
+            x_position = self.slice_no * self.cube.pixel_size
+            y_position = xdata
+            z_position = ydata
         else:
-            x_position = event.xdata
-            y_position = self.slice * self.cube.pixel_size
-            z_position = event.ydata
+            x_position = xdata
+            y_position = self.slice_no * self.cube.pixel_size
+            z_position = ydata
 
-        # TODO clamp it to ~5 digits
         x_position = "{:.2f}".format(round(x_position, 2))
         y_position = "{:.2f}".format(round(y_position, 2))
         z_position = "{:.2f}".format(round(z_position, 2))
@@ -77,26 +78,22 @@ class DataSample(QtWidgets.QWidget):
         self.yPosition_label.setText(y_position + ",")
         self.zPosition_label.setText(z_position + ")")
 
-    def update_doselet(self, event):
-        x = math.floor((event.xdata - self.x_offset) / self.cube.pixel_size)
-        if self.perspective == self.Perspective.transveral:
-            y = math.floor((event.ydata - self.y_offset) / self.cube.pixel_size)
+    def update_doselet(self, xdata: float, ydata: float) -> None:
+        x = math.floor((xdata - self.x_offset) / self.cube.pixel_size)
+        if self.perspective == self.Perspective.transversal:
+            y = math.floor((ydata - self.y_offset) / self.cube.pixel_size)
         else:
-            y = math.floor((event.ydata - self.y_offset) / self.cube.slice_distance)
+            y = math.floor((ydata - self.y_offset) / self.cube.slice_distance)
 
+        print("YX: ", y, ", ", x)
         self.doseletData_label.setText(str(self.data[y][x]))
 
-    def update_cube(self, cube):
+    def update_cube(self, cube: CtxCube) -> None:
+        # update cube when changing the patient
         self.cube = cube
-        self.update_perspective()
 
-    def update_mode_data(self, mode_name, data=None):
+    def update_mode(self, mode_name: str) -> None:
         self.mode = self.Mode(mode_name)
-
-        if self.mode == self.Mode.ctx:
-            self.slice = data
-        else:
-            self.data = data.data_to_plot
 
         if self.mode == self.Mode.dose:
             self.doseletDescription_label.setText("Dose:")
@@ -104,9 +101,15 @@ class DataSample(QtWidgets.QWidget):
         elif self.mode == self.Mode.let:
             self.doseletDescription_label.setText("LET:")
             self.doseletUnit_label.setText("keV / µm")
+            
+    def update_slice_no(self, slice_no: int) -> None:
+        self.slice_no = slice_no
+        
+    def update_doselet_data(self, data: ndarray) -> None:
+        self.data = data
 
     class Perspective(Enum):
-        transveral = "Transversal"
+        transversal = "Transversal"
         sagittal = "Sagittal"
         coronal = "Coronal"
 

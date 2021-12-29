@@ -25,7 +25,7 @@ class CanvasView:
         self.voi_list_dock = self._ui.parent().voiList_dockWidget
         self.voi_list_dock.setWidget(self._ui.voi_listWidget)
 
-        self.data_sample = DataSample(self._ui.parent())
+        self.data_sample = DataSample(self._ui.parent(), self._plotter.plotting_manager.axes)
         dock_widget = self._ui.parent().dataSample_dockWidget
         dock_widget.setWidget(self.data_sample)
 

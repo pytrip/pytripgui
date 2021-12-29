@@ -102,7 +102,7 @@ class MainWindowController:
 
         self.model.viewcanvases.widget().show()
 
-        self.model.patient_tree.add_new_item(item_list_parent, item)
+        self.model.patient_tree.add_new_item(None, patient)
         return True
 
     def on_about(self):
