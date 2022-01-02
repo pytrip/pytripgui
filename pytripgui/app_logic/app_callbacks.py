@@ -347,8 +347,15 @@ class AppCallback:
         if not controller.is_accepted:
             return False
 
-        self.app_model.viewcanvases.widget().show()
+        patient = controller.model
 
+        if not self.app_model.viewcanvases:
+            self.app_model.viewcanvases = ViewCanvases(self.parent_gui.ui)
+            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
+
+        # someone needs to test this, but I think it's unnecessary,
+        #   because after that callback another event is emitted, which sets patient one more time
+        # self.app_model.viewcanvases.set_patient(patient)
         return True
 
     def export_patient_voxelplan_callback(self, patient_item: PatientItem) -> bool:
@@ -722,7 +729,9 @@ class AppCallback:
         Returns:
         None.
         """
-        self.app_model.viewcanvases.widget().show()
+        if not self.app_model.viewcanvases:
+            self.app_model.viewcanvases = ViewCanvases(self.parent_gui)
+            self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
 
         if self.app_model.viewcanvases:
             self.app_model.viewcanvases.set_patient(patient=data_item.data, state=state_item.state)
