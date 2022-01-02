@@ -63,7 +63,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'pytrip98gui'
-copyright = '2016, Leszek Grzanka'
+copyright = '2022, Leszek Grzanka'
 author = 'Leszek Grzanka'
 
 # The version info for the project you're documenting, acts as replacement for
