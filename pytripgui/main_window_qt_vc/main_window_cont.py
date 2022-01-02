@@ -36,10 +36,6 @@ class MainWindowController:
         self.model.patient_tree = PatientTree(self.view.ui)
         self.model.patient_tree.app_callback(self.app_callback)
 
-        # self.model.viewcanvases = ViewCanvases(self.view.ui)
-        # self.model.viewcanvases.widget().hide()
-        # self.view.add_widget(self.model.viewcanvases.widget())
-
         # main window callbacks
         self.view.open_voxelplan_callback = self.app_callback.on_open_voxelplan
         self.view.open_dicom_callback = self.app_callback.on_open_dicom
@@ -83,9 +79,6 @@ class MainWindowController:
             patient_data.vdx = None
 
         self._add_new_item(None, patient)
-        # self.model.viewcanvases.widget().show()
-        #
-        # self.model.patient_tree.add_new_item(None, patient)
         return True
 
     def open_dicom(self, path):
@@ -109,16 +102,8 @@ class MainWindowController:
             self.model.viewcanvases = ViewCanvases(self.view.ui)
             self.view.add_widget(self.model.viewcanvases.widget())
 
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
         self.model.patient_tree.add_new_item(item_list_parent, item)
         return True
-
-# self.model.viewcanvases.widget().show()
-#
-# self.model.patient_tree.add_new_item(None, patient)
-# return True
 
     def on_about(self):
         """

@@ -20,7 +20,7 @@ class CanvasView:
         self._ui = UiViewCanvas(parent)
         self._plotter = MplPlotter()
 
-        # TODO probably move the ui element it out to a separate file
+        # TODO probably move the voi list out to a separate file
         self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
         self.voi_list_dock = self._ui.parent().voiList_dockWidget
         self.voi_list_dock.setWidget(self._ui.voi_listWidget)
@@ -129,7 +129,6 @@ class CanvasView:
     def _on_move(self, event) -> None:
         self.data_sample.update_sample(event)
 
-    # TODO not sure if we are keeping those two functionalities
     def voi_list_set_visibility(self, visible: bool = True) -> None:
         """
         Method that handles displaying and hiding the VOI list.
