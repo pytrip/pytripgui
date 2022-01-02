@@ -72,10 +72,11 @@ class VoiManager:
                 else:
                     xy = data_mm
 
-                # plotting in terms of pixels
+                # plotting in terms of mm
                 if _c.number_of_points() == 1:
                     # TODO not reworked yet
-                    self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
+                    pass
+                    # self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
                 else:
                     # get proper "Xs" and "Ys" to plot
                     x, y = self._get_plot_data(vdx, xy)
