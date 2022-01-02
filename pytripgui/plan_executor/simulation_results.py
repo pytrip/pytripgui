@@ -1,8 +1,6 @@
-import os
 import logging
 
-import pytrip as pt
-from pytrip import volhist
+from pytrip import volhist, DosCube, LETCube
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +19,7 @@ class SimulationResults:
         return self.plan.dosecubes
 
     def get_dose(self, dose_type):
-        if dose_type not in ("phys", "bio"):  # TODO: More dose types
+        if dose_type not in DosCube.allowed_suffix:
             raise ValueError("Wrong dose type")
 
         for dose in self.plan.dosecubes:
@@ -33,7 +31,7 @@ class SimulationResults:
         return self.plan.letcubes
 
     def get_let(self, let_type):
-        if let_type not in ("dosemlet"):  # TODO: More let types
+        if let_type not in LETCube.allowed_suffix:
             raise ValueError("Wrong LET type")
 
         for let in self.plan.letcubes:

@@ -93,7 +93,7 @@ class PlottingManager:
             if not self.dose_bar:
                 self.placement_manager.add_dose_bar()
                 self._plot_dos_bar(data)
-        else:
+        elif self.dose.is_present():
             self.dose.update(data)
 
     def _plot_dos_bar(self, data: Dos) -> None:
