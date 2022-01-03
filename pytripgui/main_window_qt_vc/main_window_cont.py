@@ -33,7 +33,7 @@ class MainWindowController:
         """
         self.app_callback = AppCallback(self)
 
-        self.model.patient_tree = PatientTree(self.view, self.view.ui)
+        self.model.patient_tree = PatientTree(self.view.ui)
         self.model.patient_tree.app_callback(self.app_callback)
 
         # main window callbacks
@@ -77,6 +77,7 @@ class MainWindowController:
             logger.warning("Loaded patient has no VOI data")
             # TODO add empty vdx init if needed
             patient_data.vdx = None
+
         self._add_new_item(None, patient)
         return True
 
@@ -98,12 +99,9 @@ class MainWindowController:
 
     def _add_new_item(self, item_list_parent, item):
         if not self.model.viewcanvases:
-            self.model.viewcanvases = ViewCanvases()
+            self.model.viewcanvases = ViewCanvases(self.view.ui)
             self.view.add_widget(self.model.viewcanvases.widget())
 
-        # someone needs to test this, but I think it's unnecessary,
-        #   because after that callback another event is emitted, which sets patient one more time
-        # self.app_model.viewcanvases.set_patient(patient)
         self.model.patient_tree.add_new_item(item_list_parent, item)
         return True
 

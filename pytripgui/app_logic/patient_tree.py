@@ -1,8 +1,5 @@
 import logging
 
-from PyQt5.QtWidgets import QDockWidget
-from PyQt5.QtCore import Qt
-
 from pytripgui.tree_vc.tree_model import TreeModel
 from pytripgui.tree_vc.tree_items import PatientList
 
@@ -13,21 +10,17 @@ logger = logging.getLogger(__name__)
 
 
 class PatientTree:
-    def __init__(self, gui, parent_view):
-        self._gui = gui
+    def __init__(self, parent):
         self.patient_tree_model = TreeModel(PatientList())
         self.patient_tree_view = TreeView()
 
         self.patient_tree_view.setModel(self.patient_tree_model)
         self.patient_tree_cont = TreeController(self.patient_tree_model, self.patient_tree_view)
 
-        self._parent_view = parent_view
+        self._parent = parent
 
-        self.widget = QDockWidget()
-        self.widget.setFeatures(self.widget.features() & ~QDockWidget.DockWidgetClosable)
+        self.widget = self._parent.patientTree_dockWidget
         self.widget.setWidget(self.patient_tree_view)
-        self._parent_view.addDockWidget(Qt.LeftDockWidgetArea, self.widget)
-        self.widget.setWindowTitle("Patient tree")
 
     def set_visible(self, visible):
         if visible:

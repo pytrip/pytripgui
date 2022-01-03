@@ -45,6 +45,7 @@ class CanvasController:
         # scrolling increments or decrements current slice number which is used to set value on slider
         # and that slider emits event that invokes callback - set_current_slice_no
         self._ui.position = self._model.projection_selector.current_slice_no
+        self._ui.data_sample.update_sample(event)
 
     def _on_perspective_change(self):
         self._model.projection_selector.plane = self._ui.perspective
@@ -55,6 +56,7 @@ class CanvasController:
 
         self._update_canvas_view()
         self._ui.draw()
+        self._ui.data_sample.update_perspective(self._model.projection_selector.plane)
 
     def _on_slider_position_change(self, slice_no):
         self._model.projection_selector.current_slice_no = slice_no
@@ -72,6 +74,9 @@ class CanvasController:
                 # TODO this does work, but is not fully reworked yet - POI plotting is deprecated
                 self._ui.plot_voi(self._model.vdx)
 
+            self._ui.data_sample.update_mode("Ctx")
+            self._ui.data_sample.update_slice_no(self._model.projection_selector.current_slice_no)
+
         if self._model.dose:
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "DOS"):
@@ -79,12 +84,18 @@ class CanvasController:
                 self._model.dose.prepare_data_to_plot()
                 self._ui.plot_dos(self._model.dose)
 
+                self._ui.data_sample.update_mode("Dose")
+                self._ui.data_sample.update_doselet_data(self._model.dose.data_to_plot)
+
         if self._model.let:
             if (self._model.display_filter == "") | \
                     (self._model.display_filter == "LET"):
                 self._model.display_filter = "LET"
                 self._model.let.prepare_data_to_plot()
                 self._ui.plot_let(self._model.let)
+
+                self._ui.data_sample.update_mode("Let")
+                self._ui.data_sample.update_doselet_data(self._model.let.data_to_plot)
 
     def set_model_data_and_update_view(self, patient: PatientModel, state: PatientGuiState = None):
         """
@@ -127,6 +138,10 @@ class CanvasController:
         # load VDX data to plot model
         if patient.vdx and patient.vdx.vois:
             self.update_voi_list(patient, state)
+
+        # update data sample with the new cube and last perspective for that cube
+        self._ui.data_sample.update_cube(self._model.ctx.cube)
+        self._ui.data_sample.update_perspective(self._model.projection_selector.plane)
 
         # update data to be displayed with loaded data
         self._update_canvas_view()

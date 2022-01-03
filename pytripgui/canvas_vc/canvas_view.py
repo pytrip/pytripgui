@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QSizePolicy
 from PyQt5 import QtCore
 
 from pytripgui.canvas_vc.plotter.mpl_plotter import MplPlotter
+from pytripgui.view.data_sample import DataSample
 from pytripgui.view.qt_gui import UiViewCanvas
 from pytripgui.view.qt_view_adapter import ListWidget
 
@@ -19,7 +20,14 @@ class CanvasView:
         self._ui = UiViewCanvas(parent)
         self._plotter = MplPlotter()
 
+        # TODO probably move the voi list out to a separate file
         self.voi_list = ListWidget(self._ui.voi_listWidget, checkable=True)
+        self.voi_list_dock = self._ui.parent().voiList_dockWidget
+        self.voi_list_dock.setWidget(self._ui.voi_listWidget)
+
+        self.data_sample = DataSample(self._ui.parent(), self._plotter.plotting_manager.axes)
+        dock_widget = self._ui.parent().dataSample_dockWidget
+        dock_widget.setWidget(self.data_sample)
 
         self._ui.vc_layout.addWidget(self._plotter)
 
@@ -38,6 +46,8 @@ class CanvasView:
 
         self._ui.perspective_comboBox.currentIndexChanged.connect(
             lambda index: self.internal_events.on_perspective_change())
+
+        self._plotter.mpl_connect("motion_notify_event", self._on_move)
 
     def widget(self):
         return self._ui
@@ -116,6 +126,9 @@ class CanvasView:
     def _enable_perspective_selector(self):
         self._ui.perspective_comboBox.setEnabled(True)
 
+    def _on_move(self, event) -> None:
+        self.data_sample.update_sample(event)
+
     def voi_list_set_visibility(self, visible: bool = True) -> None:
         """
         Method that handles displaying and hiding the VOI list.
@@ -124,10 +137,10 @@ class CanvasView:
         visible(bool): Whether the list should be shown.
         """
         if visible:
-            self._ui.voi_listWidget.show()
+            self.voi_list_dock.show()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Checked)
         else:
-            self._ui.voi_listWidget.hide()
+            self.voi_list_dock.hide()
             self._ui.voiList_checkBox.setCheckState(QtCore.Qt.Unchecked)
 
     def voi_list_empty(self, empty: bool = True) -> None:
@@ -137,7 +150,7 @@ class CanvasView:
         Parameters:
         empty(bool): Whether the list is empty and should be hidden.
         """
-        voi_list = self._ui.voi_listWidget
+        voi_list = self.voi_list_dock
         checkbox = self._ui.voiList_checkBox
 
         if empty:

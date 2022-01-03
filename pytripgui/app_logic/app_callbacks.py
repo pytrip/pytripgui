@@ -350,7 +350,7 @@ class AppCallback:
         patient = controller.model
 
         if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
+            self.app_model.viewcanvases = ViewCanvases(self.parent_gui.ui)
             self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
 
         # someone needs to test this, but I think it's unnecessary,
@@ -730,7 +730,7 @@ class AppCallback:
         None.
         """
         if not self.app_model.viewcanvases:
-            self.app_model.viewcanvases = ViewCanvases()
+            self.app_model.viewcanvases = ViewCanvases(self.parent_gui)
             self.parent_gui.add_widget(self.app_model.viewcanvases.widget())
 
         if self.app_model.viewcanvases:

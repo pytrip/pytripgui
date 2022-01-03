@@ -1,20 +1,19 @@
 import logging
 
-from PyQt5.QtWidgets import QMainWindow
-
 from pytripgui.app_logic.patient_tree import PatientTree
+from pytripgui.main_window_qt_vc import MainWindowQtView
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
 
 def test_basics(qtbot):
-    main_window = QMainWindow()
-    patient_tree = PatientTree(main_window, main_window)
+    view = MainWindowQtView()
+
+    patient_tree = PatientTree(view.ui)
     patient_tree.set_visible(True)
-    main_window.show()
 
-    qtbot.addWidget(main_window)
-    main_window.show()
+    qtbot.addWidget(view.ui)
+    view.show()
 
-    assert main_window.isVisible()
+    assert view.ui.isVisible()
