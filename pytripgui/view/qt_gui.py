@@ -2,6 +2,7 @@ import os
 
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QDialogButtonBox
 
 current_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -160,3 +161,16 @@ class LoadingFileDialog(QtWidgets.QDialog):
 
         self.info_label.setAlignment(Qt.AlignCenter)
         self.ok_button.accepted.connect(self.accept)
+
+
+class ContouringDialog(QtWidgets.QDialog):
+    def __init__(self, parent=None):
+        super(ContouringDialog, self).__init__(parent)
+        ui_path = os.path.join(current_directory, 'contouring_dialog.ui')
+        uic.loadUi(ui_path, self)
+
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+
+        self.setModal(True)
+
+        self.button_box.accepted.connect(self.accept)
