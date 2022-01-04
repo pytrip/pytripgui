@@ -542,7 +542,7 @@ class AppCallback:
         # we're not using the default import method from SimulationResults,
         # so that we're not limited to .phys.dos or .bio.dos,
         # but rather the user's file of choice
-        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data, name=plan.data.basename)
         result_item.data._import_dos(full_path)
 
         # add dose item as child of Simulation
@@ -590,7 +590,7 @@ class AppCallback:
 
         # we're not using the default import method from SimulationResults,
         # because it relies on data in the Voxelplan format (*.dos)
-        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data)
+        result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data, name=plan.data.basename)
 
         dos = DosCube(selected_patient.data.ctx)
         dcm = dicomhelper.read_dicom_dir(dicom_dir)

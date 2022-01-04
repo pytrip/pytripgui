@@ -6,10 +6,10 @@ logger = logging.getLogger(__name__)
 
 
 class SimulationResults:
-    def __init__(self, patient, plan):
+    def __init__(self, patient, plan, name):
         self.patient = patient
-        self.name = plan.basename
         self.plan = plan
+        self.name = name
         self.volume_histograms = {}
 
         self._compute_target_dvh()
