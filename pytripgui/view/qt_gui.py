@@ -169,8 +169,8 @@ class ContouringDialog(QtWidgets.QDialog):
         ui_path = os.path.join(current_directory, 'contouring_dialog.ui')
         uic.loadUi(ui_path, self)
 
-        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(Qt.Dialog | Qt.MSWindowsFixedSizeDialogHint | Qt.WindowStaysOnTopHint)
 
         self.setModal(True)
 
-        self.button_box.accepted.connect(self.accept)
+        self.button_box.button(QDialogButtonBox.No).clicked.connect(self.reject)

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Pre-calculate VOI contours</string>
+   <string>Precalculate VOI contours</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
@@ -43,7 +43,7 @@
   </widget>
   <widget class="QDialogButtonBox" name="button_box">
    <property name="enabled">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="geometry">
     <rect>
@@ -60,7 +60,7 @@
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QLabel" name="warn_label">
+  <widget class="QLabel" name="warning_label">
    <property name="geometry">
     <rect>
      <x>30</x>

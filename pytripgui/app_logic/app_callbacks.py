@@ -1,13 +1,13 @@
 import threading
-from typing import Optional, Union
+from typing import Optional, Union, Collection
 
 import pytrip.tripexecuter
-from PyQt5.QtCore import QThread
-from pytrip import DosCube, dicomhelper
+from PyQt5.QtWidgets import QApplication
+from pytrip import DosCube, dicomhelper, Voi
 
 from pytripgui.canvas_vc.gui_state import PatientGuiState
+from pytripgui.contouring_vc.contouring_controller import ContouringController
 from pytripgui.loading_file_vc.loading_file_controller import LoadingFileController
-from pytripgui.loading_file_vc.loading_file_view import LoadingFileView
 from pytripgui.plan_executor.simulation_results import SimulationResults
 from pytripgui.add_vois_vc import AddVOIsController
 from pytripgui.add_vois_vc.add_vois_view import AddVOIsQtView
@@ -70,10 +70,12 @@ class AppCallback:
 
         path = self.parent_gui.browse_file_path("Open Voxelpan", "Voxelplan (*.hed)")
         logger.debug("Open Voxelplan: {}".format(path))
-        progress_dialog = LoadingFileController(load_function=self.app_controller.open_voxelplan, function_args=(path,),
-                                                parent=self.parent_gui.ui, window_title="Open Voxelplan",
-                                                progress_message="Reading files, please wait...")
+        progress_dialog: LoadingFileController = LoadingFileController(load_function=self.app_controller.open_voxelplan,
+                                                                       function_args=(path,), parent=self.parent_gui.ui,
+                                                                       window_title="Open Voxelplan",
+                                                                       progress_message="Reading files, please wait...")
         progress_dialog.start()
+        progress_dialog.connect_finished(self.show_contouring_dialog)
 
     def on_open_dicom(self) -> None:
         """
@@ -90,6 +92,13 @@ class AppCallback:
                                                 parent=self.parent_gui.ui, window_title="Open DICOM",
                                                 progress_message="Reading files, please wait...")
         progress_dialog.start()
+        progress_dialog.connect_finished(self.show_contouring_dialog)
+
+    def show_contouring_dialog(self):
+        patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
+        vois: Collection[Voi] = patient.data.vdx.vois
+        contouring_dialog: ContouringController = ContouringController(vois=vois, parent=self.parent_gui.ui)
+        contouring_dialog.show()
 
     def on_execute_selected_plan(self) -> None:
         """
