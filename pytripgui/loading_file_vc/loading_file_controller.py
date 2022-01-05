@@ -26,5 +26,8 @@ class LoadingFileController:
             # if the user canceled opening, instantly close the loading window without waiting for confirmation
             self._view.reject()
 
+    def connect_finished(self, callback):
+        self._view.connect_finished(callback)
+
     def _update_finished(self):
         self._view.update_finished()

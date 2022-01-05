@@ -40,5 +40,8 @@ class LoadingFileView:
         self.set_info_label_text(self._finish_message)
         self._ok_button_set_enabled(True)
 
+    def connect_finished(self, callback):
+        self._ui.finished.connect(callback)
+
     def reject(self):
         self._ui.reject()
