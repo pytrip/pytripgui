@@ -34,7 +34,7 @@ install:
   - python -c "import struct;print(8 * struct.calcsize('P'))"
 # install usual requirements
   - python -m pip install --upgrade setuptools
-  - python -m pip install --upgrade -r requirements.txt
+  - python -m pip install -r requirements.txt
   - pip list
 # check numpy version
   - python -c "import numpy as np;print(np.version.version)"
