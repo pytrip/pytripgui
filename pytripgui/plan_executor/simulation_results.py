@@ -30,6 +30,18 @@ class SimulationResults:
     def get_lets(self):
         return self.plan.letcubes
 
+    def import_dos(self, dos_path):
+        logger.debug("Open DosCube {:s}".format(dos_path))
+        dos = DosCube()
+        dos.read(dos_path)
+        self.plan.dosecubes.append(dos)
+
+    def import_let(self, let_path):
+        logger.debug("Open LETCube {:s}".format(let_path))
+        let = LETCube()
+        let.read(let_path)
+        self.plan.letcubes.append(let)
+
     def get_let(self, let_type):
         if let_type not in LETCube.allowed_suffix:
             raise ValueError("Wrong LET type")

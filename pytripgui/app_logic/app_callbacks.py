@@ -552,11 +552,11 @@ class AppCallback:
         # so that we're not limited to .phys.dos or .bio.dos,
         # but rather the user's file of choice
         result_item.data = SimulationResults(patient=selected_patient.data, plan=plan.data, name=plan.data.basename)
-        result_item.data._import_dos(full_path)
+        result_item.data.import_dos(full_path)
 
         # add dose item as child of Simulation
         dose_item: SimulationResultItem = SimulationResultItem()
-        dose_item.data = result_item.data.dose
+        dose_item.data = result_item.data.get_doses()[-1]
         result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
@@ -604,11 +604,11 @@ class AppCallback:
         dos = DosCube(selected_patient.data.ctx)
         dcm = dicomhelper.read_dicom_dir(dicom_dir)
         dos.read_dicom(dcm)
-        result_item.data.dose = dos
+        result_item.data.plan.dosecubes.append(dos)
 
         # add dose item as child of Simulation
         dose_item = SimulationResultItem()
-        dose_item.data = result_item.data.dose
+        dose_item.data = dos
         result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
