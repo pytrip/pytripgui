@@ -40,7 +40,7 @@ class SimulationResults:
         logger.debug("Open LETCube {:s}".format(let_path))
         let = LETCube()
         let.read(let_path)
-        self.plan.dosecubes.append(let)
+        self.plan.letcubes.append(let)
 
     def get_let(self, let_type):
         if let_type not in LETCube.allowed_suffix:

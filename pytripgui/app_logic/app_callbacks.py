@@ -608,7 +608,7 @@ class AppCallback:
 
         # add dose item as child of Simulation
         dose_item = SimulationResultItem()
-        dose_item.data = result_item.data.get_doses()[-1]
+        dose_item.data = dos
         result_item.add_child(dose_item)
 
         # parent_item=selected_patient to set simulation result as a child of the patient
