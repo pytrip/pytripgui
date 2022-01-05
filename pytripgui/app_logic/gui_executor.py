@@ -53,14 +53,14 @@ class GuiExecutor:
         item = SimulationResultItem()
         item.data = self._thread.item_queue.get(False)
 
-        if item.data.dose:
+        for dose in item.data.get_doses():
             dose_item = SimulationResultItem()
-            dose_item.data = item.data.dose
+            dose_item.data = dose
             item.add_child(dose_item)
 
-        if item.data.let:
+        for let in item.data.get_lets():
             let_item = SimulationResultItem()
-            let_item.data = item.data.let
+            let_item.data = let
             item.add_child(let_item)
 
         self.result_callback(item, self.patient)

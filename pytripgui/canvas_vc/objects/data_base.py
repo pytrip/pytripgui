@@ -7,10 +7,10 @@ from pytripgui.canvas_vc.projection_selector import ProjectionSelector
 
 
 class PlotDataBase(ABC):
-    def __init__(self, selector: ProjectionSelector):
+    def __init__(self, cube: Cube, selector: ProjectionSelector):
         self.aspect = 1.0  # aspect ratio of plot
 
-        self.cube: Optional[Cube] = None  # placeholder for cube object from pytrip
+        self.cube: Cube = cube  # placeholder for cube object from pytrip
         self.data_to_plot = None  # placeholder for extracted and prepared data to plot
 
         self.projection_selector: ProjectionSelector = selector

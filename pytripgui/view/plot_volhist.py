@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class VolHist(FigureCanvas):
     """
-    Viewer class for matplotlib figure for Volume Historgrams
+    Viewer class for matplotlib figure for Volume Histograms
     """
     def __init__(self, parent=None, width=6, height=4, dpi=110):
         """

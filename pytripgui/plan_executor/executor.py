@@ -48,6 +48,6 @@ class PlanExecutor:
             logger.error(e.__str__())
             sys.exit(-1)
 
-        results = SimulationResults(patient, plan)
+        results = SimulationResults(patient, plan, plan.basename)
 
         return results
