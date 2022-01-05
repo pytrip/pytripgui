@@ -23,9 +23,9 @@ with open('README.rst') as readme_file:
 
 # install_requires is list of dependencies needed by pip when running `pip install`
 install_requires = [
-    'pytrip98~=3.6',
+    "matplotlib==3.4.3 ; python_version>='3.7'",
+    'pytrip98[remote]~=3.6',
     'anytree~=2.8',
-    'paramiko~=2.8',
     'Events~=0.4',
     "PyQt5<5.10 ; python_version<'3.8'",
     "PyQt5>=5.15 ; python_version>='3.8'",
