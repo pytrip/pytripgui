@@ -72,10 +72,11 @@ class VoiManager:
                 else:
                     xy = data_mm
 
-                # plotting in terms of pixels
+                # plotting in terms of mm
                 if _c.number_of_points() == 1:
                     # TODO not reworked yet
-                    self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
+                    pass
+                    # self._plot_poi(xy[0, 0], xy[0, 1], color=contour_color, legend=voi.name)
                 else:
                     # get proper "Xs" and "Ys" to plot
                     x, y = self._get_plot_data(vdx, xy)
@@ -87,7 +88,7 @@ class VoiManager:
                     # check if number of already plotted contour is less than the number of contour in VOI
                     # if it is less, plot current contour and append that plot to array stored under VOI's name
                     if len(self._plotted_voi[voi.name]) < number_of_contours:
-                        (line, ) = self._axes.plot(x, y, color=contour_color, zorder=100, scalex=False, scaley=False)
+                        (line,) = self._axes.plot(x, y, color=contour_color, zorder=100, scalex=False, scaley=False)
                         self._plotted_voi[voi.name].append(line)
                         self._blit_manager.add_artist(line)
 
@@ -211,7 +212,7 @@ class VoiManager:
         if vdx.projection_selector.plane == "Transversal":
             _slice = voi.get_slice_at_pos(positions_mm[2])
         elif vdx.projection_selector.plane == "Sagittal":
-            _slice = voi.get_2d_slice(voi.sagittal, positions_mm[0])
+            _slice = voi.get_slice_at_pos(positions_mm[0], voi.sagittal)
         elif vdx.projection_selector.plane == "Coronal":
-            _slice = voi.get_2d_slice(voi.coronal, positions_mm[1])
+            _slice = voi.get_slice_at_pos(positions_mm[1], voi.coronal)
         return _slice

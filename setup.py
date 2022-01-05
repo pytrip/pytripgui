@@ -23,7 +23,7 @@ with open('README.rst') as readme_file:
 
 # install_requires is list of dependencies needed by pip when running `pip install`
 install_requires = [
-    'pytrip98~=3.6',
+    'pytrip98~=3.7',
     'anytree~=2.8',
     'paramiko~=2.8',
     'Events~=0.4',
