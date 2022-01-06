@@ -9,11 +9,11 @@ class ContouringView:
         self._ui: QDialog = ContouringDialog(parent)
 
         # set window text defaults
-        self._initial_prompt = "Would you like to precalculate VOI contrours?"
-        self._initial_warning = "This may take a few minutes, but it will speed up viewing the patient anatomy."
+        self._initial_prompt = "Would you like to precalculate VOI contours?"
+        self._initial_warning = "This may take a while, but it will speed up viewing VOI contours."
         self._before_calculation = "Getting ready..."
         self._progress_message = "Precalculating contours for VOI: \n{name} ({current}/{total})"
-        self._calculation_warning = "This may take a few minutes..."
+        self._calculation_warning = "This may take a while..."
         self._finish_message = "Precalculating complete!"
 
     def _set_progress_label_text(self, text):
