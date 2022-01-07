@@ -28,6 +28,8 @@ Note that the paths for DDD, SPC and SIS can be remote.
 	:align: center
 	:width: 65 %
 
+|
+|
 
 Main usage scenario
 ===================
