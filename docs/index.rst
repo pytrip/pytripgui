@@ -7,7 +7,7 @@ Contents:
    :maxdepth: 2
 
    readme
-   usage
+   user_guide
    technical
    contributing
    authors
