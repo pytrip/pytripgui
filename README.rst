@@ -23,7 +23,7 @@ We recommend that you run a recent Linux distribution. A recent Ubuntu version o
 or any rolling release (archLinux, openSUSE tumbleweed). In this case, be sure you have **Python**
 and **pip** installed.
 
-As a baseline we recommend running Python version at least 3.5.
+As a baseline we recommend running Python version at least 3.6.
 To get them and install system-wide on Debian or Ubuntu, type being logged in as a normal user::
 
     $ sudo apt-get install python3 python3-pip
@@ -53,4 +53,4 @@ More documentation
 ------------------
 
 If you would like to download and run the source code of PyTRiPGUI,
-please see `developer documentation <docs/technical.rst>`__.
+please see `developer documentation <technical.html>`__.

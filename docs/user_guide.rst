@@ -43,7 +43,7 @@ treatment plan, execute it and observe its results.
 
 From the main application view, click on *Add patient* and then either *Open Voxelplan* or *Open DICOM*.
 
-.. image:: _images/new_patient_smol.png
+.. image:: _images/new_patient_small.png
 	:align: center
 
 |
