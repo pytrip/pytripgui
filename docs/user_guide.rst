@@ -130,7 +130,7 @@ Create an empty patient
 For testing purposes you can create an empty patient instead of importing DICOM or Voxelplan. To do that, from the main
 application view, click on *Add patient* and then *Create empty patient*.
 
-.. image:: _images/new_patient_smol.png
+.. image:: _images/new_patient_small.png
 	:align: center
 
 |
