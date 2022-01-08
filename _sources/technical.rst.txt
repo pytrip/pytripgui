@@ -1,16 +1,7 @@
-=========
-pytripgui
-=========
+=======================
+Developer documentation
+=======================
 
-.. image:: https://img.shields.io/pypi/v/pytripgui.svg
-        :target: https://pypi.python.org/pypi/pytrip98gui
-
-
-.. image:: https://readthedocs.org/projects/pytripgui/badge/?version=latest
-        :target: https://readthedocs.org/projects/pytripgui/?badge=latest
-        :alt: Documentation Status
-
-========
 Overview
 ========
 
@@ -22,7 +13,7 @@ Overview
     * - docs
       - |docs|
     * - tests
-      - |appveyor|
+      - |appveyor| |ghactions|
     * - package
       - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
 
@@ -30,17 +21,17 @@ Overview
     :target: https://readthedocs.org/projects/pytripgui
     :alt: Documentation Status
 
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/grzanka/pytripgui?branch=master&svg=true
+.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/pytrip/pytripgui?branch=master&svg=true
     :alt: Appveyor Build Status
-    :target: https://ci.appveyor.com/project/grzanka/pytripgui
-
-.. |version| image:: https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat
-    :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/pytrip98gui
+    :target: https://ci.appveyor.com/project/pytrip/pytripgui
 
 .. |ghactions| image:: https://github.com/pytrip/pytripgui/actions/workflows/test.yml/badge.svg
     :alt: Github Actions
     :target: https://github.com/pytrip/pytripgui/actions/workflows/test.yml
+
+.. |version| image:: https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat
+    :alt: PyPI Package latest release
+    :target: https://pypi.python.org/pypi/pytrip98gui
 
 .. |downloads| image:: https://img.shields.io/pypi/dm/pytrip98gui.svg?style=flat
     :alt: PyPI Package monthly downloads
@@ -79,29 +70,25 @@ To uninstall, simply use::
 Running pytripgui
 =================
 
-To run stable version installed using pip manager, simply type:
-        $ pytripgui
+To run stable version installed using pip manager, simply type::
 
-To run unstable, development version of pytripgui (when working with source code), type:
-        $ python -m pytripgui.main
+    pytripgui
+
+To run unstable, development version of pytripgui (when working with source code), type::
+
+    python -m pytripgui.main
 
 Documentation
 =============
 
-https://pytripgui.readthedocs.io/
-
-
-Features
---------
-
-* TODO
+https://pytrip.github.io/pytripgui/
 
 History
--------
+=======
 
 * earliest mention of the pytrip project dates back to 2010 http://willworkforscience.blogspot.com/2010/12/happy-new-year.html
 
-* 2012-2013 pytrip code with experimental GUI is developed by Niels Bassler and Jakob Toftegaard, code is hosted in SVN repository at Aarhus University (https://svn.nfit.au.dk/trac/pytrip)
+* 2012-2013 pytrip code with an experimental GUI is developed by Niels Bassler and Jakob Toftegaard, code is hosted in SVN repository at Aarhus University (https://svn.nfit.au.dk/trac/pytrip)
 
   * state of the code in late 2013 can be seen here: https://github.com/pytrip/pytrip/commit/54e2d00d41138431c1c2b69cc6136f87cf4831b8
   * pytrip works with python 2.x, GUI is based on wxwidgets library
@@ -128,9 +115,3 @@ History
 * 04.2019 Łukasz Jeleń joins developer team, introducing MVC architecture in the project
 
 * 06.2021 Arkadiusz Ćwikła, Joanna Fortuna, Michał Krawczyk and Mateusz Łaszczyk join project (part of a bachelor thesis at the AGH University)
-
-
-Credits
--------
-
- * TODO
