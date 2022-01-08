@@ -200,7 +200,7 @@ file system.
 Import dose data
 ----------------
 
-You can import dose data (part of simulation results) that you previously exported, onto patient data, by right clicking
+You can import the dose data (part of simulation results) that you previously exported, onto patient data, by right clicking
 an appropriate *Patient* entry under *Patient tree* from the main application view and then selecting either *Import
 dose from Voxelplan* or *Import dose from DICOM*.
 
