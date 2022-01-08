@@ -120,7 +120,7 @@ item.
 Other features
 ==============
 
-PyTRiPGUI also supports some of the following features.
+PyTRiPGUI also supports the following features.
 
 |
 
@@ -187,8 +187,8 @@ preview when you select them.
 Export data
 -----------
 
-You can export data by right clicking a *Patient* or a *Dose* entry (expand *Sim* first) under *Patient tree* from the
-main application view and then selecting either *Export as Voxelplan* or *Export as DICOM* and then saving it in your
+You can export data by right clicking a *Patient*, *Plan* or *Dose* entry (expand *Sim* first) under *Patient tree* from
+the main application view and then selecting either *Export as Voxelplan* or *Export as DICOM*, and saving it in your
 file system.
 
 .. image:: _images/main_window_export.png
