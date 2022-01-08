@@ -1,2 +1,2 @@
-furo==2022.01.02
+furo==2022.1.2
 pytrip98gui

@@ -1,4 +1,5 @@
-Welcome to pytrip98gui's documentation!
+=======================================
+Welcome to PyTRiP98GUI's documentation!
 =======================================
 
 Contents:
@@ -7,14 +8,7 @@ Contents:
    :maxdepth: 2
 
    readme
+   user_guide
    technical
    contributing
    authors
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
