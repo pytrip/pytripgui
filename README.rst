@@ -53,4 +53,4 @@ More documentation
 ------------------
 
 If you would like to download and run the source code of PyTRiPGUI,
-please see `developer documentation <technical.html>`__.
+please see :ref:`developer documentation <technical>`.
