@@ -80,11 +80,6 @@ To run unstable, development version of pytripgui (when working with source code
 
     python -m pytripgui.main
 
-Documentation
-=============
-
-https://pytrip.github.io/pytripgui/
-
 History
 =======
 

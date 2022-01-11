@@ -10,13 +10,16 @@ After opening the application you should be presented with this view:
 |
 |
 
+TRiP98 installation
+===================
+
+To have the ability to calculate a simulation of a plan you have to install the TRiP98 program, that works only on Linux systems.
+It can be accessed by contacting the author (e-mail: M.Kraemer@gsi.de) (`installation info <http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html>`_).
+Online documentation of this program is `available here <http://bio.gsi.de/DOCS/trip98.html>`_.
+
 Configuration
 =============
 
-To have possiblity to calculate simulation of plan you have to install TRiP98 program, that works only on Linux systems.
-It can be accessed by contacting the author (e-mail: M.Kraemer@gsi.de) (installation info:
-http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html). Online documentation of this program
-is available here http://bio.gsi.de/DOCS/trip98.html.
 After that, you need to set up the TRIP98 configuration in PyTRiPGUI. To do that, from the main application view,
 click *Settings* and then *Trip98 Config*. TRIP98 can be set up either on your local machine or a remote one, so choose
 the one that suits your needs. Presented below are both of the configuration views with explanations for each field.
@@ -33,7 +36,7 @@ HLUT and dE/dx files are delivered with TRiP98.
 Next up is the beam kernel setup. From the main application view, click on *Settings* and *Beam Kernels*. Below you can
 find its configuration view.
 Note that if you are using TRiP98 remotely, the paths for DDD, SPC and SIS files must be remote as well.
-DDD and SPC files are available here https://zenodo.org/record/4675053. SIS file is delivered with TRiP98.
+DDD and SPC files are `available here <https://zenodo.org/record/4675053>`_. SIS file is delivered with TRiP98.
 
 .. image:: _images/beam_kernel_setup.png
     :align: center
