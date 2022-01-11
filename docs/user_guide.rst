@@ -14,7 +14,8 @@ TRiP98 installation
 ===================
 
 To have the ability to calculate a simulation of a plan you have to install the TRiP98 program, that works only on Linux systems.
-It can be accessed by contacting the author (according to the `installation guide <http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html>`_, use the email addres: M.Kraemer@gsi.de).
+It can be accessed by contacting the author (according to the `installation guide <http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html>`_,
+send an email to the address: M.Kraemer@gsi.de).
 Online documentation of this program is `available here <http://bio.gsi.de/DOCS/trip98.html>`_.
 
 Configuration
