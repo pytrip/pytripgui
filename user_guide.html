@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Developer documentation" href="technical.html" /><link rel="prev" title="PyTRiP98GUI" href="readme.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Developer documentation" href="technical.html" /><link rel="prev" title="Overview" href="readme.html" />
 
     <meta name="generator" content="sphinx-4.3.2, furo 2022.01.02"/>
         <title>User guide - pytrip98gui 1.5.0 documentation</title>
@@ -156,7 +156,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="readme.html">PyTRiP98GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">Overview</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">User guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="technical.html">Developer documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
@@ -195,13 +195,16 @@
 <div class="line"><br/></div>
 <div class="line"><br/></div>
 </div>
+<section id="trip98-installation">
+<h2>TRiP98 installation<a class="headerlink" href="#trip98-installation" title="Permalink to this headline">¶</a></h2>
+<p>To have the ability to calculate a simulation of a plan you have to install the TRiP98 program, that works only on Linux systems.
+It can be accessed by contacting the author (according to the <a class="reference external" href="http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html">installation guide</a>,
+send an email to the address: <a class="reference external" href="mailto:M.Kraemer%40gsi.de">M<span>.</span>Kraemer<span>@</span>gsi<span>.</span>de</a>).
+Online documentation of this program is <a class="reference external" href="http://bio.gsi.de/DOCS/trip98.html">available here</a>.</p>
+</section>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>To have possiblity to calculate simulation of plan you have to install TRiP98 program, that works only on Linux systems.
-It can be accessed by contacting the author (e-mail: <a class="reference external" href="mailto:M.Kraemer%40gsi.de">M<span>.</span>Kraemer<span>@</span>gsi<span>.</span>de</a>) (installation info:
-<a class="reference external" href="http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html">http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html</a>). Online documentation of this program
-is available here <a class="reference external" href="http://bio.gsi.de/DOCS/trip98.html">http://bio.gsi.de/DOCS/trip98.html</a>.
-After that, you need to set up the TRIP98 configuration in PyTRiPGUI. To do that, from the main application view,
+<p>After that, you need to set up the TRIP98 configuration in PyTRiPGUI. To do that, from the main application view,
 click <em>Settings</em> and then <em>Trip98 Config</em>. TRIP98 can be set up either on your local machine or a remote one, so choose
 the one that suits your needs. Presented below are both of the configuration views with explanations for each field.
 HLUT and dE/dx files are delivered with TRiP98.</p>
@@ -213,7 +216,7 @@ HLUT and dE/dx files are delivered with TRiP98.</p>
 <p>Next up is the beam kernel setup. From the main application view, click on <em>Settings</em> and <em>Beam Kernels</em>. Below you can
 find its configuration view.
 Note that if you are using TRiP98 remotely, the paths for DDD, SPC and SIS files must be remote as well.
-DDD and SPC files are available here <a class="reference external" href="https://zenodo.org/record/4675053">https://zenodo.org/record/4675053</a>. SIS file is delivered with TRiP98.</p>
+DDD and SPC files are <a class="reference external" href="https://zenodo.org/record/4675053">available here</a>. SIS file is delivered with TRiP98.</p>
 <a class="reference internal image-reference" href="_images/beam_kernel_setup.png"><img alt="_images/beam_kernel_setup.png" class="align-center" src="_images/beam_kernel_setup.png" style="width: 65%;"/></a>
 <div class="line-block">
 <div class="line"><br/></div>
@@ -392,7 +395,7 @@ dose from Voxelplan</em> or <em>Import dose from DICOM</em>.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">PyTRiP98GUI</div>
+                <div class="title">Overview</div>
                 
               </div>
             </a>
@@ -423,6 +426,7 @@ dose from Voxelplan</em> or <em>Import dose from DICOM</em>.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">User guide</a><ul>
+<li><a class="reference internal" href="#trip98-installation">TRiP98 installation</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#main-usage-scenario">Main usage scenario</a></li>
 <li><a class="reference internal" href="#other-features">Other features</a><ul>
