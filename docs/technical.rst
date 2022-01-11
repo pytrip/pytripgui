@@ -1,3 +1,5 @@
+.. _technical:
+
 =======================
 Developer documentation
 =======================
@@ -77,11 +79,6 @@ To run stable version installed using pip manager, simply type::
 To run unstable, development version of pytripgui (when working with source code), type::
 
     python -m pytripgui.main
-
-Documentation
-=============
-
-https://pytrip.github.io/pytripgui/
 
 History
 =======
