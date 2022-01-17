@@ -8,7 +8,7 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class UiTripConfig(QtWidgets.QDialog):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(UiTripConfig, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'trip_config.ui')
         uic.loadUi(ui_path, self)
