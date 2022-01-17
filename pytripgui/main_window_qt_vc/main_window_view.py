@@ -22,13 +22,11 @@ class MainWindowQtView:
     def add_widget(self, widget):
         self.ui.main_layout.addWidget(widget)
 
-    @staticmethod
-    def get_trip_config_view():
-        return ConfigQtView()
+    def get_trip_config_view(self):
+        return ConfigQtView(self.ui)
 
-    @staticmethod
-    def get_kernel_config_view():
-        return KernelQtView()
+    def get_kernel_config_view(self):
+        return KernelQtView(self.ui)
 
     def browse_file_path(self, name, extension, path=None):
         """

@@ -12,8 +12,8 @@ class ConfigQtView:
     stackedWidget_remote_index = 1
     """
     """
-    def __init__(self):
-        self._ui = UiTripConfig()
+    def __init__(self, parent=None):
+        self._ui = UiTripConfig(parent)
 
         self.name = LineEdit(self._ui.configName_lineEdit)
         self.user_name = LineEdit(self._ui.username_lineEdit)

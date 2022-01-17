@@ -35,7 +35,7 @@ class AddVOIsController:
         self.view.accept()
 
     def _create_add_voi_dialog(self) -> None:
-        view = AddSingleVOIQtView()
+        view = AddSingleVOIQtView(self.view.ui)
 
         # get VOI names that are already being used by the about to be added VOIs
         list_vois = self.view.voi_scroll_area.widget().layout()
