@@ -14,7 +14,7 @@ class ContouringView:
                                 "but it will speed up viewing VOI contours.".format(voi_number)
         self._before_calculation = "Getting ready..."
         self._progress_message = "Precalculating contours for VOI: \n{name} ({current}/{total})"
-        self._time_of_calc = "{name}: {time:.3f} seconds"
+        self._time_of_calc = "{label}: {elapsed_time:.3f} seconds"
         self._calculation_warning = "This may take a while..."
         self._finish_message = "Precalculating complete!"
 
@@ -50,9 +50,9 @@ class ContouringView:
     def update_progress(self, voi_name, current, total):
         self._set_progress_label_text(self._progress_message.format(name=voi_name, current=current + 1, total=total))
 
-    def update_finished(self, time):
+    def update_finished(self, elapsed_time):
         self._set_progress_label_text(self._finish_message)
-        self._set_warning_label_text(self._time_of_calc.format(name='Elapsed time', time=time))
+        self._set_warning_label_text(self._time_of_calc.format(label='Elapsed time', elapsed_time=elapsed_time))
         self._buttons_set_enabled(True)
 
     def connect_yes(self, callback):

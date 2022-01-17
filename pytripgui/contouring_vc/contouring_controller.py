@@ -30,6 +30,3 @@ class ContouringController:
 
     def show(self):
         self._view.show()
-
-    def _finish_(self):
-        self._view.update_finished()
