@@ -11,8 +11,8 @@ logger = logging.getLogger(__name__)
 class KernelQtView:
     """
     """
-    def __init__(self):
-        self.ui = UiKernelDialog()
+    def __init__(self, parent=None):
+        self.ui = UiKernelDialog(parent)
 
         self._setup_internal_callbacks()
         self._disable_unimplemented()

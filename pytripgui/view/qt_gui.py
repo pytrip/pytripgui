@@ -8,8 +8,8 @@ current_directory = os.path.dirname(os.path.realpath(__file__))
 
 
 class UiTripConfig(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiTripConfig, self).__init__()
+    def __init__(self, parent=None):
+        super(UiTripConfig, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'trip_config.ui')
         uic.loadUi(ui_path, self)
 
@@ -36,8 +36,8 @@ class UiExecuteConfigDialog(QtWidgets.QDialog):
 
 
 class UiKernelDialog(QtWidgets.QDialog):
-    def __init__(self):
-        super(UiKernelDialog, self).__init__()
+    def __init__(self, parent=None):
+        super(UiKernelDialog, self).__init__(parent)
         ui_path = os.path.join(current_directory, 'kernel.ui')
         uic.loadUi(ui_path, self)
 

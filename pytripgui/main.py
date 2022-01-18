@@ -2,6 +2,7 @@ import argparse
 import logging
 import sys
 
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 
 from pytripgui.main_window_qt_vc.main_window_view import MainWindowQtView
@@ -43,6 +44,7 @@ def main(args=None):
     # all these objects need to be saved as variables, otherwise they will be garbage collected before app execution
     app = QApplication(sys.argv)
     view = MainWindowQtView()
+    view.ui.setWindowIcon(QIcon('res/icon.ico'))
     model = MainModel()
     controller = MainWindowController(model, view)
 
