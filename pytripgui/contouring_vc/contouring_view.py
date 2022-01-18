@@ -5,15 +5,17 @@ from pytripgui.view.qt_gui import ContouringDialog
 
 
 class ContouringView:
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, voi_number=None):
         self._ui: QDialog = ContouringDialog(parent)
 
         # set window text defaults
-        self._initial_prompt = "Would you like to precalculate VOI contrours?"
-        self._initial_warning = "This may take a few minutes, but it will speed up viewing the patient anatomy."
+        self._initial_prompt = "Would you like to precalculate VOI contours?"
+        self._initial_warning = "This may take a while - there are {} VOIs, " \
+                                "but it will speed up viewing VOI contours.".format(voi_number)
         self._before_calculation = "Getting ready..."
         self._progress_message = "Precalculating contours for VOI: \n{name} ({current}/{total})"
-        self._calculation_warning = "This may take a few minutes..."
+        self._time_of_calc = "{label}: {elapsed_time:.2f} seconds"
+        self._calculation_warning = "This may take a while..."
         self._finish_message = "Precalculating complete!"
 
     def _set_progress_label_text(self, text):
@@ -46,11 +48,11 @@ class ContouringView:
         self._ui.button_box.button(QDialogButtonBox.Ok).clicked.connect(self._ui.accept)
 
     def update_progress(self, voi_name, current, total):
-        self._set_progress_label_text(self._progress_message.format(name=voi_name, current=current+1, total=total))
+        self._set_progress_label_text(self._progress_message.format(name=voi_name, current=current + 1, total=total))
 
-    def update_finished(self):
+    def update_finished(self, elapsed_time):
         self._set_progress_label_text(self._finish_message)
-        self._set_warning_label_text("")
+        self._set_warning_label_text(self._time_of_calc.format(label='Elapsed time', elapsed_time=elapsed_time))
         self._buttons_set_enabled(True)
 
     def connect_yes(self, callback):
