@@ -14,7 +14,7 @@ class ContouringView:
                                 "but it will speed up viewing VOI contours.".format(voi_number)
         self._before_calculation = "Getting ready..."
         self._progress_message = "Precalculating contours for VOI: \n{name} ({current}/{total})"
-        self._time_of_calc = "{label}: {elapsed_time:.3f} seconds"
+        self._time_of_calc = "{label}: {elapsed_time:.2f} seconds"
         self._calculation_warning = "This may take a while..."
         self._finish_message = "Precalculating complete!"
 
