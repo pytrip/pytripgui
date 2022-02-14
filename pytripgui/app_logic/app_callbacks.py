@@ -96,9 +96,10 @@ class AppCallback:
 
     def show_contouring_dialog(self):
         patient: PatientItem = self.app_model.patient_tree.selected_item_patient()
-        vois: Collection[Voi] = patient.data.vdx.vois
-        contouring_dialog: ContouringController = ContouringController(vois=vois, parent=self.parent_gui.ui)
-        contouring_dialog.show()
+        if patient.data.vdx:
+            vois: Collection[Voi] = patient.data.vdx.vois
+            contouring_dialog: ContouringController = ContouringController(vois=vois, parent=self.parent_gui.ui)
+            contouring_dialog.show()
 
     def on_execute_selected_plan(self) -> None:
         """
