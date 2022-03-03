@@ -19,7 +19,7 @@ jobs:
         python -m pip install -r docs/requirements.txt
         make -C docs html
     - name: Upload artifacts
-      uses: actions/upload-artifact@v2.3.1
+      uses: actions/upload-artifact@v3
       with:
         name: html-docs
         path: docs/_build/html/
