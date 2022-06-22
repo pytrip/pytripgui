@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Developer documentation" href="technical.html" /><link rel="prev" title="Overview" href="readme.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
         <title>User guide - pytrip98gui 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -179,7 +179,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -194,54 +195,54 @@
         </div>
         <article role="main">
           <section id="user-guide">
-<h1>User guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">#</a></h1>
+<h1>User guide<a class="headerlink" href="#user-guide" title="Permalink to this heading">#</a></h1>
 <p>After opening the application you should be presented with this view:</p>
-<img alt="_images/main_window_empty.png" class="align-center" src="_images/main_window_empty.png"/>
+<img alt="_images/main_window_empty.png" class="align-center" src="_images/main_window_empty.png" />
 <div class="line-block">
-<div class="line"><br/></div>
-<div class="line"><br/></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
 <section id="trip98-installation">
-<h2>TRiP98 installation<a class="headerlink" href="#trip98-installation" title="Permalink to this headline">#</a></h2>
+<h2>TRiP98 installation<a class="headerlink" href="#trip98-installation" title="Permalink to this heading">#</a></h2>
 <p>To have the ability to calculate a simulation of a plan you have to install the TRiP98 program, that works only on Linux systems.
 It can be accessed by contacting the author (according to the <a class="reference external" href="http://bio.gsi.de/DOCS/TRiP98/PRO/DOCS/trip98inst.html">installation guide</a>,
-send an email to the address: <a class="reference external" href="mailto:M.Kraemer%40gsi.de">M<span>.</span>Kraemer<span>@</span>gsi<span>.</span>de</a>).
+send an email to the address: <a class="reference external" href="mailto:M&#46;Kraemer&#37;&#52;&#48;gsi&#46;de">M<span>&#46;</span>Kraemer<span>&#64;</span>gsi<span>&#46;</span>de</a>).
 Online documentation of this program is <a class="reference external" href="http://bio.gsi.de/DOCS/trip98.html">available here</a>.</p>
 </section>
 <section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">#</a></h2>
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">#</a></h2>
 <p>After that, you need to set up the TRIP98 configuration in PyTRiPGUI. To do that, from the main application view,
 click <em>Settings</em> and then <em>Trip98 Config</em>. TRIP98 can be set up either on your local machine or a remote one, so choose
 the one that suits your needs. Presented below are both of the configuration views with explanations for each field.
 HLUT and dE/dx files are delivered with TRiP98.</p>
-<a class="reference internal image-reference" href="_images/trip_configuration_local.png"><img alt="_images/trip_configuration_local.png" src="_images/trip_configuration_local.png" style="width: 49%;"/></a>
-<a class="reference internal image-reference" href="_images/trip_configuration_remote.png"><img alt="_images/trip_configuration_remote.png" src="_images/trip_configuration_remote.png" style="width: 49%;"/></a>
+<a class="reference internal image-reference" href="_images/trip_configuration_local.png"><img alt="_images/trip_configuration_local.png" src="_images/trip_configuration_local.png" style="width: 49%;" /></a>
+<a class="reference internal image-reference" href="_images/trip_configuration_remote.png"><img alt="_images/trip_configuration_remote.png" src="_images/trip_configuration_remote.png" style="width: 49%;" /></a>
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Next up is the beam kernel setup. From the main application view, click on <em>Settings</em> and <em>Beam Kernels</em>. Below you can
 find its configuration view.
 Note that if you are using TRiP98 remotely, the paths for DDD, SPC and SIS files must be remote as well.
 DDD and SPC files are <a class="reference external" href="https://zenodo.org/record/4675053">available here</a>. SIS file is delivered with TRiP98.</p>
-<a class="reference internal image-reference" href="_images/beam_kernel_setup.png"><img alt="_images/beam_kernel_setup.png" class="align-center" src="_images/beam_kernel_setup.png" style="width: 65%;"/></a>
+<a class="reference internal image-reference" href="_images/beam_kernel_setup.png"><img alt="_images/beam_kernel_setup.png" class="align-center" src="_images/beam_kernel_setup.png" style="width: 65%;" /></a>
 <div class="line-block">
-<div class="line"><br/></div>
-<div class="line"><br/></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
 </section>
 <section id="main-usage-scenario">
-<h2>Main usage scenario<a class="headerlink" href="#main-usage-scenario" title="Permalink to this headline">#</a></h2>
+<h2>Main usage scenario<a class="headerlink" href="#main-usage-scenario" title="Permalink to this heading">#</a></h2>
 <p>In this usage scenario you will import some patient data either from DICOM or Voxelplan, configure a simulation of a
 treatment plan, execute it and observe its results.</p>
 <p>From the main application view, click on <em>Add patient</em> and then either <em>Open Voxelplan</em> or <em>Open DICOM</em>.</p>
-<img alt="_images/new_patient_small.png" class="align-center" src="_images/new_patient_small.png"/>
+<img alt="_images/new_patient_small.png" class="align-center" src="_images/new_patient_small.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>After the selected data gets loaded in, you should be presented with the following dialog box:</p>
-<img alt="_images/contour_request.png" class="align-center" src="_images/contour_request.png"/>
+<img alt="_images/contour_request.png" class="align-center" src="_images/contour_request.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>You can choose <cite>Yes</cite> if you want to precalculate now VOI contours in sagittal and coronal planes. If you choose <cite>No</cite>
 then they will be calculated in real-time while viewing those contours. Regardless of which you choose,
@@ -251,131 +252,131 @@ more specifically one of their slices, which you can switch by using the
 scroll wheel or moving the slider visible on the far right. Above the preview, you can also switch between the three
 different planes with a drop-down list. Below <em>Patient tree</em>, you can find <em>VOI list</em> from which you can select any VOIs
 that you’d like to make visible and see its contours in the preview.</p>
-<img alt="_images/main_window_patient_loaded_contours.png" class="align-center" src="_images/main_window_patient_loaded_contours.png"/>
+<img alt="_images/main_window_patient_loaded_contours.png" class="align-center" src="_images/main_window_patient_loaded_contours.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>To configure the treatment plan, click on <em>Create plan</em>. Then you will see this window with basic patient info.</p>
-<img alt="_images/plan_setup_info.png" class="align-center" src="_images/plan_setup_info.png"/>
+<img alt="_images/plan_setup_info.png" class="align-center" src="_images/plan_setup_info.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Go to the <em>Target</em> tab and then select one of the entries from <em>Target ROI</em>.</p>
-<img alt="_images/creating_plan_target.png" class="align-center" src="_images/creating_plan_target.png"/>
+<img alt="_images/creating_plan_target.png" class="align-center" src="_images/creating_plan_target.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>In the <em>Dose Delivery</em> tab you can set beam kernel and other dose settings.</p>
-<img alt="_images/plan_setup_dose_delivery.png" class="align-center" src="_images/plan_setup_dose_delivery.png"/>
+<img alt="_images/plan_setup_dose_delivery.png" class="align-center" src="_images/plan_setup_dose_delivery.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>In the <em>Optimization</em> tab you can set optimization settings.</p>
-<img alt="_images/plan_setup_optimization.png" class="align-center" src="_images/plan_setup_optimization.png"/>
+<img alt="_images/plan_setup_optimization.png" class="align-center" src="_images/plan_setup_optimization.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>In the <em>Results</em> tab you can choose what kind of data you’d like to get as part of the simulation results of this
 treatment plan.</p>
-<img alt="_images/plan_setup_results.png" class="align-center" src="_images/plan_setup_results.png"/>
+<img alt="_images/plan_setup_results.png" class="align-center" src="_images/plan_setup_results.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Afterwards, to configure the source of the radiation dose, click on <em>Create field</em>.</p>
-<img alt="_images/creating_field.png" class="align-center" src="_images/creating_field.png"/>
+<img alt="_images/creating_field.png" class="align-center" src="_images/creating_field.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Note that the created treatment plans and fields are also visible under <em>Patient tree</em>.</p>
 <p>Finally, to execute the simulation of the created treatment plan, click on <em>Execute</em>. You should see a window pop up,
 which reports on the progress of the simulation.</p>
-<img alt="_images/executing_plan_start.png" class="align-center" src="_images/executing_plan_start.png"/>
+<img alt="_images/executing_plan_start.png" class="align-center" src="_images/executing_plan_start.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>The simulation completes soon after the <em>Done</em> message is displayed. You can click <em>OK</em> to close the window.</p>
-<img alt="_images/executing_plan_end_wo_dvh.png" class="align-center" src="_images/executing_plan_end_wo_dvh.png"/>
+<img alt="_images/executing_plan_end_wo_dvh.png" class="align-center" src="_images/executing_plan_end_wo_dvh.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>You should be able to see the distribution of the calculated dose in the preview. If the results also include a LET
 distribution you can switch to it by expanding the simulation entry under <em>Patient tree</em> and clicking on the appropriate
 item.</p>
-<img alt="_images/main_window_dose.png" class="align-center" src="_images/main_window_dose.png"/>
+<img alt="_images/main_window_dose.png" class="align-center" src="_images/main_window_dose.png" />
 <div class="line-block">
-<div class="line"><br/></div>
-<div class="line"><br/></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
 </section>
 <section id="other-features">
-<h2>Other features<a class="headerlink" href="#other-features" title="Permalink to this headline">#</a></h2>
+<h2>Other features<a class="headerlink" href="#other-features" title="Permalink to this heading">#</a></h2>
 <p>PyTRiPGUI also supports the following features.</p>
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <section id="create-an-empty-patient">
-<h3>Create an empty patient<a class="headerlink" href="#create-an-empty-patient" title="Permalink to this headline">#</a></h3>
+<h3>Create an empty patient<a class="headerlink" href="#create-an-empty-patient" title="Permalink to this heading">#</a></h3>
 <p>For testing purposes you can create an empty patient instead of importing DICOM or Voxelplan. To do that, from the main
 application view, click on <em>Add patient</em> and then <em>Create empty patient</em>.</p>
-<img alt="_images/new_patient_small.png" class="align-center" src="_images/new_patient_small.png"/>
+<img alt="_images/new_patient_small.png" class="align-center" src="_images/new_patient_small.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Here you can input some of its parameters in three different ways by switching between the tabs.</p>
-<img alt="_images/create_empty_patient.png" class="align-center" src="_images/create_empty_patient.png"/>
+<img alt="_images/create_empty_patient.png" class="align-center" src="_images/create_empty_patient.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 </section>
 <section id="add-vois">
-<h3>Add VOIs<a class="headerlink" href="#add-vois" title="Permalink to this headline">#</a></h3>
+<h3>Add VOIs<a class="headerlink" href="#add-vois" title="Permalink to this heading">#</a></h3>
 <p>You can add VOIs to imported data or an empty patient. From the main application view, make sure an appropriate
 <em>Patient</em> entry is selected under <em>Patient tree</em> and then click on <em>Add VOIs</em>.</p>
-<img alt="_images/main_window_patient.png" class="align-center" src="_images/main_window_patient.png"/>
+<img alt="_images/main_window_patient.png" class="align-center" src="_images/main_window_patient.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Click on <em>Add VOI</em> on the bottom left.</p>
-<img alt="_images/add_vois.png" class="align-center" src="_images/add_vois.png"/>
+<img alt="_images/add_vois.png" class="align-center" src="_images/add_vois.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Select one of the VOI shapes from the drop-down list and input its parameters.</p>
-<img alt="_images/add_single_voi.png" class="align-center" src="_images/add_single_voi.png"/>
+<img alt="_images/add_single_voi.png" class="align-center" src="_images/add_single_voi.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>Back here you can add more VOIs by clicking on <em>Add VOI</em> again, or remove the ones you added by clicking on <em>Remove</em>
 next to their entry on the list. When you’re done, click <em>Ok</em> on the bottom right.</p>
-<img alt="_images/add_vois_added.png" class="align-center" src="_images/add_vois_added.png"/>
+<img alt="_images/add_vois_added.png" class="align-center" src="_images/add_vois_added.png" />
 <div class="line-block">
-<div class="line"><br/></div>
+<div class="line"><br /></div>
 </div>
 <p>In the main application view you can see the newly added VOIs as entries under <em>VOI list</em> and their contours in the
 preview when you select them.</p>
-<img alt="_images/add_vois_visible.png" class="align-center" src="_images/add_vois_visible.png"/>
+<img alt="_images/add_vois_visible.png" class="align-center" src="_images/add_vois_visible.png" />
 <div class="line-block">
-<div class="line"><br/></div>
-<div class="line"><br/></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
 </section>
 <section id="export-data">
-<h3>Export data<a class="headerlink" href="#export-data" title="Permalink to this headline">#</a></h3>
+<h3>Export data<a class="headerlink" href="#export-data" title="Permalink to this heading">#</a></h3>
 <p>You can export data by right clicking a <em>Patient</em>, <em>Plan (.exec)</em> or <em>Dose</em> entry (expand <em>Sim</em> first) under <em>Patient tree</em> from
 the main application view and then selecting either <em>Export as Voxelplan</em> or <em>Export as DICOM</em>, and saving it in your
 file system.</p>
-<img alt="_images/main_window_export.png" class="align-center" src="_images/main_window_export.png"/>
+<img alt="_images/main_window_export.png" class="align-center" src="_images/main_window_export.png" />
 <div class="line-block">
-<div class="line"><br/></div>
-<div class="line"><br/></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
 </div>
 </section>
 <section id="import-dose-data">
-<h3>Import dose data<a class="headerlink" href="#import-dose-data" title="Permalink to this headline">#</a></h3>
+<h3>Import dose data<a class="headerlink" href="#import-dose-data" title="Permalink to this heading">#</a></h3>
 <p>You can import the dose data (part of simulation results) that you previously exported, onto patient data, by right clicking
 an appropriate <em>Patient</em> entry under <em>Patient tree</em> from the main application view and then selecting either <em>Import
 dose from Voxelplan</em> or <em>Import dose from DICOM</em>.</p>
-<img alt="_images/main_window_export.png" class="align-center" src="_images/main_window_export.png"/>
+<img alt="_images/main_window_export.png" class="align-center" src="_images/main_window_export.png" />
 </section>
 </section>
 </section>
@@ -462,6 +463,7 @@ dose from Voxelplan</em> or <em>Import dose from DICOM</em>.</p>
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>

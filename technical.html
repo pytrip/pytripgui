@@ -2,13 +2,13 @@
 <html class="no-js" lang="en">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Contributing" href="contributing.html" /><link rel="prev" title="User guide" href="user_guide.html" />
 
-    <meta name="generator" content="sphinx-4.5.0, furo 2022.04.07"/>
+    <meta name="generator" content="sphinx-5.0.2, furo 2022.06.21"/>
         <title>Developer documentation - pytrip98gui 1.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=68f4518137b9aefe99b631505a2064c3c42c9852" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=40978830699223671f4072448e654b5958f38b89" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
     
@@ -179,7 +179,8 @@
           </svg>
           <span>Back to top</span>
         </a>
-        <div class="content-icon-container"><div class="theme-toggle-container theme-toggle-content">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle">
               <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
               <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
@@ -194,29 +195,27 @@
         </div>
         <article role="main">
           <section id="developer-documentation">
-<span id="technical"></span><h1>Developer documentation<a class="headerlink" href="#developer-documentation" title="Permalink to this headline">#</a></h1>
+<span id="technical"></span><h1>Developer documentation<a class="headerlink" href="#developer-documentation" title="Permalink to this heading">#</a></h1>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">#</a></h2>
-<div class="table-wrapper"><table class="docutils align-default">
-<colgroup>
-<col style="width: 50%"/>
-<col style="width: 50%"/>
-</colgroup>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">#</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
 <tbody>
 <tr class="row-odd"><th class="stub"><p>docs</p></th>
-<td><p><a class="reference external" href="https://readthedocs.org/projects/pytripgui"><img alt="Documentation Status" src="https://readthedocs.org/projects/pytripgui/badge/?style=flat"/></a></p></td>
+<td><p><a class="reference external" href="https://readthedocs.org/projects/pytripgui"><img alt="Documentation Status" src="https://readthedocs.org/projects/pytripgui/badge/?style=flat" /></a></p></td>
 </tr>
 <tr class="row-even"><th class="stub"><p>tests</p></th>
-<td><p><a class="reference external" href="https://ci.appveyor.com/project/pytrip/pytripgui"><img alt="Appveyor Build Status" src="https://ci.appveyor.com/api/projects/status/github/pytrip/pytripgui?branch=master&amp;svg=true"/></a> <a class="reference external" href="https://github.com/pytrip/pytripgui/actions/workflows/test.yml"><img alt="Github Actions" src="https://github.com/pytrip/pytripgui/actions/workflows/test.yml/badge.svg"/></a></p></td>
+<td><p><a class="reference external" href="https://ci.appveyor.com/project/pytrip/pytripgui"><img alt="Appveyor Build Status" src="https://ci.appveyor.com/api/projects/status/github/pytrip/pytripgui?branch=master&amp;svg=true" /></a> <a class="reference external" href="https://github.com/pytrip/pytripgui/actions/workflows/test.yml"><img alt="Github Actions" src="https://github.com/pytrip/pytripgui/actions/workflows/test.yml/badge.svg" /></a></p></td>
 </tr>
 <tr class="row-odd"><th class="stub"><p>package</p></th>
-<td><p><a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Package latest release" src="https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat"/></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Package monthly downloads" src="https://img.shields.io/pypi/dm/pytrip98gui.svg?style=flat"/></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Wheel" src="https://img.shields.io/pypi/wheel/pytrip98gui.svg?style=flat"/></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="Supported versions" src="https://img.shields.io/pypi/pyversions/pytrip98gui.svg?style=flat"/></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="Supported implementations" src="https://img.shields.io/pypi/implementation/pytrip98gui.svg?style=flat"/></a></p></td>
+<td><p><a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Package latest release" src="https://img.shields.io/pypi/v/pytrip98gui.svg?style=flat" /></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Package monthly downloads" src="https://img.shields.io/pypi/dm/pytrip98gui.svg?style=flat" /></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="PyPI Wheel" src="https://img.shields.io/pypi/wheel/pytrip98gui.svg?style=flat" /></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="Supported versions" src="https://img.shields.io/pypi/pyversions/pytrip98gui.svg?style=flat" /></a> <a class="reference external" href="https://pypi.python.org/pypi/pytrip98gui"><img alt="Supported implementations" src="https://img.shields.io/pypi/implementation/pytrip98gui.svg?style=flat" /></a></p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
+</div>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">#</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
 <p>Stable version</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytrip98gui</span>
 </pre></div>
@@ -231,7 +230,7 @@
 </div>
 </section>
 <section id="running-pytripgui">
-<h2>Running pytripgui<a class="headerlink" href="#running-pytripgui" title="Permalink to this headline">#</a></h2>
+<h2>Running pytripgui<a class="headerlink" href="#running-pytripgui" title="Permalink to this heading">#</a></h2>
 <p>To run stable version installed using pip manager, simply type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytripgui</span>
 </pre></div>
@@ -242,7 +241,7 @@
 </div>
 </section>
 <section id="history">
-<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">#</a></h2>
+<h2>History<a class="headerlink" href="#history" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>earliest mention of the pytrip project dates back to 2010 <a class="reference external" href="http://willworkforscience.blogspot.com/2010/12/happy-new-year.html">http://willworkforscience.blogspot.com/2010/12/happy-new-year.html</a></p></li>
 <li><p>2012-2013 pytrip code with an experimental GUI is developed by Niels Bassler and Jakob Toftegaard, code is hosted in SVN repository at Aarhus University (<a class="reference external" href="https://svn.nfit.au.dk/trac/pytrip">https://svn.nfit.au.dk/trac/pytrip</a>)</p>
@@ -356,6 +355,7 @@
 </div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <script src="_static/scripts/furo.js"></script>
     </body>
