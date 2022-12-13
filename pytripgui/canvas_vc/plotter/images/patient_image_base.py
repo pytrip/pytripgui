@@ -3,7 +3,7 @@ from typing import Optional
 
 from matplotlib.axes import Axes
 from matplotlib.image import AxesImage
-from pytrip import Cube
+from pytrip.cube import Cube
 
 from pytripgui.canvas_vc.objects.data_base import PlotDataBase
 
