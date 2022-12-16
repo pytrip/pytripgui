@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from pytrip import Cube
+from pytrip.cube import Cube
 
 from pytripgui.canvas_vc.projection_selector import ProjectionSelector
 
