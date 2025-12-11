@@ -51,6 +51,7 @@ dev = [
     "sphinx-rtd-theme>=0.5",
     "flake8>=3.8",
     "pycodestyle>=2.6",
+    "pytest-timeout>=2.1",
 ]
 test = [
     "pytest>=8.2",

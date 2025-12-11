@@ -38,8 +38,15 @@ jobs:
     - name: Smoke tests
       env:
         DISPLAY: ':99.0'
+        # Enable core dumps for debugging segfaults
+        PYTHONFAULTHANDLER: 1
+        PYTEST_TIMEOUT: "300"
       run: |
-        xvfb-run --auto-servernum python -m pytest tests -q
+        # Set up core dump handling for debugging
+        ulimit -c unlimited
+        xvfb-run --auto-servernum python -m pytest tests -q -v --tb=short
+        # Check for segfaults after tests
+        if [ -f core ]; then echo "Core dump found - segfault occurred"; fi
 
 
   normal_test:
@@ -79,8 +86,15 @@ jobs:
       if: ${{ runner.os == 'Linux' }}
       env:
         DISPLAY: ':99.0'
+        # Enable Python fault handler to catch segfaults
+        PYTHONFAULTHANDLER: 1
+        PYTEST_TIMEOUT: "300"
       run: |
-        xvfb-run --auto-servernum python -m pytest tests -q
+        # Set up core dump handling
+        ulimit -c unlimited
+        xvfb-run --auto-servernum python -m pytest tests -q -v --tb=short
+        # Check for segfaults after tests
+        if [ -f core ]; then echo "Core dump found - segfault occurred"; fi
 
     - name: Regular test (Windows)
       if: ${{ runner.os == 'Windows' }}
