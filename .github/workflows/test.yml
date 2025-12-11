@@ -36,7 +36,7 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m pytest tests
+        xvfb-run --auto-servernum python -m pytest tests
          
          
   normal_test:
@@ -75,7 +75,7 @@ jobs:
         DISPLAY: ':99.0'
       run: |         
         ulimit -c unlimited
-        sudo catchsegv xvfb-run --auto-servernum `which python` -m pytest tests/
+        xvfb-run --auto-servernum python -m pytest tests/
 
     - name: Regular test (Windows)
       if: ${{ runner.os == 'Windows' }}      
