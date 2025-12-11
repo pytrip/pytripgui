@@ -57,6 +57,13 @@ Overview
 Installation
 ============
 
+Requirements
+~~~~~~~~~~~~
+
+- Python 3.9 or higher
+- Git
+- A C compiler (for building PyQt5 and other dependencies)
+
 Stable version ::
 
     pip install pytrip98gui
@@ -64,6 +71,27 @@ Stable version ::
 Latest unstable version, directly from GIT repository::
 
     pip install git+https://github.com/pytrip/pytripgui.git
+
+Development Installation (from source)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To work with the project locally, clone the repository and install in editable mode::
+
+    git clone https://github.com/pytrip/pytripgui.git
+    cd pytripgui
+    python -m venv venv
+    
+On Windows::
+
+    venv\Scripts\activate
+
+On Linux/macOS::
+
+    source venv/bin/activate
+
+Then install in editable mode with development dependencies::
+
+    pip install -e ".[dev]"
 
 To uninstall, simply use::
 
