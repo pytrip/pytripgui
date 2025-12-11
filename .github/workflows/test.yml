@@ -12,7 +12,6 @@ on:
     
 jobs:
   smoke_test:
-    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -22,7 +21,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.14'
         cache: 'pip'
 
     - name: Install system dependencies (Linux)
@@ -38,12 +37,15 @@ jobs:
     - name: Smoke tests
       env:
         DISPLAY: ':99.0'
+        # Enable core dumps for debugging segfaults
+        PYTHONFAULTHANDLER: 1
+        PYTEST_TIMEOUT: "300"
       run: |
-        xvfb-run --auto-servernum python -m pytest tests -q
+        ulimit -c unlimited
+        xvfb-run --auto-servernum python -m pytest tests -q -v --tb=short
 
 
   normal_test:
-    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       fail-fast: false
       matrix:
@@ -79,12 +81,16 @@ jobs:
       if: ${{ runner.os == 'Linux' }}
       env:
         DISPLAY: ':99.0'
+        # Enable Python fault handler to catch segfaults
+        PYTHONFAULTHANDLER: 1
+        PYTEST_TIMEOUT: "300"
       run: |
-        xvfb-run --auto-servernum python -m pytest tests -q
+        ulimit -c unlimited
+        xvfb-run --auto-servernum python -m pytest tests -v --tb=short
 
     - name: Regular test (Windows)
       if: ${{ runner.os == 'Windows' }}
       env:
         QT_DEBUG_PLUGINS: 1
       run: |
-        python -m pytest tests -q
+        python -m pytest tests -v --tb=short

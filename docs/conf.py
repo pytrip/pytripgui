@@ -16,8 +16,7 @@
 import sys
 import os
 
-import pkg_resources
-
+from importlib.metadata import version as _pkg_version
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -73,12 +72,13 @@ author = 'Leszek Grzanka'
 # built documents.
 
 try:
-    release = pkg_resources.get_distribution('pytrip98gui').version
-except pkg_resources.DistributionNotFound:
+    if _pkg_version is None:
+        raise RuntimeError('importlib.metadata unavailable')
+    release = _pkg_version('pytrip98gui')
+except Exception:
     print('pytrip98gui must be installed to build the documentation.')
-    print('Install from source using `pip install -e .` in a virtualenv.')
+    print('Install from source using `pip install -e .` before building docs.')
     sys.exit(1)
-del pkg_resources
 
 if 'dev' in release:
     release = release.split('dev')[0] + 'dev'
