@@ -11,7 +11,7 @@ The TRiP98 package is not included here. If you need it, first go to `the TRiP98
 Quick installation guide
 ------------------------
 
-PyTRiPGUI currently works on Linux, Windows and macOS with Python 3.6-3.10.
+PyTRiPGUI currently works on Linux, Windows and macOS with Python 3.9-3.14.
 
 Windows
 ~~~~~~~
@@ -23,7 +23,7 @@ To install, download the .exe file and run it. The installer doesn't require pre
 Linux and macOS
 ~~~~~~~~~~~~~~~
 
-We recommend that you run a recent Linux distribution with Python version at least 3.6.
+We recommend that you run a recent Linux distribution with Python version at least 3.9.
 
 To automatically download and install the PyTRiPGUI system-wide, type::
 

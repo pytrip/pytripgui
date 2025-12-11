@@ -1,5 +1,6 @@
 # generated file
 pytripgui/VERSION
+pytripgui/_version.py
 
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudiocode,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,visualstudiocode,eclipse

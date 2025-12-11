@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pytrip98gui"
+dynamic = ["version"]
+description = "PyTRiP GUI - Graphical user interface for the TRiP98 planning system"
+readme = "README.rst"
+license = {text = "GPL-3.0"}
+authors = [
+    {name = "Niels Bassler et al.", email = "bassler@clin.au.dk"},
+]
+maintainers = [
+    {name = "Leszek Grzanka et al.", email = "grzanka@agh.edu.pl"},
+]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Science/Research",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "matplotlib>=3.8.4",
+    "pytrip98[remote]>=3.10.1",
+    "anytree>=2.8",
+    "Events>=0.4",
+    "PyQt5>=5.15",
+    "PyQtChart>=5.15",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0",
+    "pytest-cov>=2.10",
+    "sphinx>=3.0",
+    "sphinx-rtd-theme>=0.5",
+    "flake8>=3.8",
+    "pycodestyle>=2.6",
+]
+test = [
+    "pytest>=6.0",
+    "pytest-qt>=4.0",
+    "pyautogui",
+]
+docs = [
+    "sphinx>=3.0",
+    "furo>=2022.6.21",
+]
+
+[project.urls]
+Homepage = "https://github.com/pytrip/pytripgui"
+Documentation = "https://pytrip.github.io/pytripgui/"
+Repository = "https://github.com/pytrip/pytripgui.git"
+Issues = "https://github.com/pytrip/pytripgui/issues"
+
+[project.scripts]
+pytripgui = "pytripgui.main:main"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pytripgui*"]
+exclude = ["tests", "tests.*"]
+
+[tool.setuptools.package-data]
+pytripgui = ["res/*", "view/*.ui", "VERSION"]
+
+[tool.pytest.ini_options]
+log_cli = true
+testpaths = ["tests"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+write_to = "pytripgui/_version.py"
