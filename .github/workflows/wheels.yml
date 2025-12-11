@@ -86,7 +86,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.x"
 
