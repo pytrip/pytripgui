@@ -4,7 +4,6 @@ import sys
 
 import pytest
 from PyQt5 import QtCore, QtWidgets
-import pyautogui
 
 from pytrip.ctx import CtxCube
 from pytrip.vdx import create_sphere, VdxCube
@@ -50,30 +49,16 @@ def test_basics(qtbot, window):
 
 
 @pytest.mark.xfail(sys.version_info < (3,7), reason="issue on matplotlib with python 3.6 or older")
-def test_open_voxelplan(qtbot, window, voxelplan_header_path):
+def test_open_voxelplan(qtbot, window, voxelplan_header_path, monkeypatch):
     model, view, _ = window
     qtbot.addWidget(view.ui)
 
-    patient_dir, header_basename = os.path.split(voxelplan_header_path)
+    monkeypatch.setattr(view, "browse_file_path", lambda *_, **__: voxelplan_header_path)
 
-    def handle_file_dialog():
-        dialog = view.ui.findChild(QtWidgets.QFileDialog)
-        dialog.setDirectory(QtCore.QDir(patient_dir))
-
-        pyautogui.typewrite(header_basename)
-        pyautogui.press("enter")
-
-        #  solution when option QFileDialog.DontUseNativeDialog is on
-        #  it doesn't require pyautogui
-        # dialog.findChild(QtWidgets.QLineEdit, 'fileNameEdit').setText(file)
-        # open_button = dialog.findChildren(QtWidgets.QPushButton)[0]
-        # qtbot.mouseClick(open_button, QtCore.Qt.LeftButton)
-
-    QtCore.QTimer.singleShot(1000, handle_file_dialog)
     view.ui.actionOpen_Voxelplan.trigger()
+    qtbot.waitUntil(lambda: model.patient_tree.patient_tree_model.rowCount() == 1)
 
     assert isinstance(model.viewcanvases, ViewCanvases)
-    assert model.patient_tree.patient_tree_model.rowCount() == 1
     assert len(model.patient_tree.selected_item_patient().data.vdx.vois) == 1
 
 
@@ -95,7 +80,7 @@ def test_create_plan_and_field(qtbot, window, voxelplan_header_path):
 
     assert view.ui.actionNew_Plan.isEnabled() is True
     assert view.ui.actionCreate_field.isEnabled() is False
-    QtCore.QTimer.singleShot(1000, handle_plan_dialog)
+    QtCore.QTimer.singleShot(200, handle_plan_dialog)
     view.ui.actionNew_Plan.trigger()
 
     def handle_field_dialog():
@@ -107,5 +92,5 @@ def test_create_plan_and_field(qtbot, window, voxelplan_header_path):
         qtbot.mouseClick(ok_button, QtCore.Qt.LeftButton)
 
     assert view.ui.actionCreate_field.isEnabled() is True
-    QtCore.QTimer.singleShot(1000, handle_field_dialog)
+    QtCore.QTimer.singleShot(200, handle_field_dialog)
     view.ui.actionCreate_field.trigger()

@@ -45,17 +45,17 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=6.0",
-    "pytest-cov>=2.10",
+    "pytest>=8.2",
+    "pytest-cov>=4.1",
     "sphinx>=3.0",
     "sphinx-rtd-theme>=0.5",
     "flake8>=3.8",
     "pycodestyle>=2.6",
 ]
 test = [
-    "pytest>=6.0",
-    "pytest-qt>=4.0",
-    "pyautogui",
+    "pytest>=8.2",
+    "pytest-qt>=4.3",
+    "pytest-xvfb>=2.0 ; sys_platform == 'linux'",
 ]
 docs = [
     "sphinx>=3.0",
@@ -85,6 +85,7 @@ pytripgui = ["res/*", "view/*.ui", "VERSION"]
 [tool.pytest.ini_options]
 log_cli = true
 testpaths = ["tests"]
+qt_api = "pyqt5"
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
