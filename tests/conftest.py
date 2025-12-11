@@ -19,5 +19,5 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "flaky: mark test as flaky, will be retried up to 3 times on failure"
     )
-    # Global default: retry tests up to 3 times on failure with 1 second delay
-    # Can be overridden per-test with @pytest.mark.flaky(reruns=N)
+    # Global default: all tests are retried up to 3 times on failure with 1 second delay
+    # The flaky marker is registered for documentation, but does not control rerun behavior.
