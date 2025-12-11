@@ -94,5 +94,3 @@ version_scheme = "post-release"
 local_scheme = "node-and-date"
 write_to = "pytripgui/_version.py"
 
-[project.version]
-use_scm = true
