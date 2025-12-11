@@ -41,15 +41,11 @@ jobs:
         PYTHONFAULTHANDLER: 1
         PYTEST_TIMEOUT: "300"
       run: |
-        # Set up core dump handling for debugging
         ulimit -c unlimited
         xvfb-run --auto-servernum python -m pytest tests -q -v --tb=short
-        # Check for segfaults after tests
-        if [ -f core ]; then echo "Core dump found - segfault occurred"; fi
 
 
   normal_test:
-    if: "!contains(github.event.head_commit.message, '[ci skip]') && !contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       fail-fast: false
       matrix:
@@ -89,15 +85,12 @@ jobs:
         PYTHONFAULTHANDLER: 1
         PYTEST_TIMEOUT: "300"
       run: |
-        # Set up core dump handling
         ulimit -c unlimited
         xvfb-run --auto-servernum python -m pytest tests -v --tb=short
-        # Check for segfaults after tests
-        if [ -f core ]; then echo "Core dump found - segfault occurred"; fi
 
     - name: Regular test (Windows)
       if: ${{ runner.os == 'Windows' }}
       env:
         QT_DEBUG_PLUGINS: 1
       run: |
-        python -m pytest tests -q
+        python -m pytest tests -v --tb=short
