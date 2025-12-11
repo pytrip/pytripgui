@@ -21,5 +21,3 @@ def pytest_configure(config):
     )
     # Global default: retry tests up to 3 times on failure with 1 second delay
     # Can be overridden per-test with @pytest.mark.flaky(reruns=N)
-    config.option.reruns = 3
-    config.option.reruns_delay = 1
