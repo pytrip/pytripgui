@@ -1,9 +1,7 @@
-name: Release (wheels + docs)
+name: Release - PyPI Package & Docs
 
 permissions:
   contents: read
-  id-token: write
-  pages: write
 
 on:
   workflow_dispatch:
@@ -13,7 +11,8 @@ on:
   release:
     types:
       - published
-
+  schedule:
+    - cron: '46 18 * * 2'
 env:
   FORCE_COLOR: 3
 
@@ -34,7 +33,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.x'
+          python-version: '3.14'
 
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
@@ -47,6 +46,11 @@ jobs:
 
       - name: Check metadata
         run: twine check dist/*
+
+      - name: Generate artifact attestation for sdist and wheels
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: "dist/*"
 
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v3
@@ -68,19 +72,38 @@ jobs:
         with:
           path: docs/_build/html
 
-      - name: Publish to PyPI (on release)
-        if: github.event_name == 'release' && github.event.action == 'published'
-        uses: pypa/gh-action-pypi-publish@release/v1
-
   deploy_pages:
     name: Deploy Docs to GitHub Pages
     needs: build_release
     if: github.ref == 'refs/heads/master' || (github.event_name == 'release' && github.event.action == 'published')
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  upload_pypi:
+    name: Upload to PyPI
+    needs: build_release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    environment: pypi
+    permissions:
+      id-token: write  # OIDC token for PyPI
+    steps:
+      - name: Download dist artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          print-hash: true
