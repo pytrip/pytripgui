@@ -52,6 +52,15 @@ dev = [
     "flake8>=3.8",
     "pycodestyle>=2.6",
 ]
+test = [
+    "pytest>=6.0",
+    "pytest-qt>=4.0",
+    "pyautogui",
+]
+docs = [
+    "sphinx>=3.0",
+    "furo>=2022.6.21",
+]
 
 [project.urls]
 Homepage = "https://github.com/pytrip/pytripgui"
