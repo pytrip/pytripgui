@@ -91,7 +91,7 @@ jobs:
       run: |
         # Set up core dump handling
         ulimit -c unlimited
-        xvfb-run --auto-servernum python -m pytest tests -q -v --tb=short
+        xvfb-run --auto-servernum python -m pytest tests -v --tb=short
         # Check for segfaults after tests
         if [ -f core ]; then echo "Core dump found - segfault occurred"; fi
 

@@ -1,7 +1,7 @@
 import os
 import platform
 import sys
-import traceback
+
 import gc
 
 import matplotlib
@@ -16,7 +16,7 @@ def _headless_qt_env():
         # Enable debug output for X11 errors on Linux
         os.environ.setdefault("QT_DEBUG_PLUGINS", "1")
         # Enable core dumps for segfault debugging
-        os.environ.setdefault("PYTEST_TIMEOUT", "300")
+
     
     os.environ.setdefault("MPLBACKEND", "Agg")
     matplotlib.use(os.environ["MPLBACKEND"])
@@ -35,6 +35,7 @@ def _cleanup_after_test():
         if app:
             app.processEvents()
     except Exception:
+        # Ignore exceptions during cleanup; failures here are non-critical and may occur if no QApplication exists.
         pass
 
 
