@@ -12,3 +12,14 @@ def _headless_qt_env():
         os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     os.environ.setdefault("MPLBACKEND", "Agg")
     matplotlib.use(os.environ["MPLBACKEND"])
+
+
+def pytest_configure(config):
+    """Configure pytest with default reruns for flaky tests."""
+    config.addinivalue_line(
+        "markers", "flaky: mark test as flaky, will be retried up to 3 times on failure"
+    )
+    # Global default: retry tests up to 3 times on failure with 1 second delay
+    # Can be overridden per-test with @pytest.mark.flaky(reruns=N)
+    config.option.reruns = 3
+    config.option.reruns_delay = 1

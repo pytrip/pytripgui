@@ -56,6 +56,7 @@ test = [
     "pytest>=8.2",
     "pytest-qt>=4.3",
     "pytest-xvfb>=2.0 ; sys_platform == 'linux'",
+    "pytest-rerunfailures>=14.0",
 ]
 docs = [
     "sphinx>=3.0",
@@ -80,14 +81,18 @@ include = ["pytripgui*"]
 exclude = ["tests", "tests.*"]
 
 [tool.setuptools.package-data]
-pytripgui = ["res/*", "view/*.ui", "VERSION"]
+pytripgui = ["res/*", "view/*.ui"]
 
 [tool.pytest.ini_options]
 log_cli = true
 testpaths = ["tests"]
 qt_api = "pyqt5"
+addopts = "--reruns=3 --reruns-delay=1"
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
 local_scheme = "node-and-date"
 write_to = "pytripgui/_version.py"
+
+[project.version]
+use_scm = true
