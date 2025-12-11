@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=64", "setuptools_scm>=8", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytrip98gui"
-version = "1.5.0"
+dynamic = ["version"]
 description = "PyTRiP GUI - Graphical user interface for the TRiP98 planning system"
 readme = "README.rst"
 license = {text = "GPL-3.0"}
@@ -36,7 +36,7 @@ classifiers = [
 ]
 dependencies = [
     "matplotlib>=3.8.4",
-    "pytrip98[remote]>=3.7",
+    "pytrip98[remote]>=3.10.1",
     "anytree>=2.8",
     "Events>=0.4",
     "PyQt5>=5.15",
@@ -76,3 +76,8 @@ pytripgui = ["res/*", "view/*.ui", "VERSION"]
 [tool.pytest.ini_options]
 log_cli = true
 testpaths = ["tests"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+write_to = "pytripgui/_version.py"

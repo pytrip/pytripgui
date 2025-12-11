@@ -1,6 +1,0 @@
-matplotlib>=3.8.4
-pytrip98[remote]>=3.7
-PyQt5>=5.15
-PyQtChart>=5.15
-anytree>=2.8
-Events>=0.4
