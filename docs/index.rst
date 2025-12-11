@@ -10,5 +10,15 @@ Contents:
    readme
    user_guide
    technical
+   authors
+   contributing
+
+Release process
+---------------
+
+The project publishes pure-Python wheels and a source distribution using a single CI workflow.
+On tagged releases, the workflow builds packages with ``python -m build`` and publishes to PyPI,
+and generates Sphinx documentation that is deployed to GitHub Pages. The previous ``cibuildwheel``
+based process has been removed.
    contributing
    authors
