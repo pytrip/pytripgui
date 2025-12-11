@@ -1,8 +1,6 @@
-matplotlib==3.4.3 ; python_version >= '3.7' # remove once compatibility problem with matplotlib 3.5+ is restored
-pytrip98[remote]~=3.7  # use versions compatible with 3.7 (3.7 and later from 3.x series)
-PyQt5>=5.15  ; python_version >= '3.8'
-PyQt5<5.10 ; python_version < '3.8'
-PyQtChart>=5.15  ; python_version >= '3.8'
-PyQtChart<5.10 ; python_version < '3.8'
-anytree~=2.8
-Events~=0.4
+matplotlib>=3.8.4
+pytrip98[remote]>=3.7
+PyQt5>=5.15
+PyQtChart>=5.15
+anytree>=2.8
+Events>=0.4
