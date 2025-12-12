@@ -118,7 +118,7 @@ To create the Windows installer locally, you need Python 3.14 on Windows, PyInst
 
     python -m PyInstaller main.spec
 
-   The spec script modifies the matplotlib backend configuration, generates a `VERSION` file in `build/`, and updates `win_innosetup.iss` with the detected version and platform information.
+   The spec script modifies the matplotlib backend configuration, generates a `VERSION` file in `build/` that is then bundled at the root of the frozen application, and updates `win_innosetup.iss` with the detected version and platform information.
 
 4. Build the installer executable::
 
