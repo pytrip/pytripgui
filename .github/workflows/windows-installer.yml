@@ -58,7 +58,7 @@ jobs:
           & $iscc win_innosetup.iss
 
       - name: Upload installer artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: pytripgui-windows-installer
           path: dist/installer/*.exe
