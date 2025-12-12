@@ -12,20 +12,11 @@ Overview
 .. list-table::
     :stub-columns: 1
 
-    * - docs
-      - |docs|
     * - tests
-      - |appveyor| |ghactions|
+      - |ghactions|
     * - package
       - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
 
-.. |docs| image:: https://readthedocs.org/projects/pytripgui/badge/?style=flat
-    :target: https://readthedocs.org/projects/pytripgui
-    :alt: Documentation Status
-
-.. |appveyor| image:: https://ci.appveyor.com/api/projects/status/github/pytrip/pytripgui?branch=master&svg=true
-    :alt: Appveyor Build Status
-    :target: https://ci.appveyor.com/project/pytrip/pytripgui
 
 .. |ghactions| image:: https://github.com/pytrip/pytripgui/actions/workflows/test.yml/badge.svg
     :alt: Github Actions
@@ -62,7 +53,6 @@ Requirements
 
 - Python 3.9 or higher
 - Git
-- A C compiler (for building PyQt5 and other dependencies)
 
 Stable version ::
 
@@ -111,7 +101,7 @@ To run unstable, development version of pytripgui (when working with source code
 Building the Windows installer
 ==============================
 
-To create the Windows installer locally you need Python 3.14 on Windows, PyInstaller, and Inno Setup 6+. All commands below assume you are in the repository root.
+To create the Windows installer locally, you need Python 3.14 on Windows, PyInstaller, and Inno Setup 6+. All commands below assume you are in the repository root.
 
 1. Create/activate a virtual environment and install build tools::
 
@@ -128,7 +118,7 @@ To create the Windows installer locally you need Python 3.14 on Windows, PyInsta
 
     python -m PyInstaller main.spec
 
-   The spec script patches the matplotlib backend, writes the current package version to `build/VERSION`, and updates win_innosetup.iss with the detected version and platform.
+   The spec script modifies the matplotlib backend configuration, generates a `VERSION` file in `build/`, and updates `win_innosetup.iss` with the detected version and platform information.
 
 4. Build the installer executable::
 
@@ -139,32 +129,34 @@ The final installer lands in `dist/installer/` (for example `pytripgui_<version>
 History
 =======
 
-* earliest mention of the pytrip project dates back to 2010 http://willworkforscience.blogspot.com/2010/12/happy-new-year.html
+* The earliest mention of the pytrip project dates back to 2010: http://willworkforscience.blogspot.com/2010/12/happy-new-year.html
 
-* 2012-2013 pytrip code with an experimental GUI is developed by Niels Bassler and Jakob Toftegaard, code is hosted in SVN repository at Aarhus University (https://svn.nfit.au.dk/trac/pytrip)
+* 2012-2013: pytrip code with an experimental GUI is developed by Niels Bassler and Jakob Toftegaard. The code is hosted in an SVN repository at Aarhus University (https://svn.nfit.au.dk/trac/pytrip)
 
-  * state of the code in late 2013 can be seen here: https://github.com/pytrip/pytrip/commit/54e2d00d41138431c1c2b69cc6136f87cf4831b8
-  * pytrip works with python 2.x, GUI is based on wxwidgets library
-  * pytrip (including experimental GUI) was denoted at v0.1
+  * State of the code in late 2013 can be seen here: https://github.com/pytrip/pytrip/commit/54e2d00d41138431c1c2b69cc6136f87cf4831b8
+  * pytrip is compatible with Python 2.x; the GUI is based on the wxWidgets library
+  * pytrip (including experimental GUI) is designated as v0.1
   * functionality of GUI at that moment can be seen in video https://www.youtube.com/embed/6ZqcJ6OZ598
 
-* 2014 Manuscript published:
+* 2014: Manuscript published
 
-  * Toftegaard J, Petersen JB, Bassler N. PyTRiP-a toolbox and GUI for the proton/ion therapy planning system TRiP. In Journal of Physics: Conference Series 2014 Mar 24 (Vol. 489, No. 1, p. 012045). https://doi.org/10.1088/1742-6596/489/1/012045
+  * Toftegaard J, Petersen JB, Bassler N. PyTRiP—a toolbox and GUI for the proton/ion therapy planning system TRiP. Journal of Physics: Conference Series 2014 Mar 24 (Vol. 489, No. 1, p. 012045). https://doi.org/10.1088/1742-6596/489/1/012045
 
-* 2014-2016 pytrip code (including GUI) is publicly available as a SourceForge project (https://sourceforge.net/projects/pytrip/)
+* 2014-2016: pytrip code (including GUI) is publicly available as a SourceForge project (https://sourceforge.net/projects/pytrip/)
 
-  *  Jakob Toftegaard issued several commits, Toke Printz included some fixes (https://github.com/pytrip/pytrip/commit/d6dedb8b5e309f33e06fb766542345064348e7e0)
+  * Jakob Toftegaard contributed several commits; Toke Printz added fixes (https://github.com/pytrip/pytrip/commit/d6dedb8b5e309f33e06fb766542345064348e7e0)
 
-* 28.08.2016 pytrip (including GUI) is migrated to GIT at Github repository (https://github.com/pytrip/pytrip)
+* August 28, 2016: pytrip (including GUI) is migrated to Git and hosted on GitHub (https://github.com/pytrip/pytrip)
 
-  * pytripgui is extracted to a separate project (https://github.com/pytrip/pytripgui)
-  * Leszek Grzanka joins the developer team
+  * pytripgui is extracted as a separate project (https://github.com/pytrip/pytripgui)
+  * Leszek Grzanka joins the development team
 
-* 08.05.2018 pytripgui is migrated from wxwidgets to Qt5 framework (https://github.com/pytrip/pytripgui/commit/cb27fc909d132ce5f7a5e0be5df2dbbfd64e6c1d)
+* May 8, 2018: pytripgui is migrated from wxWidgets to the Qt5 framework (https://github.com/pytrip/pytripgui/commit/cb27fc909d132ce5f7a5e0be5df2dbbfd64e6c1d)
 
-  * GUI shifts completely from python 2.x to python 3.x
+  * GUI transitions completely from Python 2.x to Python 3.x
 
-* 04.2019 Łukasz Jeleń joins developer team, introducing MVC architecture in the project
+* April 2019: Łukasz Jeleń joins the development team, introducing MVC architecture to the project
 
-* 06.2021 Arkadiusz Ćwikła, Joanna Fortuna, Michał Krawczyk and Mateusz Łaszczyk join project (part of a bachelor thesis at the AGH University)
+* June 2021: Arkadiusz Ćwikła, Joanna Fortuna, Michał Krawczyk, and Mateusz Łaszczyk join the project as part of a bachelor's thesis at AGH University
+
+* December 2025: Leszek Grzanka and Niels Bassler undertake efforts to revive the project after 3.5 years of stalled development, modernizing dependencies, fixing installation issues, and adding new features
