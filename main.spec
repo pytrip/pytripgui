@@ -5,6 +5,7 @@
 
 # following https://github.com/FCS-analysis/PyCorrFit/blob/master/freeze_pyinstaller/PyCorrFit_win7.spec
 # patch matplotlib rc file to include only one backend which results in smaller size of generated files
+from pathlib import Path
 import matplotlib
 mplrc = matplotlib.matplotlib_fname()
 print(mplrc)
@@ -20,11 +21,17 @@ with open(mplrc, "w") as fd:
 # following https://github.com/FCS-analysis/PyCorrFit/blob/master/freeze_pyinstaller/PyCorrFit_win7.spec
 # add current dir to PYTHONPATH, to enable importing pytripgui package
 import sys
-DIR = os.path.realpath(".")
-sys.path.append(DIR)
+DIR = Path.cwd().resolve()
+sys.path.append(str(DIR))
 import pytripgui
 # get version string
 version = pytripgui.__version__
+
+# write a VERSION file so PyInstaller can bundle it alongside the frozen app
+version_file = DIR / "build" / "VERSION"
+version_file.parent.mkdir(parents=True, exist_ok=True)
+with open(version_file, "w", encoding="utf-8") as fd:
+    fd.write(f"{version}\n")
 
 # following https://github.com/FCS-analysis/PyCorrFit/blob/master/freeze_pyinstaller/PyCorrFit_win7.spec
 # replace
@@ -84,12 +91,12 @@ exclude_startswith = [
 ]
 
 a = Analysis(['pytripgui\\main.py'],
-             pathex=['.'],
-             binaries=[],
-             datas=[('pytripgui/res/*', 'pytripgui/res'),
-                    ('pytripgui/view/*.ui', 'pytripgui/view'),
-                    ('pytripgui/VERSION', '.')],
-             hiddenimports=[],
+          pathex=['.'],
+          binaries=[],
+          datas=[('pytripgui/res/*', 'pytripgui/res'),
+                ('pytripgui/view/*.ui', 'pytripgui/view'),
+                (str(version_file), '.')],
+          hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=exclude_modules,
