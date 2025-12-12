@@ -39,10 +39,3 @@ More documentation
 ------------------
 
 For more information, please see the `detailed documentation <https://pytrip.github.io/pytripgui/>`_.
-
-Release and packaging
----------------------
-
-PyTRiPGUI publishes pure-Python wheels and source distributions via a unified GitHub Actions workflow.
-On releases, the workflow builds wheels/sdist and publishes them to PyPI, and it builds Sphinx HTML docs and deploys them to GitHub Pages.
-There is no longer any use of cibuildwheel; packaging is performed using `python -m build`.

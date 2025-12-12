@@ -3,6 +3,9 @@ name: Windows Installer
 on:
   push:
   pull_request:
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 env:
@@ -54,3 +57,25 @@ jobs:
           name: pytripgui-windows-installer
           path: dist/installer/*.exe
           if-no-files-found: error
+
+  upload_installer_to_release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: [build_windows_installer]
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download installer artifact
+        uses: actions/download-artifact@v6
+        with:
+          name: pytripgui-windows-installer
+          path: ./dist
+
+      - name: Upload installer to release
+        uses: ncipollo/release-action@v1.20.0
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          allowUpdates: true
+          artifacts: './dist/*'
+          token: ${{ secrets.GITHUB_TOKEN }}
