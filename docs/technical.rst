@@ -101,7 +101,7 @@ To run unstable, development version of pytripgui (when working with source code
 Building the Windows installer
 ==============================
 
-To create the Windows installer locally, you need Python 3.14 on Windows, PyInstaller, and Inno Setup 6+. All commands below assume you are in the repository root.
+To create the Windows installer locally, you need Python 3.14 on Windows, PyInstaller, and Inno Setup 6+. All commands below should be run from the repository root.
 
 1. Create/activate a virtual environment and install build tools::
 
