@@ -8,6 +8,7 @@
 #define MyAppExeName "pytripgui.exe"
 #define MyAppPlatform "win_64bit"
 #define MyAppDir = SourcePath + "\dist\pytripgui\"
+#define MyOutputDir = SourcePath + "\dist\installer\"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -29,6 +30,7 @@ ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 OutputBaseFilename={#MyAppName}_{#MyAppVersion}_{#MyAppPlatform}_setup
+OutputDir={#MyOutputDir}
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=lowest

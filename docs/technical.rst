@@ -108,6 +108,34 @@ To run unstable, development version of pytripgui (when working with source code
 
     python -m pytripgui.main
 
+Building the Windows installer
+==============================
+
+To create the Windows installer locally you need Python 3.14 on Windows, PyInstaller, and Inno Setup 6+. All commands below assume you are in the repository root.
+
+1. Create/activate a virtual environment and install build tools::
+
+    python -m venv .venv
+    .venv\Scripts\activate
+    python -m pip install --upgrade pip
+    python -m pip install . pyinstaller
+
+2. Install Inno Setup (for example)::
+
+    choco install innosetup -y
+
+3. Build the frozen application::
+
+    python -m PyInstaller main.spec
+
+   The spec script patches the matplotlib backend, writes the current package version to `build/VERSION`, and updates win_innosetup.iss with the detected version and platform.
+
+4. Build the installer executable::
+
+    "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe" win_innosetup.iss
+
+The final installer lands in `dist/installer/` (for example `pytripgui_<version>_win_64bit_setup.exe`), while the unpacked PyInstaller build lives in `dist/pytripgui/`.
+
 History
 =======
 

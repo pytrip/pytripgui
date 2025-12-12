@@ -1,0 +1,56 @@
+name: Windows Installer
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FORCE_COLOR: 3
+
+permissions:
+  contents: read
+
+jobs:
+  build_windows_installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+          cache: 'pip'
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install project and PyInstaller
+        run: python -m pip install . pyinstaller
+
+      - name: Install Inno Setup
+        shell: powershell
+        run: choco install innosetup -y
+
+      - name: Build frozen application
+        run: python -m PyInstaller main.spec
+
+      - name: Build installer executable
+        shell: powershell
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (!(Test-Path $iscc)) {
+            throw "ISCC not found at $iscc"
+          }
+          & $iscc win_innosetup.iss
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: pytripgui-windows-installer
+          path: dist/installer/*.exe
+          if-no-files-found: error
