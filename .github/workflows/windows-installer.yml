@@ -73,7 +73,7 @@ jobs:
 
     steps:
       - name: Download installer artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: pytripgui-windows-installer
           path: ./dist
